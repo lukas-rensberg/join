@@ -1,3 +1,35 @@
 :root {
     --main-color: #4589FF;
 }
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+    background-color: var(--main-color);
+    transition: background-color 700ms ease-in;
+}
+
+.logo-container {
+    display: flex;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    transition: top 700ms ease-in, left 700ms ease-in, scale 700ms ease-in, transform 700ms ease-in, invert 700ms ease-in;
+}
+
+.logo-fixed {
+    top: 2%;
+    left: 2%;
+    transform: translate(0%, 0%) scale(0.5);
+}
