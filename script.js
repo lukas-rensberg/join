@@ -11,6 +11,5 @@ document.addEventListener("DOMContentLoaded", () => {
   
   logoContainer.addEventListener("transitionstart", () => {
     changeBackground("white");
-    changeLogoColor("#4589FF");
   });
 });

@@ -1,61 +1,72 @@
 :root {
-    --main-color: #4589FF;
-    --color-default: #6E52FF;
-    --color-variant1: #FF7A00;
-    --color-variant2: #FF5EB3;
-    --color-variant3: #9327FF;
-    --color-variant4: #00BEE8;
-    --color-variant5: #1FD7C1;
-    --color-variant6: #FF745E;
-    --color-variant7: #FFA35E;
-    --color-variant8: #FC71FF;
-    --color-variant9: #FFC701;
-    --color-variant10: #0038FF;
-    --color-variant11: #C3FF2B;
-    --color-variant12: #FFE62B;
-    --color-variant13: #FF4646;
-    --color-variant14: #FFBB2B;
-    --color-primary-button-hover: #005DFF;
-    --color-primary-button-click: #FFFFFF;  
-    --color-menu-active: #D2E3FF;
-    --color-menu-hover: #E3EEFF;
-    --color-priority-urgent: #FF3D00;
-    --color-priority-medium: #FFA800;
-    --color-priority-low: #7AE229;
-
-
+  --main-color: #4589ff;
+  --color-default: #6e52ff;
+  --color-variant1: #ff7a00;
+  --color-variant2: #ff5eb3;
+  --color-variant3: #9327ff;
+  --color-variant4: #00bee8;
+  --color-variant5: #1fd7c1;
+  --color-variant6: #ff745e;
+  --color-variant7: #ffa35e;
+  --color-variant8: #fc71ff;
+  --color-variant9: #ffc701;
+  --color-variant10: #0038ff;
+  --color-variant11: #c3ff2b;
+  --color-variant12: #ffe62b;
+  --color-variant13: #ff4646;
+  --color-variant14: #ffbb2b;
+  --color-primary-button-hover: #005dff;
+  --color-primary-button-click: #ffffff;
+  --color-menu-active: #d2e3ff;
+  --color-menu-hover: #e3eeff;
+  --color-priority-urgent: #ff3d00;
+  --color-priority-medium: #ffa800;
+  --color-priority-low: #7ae229;
 }
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Open Sans';
-    scroll-behavior: smooth;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Open Sans";
+  scroll-behavior: smooth;
 }
 
 body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    width: 100vw;
-    background-color: var(--main-color);
-    transition: background-color 700ms ease-in;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--main-color);
+  transition: background-color 700ms ease-in;
 }
 
 .logo-container {
-    display: flex;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(1);
-    transition: top 700ms ease-in, left 700ms ease-in, scale 700ms ease-in, transform 700ms ease-in, invert 700ms ease-in;
+  background: url("./assets/icons/logo-white.svg")
+    center center no-repeat;
+  background-size: contain;
+
+  width: 150px;
+  height: 150px;
+
+  -webkit-transition: all 700ms ease-in;
+  -moz-transition: all 700ms ease-in;
+  transition: all 700ms ease-in;
+
+  display: flex;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
 }
 
 .logo-fixed {
-    top: 2%;
-    left: 2%;
-    transform: translate(0%, 0%) scale(0.5);
+  background: url("./assets/icons/logo-blue.svg")
+    center center no-repeat;
+  background-size: contain;
+  top: 2%;
+  left: 2%;
+  transform: translate(0%, 0%) scale(0.5);
 }
