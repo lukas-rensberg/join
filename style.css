@@ -1,5 +1,8 @@
 :root {
   --main-color: #4589ff;
+  --main-radius: 30px;
+  --button-radius: 8px;
+  --padding-side: 16px;
   --color-default: #6e52ff;
   --color-variant1: #ff7a00;
   --color-variant2: #ff5eb3;
