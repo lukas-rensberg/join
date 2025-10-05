@@ -1,11 +1,37 @@
 :root {
     --main-color: #4589FF;
+    --color-default: #6E52FF;
+    --color-variant1: #FF7A00;
+    --color-variant2: #FF5EB3;
+    --color-variant3: #9327FF;
+    --color-variant4: #00BEE8;
+    --color-variant5: #1FD7C1;
+    --color-variant6: #FF745E;
+    --color-variant7: #FFA35E;
+    --color-variant8: #FC71FF;
+    --color-variant9: #FFC701;
+    --color-variant10: #0038FF;
+    --color-variant11: #C3FF2B;
+    --color-variant12: #FFE62B;
+    --color-variant13: #FF4646;
+    --color-variant14: #FFBB2B;
+    --color-primary-button-hover: #005DFF;
+    --color-primary-button-click: #FFFFFF;  
+    --color-menu-active: #D2E3FF;
+    --color-menu-hover: #E3EEFF;
+    --color-priority-urgent: #FF3D00;
+    --color-priority-medium: #FFA800;
+    --color-priority-low: #7AE229;
+
+
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Open Sans';
+    scroll-behavior: smooth;
 }
 
 body {
