@@ -44,8 +44,7 @@ body {
 }
 
 .logo-container {
-  background: url("./assets/icons/logo-white.svg")
-    center center no-repeat;
+  background: url("./assets/icons/logo-white.svg") center center no-repeat;
   background-size: contain;
 
   width: 150px;
@@ -53,7 +52,10 @@ body {
 
   -webkit-transition: all 700ms ease-in-out;
   -moz-transition: all 700ms ease-in-out;
-  transition: all 700ms ease-in-out;
+  transition: transform 700ms ease-in-out, background-image 700ms ease-in-out,
+    background-size 700ms ease-in-out, background-position 700ms ease-in-out,
+    background-repeat 700ms ease-in-out, background-color 700ms ease-in-out,
+    scale 700ms ease-in-out, top 700ms ease-in-out, left 700ms ease-in-out;
 
   display: flex;
   position: fixed;
@@ -63,8 +65,7 @@ body {
 }
 
 .logo-fixed {
-  background: url("./assets/icons/logo-blue.svg")
-    center center no-repeat;
+  background: url("./assets/icons/logo-blue.svg") center center no-repeat;
   background-size: contain;
   top: 2%;
   left: 2%;
