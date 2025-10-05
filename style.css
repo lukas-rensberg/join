@@ -39,17 +39,12 @@ body {
   justify-content: center;
   height: 100vh;
   width: 100vw;
-  background-color: var(--main-color);
-  transition: background-color 700ms ease-in;
-  
+  animation: backgroundFade 700ms ease-in-out forwards;
 }
 
 .logo-container {
-  background: url("./assets/icons/logo-white.svg") center center no-repeat;
-  background-size: contain;
-
-  width: 150px;
-  height: 150px;
+  width: 101px;
+  height: 122px;
 
   -webkit-transition: all 700ms ease-in-out;
   -moz-transition: all 700ms ease-in-out;
@@ -57,25 +52,22 @@ body {
 
   display: flex;
   position: fixed;
-}
-
-.logo-fixed {
-  background: url("./assets/icons/logo-blue.svg") center center no-repeat;
-  background-size: contain;
   animation: logoSlideIn 700ms ease-in-out forwards;
 }
 
 /* Keyframe Animations */
 @keyframes logoSlideIn {
   0% {
+    background: url("./assets/icons/logo-white.svg") center center no-repeat;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) scale(1);
+    transform: translate(-50%, -50%) scale(1.5);
   }
   100% {
     top: 2%;
     left: 2%;
     transform: translate(0%, 0%) scale(0.5);
+    background: url("./assets/icons/logo-blue.svg") center center no-repeat;
   }
 }
 
