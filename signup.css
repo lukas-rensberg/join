@@ -15,6 +15,48 @@
 }
 
 .body-signup {
-    padding-left: var(--main-padding);
-    padding-right: var(--main-padding);
+    padding-left: var(--padding-side);
+    padding-right: var(--padding-side);
+}
+
+section {
+    margin-top: 160px;
+    margin-bottom: 160px;
+    display: flex;
+    /* justify-content: center; */
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    background-color: white;
+    border-radius: var(--main-radius);
+    position: relative;
+}
+
+.signup-text {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 36px;
+}
+
+.back-arrow-signup {
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    left: 28px;
+    top: 28px;
+    background: url("./assets/login_signup_icons/arrow-left-line.svg") center center no-repeat;
+    transform: scale(0.75);
+    cursor: pointer;
+
+    :hover {
+        cursor: pointer;
+    }
+}
+
+.seperator {
+    border-bottom: 3px solid var(--main-color);
+    width: 80px;
+    left: 50px;
+    padding-top: 12px;
 }
