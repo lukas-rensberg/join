@@ -1,0 +1,20 @@
+.body-signup {
+    background-color: var(--main-color);
+
+}
+
+.logo-container-signup {
+    width: 101px;
+    height: 122px;
+    display: flex;
+    position: fixed;
+    top: 2%;
+    left: 2%;
+    background: url("./assets/icons/logo-white.svg") center center no-repeat;
+    transform: scale(0.5);
+}
+
+.body-signup {
+    padding-left: var(--main-padding);
+    padding-right: var(--main-padding);
+}
