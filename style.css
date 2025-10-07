@@ -25,6 +25,7 @@
   --color-priority-urgent: #ff3d00;
   --color-priority-medium: #ffa800;
   --color-priority-low: #7ae229;
+  --color-light-gray: #d1d1d1;
 }
 
 * {
@@ -32,22 +33,17 @@
   padding: 0;
   box-sizing: border-box;
   font-family: "Open Sans";
-  font-style: normal !important;
   scroll-behavior: smooth;
 }
 
 body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  width: 100vw;
-
+  min-height: 100vh;
+  flex-grow: 1;
 }
 
 .body-login {
   animation: backgroundFade 700ms ease-in-out forwards;
+  position: relative;
 }
 
 .logo-container-login {
@@ -59,7 +55,7 @@ body {
   transition: all 700ms ease-in-out;
 
   display: flex;
-  position: fixed;
+  position: absolute;
   animation: logoSlideIn 700ms ease-in-out forwards;
 }
 
@@ -88,4 +84,15 @@ body {
   100% {
     background-color: #ffffff;
   }
+}
+
+footer {
+  width: 100%;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  color: white;
+  /* margin-top: 40px; */
 }
