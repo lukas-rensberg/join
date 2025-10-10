@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard App-Layout</title>
+    <link rel="stylesheet" href="css/overview.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="page-container">
+    
+    <header class="app-header">
+        <div class="logo">
+            <img src="./assets/icons/logo-white.svg" alt="Firmenlogo">
+        </div>
+        <div class="avatar"></div>
+    </header>
+    
+    <div class="dashboard-container">
+
+        <div class="card card-urgent-deadline">
+            <div class="urgent-section">
+                <div class="icon-and-count">
+                    <div class="icon-circle">
+                        <img src="./assets/menu_icons/Frame .svg" alt="Tasks Urgent Icon"> 
+                    </div>
+                    <span class="number">1</span>
+                </div>
+                <span class="title">Tasks Urgent</span>
+            </div>
+
+            <div class="deadline-section">
+                <span class="date">October 6, 2025</span>
+                <span class="title">Upcoming Deadline</span>
+            </div>
+        </div>
+
+        <div class="card card-todo">
+            <div class="todo-content"> 
+                <div class="icon-circle">
+                    <img src="./assets/menu_icons/TasToDo.svg" alt="Tasks To-do Icon"> 
+                </div>
+                <span class="number">1</span>
+                <div class="text-section">
+                    <span class="title">Tasks To-do</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card card-board">
+            <div class="icon-section">
+                <div class="icon-circle">
+                    <img src="./assets/menu_icons/onBorad.svg" alt="Tasks on Board Icon"> 
+                </div>
+                <span class="number">5</span>
+            </div>
+            <span class="title">Tasks on Board</span>
+        </div>
+        
+        <div class="card card-progress">
+            <div class="icon-section">
+                <div class="icon-circle">
+                    <img src="./assets/menu_icons/In Progress.svg" alt="Tasks in Progress Icon"> 
+                </div>
+                <span class="number">2</span>
+            </div>
+            <span class="title">Tasks in Progress</span>
+        </div>
+
+        <div class="card card-feedback">
+            <div class="icon-section">
+                <div class="icon-circle">
+                    <img src="./assets/menu_icons/Awaiting feedback.svg" alt="Awaiting feedback Icon"> 
+                </div>
+                <span class="number">2</span>
+            </div>
+            <span class="title">Awaiting feedback</span>
+        </div>
+
+        <div class="card card-done">
+            <div class="icon-section">
+                <div class="icon-circle">
+                    <img src="./assets/menu_icons/Done.svg" alt="Tasks Done Icon"> 
+                </div>
+                <span class="number">5</span>
+            </div>
+            <span class="title">Tasks Done</span>
+        </div>
+
+    </div>
+
+    <nav class="main-nav">
+        <a class="nav-item active">
+            <img src="./assets/menu_icons/summary.svg" alt="Summary Icon">
+            <span>Summary</span>
+        </a>
+        <a class="nav-item">
+            <img src="./assets/menu_icons/add task.svg" alt="Add Task Icon">
+            <span>Add Task</span>
+        </a>
+        <a class="nav-item">
+            <img src="./assets/menu_icons/board.svg" alt="Board Icon">
+            <span>Board</span>
+        </a>
+        <a class="nav-item">
+            <img src="./assets/menu_icons/contacts.svg" alt="Contacts Icon">
+            <span>Contacts</span>
+        </a>
+    </nav>
+
+</div>
+
+</body>
+</html>
