@@ -6,13 +6,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Join - A project management tool</title>
     <link rel="shortcut icon" href="./assets/icons/logo-blue.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="./signup.css">
-    <link rel="stylesheet" href="./style.css">
     <link rel="stylesheet" href="./css/font.css">
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./css/login.css">
 </head>
-
-<body class="body-login">
-    <div class="logo-container-login"></div>
+<body>
+    <div class="logo-container"></div>
+    
+    <h1 class="login-title">Log in</h1>
+    <!-- Login Form Container -->
+    <div class="login-container">
+        <div class="login-card">
+            <form action="#" method="post">
+                <div class="input-group">
+                    <input type="email" placeholder="Email" class="input-field" id="email" name="email" autocomplete="email" required>
+                    <img src="./assets/icons/mail.svg" alt="Email Icon" class="input-icon email-icon">
+                </div>
+                
+                <div class="input-group">
+                    <input type="password" placeholder="Password" class="input-field" id="password" name="password" required>
+                    <img src="./assets/icons/lock.svg" alt="Password Icon" class="input-icon password-icon">
+                </div>
+                
+                <button type="submit" class="btn-primary">Log in</button>
+                <button type="button" class="btn-secondary">Guest Log in</button>
+            </form>
+        </div>
+        
+        <div class="signup-section">
+            <span class="signup-text">Not a Join user?</span>
+            <button class="btn-signup" onclick="window.location.href='./signup.html'">Sign up</button>
+        </div>
+        
+        <div class="legal-links">
+            <a href="#" class="legal-link">Privacy Policy</a>
+            <a href="#" class="legal-link">Legal Notice</a>
+        </div>
+    </div>
 </body>
 
 </html>
