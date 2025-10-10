@@ -25,6 +25,7 @@
   --color-priority-urgent: #ff3d00;
   --color-priority-medium: #ffa800;
   --color-priority-low: #7ae229;
+  --color-light-gray: #d1d1d1;
 }
 
 * {
