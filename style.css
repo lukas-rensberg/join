@@ -31,8 +31,17 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Open Sans";
+  font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+  scroll-padding-top: 0;
+}
+
+html:focus-within {
+  scroll-behavior: auto;
 }
 
 body {
@@ -40,45 +49,8 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  min-height: 100vh;
   width: 100vw;
   animation: backgroundFade 700ms ease-in-out forwards;
-}
-
-.logo-container {
-  width: 101px;
-  height: 122px;
-
-  -webkit-transition: all 700ms ease-in-out;
-  -moz-transition: all 700ms ease-in-out;
-  transition: all 700ms ease-in-out;
-
-  display: flex;
-  position: fixed;
-  animation: logoSlideIn 700ms ease-in-out forwards;
-}
-
-/* Keyframe Animations */
-@keyframes logoSlideIn {
-  0% {
-    background: url("./assets/icons/logo-white.svg") center center no-repeat;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(1.5);
-  }
-  100% {
-    top: 2%;
-    left: 2%;
-    transform: translate(0%, 0%) scale(0.5);
-    background: url("./assets/icons/logo-blue.svg") center center no-repeat;
-  }
-}
-
-@keyframes backgroundFade {
-  0% {
-    background-color: var(--main-color);
-  }
-  100% {
-    background-color: #ffffff;
-  }
+  padding: 0 var(--padding-side);
 }
