@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join - A project management tool</title>
+    <link rel="shortcut icon" href="./assets/icons/logo-blue.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./css/font.css">
+    <link rel="stylesheet" href="./signup.css">
+</head>
+
+<body class="body-signup">
+    <main>
+        <div class="logo-container-signup"></div>
+        <form action="" method="post">
+            <div class="back-arrow-signup"></div>
+
+            <h2>Sign up</h2>
+
+            <div class="seperator"></div>
+            <div class="input-field"><input type="text" name="username" placeholder="Name" required><span
+                    class="user-name"></span></div>
+
+            <div class="input-field"><input type="email" name="email" placeholder="Email" required><span
+                    class="user-email">
+            </div>
+
+            <div class="input-field"><input type="password" name="password" placeholder="Password" required><span
+                    class="user-password"></div>
+
+            <div class="input-field"><input type="password" name="confirm-password" placeholder="Confirm Password"
+                    required><span class="user-password">
+            </div>
+            <p class="pw-not-matching">Your passwords don't match. Please try again.</p>
+            <div class="checkbox-container">
+                <div class="checkbox">
+                    <input type="checkbox" name="confirm-check" id="confirm-check">
+                </div>
+
+                <p>I accept the <a href="legal_notice.html">Privacy Policy</a></p>
+            </div>
+            <button type="submit">Sign up</button>
+        </form>
+    </main>
+    <footer>
+        <a href="legal_notice.html">Privacy Policy</a>
+        <a href="legal_notice.html">Legal Notice</a>
+    </footer>
+</body>
+
+</html>

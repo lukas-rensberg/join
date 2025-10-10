@@ -1,0 +1,224 @@
+.logo-container {
+  width: 101px;
+  height: 122px;
+
+  -webkit-transition: all 700ms ease-in-out;
+  -moz-transition: all 700ms ease-in-out;
+  transition: all 700ms ease-in-out;
+
+  display: flex;
+  position: absolute;
+  top: 2%;
+  left: 2%;
+  transform: scale(0.5);
+  background: url("./assets/icons/logo-blue.svg") center center no-repeat;
+  animation: logoSlideIn 700ms ease-in-out forwards;
+}
+
+/* Keyframe Animations */
+@keyframes logoSlideIn {
+  0% {
+    background: url("../assets/icons/logo-white.svg") center center no-repeat;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1.5);
+  }
+  100% {
+    top: 2%;
+    left: 2%;
+    transform: translate(0%, 0%) scale(0.5);
+    background: url("../assets/icons/logo-blue.svg") center center no-repeat;
+  }
+}
+
+@keyframes backgroundFade {
+  0% {
+    background-color: var(--main-color);
+  }
+  100% {
+    background-color: #ffffff;
+  }
+}
+
+/* Login Form Styles */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  animation: loginFadeIn 500ms ease-in-out 700ms forwards;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  max-width: 500px;
+  /* margin: 120px auto 32px; */
+  /* flex: 1; */
+}
+
+.login-card {
+  background: white;
+  border-radius: var(--main-radius);
+  padding: 48px 32px;
+  box-shadow: 0 0 14px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 24px;
+}
+
+.login-title {
+  font-size: 48px;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: 32px;
+  text-align: center;
+  position: relative;
+  opacity: 0;
+  animation: loginFadeIn 500ms ease-in-out 700ms forwards;
+}
+
+.login-title::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90px;
+  height: 3px;
+  background: var(--main-color);
+  border-radius: 2px;
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 24px;
+}
+
+.input-field {
+  width: 100%;
+  padding: 16px 0;
+  border: none;
+  border-bottom: 1px solid #d1d1d1;
+  font-size: 20px;
+  color: #000;
+  background: transparent;
+  outline: none;
+}
+
+.input-field::placeholder {
+  color: #d1d1d1;
+  font-size: 20px;
+}
+
+.input-icon {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.5;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 16px;
+  background: var(--main-color);
+  color: white;
+  border: none;
+  border-radius: var(--button-radius);
+  font-size: 20px;
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-button-hover);
+}
+
+.btn-secondary {
+  width: 100%;
+  padding: 16px;
+  background: white;
+  color: #000;
+  border: 1px solid #d1d1d1;
+  border-radius: var(--button-radius);
+  font-size: 20px;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.btn-secondary:hover {
+  border-color: var(--main-color);
+}
+
+.signup-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.signup-text {
+  font-size: 20px;
+  color: #000;
+}
+
+.btn-signup {
+  padding: 10px 16px;
+  background: var(--main-color);
+  color: white;
+  border: none;
+  border-radius: var(--button-radius);
+  font-size: 20px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-signup:hover {
+  background: var(--color-primary-button-hover);
+}
+
+.legal-links {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  /* padding-bottom: 32px; */
+}
+
+.legal-link {
+  font-size: 16px;
+  color: #d1d1d1;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.legal-link:hover {
+  color: var(--main-color);
+}
+
+@keyframes loginFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.bottom-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100%;
+  position: fixed;
+  padding: 32px;
+}
