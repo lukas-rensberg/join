@@ -96,17 +96,17 @@ span {
 }
 
 .user-name {
-    background: url("./assets/login_signup_icons/person.svg") center center no-repeat;
+    background: url("../assets/login_signup_icons/person.svg") center center no-repeat;
     transform: scale(0.8);
 }
 
 .user-email {
-    background: url("./assets/login_signup_icons/mail.svg") center center no-repeat;
+    background: url("../assets/login_signup_icons/mail.svg") center center no-repeat;
     transform: scale(0.8);
 }
 
 .user-password {
-    background: url("./assets/login_signup_icons/lock.svg") center center no-repeat;
+    background: url("../assets/login_signup_icons/lock.svg") center center no-repeat;
     transform: scale(0.8);
 }
 
@@ -135,6 +135,7 @@ input[type="password"] {
     height: 12px;
     font-size: 10px;
     color: red;
+    visibility: hidden;
 }
 
 .checkbox-container {
@@ -150,6 +151,12 @@ input[type="password"] {
         color: var(--main-color);
         text-decoration: none;
     }
+}
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 button[type="submit"] {
