@@ -165,13 +165,12 @@ form {
 }
 
 .btn-primary {
-  width: 180px;
-  height: 48px;
+  width: 140px;
+  height: 40px;
   background: var(--main-color);
   color: white;
   border: none;
   border-radius: var(--button-radius);
-  font-size: 20px;
   cursor: pointer;
   margin: 16px;
   transition: background-color 0.2s ease;
@@ -182,13 +181,12 @@ form {
 }
 
 .btn-secondary {
-  width: 180px;
-  height: 48px;
+  width: 140px;
+  height: 40px;
   background: white;
   color: #000;
   border: 1px solid var(--color-light-gray);
   border-radius: var(--button-radius);
-  font-size: 20px;
   cursor: pointer;
   transition: border-color 0.2s ease;
 }
@@ -206,18 +204,12 @@ form {
   margin-bottom: 32px;
 }
 
-.signup-text {
-  font-size: 20px;
-  color: #000;
-}
-
 .btn-signup {
   padding: 10px 16px;
   background: var(--main-color);
   color: white;
   border: none;
   border-radius: var(--button-radius);
-  font-size: 20px;
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
@@ -233,7 +225,7 @@ form {
 }
 
 .legal-link {
-  font-size: 16px;
+  font-size: 14px;
   color: var(--color-light-gray);
   text-decoration: none;
   transition: color 0.2s ease;
