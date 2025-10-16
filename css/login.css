@@ -136,20 +136,14 @@ input[type="password"] {
   }
 }
 
-.user-name {
-  background: url("./assets/login_signup_icons/person.svg") center center
-    no-repeat;
-  transform: scale(0.8);
-}
-
 .user-email {
-  background: url("./assets/login_signup_icons/mail.svg") center center
+  background: url("../assets/login_signup_icons/mail.svg") center center
     no-repeat;
   transform: scale(0.8);
 }
 
 .user-password {
-  background: url("./assets/login_signup_icons/lock.svg") center center
+  background: url("../assets/login_signup_icons/lock.svg") center center
     no-repeat;
   transform: scale(0.8);
 }
