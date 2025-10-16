@@ -1,0 +1,54 @@
+# Node modules (in case of local tooling)
+node_modules/
+
+# VS Code settings and workspace folders
+.vscode/
+.cursor/
+
+# macOS system files
+.DS_Store
+
+# Windows system files
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# npm logs
+npm-debug.log*
+
+# Yarn logs
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables file
+.env
+.env.*
+
+# Build output (if any)
+dist/
+build/
+
+# Optional logs and temp files
+*.log
+*.tmp
+*.swp
+
+# SASS/SCSS cache
+.sass-cache
+
+# Parcel output
+.cache/
+
+# Coverage directory used by testing tools
+coverage/
+
+# IDEs and editors
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Other backup files
+*~
+*.bak
+*.orig
+
