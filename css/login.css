@@ -1,0 +1,251 @@
+html.loading,
+body.loading {
+  overflow: hidden;
+}
+
+.logo-wrapper {
+  position: fixed;
+  top: 2%;
+  left: 2%;
+  width: 101px;
+  height: 122px;
+  z-index: 1000;
+}
+
+.logo-container {
+  width: 100%;
+  height: 100%;
+  background: url("../assets/icons/logo-white.svg") center center no-repeat;
+  background-size: contain;
+  opacity: 1;
+  animation: logoSlideIn 1s ease-in-out forwards;
+}
+
+@keyframes logoSlideIn {
+  from {
+    transform: translate(calc(50vw - 50px), calc(50vh - 61px)) scale(1.5);
+  }
+  to {
+    transform: translate(0, 0) scale(0.5);
+    background: url("../assets/icons/logo-blue.svg") center center no-repeat;
+  }
+}
+
+@keyframes backgroundFade {
+  0% {
+    background-color: var(--main-color);
+  }
+  100% {
+    background-color: #ffffff;
+  }
+}
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  animation: loginFadeIn 500ms ease-in-out 700ms forwards;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  max-width: 500px;
+  margin: 50% auto 32px;
+}
+
+.login-card {
+  background: white;
+  border-radius: var(--main-radius);
+  padding: 48px 32px;
+  box-shadow: 0 0 14px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 24px;
+}
+
+.login-title {
+  font-size: 48px;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: 32px;
+  text-align: center;
+  position: relative;
+  opacity: 0;
+  animation: loginFadeIn 500ms ease-in-out 700ms forwards;
+}
+
+.login-title::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90px;
+  height: 3px;
+  background: var(--main-color);
+  border-radius: 2px;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 40px;
+  margin-top: 20px;
+  border: none;
+  position: relative;
+}
+
+span {
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  right: 12px;
+}
+
+.email-icon {
+  background: url("../assets/login_signup_icons/mail.svg") center center
+    no-repeat;
+  transform: scale(0.8);
+}
+
+.password-icon {
+  background: url("../assets/login_signup_icons/lock.svg") center center
+    no-repeat;
+  transform: scale(0.8);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-bottom: 1px solid var(--color-light-gray);
+  padding: 0 12px;
+
+  &:focus {
+    outline: none;
+    border-bottom: 1px solid var(--main-color);
+  }
+
+  &::placeholder {
+    color: var(--color-light-gray);
+  }
+}
+
+.user-email {
+  background: url("../assets/login_signup_icons/mail.svg") center center
+    no-repeat;
+  transform: scale(0.8);
+}
+
+.user-password {
+  background: url("../assets/login_signup_icons/lock.svg") center center
+    no-repeat;
+  transform: scale(0.8);
+}
+
+form {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  background-color: white;
+  border-radius: var(--main-radius);
+  position: relative;
+}
+
+.btn-primary {
+  width: 140px;
+  height: 40px;
+  background: var(--main-color);
+  color: white;
+  border: none;
+  border-radius: var(--button-radius);
+  cursor: pointer;
+  margin: 16px;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-button-hover);
+}
+
+.btn-secondary {
+  width: 140px;
+  height: 40px;
+  background: white;
+  color: #000;
+  border: 1px solid var(--color-light-gray);
+  border-radius: var(--button-radius);
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.btn-secondary:hover {
+  border-color: var(--main-color);
+}
+
+.signup-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.btn-signup {
+  padding: 10px 16px;
+  background: var(--main-color);
+  color: white;
+  border: none;
+  border-radius: var(--button-radius);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-signup:hover {
+  background: var(--color-primary-button-hover);
+}
+
+.legal-links {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+}
+
+.legal-link {
+  font-size: 14px;
+  color: var(--color-light-gray);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.legal-link:hover {
+  color: var(--main-color);
+}
+
+@keyframes loginFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.bottom-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100%;
+  position: fixed;
+  padding: 32px;
+}
