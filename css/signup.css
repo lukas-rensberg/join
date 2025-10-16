@@ -20,7 +20,7 @@ main {
     position: absolute;
     top: 2%;
     left: 2%;
-    background: url("./assets/icons/logo-white.svg") center center no-repeat;
+    background: url("../assets/icons/logo-white.svg") center center no-repeat;
     transform: scale(0.5);
 }
 
@@ -62,7 +62,7 @@ h2::after {
     position: absolute;
     left: 28px;
     top: 8px;
-    background: url("./assets/login_signup_icons/arrow-left-line.svg") center center no-repeat;
+    background: url("../assets/login_signup_icons/arrow-left-line.svg") center center no-repeat;
     transform: scale(0.75);
     cursor: pointer;
 
