@@ -2,7 +2,7 @@
   --main-color: #4589ff;
   --main-radius: 30px;
   --button-radius: 8px;
-  --padding-side: 16px;
+  --padding-side: 1rem;
   --color-default: #6e52ff;
   --color-variant1: #ff7a00;
   --color-variant2: #ff5eb3;
@@ -48,7 +48,7 @@ html:focus-within {
   scroll-behavior: auto;
 }
 
-body {
+/* body {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -57,4 +57,4 @@ body {
   width: 100vw;
   animation: backgroundFade 700ms ease-in-out forwards;
   padding: 0 var(--padding-side);
-}
+} */
