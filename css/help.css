@@ -1,0 +1,79 @@
+.body-help {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    width: 100vw;
+    max-width: 1920px;
+}
+
+main {
+    text-align: justify;
+    margin: 50px 0;
+    display: flex;
+    flex-direction: column;
+    padding: 0 var(--padding-side);
+}
+
+.headline {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    position: relative;
+    margin-bottom: 2.5rem;
+}
+
+
+.back-arrow-signup {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    position: absolute;
+    right: 0;
+    background: url("../assets/icons/arrow-left-line.svg") center center no-repeat;
+    transform: scale(0.75);
+    cursor: pointer;
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    &:active {
+        transform: scale(0.9);
+        border-radius: 50%;
+        background-color: #E3EEFF;
+    }
+}
+
+h1 {
+    font-size: 2rem;
+}
+
+h2 {
+    margin: 1rem 0;
+    font-size: 1.5rem;
+    color: var(--main-color);
+}
+
+h3 {
+    font-size: 1rem;
+    color: var(--color-primary-button-hover);
+}
+
+.info-list {
+    display: flex;
+    flex-direction: row;
+    column-gap: 1.25rem;
+    margin: 1rem 0;
+}
+
+.info-index {
+    margin: 0 !important;
+    color: var(--color-primary-button-hover) !important;
+}
+
+span {
+    color: var(--main-color);
+}

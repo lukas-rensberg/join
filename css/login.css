@@ -133,12 +133,12 @@ span {
 }
 
 .email-icon {
-  background: url("../assets/login_signup_icons/mail.svg") center center no-repeat;
+  background: url("../assets/icons/mail.svg") center center no-repeat;
   transform: scale(0.8);
 }
 
 .password-icon {
-  background: url("../assets/login_signup_icons/lock.svg") center center no-repeat;
+  background: url("../assets/icons/lock.svg") center center no-repeat;
   transform: scale(0.8);
 }
 
@@ -162,12 +162,12 @@ input[type="password"] {
 }
 
 .user-email {
-  background: url("../assets/login_signup_icons/mail.svg") center center no-repeat;
+  background: url("../assets/icons/mail.svg") center center no-repeat;
   transform: scale(0.8);
 }
 
 .user-password {
-  background: url("../assets/login_signup_icons/lock.svg") center center no-repeat;
+  background: url("../assets/icons/lock.svg") center center no-repeat;
   transform: scale(0.8);
 }
 
