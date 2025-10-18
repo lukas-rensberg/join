@@ -6,23 +6,50 @@ A project management tool
 ```
 join/
 ├── assets/
+│   └── fonts/
+│       └── OpenSans-Italic.ttf
+│       └── OpenSans.ttf
 │   └── icons/
-│       └── logo-white.svg
+│       └── arrow-left-line.svg
+|       └── checked.svg
+│       └── lock.svg
 |       └── logo-blue.svg
+│       └── logo-white.svg
+|       └── mail.svg
+|       └── menu-icons.svg
+|       └── unchecked.svg
+│       └── visibility_off.svg
+|       └── visibility.svg
 |   └── menu_icons/
-|       └── add task.svg
+|       └── add-task.svg
+|       └── awaiting-feedback.svg
 |       └── board.svg
 |       └── contacts.svg
-|       └── log in.svg
+|       └── done.svg
+|       └── frame.svg
+|       └── in-progress.svg
+|       └── login.svg
+|       └── on-board.svg
 |       └── summary.svg
+|       └── todo.svg
 |   └── priority_icons/
 |       └── low.svg
 |       └── medium.svg
 |       └── urgent.svg
 ├── css/
 │   └── font.css
+│   └── login.css
+│   └── overview.css
+│   └── signup.css
+│   └── style.css
+├── js/
+│   └── login.js
+│   └── script.js
+├── .gitignore
 ├── index.html
-├── style.css
+├── legal_notice.html
+├── overview.html
+├── signup.html
 ├── README.md
 └── LICENSE
 ```

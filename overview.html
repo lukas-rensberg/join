@@ -15,9 +15,18 @@
 <body class="body-overview">
     <header>
         <img src="./assets/icons/logo-white.svg" alt="Join Logo">
-        <div class="avatar">GM</div>
+        <input type="checkbox" id="slideInSideMenu">
+        <label class="avatar" for="slideInSideMenu">GM</label>
+        <div class="side-menu">
+            <nav>
+                <a href="">Help</a>
+                <a href="./legal_notice.html">Legal Notice</a>
+                <a href="./legal_notice.html">Privacy Policy</a>
+                <a href="./index.html">Log Out</a>
+            </nav>
+        </div>
     </header>
-    <main class="page-container">
+    <main>
         <div class="dashboard-container">
             <div class="card card-urgent-deadline">
                 <div class="urgent-section">
@@ -108,6 +117,7 @@
             <span>Contacts</span>
         </a>
     </footer>
+    <script src="./js/overview.js"></script>
 </body>
 
 </html>

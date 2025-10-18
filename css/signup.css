@@ -75,7 +75,7 @@ h2::after {
     position: absolute;
     left: 1.75rem;
     top: 0.5rem;
-    background: url("../assets/login_signup_icons/arrow-left-line.svg") center center no-repeat;
+    background: url("../assets/icons/arrow-left-line.svg") center center no-repeat;
     transform: scale(0.75);
     cursor: pointer;
 
@@ -114,17 +114,17 @@ p {
 }
 
 .user-name {
-    background: url("../assets/login_signup_icons/person.svg") center center no-repeat;
+    background: url("../assets/icons/person.svg") center center no-repeat;
     transform: scale(0.8);
 }
 
 .user-email {
-    background: url("../assets/login_signup_icons/mail.svg") center center no-repeat;
+    background: url("../assets/icons/mail.svg") center center no-repeat;
     transform: scale(0.8);
 }
 
 .user-password {
-    background: url("../assets/login_signup_icons/lock.svg") center center no-repeat;
+    background: url("../assets/icons/lock.svg") center center no-repeat;
     transform: scale(0.8);
 }
 
