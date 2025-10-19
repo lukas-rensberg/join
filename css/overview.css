@@ -16,6 +16,8 @@ html {
 
 main {
   display: flex;
+  align-items: center;
+  flex-direction: column;
   /* justify-content: center; */
   /* width: 100%; */
   /* max-width: 500px; */
@@ -25,6 +27,7 @@ main {
 }
 
 .dashboard-container {
+  z-index: 20;
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 12px;
@@ -32,6 +35,21 @@ main {
   align-items: center;
   /* max-width: calc(25rem + (2*var(--padding-side))); */
   padding: var(--padding-side);
+  opacity: 0;
+  transform: translateY(100%);
+  animation: slideBottomToTop 600ms 1200ms ease-in forwards;
+}
+
+@keyframes slideBottomToTop {
+  /* 0% {
+    opacity: 0;
+    transform: translateY(100%);
+  } */
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .card {
@@ -158,7 +176,7 @@ main {
 }
 
 .number {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 700;
   color: black;
   line-height: 1;
@@ -190,4 +208,46 @@ main {
   color: #ffffff;
   font-weight: 400;
   /* opacity: 0.9; */
+}
+
+.greeting-container {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: auto;
+  height: auto;
+  animation: slideOutToTop 500ms ease-in 1000ms forwards;
+  z-index: 10;
+  top: 50%;
+  
+
+}
+
+@keyframes slideOutToTop {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-4rem);
+    display: none;
+  }
+}
+
+h1 {
+  font-size: 2.25rem;
+  letter-spacing: 0.1rem;
+}
+
+.h1-colorized {
+  color: var(--color-light-blue);
+} 
+
+p {
+  font-size: 1.5rem;
+  margin-bottom: 0.25rem;
 }
