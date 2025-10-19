@@ -59,9 +59,19 @@ join/
 
 ### File Overview
 - `index.html`: main entry point
-- `style.css`: Logo container animation (center → left upper corner), body background transition
+- `help.html`: Help and explanation on how to use “Join”
+- `legal_notice.html`: Includes legal notice and privacy policy
+- `overview.html`: Sends the user or guest to a board with an overview of tasks
+- `signup.html`: Page for registering the “Join” application 
 - `assets/icons/logo-white.svg`: Logo SVG (white paths)
 - `assets/icons/logo-blue.svg`: Logo SVG (blue paths, favicon)
 - `menu_icons/`: icons for the app's navbar
 - `priority_icons/`: icons for priority markering at the kanban board
-- `css/font.css`: Defination of font-families
+- `css/font.css`: Definition of font-families
+- `css/header-footer.css`: Contains the styles for the header (including submenu window) and the footer
+- `css/help.css`: Contains styles for help.html
+- `css/login.css`: Logo container animation (center → left upper corner), body login background transition
+- `css/overview.css`: Contains styles for overview.html
+- `css/signup.css`: Contains styles for signup.html
+- `css/style.css`: Contains general styles
+
