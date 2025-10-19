@@ -38,6 +38,8 @@ join/
 |       └── urgent.svg
 ├── css/
 │   └── font.css
+│   └── header-footer.css
+│   └── help.css
 │   └── login.css
 │   └── overview.css
 │   └── signup.css
@@ -46,6 +48,7 @@ join/
 │   └── login.js
 │   └── script.js
 ├── .gitignore
+├── help.html
 ├── index.html
 ├── legal_notice.html
 ├── overview.html
