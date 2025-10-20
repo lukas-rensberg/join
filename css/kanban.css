@@ -1,0 +1,313 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+}
+
+html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    width: 100vw;
+    background-color: #f6f7f8; 
+}
+
+.page-container {
+    width: 100%;
+    max-width: 500px;
+    background-color: #ffffff;
+    position: relative;
+    padding-bottom: 90px;
+    padding-top: 80px;
+}
+
+.app-header {
+    width: 100%;
+    max-width: 500px; 
+    height: 60px;
+    background-color: var(--main-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    color: #ffffff;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.logo img {
+    height: 40px;
+    width: auto;
+}
+
+.avatar {
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    background-color: #ffffff;
+    color: var(--main-color);
+    border-radius: 50%;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+}
+
+.main-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    height: 60px;
+    padding: 0 10px;
+    background-color: #ffffff;
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 500px;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: var(--color-menu-item);
+    padding: 0;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.nav-item.active {
+    color: var(--main-color);
+}
+.nav-item.active img {
+    filter: brightness(0) saturate(100%) invert(43%) sepia(87%) saturate(3062%) hue-rotate(213deg) brightness(101%) contrast(97%);
+}
+
+
+.nav-item span {
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1;
+}
+.nav-item img {
+    width: 20px;
+    height: 20px;
+}
+
+
+.add-task-form-container {
+    padding: 0 var(--padding-side); 
+    padding-bottom: 20px;
+    width: 100%;
+    
+    overflow-y: auto; 
+   
+    min-height: calc(100vh - 140px); 
+}
+
+.form-group {
+    margin-bottom: 25px;
+    width: 100%;
+}
+
+.form-group label {
+    display: block;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--color-menu-text);
+}
+
+
+.form-group input[type="text"],
+.form-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--color-light-gray);
+    border-radius: var(--button-radius);
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+    background-color: #ffffff;
+}
+
+.form-group textarea {
+    resize: none;
+    height: 100px;
+    overflow-y: auto;
+}
+
+::placeholder {
+    color: #a0a0a0;
+    opacity: 1;
+    font-weight: 400;
+}
+
+
+.input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-with-icon input {
+    padding-right: 40px; 
+}
+
+.input-with-icon .icon {
+    position: absolute;
+    right: 15px;
+    color: var(--main-color);
+    pointer-events: none;
+    font-size: 1.3rem; 
+}
+
+
+.priority-selection {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.priority-btn {
+    flex-grow: 1;
+    padding: 12px 10px;
+    border: 1px solid var(--color-light-gray);
+    border-radius: var(--button-radius);
+    background-color: #ffffff;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    color: var(--color-menu-text);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.priority-btn .priority-icon {
+    font-size: 0.8rem;
+}
+
+
+.priority-btn.urgent.active {
+    background-color: var(--color-priority-urgent); 
+    color: white;
+    box-shadow: 0 4px 8px rgba(255, 61, 0, 0.3);
+    border-color: var(--color-priority-urgent);
+}
+.priority-btn.medium.active {
+    background-color: var(--color-priority-medium);
+    color: white;
+    box-shadow: 0 4px 8px rgba(255, 168, 0, 0.3);
+    border-color: var(--color-priority-medium);
+}
+.priority-btn.low.active {
+    background-color: var(--color-priority-low);
+    color: white;
+    box-shadow: 0 4px 8px rgba(122, 226, 41, 0.3);
+    border-color: var(--color-priority-low);
+}
+
+.select-wrapper {
+    position: relative; 
+    border-bottom: 1px solid var(--color-light-gray); 
+}
+
+.form-group select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 100%;
+    padding: 12px 35px 12px 0; 
+    border: none;
+    border-radius: 0;
+    background-color: transparent;
+    font-size: 1rem;
+    color: var(--color-menu-text);
+    cursor: pointer;
+    outline: none;
+}
+
+.select-wrapper .select-arrow {
+    position: absolute;
+    right: 15px; 
+    top: 50%;
+    transform: translateY(-50%); 
+    pointer-events: none;
+    width: 14px; 
+    height: 14px; 
+}
+
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 40px;
+    width: 100%;
+    padding: 0 var(--padding-side);
+}
+
+.button-group button {
+    flex-grow: 1;
+    max-width: 180px;
+    padding: 12px 25px;
+    border-radius: var(--button-radius);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s, box-shadow 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+
+.btn-clear {
+    background-color: #ffffff;
+    color: var(--color-menu-text);
+    border: 1px solid var(--color-menu-text);
+}
+
+.btn-clear:hover {
+    background-color: var(--color-menu-hover); 
+    border-color: var(--main-color);
+    color: var(--main-color);
+}
+
+
+.btn-create {
+    background-color: var(--main-color); 
+    color: #ffffff;
+    border: none;
+    box-shadow: 0 4px 8px rgba(69, 137, 255, 0.3);
+}
+
+.btn-create:hover {
+    background-color: var(--color-primary-button-hover); 
+}
+
+.btn-create .check-icon {
+    font-size: 1.2rem;
+}
