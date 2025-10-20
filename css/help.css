@@ -14,14 +14,9 @@ html {
 }
 
 main {
-    display: flex;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-    margin-top: 4.5rem;
-    /* max-width: calc(25rem + (2*var(--padding-side))); */
-    padding: 0 var(--padding-side);
-    flex: 1;
+    text-align: justify;
+    width: 80%;
+    margin: 50px 0;
 }
 
 .headline {

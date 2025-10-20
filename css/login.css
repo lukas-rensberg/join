@@ -8,7 +8,6 @@ html {
     justify-content: center;
 }
 
-
 .body-login {
   display: flex;
   flex-direction: column;
@@ -20,7 +19,6 @@ html {
   padding: 0 var(--padding-side);
   overflow: hidden;
   animation: backgroundFade 700ms ease-in-out forwards;
-
 }
 
 .logo-wrapper {
@@ -74,8 +72,6 @@ html {
   height: 100%;
   flex: 1;
   margin-top: 4.5rem;
-  /* max-width: 31.25rem; */
-  /* margin: 50% auto 2.00rem; */
 }
 
 .login-card {
