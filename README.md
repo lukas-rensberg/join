@@ -40,6 +40,7 @@ join/
 │   └── font.css
 │   └── header-footer.css
 │   └── help.css
+│   └── legal_notice.css
 │   └── login.css
 │   └── overview.css
 │   └── signup.css
@@ -70,6 +71,7 @@ join/
 - `css/font.css`: Definition of font-families
 - `css/header-footer.css`: Contains the styles for the header (including submenu window) and the footer
 - `css/help.css`: Contains styles for help.html
+- `css/legal_notice.css`: Contains styles for legal_notice.html
 - `css/login.css`: Logo container animation (center → left upper corner), body login background transition
 - `css/overview.css`: Contains styles for overview.html
 - `css/signup.css`: Contains styles for signup.html
