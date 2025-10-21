@@ -259,3 +259,9 @@
     color: #4589ff;
     text-decoration: none;
 }
+
+@media (max-width: 350px) {
+    .contacts-container {
+        padding: 1rem;
+    }
+}
