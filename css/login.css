@@ -3,11 +3,6 @@ body.loading {
   overflow: hidden;
 }
 
-html {
-    display: flex;
-    justify-content: center;
-}
-
 .body-login {
   display: flex;
   flex-direction: column;
