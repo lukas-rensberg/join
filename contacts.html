@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="./assets/icons/logo-blue.svg" type="image/svg+xml">
+    <title>Join | Contacts</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./css/font.css">
+    <link rel="stylesheet" href="./css/header-footer.css">
+    <link rel="stylesheet" href="./css/contacts.css">
+</head>
+
+<body class="body-contacts">
+    <header>
+        <img src="./assets/icons/logo-white.svg" alt="Join Logo">
+        <input type="checkbox" id="slideInSideMenu">
+        <label class="avatar" for="slideInSideMenu">SM</label>
+        <div class="side-menu">
+            <nav>
+                <a href="help.html">Help</a>
+                <a href="legal_notice.html">Legal Notice</a>
+                <a href="legal_notice.html">Privacy Policy</a>
+                <a href="index.html">Log Out</a>
+            </nav>
+        </div>
+    </header>
+    <main class="contacts-main">
+        <div class="contacts-container">
+            <!-- TODO: Add the contacts data from the firebase database -->
+            <!-- A Section -->
+            <div class="contact-section">
+                <h2 class="section-header">A</h2>
+                <div class="section-separator"></div>
+                <div class="contact-item" onclick="showContactDetail('Anton Mayer', 'anton.mayer@example.com', '+49 1111 111 11 1', '#ff7a00', 'AM')">
+                    <div class="contact-avatar" style="background-color: #ff7a00;">AM</div>
+                    <div class="contact-info">
+                        <div class="contact-name">Anton Mayer</div>
+                        <div class="contact-email">anton.mayer@example.com</div>
+                    </div>
+                </div>
+                <div class="contact-item" onclick="showContactDetail('Anja Schulz', 'anja.schulz@example.com', '+49 1111 111 11 2', '#ff5eb3', 'AS')">
+                    <div class="contact-avatar" style="background-color: #ff5eb3;">AS</div>
+                    <div class="contact-info">
+                        <div class="contact-name">Anja Schulz</div>
+                        <div class="contact-email">anja.schulz@example.com</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- B Section -->
+            <div class="contact-section">
+                <h2 class="section-header">B</h2>
+                <div class="section-separator"></div>
+                <div class="contact-item" onclick="showContactDetail('Benedikt Ziegler', 'benedikt.ziegler@example.com', '+49 1111 111 11 3', '#4589ff', 'BZ')">
+                    <div class="contact-avatar" style="background-color: #4589ff;">BZ</div>
+                    <div class="contact-info">
+                        <div class="contact-name">Benedikt Ziegler</div>
+                        <div class="contact-email">benedikt.ziegler@example.com</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- D Section -->
+            <div class="contact-section">
+                <h2 class="section-header">D</h2>
+                <div class="section-separator"></div>
+                <div class="contact-item" onclick="showContactDetail('David Eisenberg', 'david.eisenberg@example.com', '+49 1111 111 11 4', '#ff5eb3', 'DE')">
+                    <div class="contact-avatar" style="background-color: #ff5eb3;">DE</div>
+                    <div class="contact-info">
+                        <div class="contact-name">David Eisenberg</div>
+                        <div class="contact-email">david.eisenberg@example.com</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- E Section -->
+            <div class="contact-section">
+                <h2 class="section-header">E</h2>
+                <div class="section-separator"></div>
+                <div class="contact-item" onclick="showContactDetail('Eva Fischer', 'eva.fischer@example.com', '+49 1111 111 11 5', '#ffc701', 'EF')">
+                    <div class="contact-avatar" style="background-color: #ffc701;">EF</div>
+                    <div class="contact-info">
+                        <div class="contact-name">Eva Fischer</div>
+                        <div class="contact-email">eva.fischer@example.com</div>
+                    </div>
+                </div>
+                <div class="contact-item" onclick="showContactDetail('Emmanuel Mauer', 'emmanuel.mauer@example.com', '+49 1111 111 11 6', '#1fd7c1', 'EM')">
+                    <div class="contact-avatar" style="background-color: #1fd7c1;">EM</div>
+                    <div class="contact-info">
+                        <div class="contact-name">Emmanuel Mauer</div>
+                        <div class="contact-email">emmanuel.mauer@example.com</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Contact Detail View -->
+    <div class="contact-detail-view" id="contactDetailView">
+        <div class="contact-detail-header">
+            <h1>Contact Information</h1>
+            <div class="detail-header-actions">
+                <button class="back-button" onclick="hideContactDetail()">
+                    <img src="./assets/icons/arrow-left-line.svg" alt="Back">
+                </button>
+            </div>
+        </div>
+        
+        <div class="contact-detail-content">
+            <div class="contact-detail-container">
+                <div class="contact-detail-avatar" id="detailAvatar"></div>
+                <div class="contact-detail-name" id="detailName"></div>
+            </div>
+            
+            <div class="contact-info-section">
+                <div class="info-label">Email</div>
+                <div class="info-value email-value" id="detailEmail"></div>
+            </div>
+            
+            <div class="contact-info-section">
+                <div class="info-label">Phone</div>
+                <div class="info-value" id="detailPhone"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <button class="fab" id="fabButton" onclick="handleFabClick()">
+        <img src="./assets/icons/person_add.svg" alt="Add Contact" id="fabIcon">
+    </button>
+    
+    <!-- FAB Menu Dropdown -->
+    <div class="fab-menu" id="fabMenu">
+        <nav>
+            <a href="#" onclick="editContact()">Edit</a>
+            <a href="#" onclick="deleteContact()">Delete</a>
+        </nav>
+    </div>
+    <footer>
+        <a class="nav-item" href="overview.html">
+            <img src="./assets/menu_icons/summary.svg" alt="Summary Icon">
+            <span>Summary</span>
+        </a>
+        <a class="nav-item" href="add-task.html">
+            <img src="./assets/menu_icons/add-task.svg" alt="Add Task Icon">
+            <span>Add Task</span>
+        </a>
+        <a class="nav-item" href="board.html">
+            <img src="./assets/menu_icons/board.svg" alt="Board Icon">
+            <span>Board</span>
+        </a>
+        <a class="nav-item active" href="contacts.html">
+            <img src="./assets/menu_icons/contacts.svg" alt="Contacts Icon">
+            <span>Contacts</span>
+        </a>
+    </footer>
+
+    <script>
+        /**
+         * Handles FAB click - either adds contact or shows menu depending on view
+         * @author Lukas Rensberg
+         */
+        function handleFabClick() {
+            const detailView = document.getElementById('contactDetailView');
+            if (detailView.classList.contains('active')) {
+                // In detail view - toggle menu
+                toggleFabMenu();
+            } else {
+                // In contact list - add contact
+                addContact();
+            }
+        }
+
+        /**
+         * Handles adding a new contact (not implemented yet and will be done later in contacts.js)
+         * @author Lukas Rensberg
+         */
+        function addContact() {
+            // TODO: Implement add contact functionality
+            alert('Add Contact functionality will be implemented here');
+        }
+
+        /**
+         * Toggles the FAB menu visibility
+         * @author Lukas Rensberg
+         */
+        function toggleFabMenu() {
+            const fabMenu = document.getElementById('fabMenu');
+            fabMenu.classList.toggle('active');
+        }
+
+        /**
+         * Closes the FAB menu
+         * @author Lukas Rensberg
+         */
+        function closeFabMenu() {
+            const fabMenu = document.getElementById('fabMenu');
+            fabMenu.classList.remove('active');
+        }
+
+        // Close FAB menu when clicking outside of it
+        document.addEventListener('click', function(event) {
+            const fabButton = document.getElementById('fabButton');
+            const fabMenu = document.getElementById('fabMenu');
+            
+            // Check if click is outside both FAB button and menu
+            if (!fabButton.contains(event.target) && !fabMenu.contains(event.target)) {
+                closeFabMenu();
+            }
+        });
+
+        /**
+         * Shows the contact detail view with the provided contact information
+         * @author Lukas Rensberg
+         * @param {string} name - Contact's full name
+         * @param {string} email - Contact's email address
+         * @param {string} phone - Contact's phone number
+         * @param {string} avatarColor - Background color for the avatar
+         * @param {string} initials - Contact's initials
+         */
+        function showContactDetail(name, email, phone, avatarColor, initials) {
+            // Hide the contact list
+            document.querySelector('.contacts-container').style.display = 'none';
+            
+            // Populate the detail view
+            document.getElementById('detailName').textContent = name;
+            document.getElementById('detailEmail').textContent = email;
+            document.getElementById('detailPhone').textContent = phone;
+            
+            // Set up the avatar
+            const avatar = document.getElementById('detailAvatar');
+            avatar.textContent = initials;
+            avatar.style.backgroundColor = avatarColor;
+            
+            // Change FAB icon to three dots
+            const fabIcon = document.getElementById('fabIcon');
+            fabIcon.src = './assets/icons/more-vertical.svg';
+            fabIcon.alt = 'Menu';
+            
+            // Show the detail view
+            document.getElementById('contactDetailView').classList.add('active');
+        }
+
+        /**
+         * Hides the contact detail view and shows the contact list
+         * @author Lukas Rensberg
+         */
+        function hideContactDetail() {
+            // Hide the detail view
+            document.getElementById('contactDetailView').classList.remove('active');
+            
+            // Change FAB icon back to add contact
+            const fabIcon = document.getElementById('fabIcon');
+            fabIcon.src = './assets/icons/person_add.svg';
+            fabIcon.alt = 'Add Contact';
+            
+            // Hide FAB menu if open
+            document.getElementById('fabMenu').classList.remove('active');
+            
+            // Show the contact list
+            document.querySelector('.contacts-container').style.display = 'block';
+        }
+
+        /**
+         * Handles editing a contact (placeholder for future implementation)
+         * @author Lukas Rensberg
+         */
+        function editContact() {
+            // TODO: Implement edit contact functionality
+            alert('Edit Contact functionality will be implemented here');
+        }
+
+        /**
+         * Handles deleting a contact (placeholder for future implementation)
+         * @author Lukas Rensberg
+         */
+        function deleteContact() {
+            // TODO: Implement delete contact functionality
+            alert('Delete Contact functionality will be implemented here');
+        }
+    </script>
+</body>
+
+</html>

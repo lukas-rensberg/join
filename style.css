@@ -1,8 +1,10 @@
 :root {
   --main-color: #4589ff;
+  --main-color-secondary: #1a4796;
   --main-radius: 30px;
   --button-radius: 8px;
-  --padding-side: 16px;
+  --border-rad-20: 20px;
+  --padding-side: 1rem;
   --color-default: #6e52ff;
   --color-variant1: #ff7a00;
   --color-variant2: #ff5eb3;
@@ -28,6 +30,7 @@
   --color-priority-low: #7ae229;
   --color-light-gray: #d1d1d1;
   --color-menu-text: #42526E;
+  --color-light-blue: #005DFF;
 }
 
 * {
@@ -46,15 +49,4 @@ html {
 
 html:focus-within {
   scroll-behavior: auto;
-}
-
-body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  width: 100vw;
-  animation: backgroundFade 700ms ease-in-out forwards;
-  padding: 0 var(--padding-side);
 }
