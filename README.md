@@ -17,6 +17,8 @@ join/
 │       └── logo-white.svg
 |       └── mail.svg
 |       └── menu-icons.svg
+|       └── person_add.svg
+|       └── person.svg
 |       └── unchecked.svg
 │       └── visibility_off.svg
 |       └── visibility.svg
@@ -37,6 +39,7 @@ join/
 |       └── medium.svg
 |       └── urgent.svg
 ├── css/
+│   └── contacts.css
 │   └── font.css
 │   └── header-footer.css
 │   └── help.css
@@ -47,15 +50,16 @@ join/
 │   └── style.css
 ├── js/
 │   └── login.js
-│   └── script.js
 ├── .gitignore
+├── contacts.html
 ├── help.html
 ├── index.html
 ├── legal_notice.html
+├── LICENSE
 ├── overview.html
-├── signup.html
 ├── README.md
-└── LICENSE
+├── script.js
+└── signup.html
 ```
 
 ### File Overview
