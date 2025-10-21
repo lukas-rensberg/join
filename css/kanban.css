@@ -290,11 +290,6 @@ body {
     border: 1px solid var(--color-menu-text);
 }
 
-.btn-clear:hover {
-    background-color: var(--color-menu-hover); 
-    border-color: var(--main-color);
-    color: var(--main-color);
-}
 
 
 .btn-create {
@@ -304,9 +299,7 @@ body {
     box-shadow: 0 4px 8px rgba(69, 137, 255, 0.3);
 }
 
-.btn-create:hover {
-    background-color: var(--color-primary-button-hover); 
-}
+
 
 .btn-create .check-icon {
     font-size: 1.2rem;
