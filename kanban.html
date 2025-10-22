@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aufgabe hinzufügen</title>
+    <link rel="stylesheet" href="./css/kanban.css">
+    <link rel="stylesheet" href="style.css">
+    
+    </head>
+<body>
+
+    <div class="page-container">
+        
+        <header class="app-header">
+            <div class="logo">
+                <img src="./assets/icons/logo-white.svg" alt="Firmenlogo">
+            </div>
+            <div class="avatar">SM</div>
+        </header>
+
+        <main class="add-task-form-container">
+
+            <div class="form-group">
+                <input type="text" id="title" placeholder="Enter a title">
+            </div>
+
+            <div class="form-group">
+    <label>Assigned to (optional)</label>
+    <div class="select-wrapper">
+        <select>
+            <option selected disabled>Select contacts to assign</option>
+        </select>
+        <img src="./assets/menu_icons/arrow-drop-down.svg" class="select-arrow" alt="Dropdown Pfeil"> 
+    </div>
+</div>
+
+<div class="form-group">
+    <label>Category</label>
+    <div class="select-wrapper">
+        <select>
+            <option selected disabled>Select task category</option>
+        </select>
+        <img src="./assets/menu_icons/arrow-drop-down.svg" class="select-arrow" alt="Dropdown Pfeil"> 
+    </div>
+</div>
+
+            <div class="form-group">
+                <label>Priority</label>
+                <div class="priority-selection">
+                    <button class="priority-btn urgent">Urgent <span class="priority-icon"><img src="./assets/menu_icons/Prio-baja.svg" ></span></button>
+                    <button class="priority-btn medium active">Medium <span class="priority-icon"><img src="./assets/menu_icons/Prio-Media.svg" ></button>
+                    <button class="priority-btn low">Low <span class="priority-icon"><img src="./assets/menu_icons/Capa2.svg" ></span></button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Assigned to (optional)</label>
+                <div class="select-wrapper">
+                    <select>
+                        <option selected disabled>Select contacts to assign <img src="./assets/menu_icons/arrow-drop-down.svg" ></option>
+                    </select>
+                    <span class="arrow"></span> 
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Category</label>
+                <div class="select-wrapper">
+                    <select>
+                        <option selected disabled>Select task category <img src="./assets/menu_icons/arrow-drop-down.svg" ></option>
+                    </select>
+                    <span class="arrow"></span> 
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Subtasks (optional)</label>
+                </div>
+
+            <div class="button-group">
+                <button class="btn-clear">Clear <span><img src="./assets/menu_icons/iconoir_cancel.svg" alt=""></span></button>
+                <button class="btn-create">Create Task <span class="check-icon"><img src="./assets/menu_icons/check.svg" alt=""></span></button>
+            </div>
+
+        </main>
+
+        
+    <nav class="main-nav">
+        <a class="nav-item active" href="index.html">
+            <img src="./assets/menu_icons/summary.svg" alt="Summary Icon">
+            <span>Summary</span>
+        </a>
+        <a class="nav-item" href="add-task.html">
+            <img src="./assets/menu_icons/add-task.svg" alt="Add Task Icon">
+            <span>Add Task</span>
+        </a>
+        <a class="nav-item" href="board.html">
+            <img src="./assets/menu_icons/board.svg" alt="Board Icon">
+            <span>Board</span>
+        </a>
+        <a class="nav-item" href="contacts.html">
+            <img src="./assets/menu_icons/contacts.svg" alt="Contacts Icon">
+            <span>Contacts</span>
+        </a>
+    </nav>

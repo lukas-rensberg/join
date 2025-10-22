@@ -1,8 +1,3 @@
-html {
-    display: flex;
-    justify-content: center;
-}
-
 .body-signup {
     background-color: var(--main-color);
     position: relative;

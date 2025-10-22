@@ -30,7 +30,7 @@
   --color-priority-low: #7ae229;
   --color-light-gray: #d1d1d1;
   --color-menu-text: #42526E;
-  --color-light-blue: #29ABE2;
+  --color-light-blue: #005DFF;
 }
 
 * {
@@ -50,14 +50,3 @@ html {
 html:focus-within {
   scroll-behavior: auto;
 }
-
-/* body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  width: 100vw;
-  animation: backgroundFade 700ms ease-in-out forwards;
-  padding: 0 var(--padding-side);
-} */
