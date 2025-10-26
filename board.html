@@ -57,7 +57,16 @@
                         <div class="task-card">
                             <div class="card-headline">
                                 <div class="card-label card-bg-user-story">User Story</div>
-                                <div class="card-swap-icon"></div>
+                                <div class="card-swap-icon" onclick="swapMenuSlideIn()"></div>
+                                <div class="card-swap-menu" id="card-swap-menu">
+                                    <h5>Move to</h5>
+                                    <div class="move-to-do">
+                                        <div class="move-to-do-arrow"></div>To do
+                                    </div>
+                                    <div class="move-to-review">
+                                        <div class="move-to-review-arrow"></div>Review
+                                    </div>
+                                </div>
                             </div>
                             <div class="card-task-title">Kochwelt Page & Recipe Recommender</div>
                             <div class="card-task-text">Build start page with recipe recommandation...</div>
@@ -121,19 +130,10 @@
                 <div class="task-card-container">
                     <div class="task-card-wrapper">
                         <div class="no-tasks, d-none">No tasks to do</div>
-                        <div class="task-card" style="position: relative;">
+                        <div class="task-card">
                             <div class="card-headline">
                                 <div class="card-label card-bg-user-story">User Story</div>
                                 <div class="card-swap-icon"></div>
-                                <div class="card-swap-menu">
-                                    <h5>Move to</h5>
-                                    <div class="move-to-do">
-                                        <div class="move-to-do-arrow"></div>To do
-                                    </div>
-                                    <div class="move-to-review">
-                                        <div class="move-to-review-arrow"></div>Review
-                                    </div>
-                                </div>
                             </div>
                             <div class="card-task-title">Kochwelt Page & Recipe Recommender</div>
                             <div class="card-task-text">Build start page with recipe recommandation...</div>
@@ -275,6 +275,35 @@
             <span class="nav-text">Contacts</span>
         </a>
     </footer>
+
+    <script>
+
+        // Menü einfahren (slide-in)
+        function swapMenuSlideIn() {
+            const swapMenu = document.getElementById("card-swap-menu");
+            swapMenu.classList.remove("slide-out-swap-menu");
+            swapMenu.classList.add("slide-in-swap-menu");
+
+            // Listener für Klick außerhalb einfügen
+            document.addEventListener("mousedown", handleOutsideClick);
+
+            function handleOutsideClick(event) {
+                if (!swapMenu.contains(event.target)) {
+                    slideOutMenu();
+                    document.removeEventListener("mousedown", handleOutsideClick);
+                }
+            }
+        }
+
+        // Menü ausfahren (slide-out)
+        function slideOutMenu() {
+            const swapMenu = document.getElementById("card-swap-menu");
+            swapMenu.classList.remove("slide-in-swap-menu");
+            swapMenu.classList.add("slide-out-swap-menu");
+        }
+
+
+    </script>
 </body>
 
 </html>

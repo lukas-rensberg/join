@@ -124,6 +124,7 @@ input[type="name"] {
 }
 
 .task-card-container {
+
     display: flex;
     flex-direction: row;
     gap: 1rem;
@@ -171,6 +172,7 @@ input[type="name"] {
 }
 
 .task-card {
+    position: relative;
     width: 14rem;
     height: 14rem;
     display: flex;
@@ -204,15 +206,48 @@ input[type="name"] {
 }
 
 .card-swap-menu {
+    z-index: 5;
     position: absolute;
+    opacity: 0;
     top: 1rem;
     left: calc(224px - 16px - 28px);
     width: 7rem;
+    transform: translateX(50%);
     height: 7rem;
     /* padding: 1rem; */
     background-color: var(--main-color);
     border-radius: 0 var(--border-rad-20) var(--border-rad-20) var(--border-rad-20);
 }
+
+.slide-in-swap-menu {
+    animation: slideInSwapMenu 300ms ease-in-out forwards;
+}
+
+.slide-out-swap-menu {
+    animation: slideOutSwapMenu 300ms ease-in-out forwards;
+}
+
+@keyframes slideInSwapMenu {
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOutSwapMenu {
+    0% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateX(50%);
+    }
+}
+
+
+
 
 h5 {
     color: var(--color-primary-button-click);
