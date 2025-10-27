@@ -43,7 +43,7 @@ dialog {
     border: none;
     border-radius: var(--main-radius);
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
-    padding: 1.5rem 1rem;
+    padding: 2rem 1.5rem;
 }
 
 .d-card-header {
