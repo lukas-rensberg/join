@@ -13,6 +13,14 @@
 </head>
 
 <body class="body-board">
+    <div class="blur-bg"></div>
+    <dialog open="true">
+        <div class="d-card-header">
+            <div class="card-label card-bg-user-story">User Story</div>
+            <div class="close-dialog"></div>
+        </div>
+
+    </dialog>
     <header>
         <img src="./assets/icons/logo-white.svg" alt="Join Logo">
         <input type="checkbox" id="slideInSideMenu">
@@ -54,6 +62,7 @@
                 </div>
                 <div class="task-card-container">
                     <div class="task-card-wrapper">
+                        <div class="no-tasks, d-none">No tasks in progress</div>
                         <div class="task-card">
                             <div class="card-headline">
                                 <div class="card-label card-bg-user-story">User Story</div>
@@ -117,6 +126,7 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="empty-card"></div>
                     </div>
                 </div>
 
@@ -129,7 +139,7 @@
                 </div>
                 <div class="task-card-container">
                     <div class="task-card-wrapper">
-                        <div class="no-tasks, d-none">No tasks to do</div>
+                        <div class="no-tasks, d-none">No tasks for feedback</div>
                         <div class="task-card">
                             <div class="card-headline">
                                 <div class="card-label card-bg-user-story">User Story</div>
@@ -190,10 +200,9 @@
 
                 <div class="task-title">
                     <div class="task-headline">Done</div>
-                    <div class="add-task-icon"></div>
                 </div>
                 <div class="task-card-container">
-                    <div class="no-tasks, d-none">No tasks to do</div>
+                    <div class="no-tasks, d-none">No tasks done</div>
                     <div class="task-card-wrapper">
                         <div class="task-card">
                             <div class="card-headline">

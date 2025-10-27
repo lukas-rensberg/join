@@ -17,15 +17,52 @@ main {
     flex: 1;
 }
 
-/* .section-find-task {
+.blur-bg {
+    z-index: 1050;
     position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(1px);
+    overflow: hidden;
+}
+
+dialog {
+    z-index: 1100;
+    position: fixed;
+    width: 90%;
+    max-width: calc(25rem + (2*var(--padding-side)));
+    height: calc(100vh - 152px);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: none;
+    border-radius: var(--main-radius);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem 1rem;
+}
+
+.d-card-header {
     display: flex;
-    height: 100px;
-    width: 100%;
-    justify-content: center;
-    flex-direction: column;
     align-items: center;
-} */
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+.close-dialog {
+    height: 24px;
+    width: 24px;
+    background: url(../assets/icons/close_blue.svg) center center no-repeat;
+
+    &:hover {
+        cursor: pointer;
+        background: url(../assets/icons/close_blue_hover.svg) center center no-repeat;
+    }
+}
 
 .src-container {
     z-index: 10;
@@ -181,6 +218,19 @@ input[type="name"] {
     border-radius: 1.5rem;
     background-color: #ffffff;
     box-shadow: 0px 0 10px 3px rgba(0, 0, 0, 0.08);
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.empty-card {
+    width: 14rem;
+    height: 14rem;
+    border-radius: 1.5rem;
+    border: 1px dashed var(--color-no-tasks-border);
+    box-shadow: 0px 0 4px 0px rgba(0, 0, 0, 0.16);
+    ;
 }
 
 .card-headline {
@@ -245,9 +295,6 @@ input[type="name"] {
         transform: translateX(50%);
     }
 }
-
-
-
 
 h5 {
     color: var(--color-primary-button-click);
