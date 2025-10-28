@@ -200,8 +200,13 @@ main {
   animation: slideOutToTop 500ms ease-in 1000ms forwards;
   z-index: 10;
   top: 50%;
-  
+  opacity: 0;
+  visibility: hidden;
+}
 
+.greeting-container.loaded {
+  opacity: 1;
+  visibility: visible;
 }
 
 @keyframes slideOutToTop {
@@ -229,4 +234,10 @@ h1 {
 p {
   font-size: 1.5rem;
   margin-bottom: 0.25rem;
+}
+
+.greeting-guest {
+  font-size: 2.5rem !important;
+  font-weight: 700 !important;
+  margin-bottom: 0 !important;
 }
