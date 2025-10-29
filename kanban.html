@@ -6,51 +6,48 @@
     <title>Aufgabe hinzufügen</title>
     <link rel="stylesheet" href="./css/kanban.css">
     <link rel="stylesheet" href="style.css">
-    
-    </head>
+</head>
+<body>
+
+    </style>
+</head>
 <body>
 
     <div class="page-container">
-        
+
         <header class="app-header">
             <div class="logo">
-                <img src="./assets/icons/logo-white.svg" alt="Firmenlogo">
+                <img src="./assets/icons/logo-white.svg" alt="Joinlogo">
             </div>
-            <div class="avatar">SM</div>
+            <div class="avatar"></div>
         </header>
 
         <main class="add-task-form-container">
-
-            <div class="form-group">
-                <input type="text" id="title" placeholder="Enter a title">
+            <div class="form-group form-group-title">
+                <input type="text" id="task-title" placeholder="Enter a title">
             </div>
 
             <div class="form-group">
-    <label>Assigned to (optional)</label>
-    <div class="select-wrapper">
-        <select>
-            <option selected disabled>Select contacts to assign</option>
-        </select>
-        <img src="./assets/menu_icons/arrow-drop-down.svg" class="select-arrow" alt="Dropdown Pfeil"> 
-    </div>
-</div>
+                <label for="task-description">Description (optional)</label>
+                <textarea id="task-description" placeholder="Enter a Description"></textarea>
+            </div>
 
-<div class="form-group">
-    <label>Category</label>
-    <div class="select-wrapper">
-        <select>
-            <option selected disabled>Select task category</option>
-        </select>
-        <img src="./assets/menu_icons/arrow-drop-down.svg" class="select-arrow" alt="Dropdown Pfeil"> 
-    </div>
-</div>
+            <div class="form-group">
+                <label for="due-date">Due date</label>
+                <div class="input-with-icon date-input-wrapper">
+                    <input type="text" id="due-date" placeholder="dd/mm/yyyy">
+                    <span class="icon calendar-icon">
+                        <img src="./assets/menu_icons/event.png" >
+                    </span>
+                </div>
+            </div>
 
             <div class="form-group">
                 <label>Priority</label>
                 <div class="priority-selection">
-                    <button class="priority-btn urgent">Urgent <span class="priority-icon"><img src="./assets/menu_icons/Prio-baja.svg" ></span></button>
-                    <button class="priority-btn medium active">Medium <span class="priority-icon"><img src="./assets/menu_icons/Prio-Media.svg" ></button>
-                    <button class="priority-btn low">Low <span class="priority-icon"><img src="./assets/menu_icons/Capa2.svg" ></span></button>
+                    <button class="priority-btn urgent">Urgent <span class="priority-icon"><img src="./assets/menu_icons/Capa2.svg" ></span></button>
+                    <button class="priority-btn medium active">Medium <span class="priority-icon"><img src="./assets/menu_icons/Prio-Media.svg" ></span></button>
+                    <button class="priority-btn low">Low <span class="priority-icon"><img src="./assets/menu_icons/Prio-baja.svg" ></span></button>
                 </div>
             </div>
 
@@ -58,9 +55,11 @@
                 <label>Assigned to (optional)</label>
                 <div class="select-wrapper">
                     <select>
-                        <option selected disabled>Select contacts to assign <img src="./assets/menu_icons/arrow-drop-down.svg" ></option>
+                        <option selected disabled>Select contacts to assign</option>
                     </select>
-                    <span class="arrow"></span> 
+                    <span class="select-arrow">
+                        <img src="./assets/menu_icons/arrow-drop-down.svg" >
+                    </span>
                 </div>
             </div>
 
@@ -68,15 +67,17 @@
                 <label>Category</label>
                 <div class="select-wrapper">
                     <select>
-                        <option selected disabled>Select task category <img src="./assets/menu_icons/arrow-drop-down.svg" ></option>
+                        <option selected disabled>Select task category</option>
                     </select>
-                    <span class="arrow"></span> 
+                    <span class="select-arrow">
+                        <img src="./assets/menu_icons/arrow-drop-down.svg" >
+                    </span>
                 </div>
             </div>
 
             <div class="form-group">
                 <label>Subtasks (optional)</label>
-                </div>
+            </div>
 
             <div class="button-group">
                 <button class="btn-clear">Clear <span><img src="./assets/menu_icons/iconoir_cancel.svg" alt=""></span></button>
@@ -85,22 +86,28 @@
 
         </main>
 
-        
-    <nav class="main-nav">
-        <a class="nav-item active" href="index.html">
-            <img src="./assets/menu_icons/summary.svg" alt="Summary Icon">
-            <span>Summary</span>
-        </a>
-        <a class="nav-item" href="add-task.html">
-            <img src="./assets/menu_icons/add-task.svg" alt="Add Task Icon">
-            <span>Add Task</span>
-        </a>
-        <a class="nav-item" href="board.html">
-            <img src="./assets/menu_icons/board.svg" alt="Board Icon">
-            <span>Board</span>
-        </a>
-        <a class="nav-item" href="contacts.html">
-            <img src="./assets/menu_icons/contacts.svg" alt="Contacts Icon">
-            <span>Contacts</span>
-        </a>
-    </nav>
+        <nav class="main-nav">
+            <a class="nav-item" href="index.html">
+                <img src="./assets/menu_icons/summary.svg" alt="Summary Icon">
+                <span>Summary</span>
+            </a>
+            <a class="nav-item active" href="add-task.html">
+                <img src="./assets/menu_icons/add-task.svg" alt="Add Task Icon">
+                <span>Add Task</span>
+            </a>
+            <a class="nav-item" href="board.html">
+                <img src="./assets/menu_icons/board.svg" alt="Board Icon">
+                <span>Board</span>
+            </a>
+            <a class="nav-item" href="contacts.html">
+                <img src="./assets/menu_icons/contacts.svg" alt="Contacts Icon">
+                <span>Contacts</span>
+            </a>
+        </nav>
+    </div>
+
+</body>
+</html>
+
+</body>
+</html>
