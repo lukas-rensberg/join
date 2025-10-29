@@ -20,6 +20,48 @@ function clearFormErrors() {
 }
 
 /**
+ * Update password icon based on input value
+ */
+function updatePasswordIcon(passwordInput, iconElement) {
+  const img = iconElement.querySelector("img");
+  
+  if (passwordInput.value.length === 0) {
+    // No text: show lock icon
+    img.src = "./assets/icons/lock.svg";
+    iconElement.classList.remove("clickable");
+    passwordInput.type = "password";
+  } else {
+    // Has text: show visibility toggle
+    iconElement.classList.add("clickable");
+    if (passwordInput.type === "password") {
+      img.src = "./assets/icons/visibility_off.svg";
+    } else {
+      img.src = "./assets/icons/visibility.svg";
+    }
+  }
+}
+
+/**
+ * Toggle password visibility
+ */
+function togglePasswordVisibility(toggleElement) {
+  const targetId = toggleElement.getAttribute("data-target");
+  const passwordInput = document.getElementById(targetId);
+  const img = toggleElement.querySelector("img");
+  
+  // Only toggle if there's text
+  if (passwordInput.value.length > 0) {
+    if (passwordInput.type === "password") {
+      passwordInput.type = "text";
+      img.src = "./assets/icons/visibility.svg";
+    } else {
+      passwordInput.type = "password";
+      img.src = "./assets/icons/visibility_off.svg";
+    }
+  }
+}
+
+/**
  * Validate signup form inputs (signup page)
  */
 function validateSignupForm(password, confirmPassword, acceptedPolicy) {
@@ -68,6 +110,25 @@ export function initSignupPage(signupUserCallback, handleAuthErrorCallback) {
     const inputs = signupForm.querySelectorAll('input[type="text"], input[type="email"], input[type="password"]');
     inputs.forEach(input => {
       input.addEventListener("input", clearFormErrors);
+    });
+
+    // Setup password visibility toggle for all password fields
+    const passwordToggles = document.querySelectorAll(".password-icon-toggle");
+    passwordToggles.forEach(toggle => {
+      const targetId = toggle.getAttribute("data-target");
+      const passwordInput = document.getElementById(targetId);
+      
+      if (passwordInput) {
+        // Update icon when user types
+        passwordInput.addEventListener("input", () => {
+          updatePasswordIcon(passwordInput, toggle);
+        });
+        
+        // Toggle visibility on click
+        toggle.addEventListener("click", () => {
+          togglePasswordVisibility(toggle);
+        });
+      }
     });
 
     signupForm.addEventListener("submit", async (e) => {

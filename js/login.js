@@ -20,6 +20,49 @@ function clearFormErrors() {
 }
 
 /**
+ * Update password icon based on input value
+ */
+function updatePasswordIcon(passwordInput, iconElement) {
+  const img = iconElement.querySelector("img");
+  
+  if (passwordInput.value.length === 0) {
+    // No text: show lock icon
+    img.src = "./assets/icons/lock.svg";
+    iconElement.classList.remove("clickable");
+    passwordInput.type = "password";
+  } else {
+    // Has text: show visibility toggle
+    iconElement.classList.add("clickable");
+    if (passwordInput.type === "password") {
+      img.src = "./assets/icons/visibility_off.svg";
+    } else {
+      img.src = "./assets/icons/visibility.svg";
+    }
+  }
+}
+
+/**
+ * Toggle password visibility
+ */
+function togglePasswordVisibility(toggleElement) {
+  const targetId = toggleElement.getAttribute("data-target");
+  const passwordInput = document.getElementById(targetId);
+  const img = toggleElement.querySelector("img");
+  
+  // Only toggle if there's text
+  if (passwordInput.value.length > 0) {
+    if (passwordInput.type === "password") {
+      passwordInput.type = "text";
+      img.src = "./assets/icons/visibility.svg";
+    } else {
+      passwordInput.type = "password";
+      img.src = "./assets/icons/visibility_off.svg";
+    }
+  }
+}
+
+
+/**
  * Initialize login page functionality (login page)
  */
 export function initLoginPage(loginUserCallback, guestLoginCallback, handleAuthErrorCallback) {
@@ -41,6 +84,20 @@ export function initLoginPage(loginUserCallback, guestLoginCallback, handleAuthE
         input.addEventListener("input", clearFormErrors);
       }
     });
+
+    // Setup password visibility toggle
+    const passwordIconToggle = document.querySelector(".password-icon-toggle");
+    if (passwordInput && passwordIconToggle) {
+      // Update icon when user types
+      passwordInput.addEventListener("input", () => {
+        updatePasswordIcon(passwordInput, passwordIconToggle);
+      });
+      
+      // Toggle visibility on click
+      passwordIconToggle.addEventListener("click", () => {
+        togglePasswordVisibility(passwordIconToggle);
+      });
+    }
 
     loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
