@@ -16,7 +16,7 @@
     <header>
         <img src="./assets/icons/logo-white.svg" alt="Join Logo">
         <input type="checkbox" id="slideInSideMenu">
-        <label class="avatar" for="slideInSideMenu">SM</label>
+        <label class="avatar" for="slideInSideMenu">GU</label>
         <div class="side-menu">
             <nav>
                 <a href="help.html">Help</a>
@@ -37,7 +37,7 @@
         <div class="contact-detail-header">
             <h1>Contact Information</h1>
             <div class="detail-header-actions">
-                <button class="back-button" onclick="hideContactDetail()">
+                <button class="back-button" id="backButton">
                     <img src="./assets/icons/arrow-left-line.svg" alt="Back">
                 </button>
             </div>
@@ -62,31 +62,31 @@
     </div>
 
     <!-- Floating Action Button -->
-    <button class="fab" id="fabButton" onclick="handleFabClick()">
+    <button class="fab" id="fabButton">
         <img src="./assets/icons/person_add.svg" alt="Add Contact" id="fabIcon">
     </button>
     
     <!-- FAB Menu Dropdown -->
     <div class="fab-menu" id="fabMenu">
         <nav>
-            <a href="#" onclick="editContact()">Edit</a>
-            <a href="#" onclick="deleteContact()">Delete</a>
+            <a href="#" id="editContactLink">Edit</a>
+            <a href="#" id="deleteContactLink">Delete</a>
         </nav>
     </div>
 
     <!-- Contact Modal (Edit/Create) -->
     <div class="contact-modal" id="contactModal">
-        <div class="modal-backdrop" onclick="closeContactModal()"></div>
+        <div class="modal-backdrop" id="modalBackdrop"></div>
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="modalTitle">Edit contact</h2>
                 <p class="modal-subtitle">Tasks are better with a team!</p>
-                <button class="modal-close" onclick="closeContactModal()">
+                <button class="modal-close" id="modalCloseBtn">
                     <img src="./assets/icons/close.svg" alt="Close">
                 </button>
             </div>
             <div class="modal-avatar" id="modalAvatar"></div>
-            <form class="contact-form" onsubmit="saveContact(event)">
+            <form class="contact-form" id="contactForm">
                 <div class="form-group">
                     <input type="text" id="contactName" name="name" placeholder="Name" required>
                     <img src="./assets/icons/person.svg" alt="Person" class="input-icon">
@@ -100,7 +100,7 @@
                     <img src="./assets/icons/phone.svg" alt="Phone" class="input-icon">
                 </div>
                 <div class="form-actions">
-                    <button type="button" class="btn-delete" id="deleteButton" onclick="deleteContactFromModal()" style="display: none;">Delete</button>
+                    <button type="button" class="btn-delete" id="deleteButton" style="display: none;">Delete</button>
                     <button type="submit" class="btn-save">
                         <span id="saveButtonText">Save</span>
                         <img src="./assets/icons/check.svg" alt="Save" class="save-icon">
@@ -128,434 +128,9 @@
             <span>Contacts</span>
         </a>
     </footer>
-
-    <script>
-        // Global variables
-        let contacts = [];
-        let currentContactId = null;
-        let isEditMode = false;
-
-        /**
-         * Generates a unique ID for contacts
-         * @author Lukas Rensberg
-         * @returns {string} Unique contact ID
-         */
-        function generateContactId() {
-            return 'contact_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        }
-
-        /**
-         * Saves contacts array to localStorage
-         * @author Lukas Rensberg
-         * @param {Array} contactsArray - Array of contact objects
-         */
-        function saveContactsToLocalStorage(contactsArray) {
-            localStorage.setItem('join_contacts', JSON.stringify(contactsArray));
-        }
-
-        /**
-         * Loads contacts from localStorage or returns default contacts
-         * @author Lukas Rensberg
-         * @returns {Array} Array of contact objects
-         */
-        function loadContactsFromLocalStorage() {
-            const stored = localStorage.getItem('join_contacts');
-            if (stored) {
-                return JSON.parse(stored);
-            }
-            
-            // Default contacts with unique IDs
-            return [
-                {
-                    id: generateContactId(),
-                    name: 'Anton Mayer',
-                    email: 'anton.mayer@example.com',
-                    phone: '+49 1111 111 11 1',
-                    avatarColor: '#ff7a00',
-                    initials: 'AM'
-                },
-                {
-                    id: generateContactId(),
-                    name: 'Anja Schulz',
-                    email: 'anja.schulz@example.com',
-                    phone: '+49 1111 111 11 2',
-                    avatarColor: '#ff5eb3',
-                    initials: 'AS'
-                },
-                {
-                    id: generateContactId(),
-                    name: 'Benedikt Ziegler',
-                    email: 'benedikt.ziegler@example.com',
-                    phone: '+49 1111 111 11 3',
-                    avatarColor: '#4589ff',
-                    initials: 'BZ'
-                },
-                {
-                    id: generateContactId(),
-                    name: 'David Eisenberg',
-                    email: 'david.eisenberg@example.com',
-                    phone: '+49 1111 111 11 4',
-                    avatarColor: '#ff5eb3',
-                    initials: 'DE'
-                },
-                {
-                    id: generateContactId(),
-                    name: 'Eva Fischer',
-                    email: 'eva.fischer@example.com',
-                    phone: '+49 1111 111 11 5',
-                    avatarColor: '#ffc701',
-                    initials: 'EF'
-                },
-                {
-                    id: generateContactId(),
-                    name: 'Emmanuel Mauer',
-                    email: 'emmanuel.mauer@example.com',
-                    phone: '+49 1111 111 11 6',
-                    avatarColor: '#1fd7c1',
-                    initials: 'EM'
-                }
-            ];
-        }
-
-        /**
-         * Renders the contacts list dynamically
-         * @author Lukas Rensberg
-         * @param {Array} contactsArray - Array of contact objects
-         */
-        function renderContactsList(contactsArray) {
-            const container = document.querySelector('.contacts-container');
-            container.innerHTML = '';
-
-            // Group contacts by first letter
-            const groupedContacts = {};
-            contactsArray.forEach(contact => {
-                const firstLetter = contact.name.charAt(0).toUpperCase();
-                if (!groupedContacts[firstLetter]) {
-                    groupedContacts[firstLetter] = [];
-                }
-                groupedContacts[firstLetter].push(contact);
-            });
-
-            // Sort letters and render sections
-            const sortedLetters = Object.keys(groupedContacts).sort();
-            sortedLetters.forEach(letter => {
-                const section = document.createElement('div');
-                section.className = 'contact-section';
-                
-                section.innerHTML = `
-                    <h2 class="section-header">${letter}</h2>
-                    <div class="section-separator"></div>
-                `;
-
-                // Sort contacts in this section by name
-                groupedContacts[letter].sort((a, b) => a.name.localeCompare(b.name));
-                
-                groupedContacts[letter].forEach(contact => {
-                    const contactItem = document.createElement('div');
-                    contactItem.className = 'contact-item';
-                    contactItem.onclick = () => showContactDetail(contact.id);
-                    
-                    contactItem.innerHTML = `
-                        <div class="contact-avatar" style="background-color: ${contact.avatarColor};">${contact.initials}</div>
-                        <div class="contact-info">
-                            <div class="contact-name">${contact.name}</div>
-                            <div class="contact-email">${contact.email}</div>
-                        </div>
-                    `;
-                    
-                    section.appendChild(contactItem);
-                });
-
-                container.appendChild(section);
-            });
-        }
-
-        /**
-         * Initializes contacts on page load
-         * @author Lukas Rensberg
-         */
-        function initializeContacts() {
-            contacts = loadContactsFromLocalStorage();
-            renderContactsList(contacts);
-        }
-
-        /**
-         * Handles FAB click - either adds contact or shows menu depending on view
-         * @author Lukas Rensberg
-         */
-        function handleFabClick() {
-            const detailView = document.getElementById('contactDetailView');
-            if (detailView.classList.contains('active')) {
-                // In detail view - toggle menu
-                toggleFabMenu();
-            } else {
-                // In contact list - add contact
-                addContact();
-            }
-        }
-
-        /**
-         * Handles adding a new contact - opens the modal in create mode
-         * @author Lukas Rensberg
-         */
-        function addContact() {
-            openContactModal(false);
-        }
-
-        /**
-         * Toggles the FAB menu visibility
-         * @author Lukas Rensberg
-         */
-        function toggleFabMenu() {
-            const fabMenu = document.getElementById('fabMenu');
-            fabMenu.classList.toggle('active');
-        }
-
-        /**
-         * Closes the FAB menu
-         * @author Lukas Rensberg
-         */
-        function closeFabMenu() {
-            const fabMenu = document.getElementById('fabMenu');
-            fabMenu.classList.remove('active');
-        }
-
-        // Close FAB menu when clicking outside of it
-        document.addEventListener('click', function(event) {
-            const fabButton = document.getElementById('fabButton');
-            const fabMenu = document.getElementById('fabMenu');
-            
-            // Check if click is outside both FAB button and menu
-            if (!fabButton.contains(event.target) && !fabMenu.contains(event.target)) {
-                closeFabMenu();
-            }
-        });
-
-        /**
-         * Shows the contact detail view with the provided contact ID
-         * @author Lukas Rensberg
-         * @param {string} contactId - Contact's unique ID
-         */
-        function showContactDetail(contactId) {
-            const contact = contacts.find(c => c.id === contactId);
-            if (!contact) return;
-
-            currentContactId = contactId;
-            
-            // Hide the contact list
-            document.querySelector('.contacts-container').style.display = 'none';
-            
-            // Populate the detail view
-            document.getElementById('detailName').textContent = contact.name;
-            document.getElementById('detailEmail').textContent = contact.email;
-            document.getElementById('detailPhone').textContent = contact.phone;
-            
-            // Set up the avatar
-            const avatar = document.getElementById('detailAvatar');
-            avatar.textContent = contact.initials;
-            avatar.style.backgroundColor = contact.avatarColor;
-            
-            // Change FAB icon to three dots
-            const fabIcon = document.getElementById('fabIcon');
-            fabIcon.src = './assets/icons/more-vertical.svg';
-            fabIcon.alt = 'Menu';
-            
-            // Show the detail view
-            document.getElementById('contactDetailView').classList.add('active');
-        }
-
-        /**
-         * Hides the contact detail view and shows the contact list
-         * @author Lukas Rensberg
-         */
-        function hideContactDetail() {
-            // Hide the detail view
-            document.getElementById('contactDetailView').classList.remove('active');
-            
-            // Change FAB icon back to add contact
-            const fabIcon = document.getElementById('fabIcon');
-            fabIcon.src = './assets/icons/person_add.svg';
-            fabIcon.alt = 'Add Contact';
-            
-            // Hide FAB menu if open
-            document.getElementById('fabMenu').classList.remove('active');
-            
-            // Show the contact list
-            document.querySelector('.contacts-container').style.display = 'block';
-        }
-
-        /**
-         * Handles editing a contact - opens the modal in edit mode
-         * @author Lukas Rensberg
-         */
-        function editContact() {
-            if (!currentContactId) return;
-            openContactModal(true);
-        }
-
-        /**
-         * Opens the contact modal in either create or edit mode
-         * @author Lukas Rensberg
-         * @param {boolean} editMode - Whether to open in edit mode (true) or create mode (false)
-         */
-        function openContactModal(editMode) {
-            isEditMode = editMode;
-            
-            if (editMode) {
-                // Edit mode - pre-populate with current contact data
-                if (!currentContactId) return;
-                
-                const contact = contacts.find(c => c.id === currentContactId);
-                if (!contact) return;
-
-                // Set modal title and button text
-                document.getElementById('modalTitle').textContent = 'Edit contact';
-                document.getElementById('saveButtonText').textContent = 'Save';
-                document.getElementById('deleteButton').style.display = 'block';
-
-                // Pre-populate form with current contact data
-                document.getElementById('contactName').value = contact.name;
-                document.getElementById('contactEmail').value = contact.email;
-                document.getElementById('contactPhone').value = contact.phone;
-
-                // Set modal avatar
-                const modalAvatar = document.getElementById('modalAvatar');
-                modalAvatar.textContent = contact.initials;
-                modalAvatar.style.backgroundColor = contact.avatarColor;
-            } else {
-                // Create mode - clear form
-                document.getElementById('modalTitle').textContent = 'Add contact';
-                document.getElementById('saveButtonText').textContent = 'Create contact';
-                document.getElementById('deleteButton').style.display = 'none';
-
-                // Clear form
-                document.getElementById('contactName').value = '';
-                document.getElementById('contactEmail').value = '';
-                document.getElementById('contactPhone').value = '';
-
-                // Set default avatar
-                const modalAvatar = document.getElementById('modalAvatar');
-                modalAvatar.textContent = '?';
-                modalAvatar.style.backgroundColor = '#4589ff';
-            }
-
-            // Show modal
-            document.getElementById('contactModal').classList.add('active');
-            closeFabMenu();
-        }
-
-        /**
-         * Handles deleting a contact - deletes immediately without confirmation
-         * @author Lukas Rensberg
-         */
-        function deleteContact() {
-            if (!currentContactId) return;
-            
-            const contact = contacts.find(c => c.id === currentContactId);
-            if (!contact) return;
-
-            // Remove contact from array
-            contacts = contacts.filter(c => c.id !== currentContactId);
-            
-            // Save to localStorage
-            saveContactsToLocalStorage(contacts);
-            
-            // Re-render contact list
-            renderContactsList(contacts);
-            
-            // Hide detail view and close FAB menu
-            hideContactDetail();
-            closeFabMenu();
-            
-            // TODO: Remove contact from all assigned tasks when task functionality is implemented
-        }
-
-        /**
-         * Closes the contact modal
-         * @author Lukas Rensberg
-         */
-        function closeContactModal() {
-            document.getElementById('contactModal').classList.remove('active');
-        }
-
-        /**
-         * Handles deleting a contact from the modal - deletes immediately
-         * @author Lukas Rensberg
-         */
-        function deleteContactFromModal() {
-            closeContactModal();
-            deleteContact();
-        }
-
-        /**
-         * Saves the contact data (both create and edit)
-         * @author Lukas Rensberg
-         * @param {Event} event - Form submit event
-         */
-        function saveContact(event) {
-            event.preventDefault();
-            
-            // Get form data
-            const name = document.getElementById('contactName').value.trim();
-            const email = document.getElementById('contactEmail').value.trim();
-            const phone = document.getElementById('contactPhone').value.trim();
-
-            // Generate initials from name
-            const nameParts = name.split(' ');
-            const initials = nameParts.map(part => part.charAt(0).toUpperCase()).join('').substring(0, 2);
-
-            if (isEditMode) {
-                // Edit mode - update existing contact
-                if (!currentContactId) return;
-
-                const contact = contacts.find(c => c.id === currentContactId);
-                if (!contact) return;
-
-                // Update contact
-                contact.name = name;
-                contact.email = email;
-                contact.phone = phone;
-                contact.initials = initials;
-
-                // Save to localStorage
-                saveContactsToLocalStorage(contacts);
-                
-                // Re-render contact list
-                renderContactsList(contacts);
-                
-                // Update detail view if it's showing the same contact
-                if (document.getElementById('contactDetailView').classList.contains('active')) {
-                    showContactDetail(currentContactId);
-                }
-            } else {
-                // Create mode - add new contact
-                const newContact = {
-                    id: generateContactId(),
-                    name: name,
-                    email: email,
-                    phone: phone,
-                    avatarColor: '#4589ff', // Default color
-                    initials: initials
-                };
-
-                // Add to contacts array
-                contacts.push(newContact);
-
-                // Save to localStorage
-                saveContactsToLocalStorage(contacts);
-                
-                // Re-render contact list
-                renderContactsList(contacts);
-            }
-            
-            // Close modal
-            closeContactModal();
-        }
-
-
-        // Initialize contacts when page loads
-        document.addEventListener('DOMContentLoaded', initializeContacts);
-    </script>
+    <script type="module" src="./js/auth.js"></script>
+    <script type="module" src="./js/user-profile.js"></script>
+    <script type="module" src="./js/contacts.js"></script>
 </body>
 
 </html>

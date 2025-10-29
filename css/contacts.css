@@ -208,7 +208,9 @@
 .contact-detail-content {
     flex: 1;
     padding: 1rem;
+    display: flex;
     overflow-y: auto;
+    flex-direction: column;
 }
 
 .contact-detail-container {
@@ -217,26 +219,29 @@
     align-items: center;
     gap: 1rem;
     margin-bottom: 2rem;
+    flex: 1;
 }
 
 .contact-detail-avatar {
-    width: 5rem;
-    height: 5rem;
+    width: 4.5rem;
+    height: 4.5rem;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #ffffff;
     font-weight: 300;
+    flex: 1;
+    max-width: 4.5rem;
     font-size: 1.75rem;
 }
 
 .contact-detail-name {
-    font-size: 2rem;
-    font-weight: 500;
+    font-size: 1.75rem;
     color: #000000;
     text-align: left;
     margin-bottom: 0;
+    flex: 1;
 }
 
 .contact-info-section {
@@ -245,7 +250,7 @@
 
 .info-label {
     font-size: 1rem;
-    font-weight: 500;
+    font-weight: bold;
     color: #000000;
     margin-bottom: 0.5rem;
 }

@@ -1,57 +1,83 @@
 <!DOCTYPE html>
 <html lang="de">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Join | Signup</title>
-    <link rel="shortcut icon" href="./assets/icons/logo-blue.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="./style.css">
-    <link rel="stylesheet" href="./css/font.css">
-    <link rel="stylesheet" href="./css/signup.css">
-</head>
+    <link
+      rel="shortcut icon"
+      href="./assets/icons/logo-blue.svg"
+      type="image/svg+xml"
+    />
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./css/font.css" />
+    <link rel="stylesheet" href="./css/signup.css" />
+  </head>
 
-<body class="body-signup">
+  <body class="body-signup">
     <div class="signed-up-container">
-        <div class="signed-up-text">
-            <p>You Signed Up successfully</p>
-        </div>
-
+      <div class="signed-up-text">
+        <p>You Signed Up successfully</p>
+      </div>
     </div>
     <main>
-        <div class="logo-container-signup"></div>
-        <form action="" method="post">
+      <div class="logo-container-signup"></div>
+      <form action="" method="post">
+        <h2><a class="back-arrow-signup" href="index.html"></a>Sign up</h2>
 
-            <h2><a class="back-arrow-signup" href="index.html"></a>Sign up</h2>
+        <div class="input-field">
+          <input type="text" name="username" placeholder="Name" required /><span
+            class="user-name"
+          ></span>
+        </div>
 
-            <div class="input-field"><input type="text" name="username" placeholder="Name" required><span
-                    class="user-name"></span></div>
+        <div class="input-field">
+          <input type="email" name="email" placeholder="Email" required /><span
+            class="user-email"
+          ></span>
+        </div>
 
-            <div class="input-field"><input type="email" name="email" placeholder="Email" required><span
-                    class="user-email">
-            </div>
+        <div class="input-field">
+          <input
+            type="password"
+            name="password"
+            id="signup-password"
+            placeholder="Password"
+            required
+          />
+          <span class="password-icon-toggle" data-target="signup-password">
+            <img src="./assets/icons/lock.svg" alt="Password" />
+          </span>
+        </div>
 
-            <div class="input-field"><input type="password" name="password" placeholder="Password" required><span
-                    class="user-password"></div>
-
-            <div class="input-field"><input type="password" name="confirm-password" placeholder="Confirm Password"
-                    required><span class="user-password">
-            </div>
-            <p class="pw-not-matching">Your passwords don't match. Please try again.</p>
-            <div class="checkbox-container">
-                <div class="checkbox">
-                    <input type="checkbox" name="confirm-check" id="confirm-check">
-                </div>
-                <p>I accept the <a href="legal_notice.html">Privacy Policy</a></p>
-            </div>
-            <button type="submit">Sign up</button>
-        </form>
-
+        <div class="input-field">
+          <input
+            type="password"
+            name="confirm-password"
+            id="confirm-password"
+            placeholder="Confirm Password"
+            required
+          />
+          <span class="password-icon-toggle" data-target="confirm-password">
+            <img src="./assets/icons/lock.svg" alt="Password" />
+          </span>
+        </div>
+        <p class="pw-not-matching">
+          Your passwords don't match. Please try again.
+        </p>
+        <div class="checkbox-container">
+          <div class="checkbox">
+            <input type="checkbox" name="confirm-check" id="confirm-check" />
+          </div>
+          <p>I accept the <a href="legal_notice.html">Privacy Policy</a></p>
+        </div>
+        <button type="submit">Sign up</button>
+      </form>
     </main>
     <footer>
-        <a href="legal_notice.html">Privacy Policy</a>
-        <a href="legal_notice.html">Legal Notice</a>
+      <a href="legal_notice.html">Privacy Policy</a>
+      <a href="legal_notice.html">Legal Notice</a>
     </footer>
-</body>
-
+    <script type="module" src="./js/auth.js"></script>
+  </body>
 </html>
