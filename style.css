@@ -31,6 +31,11 @@
   --color-light-gray: #d1d1d1;
   --color-menu-text: #42526E;
   --color-light-blue: #005DFF;
+  --color-border-gray: #A8A8A8;
+  --color-no-tasks-bg: #E7E7E7;
+  --color-no-tasks-border: #A8A8A8;
+  --color-card-progress-bar-bg: #F4F4F4;
+
 }
 
 * {
