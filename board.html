@@ -26,16 +26,16 @@
                 </div>
                 <p>Build start page with recipe recommendation.</p>
                 <div class="d-due-date-prio">
-                    <p style="width: 6rem;"><strong>Due date:</strong></p>
+                    <p><strong>Due date:</strong></p>
                     <p>10/05/2025</p>
                 </div>
                 <div class="d-due-date-prio">
-                    <p style="width: 6rem;"><strong>Priority:</strong></p>
-                    <p style="margin-right: .5rem;">Medium</p>
+                    <p><strong>Priority:</strong></p>
+                    <p class="p-prio">Medium</p>
                     <img src="./assets/priority_icons/prio_medium_colored.svg" alt="prio medium">
                 </div>
                 <div class="d-assigned-to">
-                    <p style="width: 100%;"><strong>Assigned to:</strong></p>
+                    <p><strong>Assigned to:</strong></p>
                     <div class="d-assigned-members">
                         <div class="d-assigned-member-cards">
                             <div class="d-assigned-member-icon" style="background-color: var(--color-variant1);">EM
@@ -65,7 +65,7 @@
                     </div>
                 </div>
                 <div class="d-subtasks">
-                    <p style="width: 100%;"><strong>Subtasks:</strong></p>
+                    <p><strong>Subtasks:</strong></p>
                     <div class="d-subtasks-check">
                         <div class="d-subtask">
                             <input type="checkbox" id="d-subtaks-1">
@@ -184,7 +184,7 @@
                                     <div class="marked-user" style="background-color: var(--color-default);">AM</div>
                                     <div class="marked-user marked-user-2"
                                         style="background-color: var(--color-variant1);">EM</div>
-                                    </div>
+                                </div>
                                 <div class="card-prio-icon"
                                     style="background: url(./assets/priority_icons/prio_urgent_colored.svg) center center no-repeat;">
                                 </div>
@@ -260,7 +260,7 @@
                                     <div class="marked-user" style="background-color: var(--color-default);">AM</div>
                                     <div class="marked-user marked-user-2"
                                         style="background-color: var(--color-variant1);">EM</div>
-                                    </div>
+                                </div>
                                 <div class="card-prio-icon"
                                     style="background: url(./assets/priority_icons/prio_urgent_colored.svg) center center no-repeat;">
                                 </div>
@@ -321,7 +321,7 @@
                                     <div class="marked-user" style="background-color: var(--color-default);">AM</div>
                                     <div class="marked-user marked-user-2"
                                         style="background-color: var(--color-variant1);">EM</div>
-                                    </div>
+                                </div>
                                 <div class="card-prio-icon"
                                     style="background: url(./assets/priority_icons/prio_urgent_colored.svg) center center no-repeat;">
                                 </div>
@@ -354,46 +354,7 @@
         </a>
     </footer>
 
-    <script>
-
-        let dialogRef = document.querySelector("dialog");
-
-        // slide in menu
-        function swapMenuSlideIn() {
-            const swapMenu = document.getElementById("card-swap-menu");
-            swapMenu.classList.remove("slide-out-swap-menu");
-            swapMenu.classList.add("slide-in-swap-menu");
-
-            // listener for clicking outside menu to close menu
-            document.addEventListener("mousedown", handleOutsideClick);
-
-            function handleOutsideClick(event) {
-                if (!swapMenu.contains(event.target)) {
-                    slideOutMenu();
-                    document.removeEventListener("mousedown", handleOutsideClick);
-                }
-            }
-        }
-
-        // slide out menu
-        function slideOutMenu() {
-            const swapMenu = document.getElementById("card-swap-menu");
-            swapMenu.classList.remove("slide-in-swap-menu");
-            swapMenu.classList.add("slide-out-swap-menu");
-        }
-
-        // open dialog
-        function openDialog() {
-            dialogRef.classList.add("dialog-swipe-in");
-            dialogRef.showModal();
-        }
-
-        function closeDialog() {
-            dialogRef.classList.remove("dialog-swipe-in");
-            dialogRef.close();
-        }
-
-    </script>
+    <script src="./js/board.js"></script>
 </body>
 
 </html>

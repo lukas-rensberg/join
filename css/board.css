@@ -12,7 +12,6 @@ main {
     display: flex;
     align-items: center;
     flex-direction: column;
-    /* max-width: calc(25rem + (2*var(--padding-side))); */
     width: 100%;
     flex: 1;
 }

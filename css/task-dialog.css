@@ -85,6 +85,14 @@ h2 {
     width: 100%;
     margin: .5rem 0;
     height: 1.25rem;
+
+    p {
+        width: 6rem;
+    }
+}
+
+.p-prio {
+    margin-right: .5rem;
 }
 
 strong {
@@ -147,6 +155,10 @@ strong {
 .d-subtasks {
     margin-top: .5rem;
     overflow: visible;
+
+    p {
+        width: 100%;
+    }
 }
 
 .d-subtasks-check {
