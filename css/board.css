@@ -360,7 +360,7 @@ h5 {
     border-radius: 999px;
 }
 
-#tasks-done {
+.tasks-done {
     font-size: .8rem;
 }
 
