@@ -184,9 +184,7 @@
                                     <div class="marked-user" style="background-color: var(--color-default);">AM</div>
                                     <div class="marked-user marked-user-2"
                                         style="background-color: var(--color-variant1);">EM</div>
-                                    <!-- <div class="marked-user marked-user-3" style="background-color: var(--color-variant11);">BM</div> -->
-                                    <!-- <div class="marked-user marked-user-4" style="background-color: var(--color-variant12);">+11</div> -->
-                                </div>
+                                    </div>
                                 <div class="card-prio-icon"
                                     style="background: url(./assets/priority_icons/prio_urgent_colored.svg) center center no-repeat;">
                                 </div>
@@ -262,9 +260,7 @@
                                     <div class="marked-user" style="background-color: var(--color-default);">AM</div>
                                     <div class="marked-user marked-user-2"
                                         style="background-color: var(--color-variant1);">EM</div>
-                                    <!-- <div class="marked-user marked-user-3" style="background-color: var(--color-variant11);">BM</div> -->
-                                    <!-- <div class="marked-user marked-user-4" style="background-color: var(--color-variant12);">+11</div> -->
-                                </div>
+                                    </div>
                                 <div class="card-prio-icon"
                                     style="background: url(./assets/priority_icons/prio_urgent_colored.svg) center center no-repeat;">
                                 </div>
@@ -325,9 +321,7 @@
                                     <div class="marked-user" style="background-color: var(--color-default);">AM</div>
                                     <div class="marked-user marked-user-2"
                                         style="background-color: var(--color-variant1);">EM</div>
-                                    <!-- <div class="marked-user marked-user-3" style="background-color: var(--color-variant11);">BM</div> -->
-                                    <!-- <div class="marked-user marked-user-4" style="background-color: var(--color-variant12);">+11</div> -->
-                                </div>
+                                    </div>
                                 <div class="card-prio-icon"
                                     style="background: url(./assets/priority_icons/prio_urgent_colored.svg) center center no-repeat;">
                                 </div>
@@ -364,13 +358,13 @@
 
         let dialogRef = document.querySelector("dialog");
 
-        // Menü einfahren (slide-in)
+        // slide in menu
         function swapMenuSlideIn() {
             const swapMenu = document.getElementById("card-swap-menu");
             swapMenu.classList.remove("slide-out-swap-menu");
             swapMenu.classList.add("slide-in-swap-menu");
 
-            // Listener für Klick außerhalb einfügen
+            // listener for clicking outside menu to close menu
             document.addEventListener("mousedown", handleOutsideClick);
 
             function handleOutsideClick(event) {
@@ -381,22 +375,21 @@
             }
         }
 
-        // Menü ausfahren (slide-out)
+        // slide out menu
         function slideOutMenu() {
             const swapMenu = document.getElementById("card-swap-menu");
             swapMenu.classList.remove("slide-in-swap-menu");
             swapMenu.classList.add("slide-out-swap-menu");
         }
 
+        // open dialog
         function openDialog() {
-            // dialogRef.classList.remove("dialog-swipe-out");
             dialogRef.classList.add("dialog-swipe-in");
             dialogRef.showModal();
         }
 
         function closeDialog() {
             dialogRef.classList.remove("dialog-swipe-in");
-            // dialogRef.classList.add("dialog-swipe-out");
             dialogRef.close();
         }
 
