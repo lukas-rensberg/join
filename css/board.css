@@ -1,0 +1,417 @@
+.body-board {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    width: 100vw;
+    max-width: 1920px;
+}
+
+main {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    flex: 1;
+}
+
+.src-container {
+    z-index: 10;
+    position: sticky;
+    top: 60px;
+    height: 100px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background-color: #ffffff;
+}
+
+input[type="name"] {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    padding-left: .5rem;
+}
+
+.input-seperator {
+    height: 80%;
+    width: 1px;
+    background-color: var(--color-border-gray);
+    margin-right: .5rem;
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    width: 90%;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid var(--color-border-gray);
+    margin: 2.5rem 0;
+
+    &:focus-within {
+        border: 1px solid var(--main-color);
+    }
+}
+
+.inp-src-icon {
+    background: url(../assets/icons/search.svg) center center no-repeat;
+    transform: scale(0.8);
+    position: absolute;
+    height: 100%;
+    width: 3rem;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-left: 1px solid var(--color-border-gray);
+}
+
+.inp-src-icon:hover {
+    background: url(../assets/icons/search_hover.svg) center center no-repeat;
+    cursor: pointer;
+}
+
+.inp-src-icon:active {
+    background: url(../assets/icons/search_click.svg) center center no-repeat;
+}
+
+.section-tasks {
+    display: flex;
+    width: 100%;
+    height: 500px;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+.tasks-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+}
+
+.task-title {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: .5rem;
+}
+
+.task-headline {
+    font-weight: 700;
+    font-size: 1.25rem;
+}
+
+.task-card-container {
+
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    width: 100%;
+    padding-bottom: .75rem;
+    overflow: auto;
+}
+
+.task-card-wrapper {
+    display: flex;
+    gap: 1rem;
+    padding: .75rem 0;
+}
+
+.d-none {
+    display: none;
+}
+
+
+.no-tasks {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    width: 100%;
+    background-color: var(--color-no-tasks-bg);
+    border-radius: 10px;
+    border: 1px dashed var(--color-no-tasks-border);
+    color: var(--color-no-tasks-border);
+}
+
+.add-task-icon {
+    background: url("../assets/icons/plus_button_default.svg") center center no-repeat;
+    width: 1.5rem;
+    height: 1.5rem;
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    &:active {
+        background: url("../assets/icons/plus_button_click.svg") center center no-repeat;
+    }
+}
+
+.task-card {
+    position: relative;
+    width: 14rem;
+    height: 14rem;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    border-radius: 1.5rem;
+    background-color: #ffffff;
+    box-shadow: 0px 0 10px 3px rgba(0, 0, 0, 0.08);
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    &:f {
+        transform: rotate(5);
+    }
+}
+
+.empty-card {
+    width: 14rem;
+    height: 14rem;
+    border-radius: 1.5rem;
+    border: 1px dashed var(--color-no-tasks-border);
+    box-shadow: 0px 0 4px 0px rgba(0, 0, 0, 0.16);
+    ;
+}
+
+.card-headline {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    justify-content: space-between;
+}
+
+.card-swap-icon {
+    visibility: hidden;
+    position: relative;
+    background: url("../assets/icons/swap-icon.svg") center center no-repeat;
+    width: 1.75rem;
+    height: 1.75rem;
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    &:active {
+        transform: scale(0.95);
+    }
+}
+
+.card-swap-menu {
+    z-index: 5;
+    position: absolute;
+    opacity: 0;
+    top: 1rem;
+    left: calc(224px - 16px - 28px);
+    width: 7rem;
+    transform: translateX(50%);
+    height: 7rem;
+    background-color: var(--main-color);
+    border-radius: 0 var(--border-rad-20) var(--border-rad-20) var(--border-rad-20);
+}
+
+.slide-in-swap-menu {
+    animation: slideInSwapMenu 300ms ease-in-out forwards;
+}
+
+.slide-out-swap-menu {
+    animation: slideOutSwapMenu 300ms ease-in-out forwards;
+}
+
+@keyframes slideInSwapMenu {
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOutSwapMenu {
+    0% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateX(50%);
+    }
+}
+
+h5 {
+    color: var(--color-primary-button-click);
+    margin-bottom: .5rem;
+    padding: 1rem 1rem 0 1rem;
+}
+
+.move-to-do {
+    margin: 0 .5rem;
+    display: flex;
+    align-items: center;
+    padding: .25rem .5rem;
+    gap: .5rem;
+    color: var(--color-primary-button-click);
+    border-radius: var(--button-radius);
+}
+
+.move-to-do:hover,
+.move-to-do .move-to-do-arrow:hover {
+    color: var(--main-color);
+    cursor: pointer;
+    background-color: var(--color-menu-hover);
+}
+
+.move-to-do:hover .move-to-do-arrow {
+    background: url(../assets/icons/arrow_upward_blue.svg) center center no-repeat;
+}
+
+.move-to-do-arrow {
+    height: 1rem;
+    width: 1rem;
+    background: url(../assets/icons/arrow_upward_white.svg) center center no-repeat;
+}
+
+.move-to-review {
+    margin: 0 .5rem;
+    display: flex;
+    align-items: center;
+    padding: .25rem .5rem;
+    gap: .5rem;
+    color: var(--color-primary-button-click);
+    border-radius: var(--button-radius);
+}
+
+.move-to-review:hover,
+.move-to-review .move-to-review-arrow:hover {
+    color: var(--main-color);
+    cursor: pointer;
+    background-color: var(--color-menu-hover);
+}
+
+.move-to-review:hover .move-to-review-arrow {
+    background: url(../assets/icons/arrow_downward_blue.svg) center center no-repeat;
+}
+
+.move-to-review-arrow {
+    height: 1rem;
+    width: 1rem;
+    background: url(../assets/icons/arrow_downward_white.svg) center center no-repeat;
+}
+
+.card-label {
+    width: fit-content;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.75rem;
+}
+
+.card-bg-user-story {
+    background-color: var(--color-variant1);
+    color: white;
+}
+
+.card-bg-tech-task {
+    background-color: var(--color-variant10);
+    color: white;
+}
+
+.card-task-title {
+    font-weight: 700;
+    color: var(--main-color);
+    margin-bottom: .25rem;
+}
+
+.card-task-text {
+    font-weight: 400;
+    color: var(--color-border-gray);
+}
+
+.card-progress-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 1.25rem;
+    margin: .25rem 0;
+
+}
+
+.card-progress-bar {
+    width: 50%;
+    background-color: var(--color-card-progress-bar-bg);
+    height: 50%;
+    border-radius: 999px;
+}
+
+.card-sub-progress-bar {
+    height: 100%;
+    background-color: var(--main-color);
+    border-radius: 999px;
+}
+
+.tasks-done {
+    font-size: .8rem;
+}
+
+.user-prio-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+    height: 2rem;
+    width: 100%;
+}
+
+.marked-user-container {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+}
+
+.marked-user-container:nth-child(2) {
+    position: absolute;
+    left: -4px;
+}
+
+.marked-user {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 2rem;
+    width: 2rem;
+    font-size: .75rem;
+    border-radius: 50%;
+    color: var(--color-primary-button-click);
+    border: 1px solid var(--color-primary-button-click);
+}
+
+.marked-user-2 {
+    position: absolute;
+    left: 1.6rem;
+}
+
+.marked-user-3 {
+    position: absolute;
+    left: 3.15rem;
+}
+
+.marked-user-4 {
+    position: absolute;
+    left: 4.75rem;
+}
+
+.card-prio-icon {
+    width: 2rem;
+    height: 2rem;
+}

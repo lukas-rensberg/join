@@ -31,15 +31,15 @@ header {
   font-weight: 700;
 }
 
-input[type="checkbox"] {
+#slideInSideMenu {
   display: none;
 }
 
-input[type="checkbox"]:checked ~ .side-menu {
+#slideInSideMenu:checked ~ .side-menu {
   transform: translateX(0);
 }
 
-input[type="checkbox"]:not(:checked) ~ .side-menu {
+#slideInSideMenu:not(:checked) ~ .side-menu {
   transform: translateX(200%);
 }
 
