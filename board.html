@@ -10,59 +10,91 @@
     <link rel="stylesheet" href="./css/font.css">
     <link rel="stylesheet" href="./css/board.css">
     <link rel="stylesheet" href="./css/header-footer.css">
+    <link rel="stylesheet" href="./css/task-dialog.css">
 </head>
 
 <body class="body-board">
-    <div class="blur-bg"></div>
-    <dialog open="true">
-        <div class="d-card-header">
-            <div class="card-label card-bg-user-story">User Story</div>
-            <div class="close-dialog"></div>
-        </div>
-        <div class="d-card-headline">
-            <h2>Kochwelt Page & Recipe Recommmander</h2>
-        </div>
-        <p>Build start page with recipe recommendation.</p>
-        <div class="d-due-date-prio">
-            <p style="width: 6rem;"><strong>Due date:</strong></p>
-            <p>10/05/2025</p>
-        </div>
-        <div class="d-due-date-prio">
-            <p style="width: 6rem;"><strong>Priority:</strong></p>
-            <p style="margin-right: .5rem;">Medium</p>
-            <img src="./assets/priority_icons/prio_medium_colored.svg" alt="prio medium">
-        </div>
-        <div class="d-assigned-to">
-            <p style="width: 100%;"><strong>Assigned to:</strong></p>
-            <div class="d-assigned-member">
-                <div
-                    style="display: flex; align-items: center; gap: 1rem; padding: .5rem 1rem; border-radius: .6125rem; height: 4rem; width: 100%; background-color:bisque; border: 1px solid black;">
-                    <div class="d-assigned-member-icon" style="background-color: var(--color-variant1);">EM</div>
-                    <p>Edkar Massulo</p>
+    <dialog>
+        <div class="dialog-content">
+            <div class="d-card-header">
+                <div class="card-label card-bg-user-story">User Story</div>
+                <div class="close-dialog" onclick="closeDialog()"></div>
+            </div>
+            <section>
+                <div class="d-card-headline">
+                    <h2>Kochwelt Page & Recipe Recommmander</h2>
                 </div>
-                <div
-                    style="display: flex; align-items: center; gap: 1rem; padding: .5rem 1rem; border-radius: .6125rem; height: 4rem; background-color:bisque; border: 1px solid black;">
-                    <div class="d-assigned-member-icon" style="background-color: var(--color-variant11);">MM</div>
-                    <p>Manuel Mann</p>
+                <p>Build start page with recipe recommendation.</p>
+                <div class="d-due-date-prio">
+                    <p style="width: 6rem;"><strong>Due date:</strong></p>
+                    <p>10/05/2025</p>
                 </div>
-                <div
-                    style="display: flex; align-items: center; gap: 1rem; padding: .5rem 1rem; border-radius: .6125rem; height: 4rem; background-color:bisque; border: 1px solid black;">
-                    <div class="d-assigned-member-icon" style="background-color: var(--color-variant12);">AC</div>
-                    <p>Anton Chart</p>
+                <div class="d-due-date-prio">
+                    <p style="width: 6rem;"><strong>Priority:</strong></p>
+                    <p style="margin-right: .5rem;">Medium</p>
+                    <img src="./assets/priority_icons/prio_medium_colored.svg" alt="prio medium">
                 </div>
-                <div
-                    style="display: flex; align-items: center; gap: 1rem; padding: .5rem 1rem; border-radius: .6125rem; height: 4rem; background-color:bisque; border: 1px solid black;">
-                    <div class="d-assigned-member-icon" style="background-color: var(--color-variant13);">WW</div>
-                    <p>Wolfgrnag Wolf</p>
+                <div class="d-assigned-to">
+                    <p style="width: 100%;"><strong>Assigned to:</strong></p>
+                    <div class="d-assigned-members">
+                        <div class="d-assigned-member-cards">
+                            <div class="d-assigned-member-icon" style="background-color: var(--color-variant1);">EM
+                            </div>
+                            <p>Edkar Massulo</p>
+                        </div>
+                        <div class="d-assigned-member-cards">
+                            <div class="d-assigned-member-icon" style="background-color: var(--color-variant11);">MM
+                            </div>
+                            <p>Manuel Mann</p>
+                        </div>
+                        <div class="d-assigned-member-cards">
+                            <div class="d-assigned-member-icon" style="background-color: var(--color-variant12);">AC
+                            </div>
+                            <p>Anton Chart</p>
+                        </div>
+                        <div class="d-assigned-member-cards">
+                            <div class="d-assigned-member-icon" style="background-color: var(--color-variant13);">WW
+                            </div>
+                            <p>Wolfgang Wolf</p>
+                        </div>
+                        <div class="d-assigned-member-cards">
+                            <div class="d-assigned-member-icon" style="background-color: var(--color-variant14);">II
+                            </div>
+                            <p>Igor Isslie</p>
+                        </div>
+                    </div>
                 </div>
-                <div
-                    style="display: flex; align-items: center; gap: 1rem; padding: .5rem 1rem; border-radius: .6125rem; height: 4rem; background-color:bisque; border: 1px solid black;">
-                    <div class="d-assigned-member-icon" style="background-color: var(--color-variant14);">II</div>
-                    <p>Igor Isslie</p>
+                <div class="d-subtasks">
+                    <p style="width: 100%;"><strong>Subtasks:</strong></p>
+                    <div class="d-subtasks-check">
+                        <div class="d-subtask">
+                            <input type="checkbox" id="d-subtaks-1">
+                            <label for="d-subtaks-1">Implement Recipe Recommendation</label>
+                        </div>
+                        <div class="d-subtask">
+                            <input type="checkbox" id="d-subtaks-2">
+                            <label for="d-subtaks-2">Start Layout</label>
+                        </div>
+                        <div class="d-subtask">
+                            <input type="checkbox" id="d-subtaks-3">
+                            <label for="d-subtaks-3">Double Check</label>
+                        </div>
+                        <div class="d-subtask">
+                            <input type="checkbox" id="d-subtaks-4">
+                            <label for="d-subtaks-4">Code Review</label>
+                        </div>
+                        <div class="d-subtask">
+                            <input type="checkbox" id="d-subtaks-5">
+                            <label for="d-subtaks-5">Beta Test</label>
+                        </div>
+                    </div>
                 </div>
+            </section>
+            <div class="d-card-footer">
+                <div class="d-card-footer-d">Delete</div>
+                <div class="d-card-footer-e">Edit</div>
             </div>
         </div>
-
     </dialog>
     <header>
         <img src="./assets/icons/logo-white.svg" alt="Join Logo">
@@ -106,19 +138,10 @@
                 <div class="task-card-container">
                     <div class="task-card-wrapper">
                         <div class="no-tasks, d-none">No tasks in progress</div>
-                        <div class="task-card">
+                        <div class="task-card" onclick="openDialog()">
                             <div class="card-headline">
                                 <div class="card-label card-bg-user-story">User Story</div>
-                                <div class="card-swap-icon" onclick="swapMenuSlideIn()"></div>
-                                <div class="card-swap-menu" id="card-swap-menu">
-                                    <h5>Move to</h5>
-                                    <div class="move-to-do">
-                                        <div class="move-to-do-arrow"></div>To do
-                                    </div>
-                                    <div class="move-to-review">
-                                        <div class="move-to-review-arrow"></div>Review
-                                    </div>
-                                </div>
+                                <div class="card-swap-icon"></div>
                             </div>
                             <div class="card-task-title">Kochwelt Page & Recipe Recommender</div>
                             <div class="card-task-text">Build start page with recipe recommandation...</div>
@@ -186,7 +209,16 @@
                         <div class="task-card">
                             <div class="card-headline">
                                 <div class="card-label card-bg-user-story">User Story</div>
-                                <div class="card-swap-icon"></div>
+                                <div class="card-swap-icon" onclick="swapMenuSlideIn()"></div>
+                                <div class="card-swap-menu" id="card-swap-menu">
+                                    <h5>Move to</h5>
+                                    <div class="move-to-do">
+                                        <div class="move-to-do-arrow"></div>To do
+                                    </div>
+                                    <div class="move-to-review">
+                                        <div class="move-to-review-arrow"></div>Review
+                                    </div>
+                                </div>
                             </div>
                             <div class="card-task-title">Kochwelt Page & Recipe Recommender</div>
                             <div class="card-task-text">Build start page with recipe recommandation...</div>
@@ -330,6 +362,8 @@
 
     <script>
 
+        let dialogRef = document.querySelector("dialog");
+
         // Menü einfahren (slide-in)
         function swapMenuSlideIn() {
             const swapMenu = document.getElementById("card-swap-menu");
@@ -354,6 +388,17 @@
             swapMenu.classList.add("slide-out-swap-menu");
         }
 
+        function openDialog() {
+            // dialogRef.classList.remove("dialog-swipe-out");
+            dialogRef.classList.add("dialog-swipe-in");
+            dialogRef.showModal();
+        }
+
+        function closeDialog() {
+            dialogRef.classList.remove("dialog-swipe-in");
+            // dialogRef.classList.add("dialog-swipe-out");
+            dialogRef.close();
+        }
 
     </script>
 </body>
