@@ -1,4 +1,4 @@
-body main:has(dialog[open]) {
+html:has(dialog[open]) {
     overflow: hidden;
 }
 
