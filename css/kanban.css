@@ -1,16 +1,12 @@
-html {
-scroll-behavior: smooth;
-overflow-x: hidden;
-}
 
 body {
 display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-  width: 100vw;
-  max-width: 1920px;
-  position: relative;
+flex-direction: column;
+align-items: center;
+justify-content: flex-start;
+min-height: 100vh;
+width: 100vw;
+background-color: #f6f7f8;
 }
 
 .page-container {
@@ -106,8 +102,8 @@ color: var(--color-menu-text);
 }
 
 .form-group-title #task-title::placeholder {
-font-size: 1.8rem;
-font-weight: 500;
+font-size: 1.5rem;
+font-weight: 400;
 color: #a0a0a0;
 opacity: 1;
 }
@@ -116,7 +112,7 @@ opacity: 1;
 width: 100%;
 padding: 12px 15px;
 border: 1px solid var(--color-light-gray);
-border-radius: var(--button-radius);
+border-radius:0 var(--button-radius) var(--color-light-gray);
 font-size: 1rem;
 outline: none;
 transition: border-color 0.2s;
@@ -136,7 +132,7 @@ border-bottom: 1px solid var(--color-light-gray);
 
 .input-with-icon input[type="text"] {
 flex-grow: 1;
-padding: 12px 0;
+padding: 12px ;
 border: none;
 border-radius: 0;
 font-size: 1rem;
@@ -145,12 +141,9 @@ background-color: transparent;
 }
 
 .input-with-icon .icon {
-padding-left: 15px;
+padding:0 15px;
 }
-.input-with-icon .icon img {
-width: 20px;
-height: 20px;
-}
+
 
 .subtask-input-wrapper {
 border: 1px solid var(--color-light-gray);
@@ -374,59 +367,4 @@ filter: brightness(0) saturate(100%) invert(26%) sepia(85%) saturate(3062%) hue-
 font-size: 0.75rem;
 font-weight: 500;
 line-height: 1;
-}
-
-@media (min-width: 768px) {
-body {
-min-height: auto;
-justify-content: flex-start;
-}
-
-.page-container {
-max-width: 1400px;
-margin: 0 auto;
-padding-top: 80px;
-padding-bottom: 20px;
-min-height: 100vh;
-display: flex;
-flex-direction: column;
-}
-
-.app-header {
-max-width: 100%;
-height: 80px;
-padding: 0 50px;
-position: fixed;
-left: 0;
-transform: none;
-}
-
-.main-nav {
-display: none;
-}
-
-.add-task-form-container {
-max-width: 800px;
-margin: 40px auto;
-padding: 40px 50px;
-background-color: #ffffff;
-border-radius: 30px;
-box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-min-height: auto;
-}
-
-.priority-selection {
-gap: 20px;
-}
-
-.button-group {
-justify-content: center;
-padding: 0;
-margin-top: 50px;
-}
-
-.button-group button {
-flex-grow: 0;
-width: 160px;
-}
 }

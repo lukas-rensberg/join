@@ -6,11 +6,8 @@
     <title>Aufgabe hinzufügen</title>
     <link rel="stylesheet" href="./css/kanban.css">
     <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-    </style>
-</head>
+    
+    </head>
 <body>
 
     <div class="page-container">
@@ -77,11 +74,19 @@
 
             <div class="form-group">
                 <label>Subtasks (optional)</label>
+                <div class="select-wrapper">
+                    <select>
+                        <option selected disabled>Add new subtask</option>
+                    </select>
+                    <span class="select-arrow">
+                    </span>
+                </div>
             </div>
+                
 
             <div class="button-group">
                 <button class="btn-clear">Clear <span><img src="./assets/menu_icons/iconoir_cancel.svg" alt=""></span></button>
-                <button class="btn-create">Create Task <span class="check-icon"><img src="assets/menu_icons/check.svg" alt=""></span></button>
+                <button class="btn-create">Create Task <span class="check-icon"><img src="./assets/menu_icons/check.svg" alt=""></span></button>
             </div>
 
         </main>
@@ -105,9 +110,6 @@
             </a>
         </nav>
     </div>
-
-</body>
-</html>
 
 </body>
 </html>
