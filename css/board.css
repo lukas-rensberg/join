@@ -111,25 +111,29 @@ input[type="name"] {
 }
 
 .task-card-container {
-
     display: flex;
     flex-direction: row;
     gap: 1rem;
     width: 100%;
-    padding-bottom: .75rem;
+    padding: .5rem 0;
     overflow: auto;
+    border-radius: 1rem;
+    border: 2px solid transparent;
+}
+
+.task-card-container-dragover {
+    background-color: var(--color-light-gray);
+    border: 2px dashed var(--color-border-gray);
 }
 
 .task-card-wrapper {
     display: flex;
     gap: 1rem;
-    padding: .75rem 0;
 }
 
 .d-none {
     display: none;
 }
-
 
 .no-tasks {
     display: flex;
@@ -161,7 +165,7 @@ input[type="name"] {
 .task-card {
     position: relative;
     width: 14rem;
-    height: 14rem;
+    aspect-ratio: 1 / 1;
     display: flex;
     flex-direction: column;
     padding: 1rem;
@@ -172,10 +176,10 @@ input[type="name"] {
     &:hover {
         cursor: pointer;
     }
+}
 
-    &:f {
-        transform: rotate(5);
-    }
+.is-dragging {
+    rotate: 5deg;
 }
 
 .empty-card {
@@ -184,7 +188,6 @@ input[type="name"] {
     border-radius: 1.5rem;
     border: 1px dashed var(--color-no-tasks-border);
     box-shadow: 0px 0 4px 0px rgba(0, 0, 0, 0.16);
-    ;
 }
 
 .card-headline {
@@ -321,7 +324,7 @@ h5 {
     color: white;
 }
 
-.card-bg-tech-task {
+.card-bg-technical-task {
     background-color: var(--color-variant10);
     color: white;
 }

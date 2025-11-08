@@ -1,360 +1,233 @@
 <!DOCTYPE html>
 <html lang="de">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Join | Board</title>
-    <link rel="shortcut icon" href="./assets/icons/logo-blue.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="./style.css">
-    <link rel="stylesheet" href="./css/font.css">
-    <link rel="stylesheet" href="./css/board.css">
-    <link rel="stylesheet" href="./css/header-footer.css">
-    <link rel="stylesheet" href="./css/task-dialog.css">
-</head>
+    <link
+      rel="shortcut icon"
+      href="./assets/icons/logo-blue.svg"
+      type="image/svg+xml"
+    />
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./css/font.css" />
+    <link rel="stylesheet" href="./css/board.css" />
+    <link rel="stylesheet" href="./css/header-footer.css" />
+    <link rel="stylesheet" href="./css/task-dialog.css" />
+  </head>
 
-<body class="body-board">
-    <dialog>
-        <div class="dialog-content">
-            <div class="d-card-header">
-                <div class="card-label card-bg-user-story">User Story</div>
-                <div class="close-dialog" onclick="closeDialog()"></div>
-            </div>
-            <section>
-                <div class="d-card-headline">
-                    <h2>Kochwelt Page & Recipe Recommmander</h2>
-                </div>
-                <p>Build start page with recipe recommendation.</p>
-                <div class="d-due-date-prio">
-                    <p><strong>Due date:</strong></p>
-                    <p>10/05/2025</p>
-                </div>
-                <div class="d-due-date-prio">
-                    <p><strong>Priority:</strong></p>
-                    <p class="p-prio">Medium</p>
-                    <img src="./assets/priority_icons/prio_medium_colored.svg" alt="prio medium">
-                </div>
-                <div class="d-assigned-to">
-                    <p><strong>Assigned to:</strong></p>
-                    <div class="d-assigned-members">
-                        <div class="d-assigned-member-cards">
-                            <div class="d-assigned-member-icon" style="background-color: var(--color-variant1);">EM
-                            </div>
-                            <p>Edkar Massulo</p>
-                        </div>
-                        <div class="d-assigned-member-cards">
-                            <div class="d-assigned-member-icon" style="background-color: var(--color-variant11);">MM
-                            </div>
-                            <p>Manuel Mann</p>
-                        </div>
-                        <div class="d-assigned-member-cards">
-                            <div class="d-assigned-member-icon" style="background-color: var(--color-variant12);">AC
-                            </div>
-                            <p>Anton Chart</p>
-                        </div>
-                        <div class="d-assigned-member-cards">
-                            <div class="d-assigned-member-icon" style="background-color: var(--color-variant13);">WW
-                            </div>
-                            <p>Wolfgang Wolf</p>
-                        </div>
-                        <div class="d-assigned-member-cards">
-                            <div class="d-assigned-member-icon" style="background-color: var(--color-variant14);">II
-                            </div>
-                            <p>Igor Isslie</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="d-subtasks">
-                    <p><strong>Subtasks:</strong></p>
-                    <div class="d-subtasks-check">
-                        <div class="d-subtask">
-                            <input type="checkbox" id="d-subtaks-1">
-                            <label for="d-subtaks-1">Implement Recipe Recommendation</label>
-                        </div>
-                        <div class="d-subtask">
-                            <input type="checkbox" id="d-subtaks-2">
-                            <label for="d-subtaks-2">Start Layout</label>
-                        </div>
-                        <div class="d-subtask">
-                            <input type="checkbox" id="d-subtaks-3">
-                            <label for="d-subtaks-3">Double Check</label>
-                        </div>
-                        <div class="d-subtask">
-                            <input type="checkbox" id="d-subtaks-4">
-                            <label for="d-subtaks-4">Code Review</label>
-                        </div>
-                        <div class="d-subtask">
-                            <input type="checkbox" id="d-subtaks-5">
-                            <label for="d-subtaks-5">Beta Test</label>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <div class="d-card-footer">
-                <div class="d-card-footer-d">Delete</div>
-                <div class="d-card-footer-e">Edit</div>
-            </div>
-        </div>
-    </dialog>
+  <body class="body-board" onload="updateHTML()">
     <header>
-        <img src="./assets/icons/logo-white.svg" alt="Join Logo">
-        <input type="checkbox" id="slideInSideMenu">
-        <label class="avatar" for="slideInSideMenu">GM</label>
-        <div class="side-menu">
-            <nav>
-                <a href="help.html">Help</a>
-                <a href="legal_notice.html">Legal Notice</a>
-                <a href="legal_notice.html">Privacy Policy</a>
-                <a href="index.html">Log Out</a>
-            </nav>
-        </div>
+      <img src="./assets/icons/logo-white.svg" alt="Join Logo" />
+      <input type="checkbox" id="slideInSideMenu" />
+      <label class="avatar" for="slideInSideMenu">GU</label>
+      <div class="side-menu">
+        <nav>
+          <a href="help.html">Help</a>
+          <a href="legal_notice.html">Legal Notice</a>
+          <a href="legal_notice.html">Privacy Policy</a>
+          <a href="index.html">Log Out</a>
+        </nav>
+      </div>
     </header>
     <main>
-        <section class="src-container">
-            <div class="input-container">
-                <input type="name" name="search-task" id="search-task" placeholder="Find Task">
-                <div class="inp-src-icon"></div>
+      <section class="src-container">
+        <div class="input-container">
+          <input
+            type="name"
+            name="search-task"
+            id="search-task"
+            placeholder="Find Task"
+          />
+          <div class="inp-src-icon"></div>
+        </div>
+      </section>
+      <section class="section-tasks">
+        <div class="tasks-container">
+          <div class="task-title">
+            <div class="task-headline">To do</div>
+            <div class="add-task-icon"></div>
+          </div>
+          <div
+            class="task-card-container"
+            id="to-do"
+            ondrop="moveTo('to-do')"
+            ondragleave="bgContainerRemove('to-do')"
+            ondragover="allowDrop(event); bgContainer('to-do'); showDashedBoxOnce('to-do')"
+          >
+            <div class="task-card-wrapper"></div>
+            <div class="add-task-icon"></div>
+          </div>
+          <div class="task-title">
+            <div class="task-headline">In progress</div>
+            <div class="add-task-icon"></div>
+          </div>
+          <div
+            class="task-card-container"
+            id="in-progress"
+            ondrop="moveTo('in-progress')"
+            ondragleave="bgContainerRemove('in-progress')"
+            ondragover="allowDrop(event); bgContainer('in-progress'); showDashedBoxOnce('in-progress')"
+          >
+            <div class="task-card-wrapper"></div>
+          </div>
+
+          <div class="task-title">
+            <div class="task-headline">Await feedback</div>
+            <div class="add-task-icon"></div>
+          </div>
+          <div
+            class="task-card-container"
+            id="await-feedback"
+            ondrop="moveTo('await-feedback')"
+            ondragleave="bgContainerRemove('await-feedback')"
+            ondragover="allowDrop(event); bgContainer('await-feedback'); showDashedBoxOnce('await-feedback')"
+          >
+            <div class="task-card-wrapper"></div>
+          </div>
+
+          <div class="task-title">
+            <div class="task-headline">Done</div>
+          </div>
+          <div
+            class="task-card-container"
+            id="done"
+            ondrop="moveTo('done')"
+            ondragleave="bgContainerRemove('done')"
+            ondragover="allowDrop(event); bgContainer('done'); showDashedBoxOnce('done')"
+          >
+            <div class="task-card-wrapper"></div>
+          </div>
+        </div>
+      </section>
+
+      <dialog>
+        <div class="dialog-content">
+          <div class="d-card-header">
+            <div class="card-label card-bg-user-story">User Story</div>
+            <div class="close-dialog" onclick="closeDialog()"></div>
+          </div>
+          <section>
+            <div class="d-card-headline">
+              <h2>Kochwelt Page & Recipe Recommmander</h2>
             </div>
-        </section>
-        <section class="section-tasks">
-            <div class="tasks-container">
-
-                <div class="task-title">
-                    <div class="task-headline">To do</div>
-                    <div class="add-task-icon"></div>
-                </div>
-                <div class="task-card-container">
-                    <div class="no-tasks">No tasks to do</div>
-                </div>
-
-
-
-
-
-                <div class="task-title">
-                    <div class="task-headline">In progress</div>
-                    <div class="add-task-icon"></div>
-                </div>
-                <div class="task-card-container">
-                    <div class="task-card-wrapper">
-                        <div class="no-tasks, d-none">No tasks in progress</div>
-                        <div class="task-card" onclick="openDialog()">
-                            <div class="card-headline">
-                                <div class="card-label card-bg-user-story">User Story</div>
-                                <div class="card-swap-icon"></div>
-                            </div>
-                            <div class="card-task-title">Kochwelt Page & Recipe Recommender</div>
-                            <div class="card-task-text">Build start page with recipe recommandation...</div>
-                            <div class="card-progress-container">
-                                <div class="card-progress-bar">
-                                    <div class="card-sub-progress-bar" style="width: 50%;"></div>
-                                </div>
-                                <div id="tasks-done">1/2 Subtasks</div>
-                            </div>
-                            <div class="user-prio-container">
-                                <div class="marked-user-container">
-                                    <div class="marked-user" style="background-color: var(--color-default);">AM</div>
-                                    <div class="marked-user marked-user-2"
-                                        style="background-color: var(--color-variant1);">EM</div>
-                                    <div class="marked-user marked-user-3"
-                                        style="background-color: var(--color-variant11);">MM</div>
-                                    <div class="marked-user marked-user-4"
-                                        style="background-color: var(--color-variant12);">+11</div>
-                                </div>
-                                <div class="card-prio-icon"
-                                    style="background: url(./assets/priority_icons/prio_low_colored.svg) center center no-repeat;">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="task-card">
-                            <div class="card-headline">
-                                <div class="card-label card-bg-tech-task">Technical Task</div>
-                                <div class="card-swap-icon"></div>
-                            </div>
-                            <div class="card-task-title">HTML Base Template Creation</div>
-                            <div class="card-task-text">Create reusable HTML base templates...</div>
-                            <div class="card-progress-container">
-                                <div class="card-progress-bar">
-                                    <div class="card-sub-progress-bar" style="width: 25%;"></div>
-                                </div>
-                                <div id="tasks-done">1/4 Subtasks</div>
-                            </div>
-                            <div class="user-prio-container">
-                                <div class="marked-user-container">
-                                    <div class="marked-user" style="background-color: var(--color-default);">AM</div>
-                                    <div class="marked-user marked-user-2"
-                                        style="background-color: var(--color-variant1);">EM</div>
-                                </div>
-                                <div class="card-prio-icon"
-                                    style="background: url(./assets/priority_icons/prio_urgent_colored.svg) center center no-repeat;">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="empty-card"></div>
-                    </div>
-                </div>
-
-
-
-                <div class="task-title">
-                    <div class="task-headline">Await feedback</div>
-                    <div class="add-task-icon"></div>
-
-                </div>
-                <div class="task-card-container">
-                    <div class="task-card-wrapper">
-                        <div class="no-tasks, d-none">No tasks for feedback</div>
-                        <div class="task-card">
-                            <div class="card-headline">
-                                <div class="card-label card-bg-user-story">User Story</div>
-                                <div class="card-swap-icon" onclick="swapMenuSlideIn()"></div>
-                                <div class="card-swap-menu" id="card-swap-menu">
-                                    <h5>Move to</h5>
-                                    <div class="move-to-do">
-                                        <div class="move-to-do-arrow"></div>To do
-                                    </div>
-                                    <div class="move-to-review">
-                                        <div class="move-to-review-arrow"></div>Review
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-task-title">Kochwelt Page & Recipe Recommender</div>
-                            <div class="card-task-text">Build start page with recipe recommandation...</div>
-                            <div class="card-progress-container">
-                                <div class="card-progress-bar">
-                                    <div class="card-sub-progress-bar" style="width: 50%;"></div>
-                                </div>
-
-                                <div id="tasks-done">1/2 Subtasks</div>
-                            </div>
-                            <div class="user-prio-container">
-                                <div class="marked-user-container">
-                                    <div class="marked-user" style="background-color: var(--color-default);">AM</div>
-                                    <div class="marked-user marked-user-2"
-                                        style="background-color: var(--color-variant1);">EM</div>
-                                    <div class="marked-user marked-user-3"
-                                        style="background-color: var(--color-variant11);">BM</div>
-                                    <div class="marked-user marked-user-4"
-                                        style="background-color: var(--color-variant12);">+11</div>
-                                </div>
-                                <div class="card-prio-icon"
-                                    style="background: url(./assets/priority_icons/prio_low_colored.svg) center center no-repeat;">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="task-card">
-                            <div class="card-headline">
-                                <div class="card-label card-bg-tech-task">Technical Task</div>
-                                <div class="card-swap-icon"></div>
-                            </div>
-                            <div class="card-task-title">HTML Base Template Creation</div>
-                            <div class="card-task-text">Create reusable HTML base templates...</div>
-                            <div class="card-progress-container">
-                                <div class="card-progress-bar">
-                                    <div class="card-sub-progress-bar" style="width: 25%;"></div>
-                                </div>
-                                <div id="tasks-done">1/4 Subtasks</div>
-                            </div>
-                            <div class="user-prio-container">
-                                <div class="marked-user-container">
-                                    <div class="marked-user" style="background-color: var(--color-default);">AM</div>
-                                    <div class="marked-user marked-user-2"
-                                        style="background-color: var(--color-variant1);">EM</div>
-                                </div>
-                                <div class="card-prio-icon"
-                                    style="background: url(./assets/priority_icons/prio_urgent_colored.svg) center center no-repeat;">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="task-title">
-                    <div class="task-headline">Done</div>
-                </div>
-                <div class="task-card-container">
-                    <div class="no-tasks, d-none">No tasks done</div>
-                    <div class="task-card-wrapper">
-                        <div class="task-card">
-                            <div class="card-headline">
-                                <div class="card-label card-bg-user-story">User Story</div>
-                                <div class="card-swap-icon"></div>
-                            </div>
-                            <div class="card-task-title">Kochwelt Page & Recipe Recommender</div>
-                            <div class="card-task-text">Build start page with recipe recommandation...</div>
-                            <div class="card-progress-container">
-                                <div class="card-progress-bar">
-                                    <div class="card-sub-progress-bar" style="width: 50%;"></div>
-                                </div>
-                                <div id="tasks-done">1/2 Subtasks</div>
-                            </div>
-                            <div class="user-prio-container">
-                                <div class="marked-user-container">
-                                    <div class="marked-user" style="background-color: var(--color-default);">AM</div>
-                                    <div class="marked-user marked-user-2"
-                                        style="background-color: var(--color-variant1);">EM</div>
-                                    <div class="marked-user marked-user-3"
-                                        style="background-color: var(--color-variant11);">BM</div>
-                                    <div class="marked-user marked-user-4"
-                                        style="background-color: var(--color-variant12);">+11</div>
-                                </div>
-                                <div class="card-prio-icon"
-                                    style="background: url(./assets/priority_icons/prio_medium_colored.svg) center center no-repeat;">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="task-card">
-                            <div class="card-headline">
-                                <div class="card-label card-bg-tech-task">Technical Task</div>
-                                <div class="card-swap-icon"></div>
-                            </div>
-                            <div class="card-task-title">HTML Base Template Creation</div>
-                            <div class="card-task-text">Create reusable HTML base templates...</div>
-                            <div class="card-progress-container">
-                                <div class="card-progress-bar">
-                                    <div class="card-sub-progress-bar" style="width: 25%;"></div>
-                                </div>
-                                <div class="tasks-done">1/4 Subtasks</div>
-                            </div>
-                            <div class="user-prio-container">
-                                <div class="marked-user-container">
-                                    <div class="marked-user" style="background-color: var(--color-default);">AM</div>
-                                    <div class="marked-user marked-user-2"
-                                        style="background-color: var(--color-variant1);">EM</div>
-                                </div>
-                                <div class="card-prio-icon"
-                                    style="background: url(./assets/priority_icons/prio_urgent_colored.svg) center center no-repeat;">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <p>Build start page with recipe recommendation.</p>
+            <div class="d-due-date-prio">
+              <p><strong>Due date:</strong></p>
+              <p>10/05/2025</p>
             </div>
-        </section>
-
-
-
+            <div class="d-due-date-prio">
+              <p><strong>Priority:</strong></p>
+              <p class="p-prio">Medium</p>
+              <img
+                src="./assets/priority_icons/prio_medium_colored.svg"
+                alt="prio medium"
+              />
+            </div>
+            <div class="d-assigned-to">
+              <p><strong>Assigned to:</strong></p>
+              <div class="d-assigned-members">
+                <div class="d-assigned-member-cards">
+                  <div
+                    class="d-assigned-member-icon"
+                    style="background-color: var(--color-variant1)"
+                  >
+                    EM
+                  </div>
+                  <p>Edkar Massulo</p>
+                </div>
+                <div class="d-assigned-member-cards">
+                  <div
+                    class="d-assigned-member-icon"
+                    style="background-color: var(--color-variant11)"
+                  >
+                    MM
+                  </div>
+                  <p>Manuel Mann</p>
+                </div>
+                <div class="d-assigned-member-cards">
+                  <div
+                    class="d-assigned-member-icon"
+                    style="background-color: var(--color-variant12)"
+                  >
+                    AC
+                  </div>
+                  <p>Anton Chart</p>
+                </div>
+                <div class="d-assigned-member-cards">
+                  <div
+                    class="d-assigned-member-icon"
+                    style="background-color: var(--color-variant13)"
+                  >
+                    WW
+                  </div>
+                  <p>Wolfgang Wolf</p>
+                </div>
+                <div class="d-assigned-member-cards">
+                  <div
+                    class="d-assigned-member-icon"
+                    style="background-color: var(--color-variant14)"
+                  >
+                    II
+                  </div>
+                  <p>Igor Isslie</p>
+                </div>
+              </div>
+            </div>
+            <div class="d-subtasks">
+              <p><strong>Subtasks:</strong></p>
+              <div class="d-subtasks-check">
+                <div class="d-subtask">
+                  <input type="checkbox" id="d-subtaks-1" />
+                  <label for="d-subtaks-1"
+                    >Implement Recipe Recommendation</label
+                  >
+                </div>
+                <div class="d-subtask">
+                  <input type="checkbox" id="d-subtaks-2" />
+                  <label for="d-subtaks-2">Start Layout</label>
+                </div>
+                <div class="d-subtask">
+                  <input type="checkbox" id="d-subtaks-3" />
+                  <label for="d-subtaks-3">Double Check</label>
+                </div>
+                <div class="d-subtask">
+                  <input type="checkbox" id="d-subtaks-4" />
+                  <label for="d-subtaks-4">Code Review</label>
+                </div>
+                <div class="d-subtask">
+                  <input type="checkbox" id="d-subtaks-5" />
+                  <label for="d-subtaks-5">Beta Test</label>
+                </div>
+              </div>
+            </div>
+          </section>
+          <div class="d-card-footer">
+            <div class="d-card-footer-d">Delete</div>
+            <div class="d-card-footer-e">Edit</div>
+          </div>
+        </div>
+      </dialog>
     </main>
     <footer>
-        <a class="nav-item" href="#">
-            <img src="./assets/menu_icons/summary.svg" alt="Summary Icon">
-            <span class="nav-text">Summary</span>
-        </a>
-        <a class="nav-item" href="#">
-            <img src="./assets/menu_icons/add-task.svg" alt="Add Task Icon">
-            <span class="nav-text">Add Task</span>
-        </a>
-        <a class="nav-item" href="#">
-            <img src="./assets/menu_icons/board.svg" alt="Board Icon">
-            <span class="nav-text">Board</span>
-        </a>
-        <a class="nav-item" href="#">
-            <img src="./assets/menu_icons/contacts.svg" alt="Contacts Icon">
-            <span class="nav-text">Contacts</span>
-        </a>
+      <a class="nav-item" href="#">
+        <img src="./assets/menu_icons/summary.svg" alt="Summary Icon" />
+        <span class="nav-text">Summary</span>
+      </a>
+      <a class="nav-item" href="#">
+        <img src="./assets/menu_icons/add-task.svg" alt="Add Task Icon" />
+        <span class="nav-text">Add Task</span>
+      </a>
+      <a class="nav-item" href="#">
+        <img src="./assets/menu_icons/board.svg" alt="Board Icon" />
+        <span class="nav-text">Board</span>
+      </a>
+      <a class="nav-item" href="#">
+        <img src="./assets/menu_icons/contacts.svg" alt="Contacts Icon" />
+        <span class="nav-text">Contacts</span>
+      </a>
     </footer>
 
     <script src="./js/board.js"></script>
-</body>
-
+  </body>
 </html>
