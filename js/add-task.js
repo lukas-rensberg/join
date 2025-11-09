@@ -3,18 +3,22 @@
  * Simple functions for managing subtasks
  */
 
-import { createSubtaskHTML, createEditActionsHTML, createNormalActionsHTML } from './template.js';
+import {
+  createSubtaskHTML,
+  createEditActionsHTML,
+  createNormalActionsHTML,
+} from "./template.js";
 
 /**
  * Toggles visibility of subtask input icons based on input content
  */
 function toggleSubtaskIcons() {
-  const input = document.querySelector('.subtask-input');
-  const icons = document.querySelector('.subtask-icons');
+  const input = document.querySelector(".subtask-input");
+  const icons = document.querySelector(".subtask-icons");
   if (input.value.trim().length > 0) {
-    icons.classList.add('visible');
+    icons.classList.add("visible");
   } else {
-    icons.classList.remove('visible');
+    icons.classList.remove("visible");
   }
 }
 
@@ -22,10 +26,10 @@ function toggleSubtaskIcons() {
  * Clears the subtask input field and hides icons
  */
 function clearSubtaskInput() {
-  const input = document.querySelector('.subtask-input');
-  const icons = document.querySelector('.subtask-icons');
-  input.value = '';
-  icons.classList.remove('visible');
+  const input = document.querySelector(".subtask-input");
+  const icons = document.querySelector(".subtask-icons");
+  input.value = "";
+  icons.classList.remove("visible");
   input.focus();
 }
 
@@ -34,7 +38,7 @@ function clearSubtaskInput() {
  * @param {KeyboardEvent} event - The keyboard event
  */
 function handleSubtaskEnter(event) {
-  if (event.key === 'Enter') {
+  if (event.key === "Enter") {
     event.preventDefault();
     addNewSubtask();
   }
@@ -44,21 +48,20 @@ function handleSubtaskEnter(event) {
  * Adds a new subtask to the list
  */
 function addNewSubtask() {
-  const input = document.querySelector('.subtask-input');
+  const input = document.querySelector(".subtask-input");
   const text = input.value.trim();
   if (!text) return;
 
-  const list = document.getElementById('subtaskList');
-  const listItem = document.createElement('li');
-  listItem.className = 'subtask-item';
+  const list = document.getElementById("subtaskList");
+  const listItem = document.createElement("li");
+  listItem.className = "subtask-item";
   const escapedText = escapeHtml(text);
   const html = createSubtaskHTML(escapedText);
   listItem.innerHTML = html;
-  
+
   list.appendChild(listItem);
   clearSubtaskInput();
 }
-
 
 /**
  * Escapes HTML special characters to prevent XSS attacks
@@ -66,17 +69,17 @@ function addNewSubtask() {
  * @returns {string} The escaped text
  */
 function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-  }
+  const div = document.createElement("div");
+  div.textContent = text;
+  return div.innerHTML;
+}
 
 /**
  * Deletes a subtask from the list
  * @param {HTMLElement} button - The delete button element
  */
 function deleteSubtask(button) {
-  const listItem = button.closest('.subtask-item');
+  const listItem = button.closest(".subtask-item");
   listItem.remove();
 }
 
@@ -86,12 +89,12 @@ function deleteSubtask(button) {
  * @returns {HTMLInputElement} The input element
  */
 function createEditInput(text) {
-  const input = document.createElement('input');
-  input.type = 'text';
-  input.className = 'subtask-edit-input';
+  const input = document.createElement("input");
+  input.type = "text";
+  input.className = "subtask-edit-input";
   input.value = text;
-  input.setAttribute('data-original', text);
-  input.addEventListener('keypress', (event) => handleEditEnter(event, input));
+  input.setAttribute("data-original", text);
+  input.addEventListener("keypress", (event) => handleEditEnter(event, input));
   return input;
 }
 
@@ -100,20 +103,18 @@ function createEditInput(text) {
  * @param {HTMLElement} button - The edit button element
  */
 function startEditingSubtask(button) {
-  const listItem = button.closest('.subtask-item');
-  const textSpan = listItem.querySelector('.subtask-text');
+  const listItem = button.closest(".subtask-item");
+  const textSpan = listItem.querySelector(".subtask-text");
   const currentText = textSpan.textContent;
-  
-  listItem.classList.add('subtask-item-editing');
+
+  listItem.classList.add("subtask-item-editing");
   const input = createEditInput(currentText);
   textSpan.replaceWith(input);
   input.focus();
-  
-  const actions = listItem.querySelector('.subtask-actions');
+
+  const actions = listItem.querySelector(".subtask-actions");
   actions.innerHTML = createEditActionsHTML();
 }
-
-
 
 /**
  * Handles Enter key press during editing
@@ -121,9 +122,9 @@ function startEditingSubtask(button) {
  * @param {HTMLInputElement} input - The input field element
  */
 function handleEditEnter(event, input) {
-  if (event.key === 'Enter') {
+  if (event.key === "Enter") {
     event.preventDefault();
-    const saveBtn = input.closest('.subtask-item').querySelector('.save-edit');
+    const saveBtn = input.closest(".subtask-item").querySelector(".save-edit");
     if (saveBtn) {
       saveEdit(saveBtn);
     }
@@ -135,9 +136,9 @@ function handleEditEnter(event, input) {
  * @param {HTMLElement} button - The cancel button element
  */
 function cancelEdit(button) {
-  const listItem = button.closest('.subtask-item');
-  const input = listItem.querySelector('.subtask-edit-input');
-  const originalText = input.getAttribute('data-original');
+  const listItem = button.closest(".subtask-item");
+  const input = listItem.querySelector(".subtask-edit-input");
+  const originalText = input.getAttribute("data-original");
   exitEditMode(listItem, input, originalText);
 }
 
@@ -146,10 +147,10 @@ function cancelEdit(button) {
  * @param {HTMLElement} button - The save button element
  */
 function saveEdit(button) {
-  const listItem = button.closest('.subtask-item');
-  const input = listItem.querySelector('.subtask-edit-input');
+  const listItem = button.closest(".subtask-item");
+  const input = listItem.querySelector(".subtask-edit-input");
   const newText = input.value.trim();
-  
+
   if (newText) {
     exitEditMode(listItem, input, newText);
   }
@@ -162,14 +163,14 @@ function saveEdit(button) {
  * @param {string} text - The text to display
  */
 function exitEditMode(listItem, input, text) {
-  listItem.classList.remove('subtask-item-editing');
-  
-  const span = document.createElement('span');
-  span.className = 'subtask-text';
+  listItem.classList.remove("subtask-item-editing");
+
+  const span = document.createElement("span");
+  span.className = "subtask-text";
   span.textContent = text;
   input.replaceWith(span);
-  
-  const actions = listItem.querySelector('.subtask-actions');
+
+  const actions = listItem.querySelector(".subtask-actions");
   actions.innerHTML = createNormalActionsHTML();
 }
 
