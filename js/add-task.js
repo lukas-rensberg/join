@@ -1,0 +1,172 @@
+/**
+ * Subtask Management Functions
+ * Simple functions for managing subtasks
+ */
+
+import { createSubtaskHTML, createEditActionsHTML, createNormalActionsHTML } from './template.js';
+
+/**
+ * Toggles visibility of subtask input icons based on input content
+ */
+function toggleSubtaskIcons() {
+  const input = document.querySelector('.subtask-input');
+  const icons = document.querySelector('.subtask-icons');
+  if (input.value.trim().length > 0) {
+    icons.classList.add('visible');
+  } else {
+    icons.classList.remove('visible');
+  }
+}
+
+/**
+ * Clears the subtask input field and hides icons
+ */
+function clearSubtaskInput() {
+  const input = document.querySelector('.subtask-input');
+  const icons = document.querySelector('.subtask-icons');
+  input.value = '';
+  icons.classList.remove('visible');
+  input.focus();
+}
+
+/**
+ * Handles Enter key press in input field
+ * @param {KeyboardEvent} event - The keyboard event
+ */
+function handleSubtaskEnter(event) {
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    addNewSubtask();
+  }
+}
+
+/**
+ * Adds a new subtask to the list
+ */
+function addNewSubtask() {
+  const input = document.querySelector('.subtask-input');
+  const text = input.value.trim();
+  if (!text) return;
+
+  const list = document.getElementById('subtaskList');
+  const listItem = document.createElement('li');
+  listItem.className = 'subtask-item';
+  listItem.innerHTML = createSubtaskHTML(text);
+  
+  list.appendChild(listItem);
+  clearSubtaskInput();
+}
+
+
+/**
+ * Deletes a subtask from the list
+ * @param {HTMLElement} button - The delete button element
+ */
+function deleteSubtask(button) {
+  const listItem = button.closest('.subtask-item');
+  listItem.remove();
+}
+
+/**
+ * Creates an edit input element
+ * @param {string} text - The current text value
+ * @returns {HTMLInputElement} The input element
+ */
+function createEditInput(text) {
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'subtask-edit-input';
+  input.value = text;
+  input.setAttribute('data-original', text);
+  input.addEventListener('keypress', (event) => handleEditEnter(event, input));
+  return input;
+}
+
+/**
+ * Starts editing mode for a subtask
+ * @param {HTMLElement} button - The edit button element
+ */
+function startEditingSubtask(button) {
+  const listItem = button.closest('.subtask-item');
+  const textSpan = listItem.querySelector('.subtask-text');
+  const currentText = textSpan.textContent;
+  
+  listItem.classList.add('subtask-item-editing');
+  const input = createEditInput(currentText);
+  textSpan.replaceWith(input);
+  input.focus();
+  
+  const actions = listItem.querySelector('.subtask-actions');
+  actions.innerHTML = createEditActionsHTML();
+}
+
+
+
+/**
+ * Handles Enter key press during editing
+ * @param {KeyboardEvent} event - The keyboard event
+ * @param {HTMLInputElement} input - The input field element
+ */
+function handleEditEnter(event, input) {
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    const saveBtn = input.closest('.subtask-item').querySelector('.save-edit');
+    if (saveBtn) {
+      saveEdit(saveBtn);
+    }
+  }
+}
+
+/**
+ * Cancels editing and restores original text
+ * @param {HTMLElement} button - The cancel button element
+ */
+function cancelEdit(button) {
+  const listItem = button.closest('.subtask-item');
+  const input = listItem.querySelector('.subtask-edit-input');
+  const originalText = input.getAttribute('data-original');
+  exitEditMode(listItem, input, originalText);
+}
+
+/**
+ * Saves edited text
+ * @param {HTMLElement} button - The save button element
+ */
+function saveEdit(button) {
+  const listItem = button.closest('.subtask-item');
+  const input = listItem.querySelector('.subtask-edit-input');
+  const newText = input.value.trim();
+  
+  if (newText) {
+    exitEditMode(listItem, input, newText);
+  }
+}
+
+/**
+ * Exits edit mode and restores normal view
+ * @param {HTMLElement} listItem - The list item element
+ * @param {HTMLInputElement} input - The input field element
+ * @param {string} text - The text to display
+ */
+function exitEditMode(listItem, input, text) {
+  listItem.classList.remove('subtask-item-editing');
+  
+  const span = document.createElement('span');
+  span.className = 'subtask-text';
+  span.textContent = text;
+  input.replaceWith(span);
+  
+  const actions = listItem.querySelector('.subtask-actions');
+  actions.innerHTML = createNormalActionsHTML();
+}
+
+// Make functions globally available for onclick handlers
+window.toggleSubtaskIcons = toggleSubtaskIcons;
+window.clearSubtaskInput = clearSubtaskInput;
+window.handleSubtaskEnter = handleSubtaskEnter;
+window.addNewSubtask = addNewSubtask;
+window.deleteSubtask = deleteSubtask;
+window.startEditingSubtask = startEditingSubtask;
+window.handleEditEnter = handleEditEnter;
+window.cancelEdit = cancelEdit;
+window.saveEdit = saveEdit;
