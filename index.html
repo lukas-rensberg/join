@@ -1,58 +1,78 @@
 <!DOCTYPE html>
 <html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Join | Login</title>
+    <link
+      rel="shortcut icon"
+      href="./assets/icons/logo-blue.svg"
+      type="image/svg+xml"
+    />
+    <link rel="stylesheet" href="./css/font.css" />
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./css/login.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Join | Login</title>
-  <link rel="shortcut icon" href="./assets/icons/logo-blue.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="./css/font.css" />
-  <link rel="stylesheet" href="./style.css" />
-  <link rel="stylesheet" href="./css/login.css" />
-</head>
-
-<body class="body-login">
-  <div class="logo-wrapper">
-    <div class="logo-container"></div>
-  </div>
-
-  <!-- Login Form Container -->
-  <div class="login-container">
-    
-    <div class="login-card">
-      <form action="#" method="post">
-        <h2 class="login-title">Log in</h2>
-        <div class="input-group">
-          <input type="email" placeholder="Email" class="input-field" id="email" name="email" autocomplete="email"
-            required><span class="user-email"></span>
-        </div>
-
-        <div class="input-group">
-          <input type="password" placeholder="Password" class="input-field" id="password" name="password" required>
-          <span class="user-password">
-        </div>
-
-        <button type="submit" class="btn-primary">Log in</button>
-        <button type="button" class="btn-secondary">Guest Log in</button>
-      </form>
+  <body class="body-login">
+    <div class="logo-wrapper">
+      <div class="logo-container"></div>
     </div>
 
-    <div class="signup-section">
-      <p>Not a Join user?</p>
-      <button class="btn-signup" onclick="window.location.href='./signup.html'">
-        Sign up
-      </button>
+    <!-- Login Form Container -->
+    <div class="login-container">
+      <div class="login-card">
+        <form action="#" method="post">
+          <h2 class="login-title">Log in</h2>
+          <div class="input-group">
+            <input
+              type="email"
+              placeholder="Email"
+              class="input-field"
+              id="email"
+              name="email"
+              autocomplete="email"
+              required
+            /><span class="user-email"></span>
+          </div>
+
+          <div class="input-group">
+            <input
+              type="password"
+              placeholder="Password"
+              class="input-field"
+              id="password"
+              name="password"
+              required
+            />
+            <span class="password-icon-toggle" data-target="password">
+              <img src="./assets/icons/lock.svg" alt="Password" />
+            </span>
+          </div>
+
+          <div class="button-container">
+            <button type="submit" class="btn-primary">Log in</button>
+            <button type="button" class="btn-secondary">Guest log in</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="signup-section">
+        <p>Not a Join user?</p>
+        <button
+          class="btn-signup"
+          onclick="window.location.href='./signup.html'"
+        >
+          Sign up
+        </button>
+      </div>
     </div>
+    <footer class="legal-links">
+      <a href="./legal_notice.html" class="legal-link">Privacy Policy</a>
+      <a href="./legal_notice.html" class="legal-link">Legal Notice</a>
+    </footer>
 
-
-  </div>
-  <footer class="legal-links">
-    <a href="./legal_notice.html" class="legal-link">Privacy Policy</a>
-    <a href="./legal_notice.html" class="legal-link">Legal Notice</a>
-  </footer>
-
-  <script src="script.js"></script>
-  <script src="./js/login.js"></script>
-</body>
-
+    <script src="script.js"></script>
+    <script type="module" src="./js/auth.js"></script>
+  </body>
 </html>
