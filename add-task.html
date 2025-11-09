@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aufgabe hinzufügen</title>
-    <link rel="stylesheet" href="./css/kanban.css">
+    <link rel="stylesheet" href="./css/add-task.css">
     <link rel="stylesheet" href="style.css">
     
     </head>
@@ -58,6 +58,7 @@
                         <img src="./assets/menu_icons/arrow-drop-down.svg" >
                     </span>
                 </div>
+                <div class="dropzone "></div>
             </div>
 
             <div class="form-group">
@@ -70,17 +71,25 @@
                         <img src="./assets/menu_icons/arrow-drop-down.svg" >
                     </span>
                 </div>
+                <div class="dropzone "></div>
             </div>
 
             <div class="form-group">
                 <label>Subtasks (optional)</label>
                 <div class="select-wrapper">
-                    <select>
+                    <select id="subtask-select">
                         <option selected disabled>Add new subtask</option>
+                        <option>Contact Form</option> 
                     </select>
+                    <div class="subtask-icons">
+                        <img src="./assets/icons/close.svg" alt="Cancel" class="icon-btn-close-btn">
+                        <img src="./assets/icons/check.svg" alt="Confirm" class="icon-btn-confirm-btn">
+                    </div>
                     <span class="select-arrow">
+                        
                     </span>
                 </div>
+                <div class="dropzone "></div>
             </div>
                 
 
