@@ -1,15 +1,4 @@
 /**
- * Escapes HTML special characters to prevent XSS attacks
- * @param {string} text - The text to escape
- * @returns {string} The escaped text
- */
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
-}
-
-/**
  * Create error message element for authentication errors
  * @param {string} message - The error message to display
  * @returns {HTMLElement} The error message div element
@@ -33,9 +22,8 @@ export function createAuthErrorMessage(message) {
  * @returns {string} HTML string for the subtask
  */
 export function createSubtaskHTML(text) {
-  const escapedText = escapeHtml(text);
   return `
-    <span class="subtask-text">${escapedText}</span>
+    <span class="subtask-text">${text}</span>
     <div class="subtask-actions">
       <img src="./assets/icons/edit.svg" alt="Edit" onclick="startEditingSubtask(this)" />
       <span class="subtask-separator"></span>

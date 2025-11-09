@@ -51,12 +51,25 @@ function addNewSubtask() {
   const list = document.getElementById('subtaskList');
   const listItem = document.createElement('li');
   listItem.className = 'subtask-item';
-  listItem.innerHTML = createSubtaskHTML(text);
+  const escapedText = escapeHtml(text);
+  const html = createSubtaskHTML(escapedText);
+  listItem.innerHTML = html;
   
   list.appendChild(listItem);
   clearSubtaskInput();
 }
 
+
+/**
+ * Escapes HTML special characters to prevent XSS attacks
+ * @param {string} text - The text to escape
+ * @returns {string} The escaped text
+ */
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
 
 /**
  * Deletes a subtask from the list
