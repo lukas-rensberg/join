@@ -39,7 +39,7 @@ dialog {
     flex-direction: column;
     width: 100%;
     height: min(700px, calc(100vh - 152px));
-    padding: 1.5rem 1rem;
+    padding: 1.25rem 1rem;
 
     section {
         display: flex;
@@ -76,7 +76,7 @@ h2 {
 .d-card-headline {
     height: auto;
     width: 100%;
-    margin: 1rem 0 .5rem 0;
+    margin: .5rem 0 .5rem 0;
 }
 
 .d-due-date-prio {
@@ -153,7 +153,7 @@ strong {
 }
 
 .d-subtasks {
-    margin-top: .5rem;
+    margin: .5rem 0;
     overflow: visible;
 
     p {
@@ -167,7 +167,7 @@ strong {
     row-gap: .5rem;
     margin-top: .5rem;
     width: 100%;
-    max-height: 6rem;
+    height: 6rem;
     border: none;
     overflow: auto;
 
@@ -301,7 +301,7 @@ strong {
     }
 
     .d-subtasks-check {
-        max-height: 3rem;
+        max-height: 2.5rem;
     }
 
     dialog {
