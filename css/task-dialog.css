@@ -3,10 +3,11 @@ html:has(dialog[open]) {
 }
 
 dialog {
+    display: flex;
     border: none;
     width: 90%;
     max-width: calc(25rem + (2*var(--padding-side)));
-    height: min(700px, calc(100vh - 152px));
+    height: min(700px, calc(100vh - 1rem));
     position: fixed;
     z-index: 1100;
     top: 50%;
@@ -38,7 +39,7 @@ dialog {
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: min(700px, calc(100vh - 152px));
+    height: 100%;
     padding: 1.25rem 1rem;
 
     section {
@@ -297,19 +298,19 @@ strong {
 
 @media (width < 500px) {
     .d-assigned-members {
-        max-height: 6rem;
+        max-height: 9rem;
+    }
+
+    .d-subtasks {
+        height: 6rem;
     }
 
     .d-subtasks-check {
-        max-height: 2.5rem;
+        height: 100%;
     }
 
     dialog {
         transform: translateX(50%) translateY(-50%);
-
-        p {
-            font-size: 0.75rem;
-        }
 
         section {
             overflow: auto;
@@ -325,7 +326,6 @@ strong {
         align-items: center;
 
         label {
-            font-size: 12px;
 
             &::before {
                 transform: scale(0.8);
