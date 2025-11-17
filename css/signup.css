@@ -213,7 +213,6 @@ input[type="password"] {
   }
 
   input[type="checkbox"] {
-    /* display: none; */
     margin-right: 1rem;
     cursor: pointer;
     opacity: 0;
