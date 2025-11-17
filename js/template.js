@@ -14,5 +14,8 @@ export function createAuthErrorMessage(message) {
     width: 90%;
   `;
   return errorDiv;
-}
+};
+
+
+
 
