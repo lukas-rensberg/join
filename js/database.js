@@ -1,6 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 import { getDatabase, ref, set, get, update } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+import { showInlineError } from "./error-handler.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyA_jMGVxtdphe5xhWwkHQFh7T7a5wQLA0Y",
@@ -20,7 +21,7 @@ const database = getDatabase(app);
  * Creates a new contact in the RTDB
  * @param {String} uid The user ID of the new contact
  * @param {String} username The name of the new contact
- * @param {String} email The e-mail-address of the new contact
+ * @param {String} email The email address of the new contact
  * @param {String} phone The phone number of the new contact
  * @param {String} avatarColor The avatar color of the new contact
  * @param {String} initials The initials of the new contact
@@ -40,7 +41,7 @@ async function createContact(uid, username, email, phone, avatarColor, initials,
     });
   } catch (error) {
     console.error("Error creating contact:", error);
-    alert("Failed to create contact. Please try again.");
+    showInlineError("Failed to create contact. Please try again.");
   }
 }
 
@@ -54,7 +55,15 @@ export async function ensureUserAsContact(user, generatePhoneNumber, getRandomCo
   const snapshot = await get(contactRef);
 
   if (!snapshot.exists()) {
-    await createContact(user.uid, user.displayName || "Undefined User", user.email, generatePhoneNumber(), getRandomColor(), getInitials(user.displayName), true);
+    await createContact(
+      user.uid,
+      user.displayName || user.email.split("@")[0],
+      user.email,
+      generatePhoneNumber(),
+      getRandomColor(),
+      getInitials(user.displayName || user.email.split("@")[0]),
+      true
+    );
   }
 }
 
@@ -77,7 +86,7 @@ async function updateContact(uid, name, email, phone, initials) {
     });
   } catch (error) {
     console.error("Error updating contact:", error);
-    alert("Failed to update contact. Please try again.");
+    showInlineError("Failed to update contact. Please try again.");
   }
 }
 

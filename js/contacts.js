@@ -4,10 +4,11 @@
 */
 
 import { updateContact, database, createContact } from "./database.js";
-import { getRandomColor } from "./auth.js";
+import { getRandomColor } from "../utils/contact.js";
 import { ref, remove, onValue } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 import { generateSectionTemplate, generateContactItemTemplate } from "./template.js";
 import { validateContactForm } from "./contact-form-validation.js";
+import { showInlineError } from "./error-handler.js";
 
 let contacts = [];
 let currentContactId = null;
@@ -49,7 +50,8 @@ async function loadContactsFromRTDB() {
   });
 }
 
-/** Groups contacts by the first letter of their name
+/** 
+ * Groups contacts by the first letter of their name
  * @param {Array} contactsArray Array of contact objects
  * @returns {Object} Grouped contacts
  */
@@ -85,7 +87,8 @@ function renderContactsList(contactsArray) {
 }
 
 
-/** Creates contact section for a specific letter
+/** 
+ * Creates contact section for a specific letter
  * @param {string} letter The wanted letter of the contacts in this section
  * @param {Object} groupedContacts Contacts grouped by first letter
  * @returns {HTMLElement} Section element with contacts starting with the given letter
@@ -105,7 +108,8 @@ function createContactsPerLetter(letter, groupedContacts) {
   return section;
 }
 
-/** Creates a contact section element
+/** 
+ * Creates a contact section element
  * @param {string} letter The letter for the section header
  * @returns {HTMLElement} Section element
  */
@@ -160,8 +164,7 @@ function setupClickOutsideListener() {
     const fabMenu = document.getElementById("fabMenu");
 
     if (
-      (fabButton && fabMenu) &&
-      (!fabButton.contains(event.target) && !fabMenu.contains(event.target))
+      (fabButton && fabMenu) && !fabButton.contains(event.target) && !fabMenu.contains(event.target)
     ) {
       closeFabMenu();
     }
@@ -303,15 +306,16 @@ function clearModalFormFields() {
   document.getElementById("contactPhone").value = "";
 }
 
-/** Generates the modal avatar based on contact data or default state
+/** 
+ * Generates the modal avatar based on contact data or default state
  * @param {Object} [contact] The contact object
  * @return {void}
  */
 function generateModalAvatar(contact) {
   const modalAvatar = document.getElementById("modalAvatar");
-  modalAvatar.innerHTML = '';
   
   if (!contact) {
+    modalAvatar.innerHTML = '';
     modalAvatar.style.backgroundColor = "#D1D1D1";
 
     const modalIcon = document.createElement("img");
@@ -335,7 +339,7 @@ async function deleteContact() {
     closeFabMenu();
   } catch (error) {
     console.error("Failed to delete contact:", error);
-    alert("Failed to delete contact. Please try again.");
+    showInlineError("Failed to delete contact. Please try again.");
   }
 
   // TODO: Remove contact from all assigned tasks when task functionality is implemented
@@ -403,7 +407,7 @@ async function saveContact(event) {
  * Sets up click listeners for various buttons and links
  * @returns {void}
  */
-function setupClickListener() {
+function setupClickListeners() {
   const fabButton = document.getElementById("fabButton");
   if (fabButton) {
     fabButton.addEventListener("click", handleFabClick);
@@ -440,12 +444,15 @@ function setupClickListener() {
   }
 }
 
-// Initialize contacts and event listeners when page loads
 function init() {
   loadContactsFromRTDB();
   setupClickOutsideListener();
-  setupClickListener();
-};
+  setupClickListeners();
 
-window.saveContact = saveContact;
-window.init = init;
+  const contactForm = document.getElementById("contactForm");
+  if (contactForm) {
+    contactForm.addEventListener("submit", saveContact);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", init);

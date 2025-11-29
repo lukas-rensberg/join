@@ -3,15 +3,7 @@
  * @author Lukas Rensberg
  */
 
-/**
- * Validates email format
- * @param {string} email Email address
- * @return {boolean} True if valid
- */
-export function validateEmail(email) {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-}
+import { validateEmailFormat } from "../utils/contact.js";
 
 /**
  * Validates phone number format
@@ -19,7 +11,7 @@ export function validateEmail(email) {
  * @return {boolean} True if valid
  */
 export function validatePhone(phone) {
-  const phoneRegex = /^[\d\s+\-().]+$/;
+  const phoneRegex = /^\+?[\d\s\-().]{5,}$/;
   return phoneRegex.test(phone) && phone.length >= 5;
 }
 
@@ -81,7 +73,7 @@ export function validateContactForm(formData) {
   if (!formData.email.trim()) {
     showFieldError("contactEmail", "Email is required");
     isValid = false;
-  } else if (!validateEmail(formData.email)) {
+  } else if (!validateEmailFormat(formData.email)) {
     showFieldError("contactEmail", "Invalid email format");
     isValid = false;
   } else {

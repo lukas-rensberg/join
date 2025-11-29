@@ -9,19 +9,11 @@ import {
 import { auth, ensureUserAsContact, createContact } from "./database.js";
 import { initLoginPage, initLogout } from "./login.js";
 import { initSignupPage, showSuccessMessage } from "./signup.js";
-import { handleAuthError } from "./error-handler.js";
+import { handleAuthError, showInlineError } from "./error-handler.js";
 
 const PROTECTED_PAGES = ["overview.html", "contacts.html", "help.html", "legal_notice.html", "kanban.html"];
 const LOGIN_PAGE = "index.html";
 const OVERVIEW_PAGE = "overview.html";
-const AVATAR_COLORS = ["#ff7a00", "#ff5eb3", "#4589ff", "#ffc701", "#1fd7c1", "#9327ff", "#00bee8", "#ff4646"];
-
-/**
- * Get random avatar color from predefined palette
- */
-export function getRandomColor() {
-  return AVATAR_COLORS[Math.floor(Math.random() * AVATAR_COLORS.length)];
-}
 
 /**
  * Generate initials from name
@@ -128,7 +120,8 @@ async function handleLogout() {
     await signOut(auth);
     window.location.href = `./${LOGIN_PAGE}`;
   } catch (error) {
-    alert("An error occurred during logout. Please try again.");
+    console.error("Logout error:", error);
+    showInlineError("An error occurred during logout. Please try again.");
   }
 }
 

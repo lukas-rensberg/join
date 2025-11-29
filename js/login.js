@@ -1,4 +1,4 @@
-import { validateEmailFormat } from "./utils/email.js";
+import { validateEmailFormat } from "../utils/contact.js";
 
 /**
  * Clear error messages and red borders from form inputs
