@@ -248,7 +248,9 @@ function openDialog(index) {
   dialogRef.classList.add("dialog-swipe-in");
   dialogRef.innerHTML = getTemplateDialog(element);
   initMembers(element["member"]);
-  iniSubtasks(element["subtasks"]);
+  iniSubtasks(element["subtasks"], element["id"]);
+  console.log(element["id"]);
+  
   dialogRef.showModal();
 }
 
@@ -319,19 +321,19 @@ function getTemplateMember(member, memberInitials, memberIndex) {
               </div>`;
 }
 
-function iniSubtasks(subtasks) {
+function iniSubtasks(subtasks, taskId) {
   let subtasksContainer = document.querySelector(".d-subtasks-check");
   subtasksContainer.innerHTML = "";
   for (let index = 0; index < subtasks.length; index++) {
     const subtask = subtasks[index];
     const subtaskId = index + 1;
-    subtasksContainer.innerHTML += getTemplateSubtask(subtask, subtaskId);
+    subtasksContainer.innerHTML += getTemplateSubtask(subtask, taskId);
   }
 }
 
-function getTemplateSubtask(subtask, subtaskId) {
+function getTemplateSubtask(subtask, taskId) {
   return `<div class="d-subtask">
-                <input type="checkbox" id="d-subtask-${subtaskId}" />
-                <label for="d-subtask-${subtaskId}">${subtask}</label>
+                <input type="checkbox" id="d-subtask-${taskId}" value="${subtask}"/>
+                <label for="d-subtask-${taskId}">${subtask}</label>
               </div>`;
 }

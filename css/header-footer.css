@@ -29,17 +29,36 @@ header {
   border-radius: 50%;
   font-size: 0.8rem;
   font-weight: 700;
+  border: 1px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    cursor: pointer;
+    background-color: rgb(240, 248, 255);
+  }
+}
+
+label[for="slideInSideMenu"] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 3px solid #ffffff;
 }
 
 #slideInSideMenu {
   display: none;
 }
 
-#slideInSideMenu:checked ~ .side-menu {
+#slideInSideMenu:checked~.side-menu {
   transform: translateX(0);
 }
 
-#slideInSideMenu:not(:checked) ~ .side-menu {
+#slideInSideMenu:not(:checked)~.side-menu {
   transform: translateX(200%);
 }
 
@@ -50,8 +69,7 @@ header {
   z-index: 1001;
   right: 1.25rem;
   top: 3.25rem;
-  border-radius: var(--border-rad-20) 0 var(--border-rad-20)
-    var(--border-rad-20);
+  border-radius: var(--border-rad-20) 0 var(--border-rad-20) var(--border-rad-20);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
   display: flex;
   justify-content: center;
@@ -123,6 +141,7 @@ footer {
     &.nav-text:not(.active):not(:hover) {
       color: var(--color-menu-item) !important;
     }
+
     &.nav-text.active {
       color: var(--main-color) !important;
     }
@@ -140,4 +159,10 @@ footer {
 
 .nav-item.active {
   color: var(--main-color);
+}
+
+@media (width >=500px) {
+  footer {
+    display: none;
+  }
 }
