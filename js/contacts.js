@@ -410,6 +410,7 @@ function setupClickListener() {
   document.getElementById("modalBackdrop").addEventListener("click", closeContactModal);
   document.getElementById("modalCloseBtn").addEventListener("click", closeContactModal);
   document.getElementById("deleteButton").addEventListener("click", deleteContactFromModal);
+  document.getElementById("contactForm").addEventListener("submit", saveContact);
 }
 
 // Initialize contacts and event listeners when page loads
