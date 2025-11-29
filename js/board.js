@@ -122,86 +122,35 @@ function getTemplateRemainingMembers(memberIndex, remainingMembers) {
   return `<div class="marked-user marked-user-${memberIndex}" style="background-color: var(--color-variant-over);">+${remainingMembers}</div>`
 }
 
+/**
+ * Renders tasks for a specific category
+ * @param {string} category Task category
+ * @param {string} displayName Display name for empty state
+ */
+function renderTasksByCategory(category, displayName) {
+  const filteredTasks = tasks.filter((t) => t["category"] === category);
+  const containerRef = document.getElementById(category);
+  containerRef.innerHTML = "";
+
+  if (filteredTasks.length === 0) {
+    containerRef.innerHTML = getNoTaskTemplate(displayName);
+    return;
+  }
+
+  filteredTasks.forEach((task) => {
+    containerRef.innerHTML += getTemplateTaskCard(task);
+    initMarkedUsers(task);
+  });
+}
+
+/**
+ * Updates all task columns in the board
+ */
 function updateHTML() {
-  /**
-   * To do Tasks
-   */
-  let toDo = tasks.filter((t) => t["category"] == "to-do");
-  const toDoRef = document.getElementById("to-do");
-
-  toDoRef.innerHTML = "";
-
-  if (toDo.length === 0) {
-    toDoRef.innerHTML = getNoTaskTemplate("to do");
-  } else {
-    for (let index = 0; index < toDo.length; index++) {
-      const element = toDo[index];
-      const eleIndex = index + 1;
-      const eleInitials = element["member"][0].charAt(0).toUpperCase() + element["member"][0].charAt(element["member"][0].indexOf(" ") + 1).toUpperCase();
-      toDoRef.innerHTML += getTemplateTaskCard(element, eleIndex, eleInitials);
-      initMarkedUsers(element);
-    }
-  }
-
-  /**
-   * In Progress Tasks
-   */
-  let inProgress = tasks.filter((t) => t["category"] == "in-progress");
-  const inProgressRef = document.getElementById("in-progress");
-
-  inProgressRef.innerHTML = "";
-
-  if (inProgress.length === 0) {
-    inProgressRef.innerHTML = getNoTaskTemplate("in progress");
-  } else {
-    for (let index = 0; index < inProgress.length; index++) {
-      const element = inProgress[index];
-      const eleIndex = index + 1;
-      const eleInitials = element["member"][0].charAt(0).toUpperCase() + element["member"][0].charAt(element["member"][0].indexOf(" ") + 1).toUpperCase();
-      inProgressRef.innerHTML += getTemplateTaskCard(element, eleIndex, eleInitials);
-      initMarkedUsers(element);
-    }
-  }
-
-  /**
-   * Await Feedback Tasks
-   */
-  let awaitFeedback = tasks.filter((t) => t["category"] == "await-feedback");
-  const awaitFeedbackRef = document.getElementById("await-feedback");
-
-  awaitFeedbackRef.innerHTML = "";
-
-  if (awaitFeedback.length === 0) {
-    awaitFeedbackRef.innerHTML = getNoTaskTemplate("awaiting feedback");
-  } else {
-    for (let index = 0; index < awaitFeedback.length; index++) {
-      const element = awaitFeedback[index];
-      const eleIndex = index + 1;
-      const eleInitials = element["member"][0].charAt(0).toUpperCase() + element["member"][0].charAt(element["member"][0].indexOf(" ") + 1).toUpperCase();
-      awaitFeedbackRef.innerHTML += getTemplateTaskCard(element, eleIndex, eleInitials);
-      initMarkedUsers(element);
-    }
-  }
-
-  /**
-   * Done Tasks
-   */
-  let done = tasks.filter((t) => t["category"] == "done");
-  const doneRef = document.getElementById("done");
-
-  doneRef.innerHTML = "";
-
-  if (done.length === 0) {
-    doneRef.innerHTML = getNoTaskTemplate("done");
-  } else {
-    for (let index = 0; index < done.length; index++) {
-      const element = done[index];
-      const eleIndex = index + 1;
-      const eleInitials = element["member"][0].charAt(0).toUpperCase() + element["member"][0].charAt(element["member"][0].indexOf(" ") + 1).toUpperCase();
-      doneRef.innerHTML += getTemplateTaskCard(element, eleIndex, eleInitials);
-      initMarkedUsers(element);
-    }
-  }
+  renderTasksByCategory("to-do", "to do");
+  renderTasksByCategory("in-progress", "in progress");
+  renderTasksByCategory("await-feedback", "awaiting feedback");
+  renderTasksByCategory("done", "done");
 }
 
 function startDragging(id) {
@@ -361,7 +310,6 @@ function initMembers(members) {
     const memberIndex = index + 1;
     membersContainer.innerHTML += getTemplateMember(member, memberInitials, memberIndex);
   }
-
 }
 
 function getTemplateMember(member, memberInitials, memberIndex) {
