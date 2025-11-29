@@ -12,7 +12,7 @@ import { initSignupPage, showSuccessMessage } from "./signup.js";
 import { handleAuthError, showInlineError } from "./error-handler.js";
 import { getRandomColor } from "../utils/contact.js";
 
-const PROTECTED_PAGES = ["overview.html", "contacts.html", "help.html", "legal_notice.html", "kanban.html"];
+const PROTECTED_PAGES = ["overview.html", "contacts.html", "help.html", "legal_notice.html", "kanban.html", "board.html"];
 const LOGIN_PAGE = "index.html";
 const OVERVIEW_PAGE = "overview.html";
 

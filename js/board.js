@@ -1,6 +1,142 @@
+import { 
+  createTask, 
+  updateTask, 
+  deleteTask, 
+  loadTasks, 
+  migrateDefaultTasks,
+  auth,
+  database
+} from './database.js';
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import { ref, onValue } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+
 let dialogRef = document.querySelector("dialog");
 
-let tasks = [
+let tasks = [];
+let contacts = [];
+
+// Load contacts from Firebase
+function loadContacts() {
+  const contactsRef = ref(database, 'contacts');
+  onValue(contactsRef, (snapshot) => {
+    if (snapshot.exists()) {
+      contacts = Object.values(snapshot.val());
+    }
+  });
+}
+
+// Helper function to get contact by ID
+function getContactById(contactId) {
+  return contacts.find(c => c.id === contactId);
+}
+
+/**
+ * Format date string for display
+ * @param {string} dateString - Date in YYYY-MM-DD format
+ * @returns {string} Formatted date string
+ */
+function formatDate(dateString) {
+  if (!dateString) return "No due date";
+  
+  try {
+    const date = new Date(dateString + 'T00:00:00'); 
+    return date.toLocaleDateString('en-GB', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
+  } catch (error) {
+    return dateString;
+  }
+}
+
+/**
+ * Get random contacts for task assignment
+ * @param {number} count - Number of random contacts to return
+ * @returns {Array} Array of contact IDs
+ */
+function getRandomContactIds(count = 3) {
+  if (!contacts || contacts.length === 0) return [];
+  
+  const availableContacts = contacts.filter(c => !c.isAuthUser); // Exclude auth user from random assignment
+  if (availableContacts.length === 0) return [];
+  
+  const shuffled = [...availableContacts].sort(() => 0.5 - Math.random());
+  const selectedCount = Math.min(count, Math.max(1, Math.floor(Math.random() * 4) + 1)); // 1-4 members
+  return shuffled.slice(0, selectedCount).map(c => c.id);
+}
+
+/**
+ * Create default tasks with random member assignments
+ * @returns {Array} Array of default tasks with random members
+ */
+function createDefaultTasksWithMembers() {
+  return [
+    {
+      id: "to-do-1",
+      task: "User Story",
+      title: "Kochwelt Page & Recipe Recommender",
+      text: "Build start page with recipe recommandation...",
+      subtasks: ["Beta Test", "Double Check", "Design Mockup", "Gather Content"],
+      subtasks_done: ["Start Layout", "Implement Recipe Recommendation"],
+      member: getRandomContactIds(),
+      priority: "medium",
+      category: "to-do",
+      dueDate: "2025-12-15",
+    },
+    {
+      id: "to-do-2",
+      task: "Technical Task",
+      title: "HTML Base Template Creation",
+      text: "Create reusable HTML base templates...",
+      subtasks: ["Beta Test", "Double Check", "Extra Subtask"],
+      subtasks_done: ["Another Subtask", "More Subtasks"],
+      member: getRandomContactIds(),
+      priority: "urgent",
+      category: "to-do",
+      dueDate: "2025-12-10",
+    },
+    {
+      id: "await-feedback-1",
+      task: "User Story",
+      title: "HTML Base Template Creation",
+      text: "Create reusable HTML base templates...",
+      subtasks: ["Beta Test"],
+      subtasks_done: ["Double Check"],
+      member: getRandomContactIds(),
+      priority: "urgent",
+      category: "await-feedback",
+      dueDate: "2025-12-08",
+    },
+    {
+      id: "in-progress-1",
+      task: "Technical Task",
+      title: "HTML Base Template Creation",
+      text: "Create reusable HTML base templates...",
+      subtasks: ["Beta Test", "Double Check", "Extra Subtask", "Another Subtask"],
+      subtasks_done: [],
+      member: getRandomContactIds(),
+      priority: "urgent",
+      category: "in-progress",
+      dueDate: "2025-12-20",
+    },
+    {
+      id: "done-2",
+      task: "User Story",
+      title: "HTML Base Template Creation",
+      text: "Create reusable HTML base templates...",
+      subtasks: ["Beta Test", "Double Check", "Extra Subtask", "Another Subtask"],
+      subtasks_done: ["Double Check"],
+      member: getRandomContactIds(),
+      priority: "low",
+      category: "done",
+      dueDate: "2025-11-30",
+    },
+  ];
+}
+
+// Default tasks for initial setup/migration - using placeholder contact IDs
+const defaultTasks = [
   {
     id: "to-do-1",
     task: "User Story",
@@ -8,7 +144,7 @@ let tasks = [
     text: "Build start page with recipe recommandation...",
     subtasks: ["Beta Test", "Double Check", "Design Mockup", "Gather Content"],
     subtasks_done: ["Start Layout", "Implement Recipe Recommendation"],
-    member: ["Anton Chart", "Edkar Massulo", "Manuel Mann", "Wolfgang Wolf", "Susi Super", "Lena Loder", "Peter Parker"],
+    member: [],
     priority: "medium",
     category: "to-do",
   },
@@ -19,7 +155,7 @@ let tasks = [
     text: "Create reusable HTML base templates...",
     subtasks: ["Beta Test", "Double Check", "Extra Subtask"],
     subtasks_done: ["Another Subtask", "More Subtasks"],
-    member: ["Anton Chart", "Edkar Massulo", "Manuel Mann", "Wolfgang Wolf", "Susi Super", "Lena Loder", "Peter Parker", "Bruce Banner", "Tony Stark"],
+    member: [],
     priority: "urgent",
     category: "to-do",
   },
@@ -30,7 +166,7 @@ let tasks = [
     text: "Create reusable HTML base templates...",
     subtasks: ["Beta Test"],
     subtasks_done: ["Double Check"],
-    member: ["Anton Chart", "Edkar Massulo", "Manuel Mann", "Wolfgang Wolf", "Susi Super", "Lena Loder"],
+    member: [],
     priority: "urgent",
     category: "await-feedback",
   },
@@ -41,7 +177,7 @@ let tasks = [
     text: "Create reusable HTML base templates...",
     subtasks: ["Beta Test", "Double Check", "Extra Subtask", "Another Subtask"],
     subtasks_done: [],
-    member: ["Anton Chart", "Edkar Massulo", "Manuel Mann", "Wolfgang Wolf", "Susi Super", "Lena Loder", "Peter Parker", "Bruce Banner", "Tony Stark"],
+    member: [],
     priority: "urgent",
     category: "in-progress",
   },
@@ -52,11 +188,81 @@ let tasks = [
     text: "Create reusable HTML base templates...",
     subtasks: ["Beta Test", "Double Check", "Extra Subtask", "Another Subtask"],
     subtasks_done: ["Double Check"],
-    member: ["Anton Chart", "Edkar Massulo", "Manuel Mann", "Wolfgang Wolf", "Susi Super", "Lena Loder", "Peter Parker", "Bruce Banner", "Tony Stark", "Clark Kent", "Diana Prince", "Barry Allen"],
+    member: [], 
     priority: "low",
     category: "done",
   },
 ];
+
+/**
+ * Initialize tasks by loading from Firebase
+ */
+function initializeTasks() {
+  try {
+    loadContacts();
+    
+    loadTasks((loadedTasks) => {
+      tasks = loadedTasks;
+      updateHTML();
+    });
+    
+    // Wait for contacts to load before migrating tasks with random members
+    setTimeout(() => {
+      migrateDefaultTasksWithMembers();
+    }, 1000); // Give contacts time to load
+  } catch (error) {
+    console.error('Error initializing tasks:', error);
+    tasks = [...defaultTasks];
+    updateHTML();
+  }
+}
+
+/**
+ * Migrate default tasks with random member assignments
+ */
+async function migrateDefaultTasksWithMembers() {
+  try {
+    const tasksWithMembers = createDefaultTasksWithMembers();
+    await migrateDefaultTasks(tasksWithMembers);
+  } catch (error) {
+    console.error('Error migrating tasks with members:', error);
+    // Fallback to default tasks without members
+    await migrateDefaultTasks(defaultTasks);
+  }
+}
+
+/**
+ * Save task to Firebase when created or updated
+ */
+async function saveTask(task) {
+  try {
+    if (task.id && task.id.startsWith('temp-')) {
+      // New task - create in Firebase
+      const newId = await createTask(task);
+      // Update local task with new ID
+      const taskIndex = tasks.findIndex(t => t.id === task.id);
+      if (taskIndex !== -1) {
+        tasks[taskIndex].id = newId;
+      }
+    } else if (task.id) {
+      // Existing task - update in Firebase
+      await updateTask(task.id, task);
+    }
+  } catch (error) {
+    console.error('Error saving task:', error);
+  }
+}
+
+/**
+ * Delete task from Firebase
+ */
+async function removeTask(taskId) {
+  try {
+    await deleteTask(taskId);
+  } catch (error) {
+    console.error('Error deleting task:', error);
+  }
+}
 
 let currentDraggedElement;
 
@@ -98,24 +304,26 @@ function slideOutMenu() {
 
 function initMarkedUsers(element) {
   let markedUserContainer = document.getElementById(`marked-user-container-${element["id"]}`);
-  for (let index = 0; index < element["member"].length; index++) {
+  const memberIds = element["member"] || [];
+  
+  for (let index = 0; index < memberIds.length; index++) {
     const memberIndex = index + 1;
     if (index == 3) {
-      const remainingMembers = element["member"].length - 3;
+      const remainingMembers = memberIds.length - 3;
       markedUserContainer.innerHTML += getTemplateRemainingMembers(memberIndex, remainingMembers);
       break;
     } else {
-      const member = element["member"][index];
-      const firstLetter = member.charAt(0).toUpperCase();
-      const secondLetter = member.charAt(member.indexOf(" ") + 1).toUpperCase();
-      const memberInitials = firstLetter + secondLetter;
-      markedUserContainer.innerHTML += getTemplateMarkedUser(memberIndex, memberInitials);
+      const contactId = memberIds[index];
+      const contact = getContactById(contactId);
+      if (contact) {
+        markedUserContainer.innerHTML += getTemplateMarkedUser(memberIndex, contact.initials, contact.avatarColor);
+      }
     }
   }
 }
 
-function getTemplateMarkedUser(memberIndex, memberInitials) {
-  return `<div class="marked-user marked-user-${memberIndex}" style="background-color: var(--color-variant${memberIndex});">${memberInitials}</div>`
+function getTemplateMarkedUser(memberIndex, memberInitials, avatarColor) {
+  return `<div class="marked-user marked-user-${memberIndex}" style="background-color: ${avatarColor || `var(--color-variant${memberIndex})`};">${memberInitials}</div>`
 }
 
 function getTemplateRemainingMembers(memberIndex, remainingMembers) {
@@ -143,14 +351,19 @@ function renderTasksByCategory(category, displayName) {
   });
 }
 
+let updateTimeout;
+
 /**
- * Updates all task columns in the board
+ * Updates all task columns in the board with debouncing to prevent flickering
  */
 function updateHTML() {
-  renderTasksByCategory("to-do", "to do");
-  renderTasksByCategory("in-progress", "in progress");
-  renderTasksByCategory("await-feedback", "awaiting feedback");
-  renderTasksByCategory("done", "done");
+  clearTimeout(updateTimeout);
+  updateTimeout = setTimeout(() => {
+    renderTasksByCategory("to-do", "to do");
+    renderTasksByCategory("in-progress", "in progress");
+    renderTasksByCategory("await-feedback", "awaiting feedback");
+    renderTasksByCategory("done", "done");
+  }, 100); // Increased debounce to 100ms
 }
 
 function startDragging(id) {
@@ -162,15 +375,33 @@ function allowDrop(event) {
   event.preventDefault();
 }
 
+/**
+ * Optimized drag over handler to prevent flickering
+ */
+function handleDragOver(event, section) {
+  event.preventDefault();
+  
+  // Throttle the calls to prevent excessive DOM manipulation
+  if (dragOverThrottle) return;
+  
+  dragOverThrottle = setTimeout(() => {
+    dragOverThrottle = null;
+  }, 16); // ~60fps throttling
+  
+  bgContainer(section);
+  showDashedBoxOnce(section);
+}
+
 function moveTo(category) {
-  tasks.forEach((task) => {
-    if (task["id"] == currentDraggedElement) {
-      task["category"] = category;
-    }
-  });
+  const taskToUpdate = tasks.find(task => task.id == currentDraggedElement);
+  if (taskToUpdate) {
+    taskToUpdate.category = category;
+    // Save the updated task to Firebase
+    saveTask(taskToUpdate);
+  }
   document.getElementById(currentDraggedElement).classList.remove("is-dragging");
   bgContainerRemove(category);
-  updateHTML();
+  // Remove updateHTML() call as Firebase listener will handle the update
 }
 
 function bgContainer(id) {
@@ -183,6 +414,12 @@ function bgContainerRemove(id) {
 }
 
 function getTemplateTaskCard(element) {
+  // Ensure subtasks arrays exist
+  const subtasks = element["subtasks"] || [];
+  const subtasksDone = element["subtasks_done"] || [];
+  const totalSubtasks = subtasks.length + subtasksDone.length;
+  const progressWidth = totalSubtasks > 0 ? (subtasksDone.length / totalSubtasks) * 100 : 0;
+  
   return `<div class="task-card" id="${element["id"]}" draggable="true" onclick="openDialog('${element["id"]}')" ondragstart="startDragging('${element["id"]}')">
                             <div class="card-headline">
                                 <div class="card-label card-bg-${element["task"].split(" ")[0].toLowerCase()}-${element["task"].split(" ")[1].toLowerCase()}">${element["task"]}</div>
@@ -192,9 +429,9 @@ function getTemplateTaskCard(element) {
                             <div class="card-task-text">${element["text"]}</div>
                             <div class="card-progress-container">
                                 <div class="card-progress-bar">
-                                    <div class="card-sub-progress-bar" style="width: ${((element["subtasks_done"].length) / (element["subtasks_done"].length + element["subtasks"].length)) * 100}%;"></div>
+                                    <div class="card-sub-progress-bar" style="width: ${progressWidth}%;"></div>
                                 </div>
-                                <div id="tasks-done">${element["subtasks_done"].length}/${(element["subtasks"].length + element["subtasks_done"].length)} Subtasks</div>
+                                <div id="tasks-done">${subtasksDone.length}/${totalSubtasks} Subtasks</div>
                             </div>
                             <div class="user-prio-container">
                                 <div class="marked-user-container" id="marked-user-container-${element["id"]}">
@@ -210,27 +447,50 @@ function getNoTaskTemplate(section) {
   return `<div class="no-tasks">No tasks ${section}</div>`;
 }
 
+let activeDragOverSection = null;
+let dragOverThrottle = null;
+
 function showDashedBoxOnce(section) {
-  // Remove any 'no-tasks' element if present in the section container
+  // Prevent repeated calls for the same section
+  if (activeDragOverSection === section) return;
+  
   const container = document.getElementById(section);
+  if (!container) return;
+  
+  // Check if already has empty card to avoid duplicate additions
+  if (container.querySelector(".empty-card")) {
+    activeDragOverSection = section;
+    return;
+  }
+  
   const noTasksElem = container.querySelector(".no-tasks");
   if (noTasksElem) {
     noTasksElem.style.display = "none";
   }
-  if (!container.querySelector(".empty-card")) {
-    container.innerHTML += generateEmptyCard();
-  }
+  
+  // Use insertAdjacentHTML instead of innerHTML += to avoid reflow
+  container.insertAdjacentHTML('beforeend', generateEmptyCard());
+  activeDragOverSection = section;
 }
 
 function hideDashedBox(section) {
   const container = document.getElementById(section);
+  if (!container) return;
+  
   const noTasksElem = container.querySelector(".no-tasks");
   if (noTasksElem) {
     noTasksElem.style.display = "flex";
   }
+  
   const emptyCard = container.querySelector(".empty-card");
-  if (!emptyCard) return;
-  emptyCard.parentNode.removeChild(emptyCard);
+  if (emptyCard) {
+    emptyCard.remove(); // Use remove() instead of parentNode.removeChild
+  }
+  
+  // Reset the active section flag
+  if (activeDragOverSection === section) {
+    activeDragOverSection = null;
+  }
 }
 
 function generateEmptyCard() {
@@ -248,8 +508,7 @@ function openDialog(index) {
   dialogRef.classList.add("dialog-swipe-in");
   dialogRef.innerHTML = getTemplateDialog(element);
   initMembers(element["member"]);
-  iniSubtasks(element["subtasks"], element["id"]);
-  console.log(element["id"]);
+  iniSubtasks(element["subtasks"], element["id"]); // Pass only subtasks array as expected
   
   dialogRef.showModal();
 }
@@ -263,6 +522,8 @@ function closeDialog() {
 }
 
 function getTemplateDialog(element) {
+  const dueDate = element["dueDate"] ? formatDate(element["dueDate"]) : "No due date set";
+  
   return `<div class="dialog-content">
         <div class="d-card-header">
           <div class="card-label card-bg-${element["task"].split(" ")[0].toLowerCase()}-${element["task"].split(" ")[1].toLowerCase()}">${element["task"]}</div>
@@ -275,7 +536,7 @@ function getTemplateDialog(element) {
           <p>${element["text"]}</p>
           <div class="d-due-date-prio">
             <p><strong>Due date:</strong></p>
-            <p>10/05/2025</p>
+            <p>${dueDate}</p>
           </div>
           <div class="d-due-date-prio">
             <p><strong>Priority:</strong></p>
@@ -299,41 +560,215 @@ function getTemplateDialog(element) {
       </div>`;
 }
 
-function initMembers(members) {
+function initMembers(memberIds) {
   let membersContainer = document.getElementById("d-assigned-members");
   membersContainer.innerHTML = "";
-  for (let index = 0; index < members.length; index++) {
-    const member = members[index];
-    const firstLetter = member.charAt(0).toUpperCase();
-    const secondLetter = member.charAt(member.indexOf(" ") + 1).toUpperCase();
-    const memberInitials = firstLetter + secondLetter;
-    const memberIndex = index + 1;
-    membersContainer.innerHTML += getTemplateMember(member, memberInitials, memberIndex);
+  const memberIdArray = memberIds || [];
+  for (let index = 0; index < memberIdArray.length; index++) {
+    const contactId = memberIdArray[index];
+    const contact = getContactById(contactId);
+    if (contact) {
+      const memberIndex = index + 1;
+      membersContainer.innerHTML += getTemplateMember(contact.name, contact.initials, contact.avatarColor);
+    }
   }
 }
 
-function getTemplateMember(member, memberInitials, memberIndex) {
+function getTemplateMember(memberName, memberInitials, avatarColor) {
   return `<div class="d-assigned-member-cards">
-                <div class="d-assigned-member-icon" style="background-color: var(--color-variant${memberIndex})">
+                <div class="d-assigned-member-icon" style="background-color: ${avatarColor}">
                   ${memberInitials}
                 </div>
-                <p>${member}</p>
+                <p>${memberName}</p>
               </div>`;
 }
 
 function iniSubtasks(subtasks, taskId) {
   let subtasksContainer = document.querySelector(".d-subtasks-check");
   subtasksContainer.innerHTML = "";
-  for (let index = 0; index < subtasks.length; index++) {
-    const subtask = subtasks[index];
-    const subtaskId = index + 1;
-    subtasksContainer.innerHTML += getTemplateSubtask(subtask, taskId);
+  
+  const task = tasks.find(t => t.id === taskId);
+  if (!task) return;
+  
+  const pendingSubtasks = task.subtasks || [];
+  const completedSubtasks = task.subtasks_done || [];
+  
+  // Add pending subtasks
+  pendingSubtasks.forEach((subtask, index) => {
+    subtasksContainer.innerHTML += getTemplateSubtask(subtask, taskId, index, false);
+  });
+  
+  // Add completed subtasks
+  completedSubtasks.forEach((subtask, index) => {
+    subtasksContainer.innerHTML += getTemplateSubtask(subtask, taskId, index + pendingSubtasks.length, true);
+  });
+  
+  // Add event listeners after DOM is updated
+  setTimeout(() => addSubtaskEventListeners(taskId), 0);
+}
+
+function getTemplateSubtask(subtask, taskId, index, isCompleted) {
+  const uniqueId = `subtask-${taskId}-${index}`;
+  return `<div class="d-subtask">
+                <input type="checkbox" id="${uniqueId}" value="${subtask}" ${isCompleted ? 'checked' : ''} data-task-id="${taskId}" data-subtask="${subtask}"/>
+                <label for="${uniqueId}">${subtask}</label>
+              </div>`;
+}
+
+/**
+ * Add event listeners to subtask checkboxes
+ */
+function addSubtaskEventListeners(taskId) {
+  const checkboxes = document.querySelectorAll(`input[data-task-id="${taskId}"]`);
+  checkboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+      const subtask = this.dataset.subtask;
+      const isCompleted = this.checked;
+      updateSubtaskStatus(taskId, subtask, isCompleted);
+    });
+  });
+}
+
+/**
+ * Create a new task and save it to Firebase
+ */
+async function createNewTask(taskData) {
+  try {
+    const newTask = {
+      ...taskData,
+      id: `temp-${Date.now()}`, // Temporary ID until Firebase assigns real one
+      subtasks: taskData.subtasks || [],
+      subtasks_done: taskData.subtasks_done || [],
+      member: taskData.member || [],
+      priority: taskData.priority || "medium",
+      category: taskData.category || "to-do",
+      dueDate: taskData.dueDate || null
+    };
+    
+    // Add to local array first for immediate UI feedback
+    tasks.push(newTask);
+    updateHTML();
+    
+    // Save to Firebase
+    await saveTask(newTask);
+  } catch (error) {
+    console.error('Error creating new task:', error);
+    // Remove from local array if Firebase save failed
+    const index = tasks.findIndex(t => t.id === newTask.id);
+    if (index > -1) {
+      tasks.splice(index, 1);
+      updateHTML();
+    }
   }
 }
 
-function getTemplateSubtask(subtask, taskId) {
-  return `<div class="d-subtask">
-                <input type="checkbox" id="d-subtask-${taskId}" value="${subtask}"/>
-                <label for="d-subtask-${taskId}">${subtask}</label>
-              </div>`;
+/**
+ * Add contact to task
+ */
+async function addContactToTask(taskId, contactId) {
+  const task = tasks.find(t => t.id === taskId);
+  if (!task) return;
+  
+  if (!task.member.includes(contactId)) {
+    task.member.push(contactId);
+    await saveTask(task);
+    // updateHTML will be called by Firebase listener
+  }
 }
+
+/**
+ * Remove contact from task
+ */
+async function removeContactFromTask(taskId, contactId) {
+  const task = tasks.find(t => t.id === taskId);
+  if (!task) return;
+  
+  const index = task.member.indexOf(contactId);
+  if (index > -1) {
+    task.member.splice(index, 1);
+    await saveTask(task);
+    // updateHTML will be called by Firebase listener
+  }
+}
+
+/**
+ * Remove contact from all tasks (called when contact is deleted)
+ */
+async function removeContactFromAllTasks(contactId) {
+  const tasksWithContact = tasks.filter(t => t.member && t.member.includes(contactId));
+  
+  for (const task of tasksWithContact) {
+    const index = task.member.indexOf(contactId);
+    if (index > -1) {
+      task.member.splice(index, 1);
+      await saveTask(task);
+    }
+  }
+  
+  updateHTML();
+}
+
+/**
+ * Update subtask completion status
+ */
+async function updateSubtaskStatus(taskId, subtask, isCompleted) {
+  const task = tasks.find(t => t.id === taskId);
+  if (!task) return;
+
+  // Ensure subtask arrays exist
+  if (!task.subtasks) task.subtasks = [];
+  if (!task.subtasks_done) task.subtasks_done = [];
+
+  if (isCompleted) {
+    // Move from subtasks to subtasks_done
+    const subtaskIndex = task.subtasks.indexOf(subtask);
+    if (subtaskIndex > -1) {
+      task.subtasks.splice(subtaskIndex, 1);
+      task.subtasks_done.push(subtask);
+    }
+  } else {
+    // Move from subtasks_done to subtasks
+    const subtaskIndex = task.subtasks_done.indexOf(subtask);
+    if (subtaskIndex > -1) {
+      task.subtasks_done.splice(subtaskIndex, 1);
+      task.subtasks.push(subtask);
+    }
+  }
+
+  // Save the updated task to Firebase
+  await saveTask(task);
+  // No need to call updateHTML() here since we're in a dialog
+  // The board will update when the dialog closes or through real-time listeners
+}
+
+// Initialize the board when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+  initializeTasks();
+});
+
+// Also initialize immediately if the DOM is already loaded
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeTasks);
+} else {
+  initializeTasks();
+}
+
+// Make functions globally accessible for inline event handlers
+window.openDialog = openDialog;
+window.closeDialog = closeDialog;
+window.startDragging = startDragging;
+window.allowDrop = allowDrop;
+window.handleDragOver = handleDragOver;
+window.moveTo = moveTo;
+window.bgContainer = bgContainer;
+window.bgContainerRemove = bgContainerRemove;
+window.swapMenuSlideIn = swapMenuSlideIn;
+window.slideOutMenu = slideOutMenu;
+window.showDashedBoxOnce = showDashedBoxOnce;
+window.hideDashedBox = hideDashedBox;
+window.addContactToTask = addContactToTask;
+window.removeContactFromTask = removeContactFromTask;
+window.removeContactFromAllTasks = removeContactFromAllTasks;
+window.updateSubtaskStatus = updateSubtaskStatus;
+window.getRandomContactIds = getRandomContactIds;
+window.formatDate = formatDate;
