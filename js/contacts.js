@@ -305,7 +305,7 @@ function clearModalFormFields() {
 
 /** Generates the modal avatar based on contact data or default state
  * @param {Object} [contact] The contact object
- * @return {void|HTMLElement} The modal avatar element if no contact is provided
+ * @return {void} The modal avatar element if no contact is provided
  */
 function generateModalAvatar(contact) {
   if (!contact) {
@@ -315,7 +315,7 @@ function generateModalAvatar(contact) {
     const modalIcon = document.createElement("img");
     modalIcon.src = "./assets/icons/person.svg";
     modalIcon.alt = "No avatar";
-    return modalAvatar.appendChild(modalIcon);
+    modalAvatar.appendChild(modalIcon);
   };
   const modalAvatar = document.getElementById("modalAvatar");
   modalAvatar.textContent = contact.initials;
