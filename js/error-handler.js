@@ -8,16 +8,13 @@ import { createAuthErrorMessage } from "./template.js";
  * Show error message below form fields
  */
 export function showErrorMessage(message, context = "login") {
-  // Remove any existing error messages
   const existingError = document.querySelector(".auth-error-message");
   if (existingError) {
     existingError.remove();
   }
 
-  // Create error message element using template
   const errorDiv = createAuthErrorMessage(message);
 
-  // Add red border to input fields
   const form = document.querySelector("form");
   if (form) {
     const inputs = form.querySelectorAll('input[type="email"], input[type="password"], input[type="text"]');
@@ -25,7 +22,6 @@ export function showErrorMessage(message, context = "login") {
       input.style.borderBottom = "0.06rem solid #ff0000";
     });
 
-    // Insert before the first button (login button)
     const firstButton = form.querySelector(".btn-primary");
     if (firstButton) {
       form.insertBefore(errorDiv, firstButton);
@@ -44,7 +40,6 @@ export function handleAuthError(error, context = "auth") {
   let errorMessage = "An error occurred. Please try again.";
 
   switch (error.code) {
-    // Login errors
     case "auth/invalid-email":
       errorMessage = "Invalid email address.";
       break;
@@ -64,7 +59,6 @@ export function handleAuthError(error, context = "auth") {
       errorMessage = "Too many failed attempts. Please try again later.";
       break;
 
-    // Signup errors
     case "auth/email-already-in-use":
       errorMessage = "This email is already registered.";
       break;

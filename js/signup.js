@@ -1,8 +1,4 @@
 /**
- * Signup Module - Handles signup page functionality
- */
-
-/**
  * Clear error messages and red borders from form inputs
  */
 function clearFormErrors() {
@@ -61,26 +57,50 @@ function togglePasswordVisibility(toggleElement) {
   }
 }
 
+
 /**
  * Validate signup form inputs (signup page)
  */
-function validateSignupForm(password, confirmPassword, acceptedPolicy) {
-  const errorMessage = document.querySelector(".pw-not-matching");
-
-  if (password !== confirmPassword) {
-    if (errorMessage) errorMessage.style.display = "block";
+function validateSignupForm(username, email, password, confirmPassword, acceptedPolicy) {
+  clearFormErrors();
+  
+  if (!username.trim()) {
+    showFormError("username", "Name is required");
     return false;
-  } else {
-    if (errorMessage) errorMessage.style.display = "none";
+  }
+  
+  if (!email.trim()) {
+    showFormError("email", "Email is required");
+    return false;
+  }
+  
+  if (!validateEmailFormat(email)) {
+    showFormError("email", "Invalid email format");
+    return false;
+  }
+
+  if (!password) {
+    showFormError("password", "Password is required");
+    return false;
   }
 
   if (password.length < 6) {
-    alert("Password must be at least 6 characters long.");
+    showFormError("password", "Password must be at least 6 characters");
+    return false;
+  }
+
+  if (password !== confirmPassword) {
+    showFormError("confirm-password", "Passwords do not match");
     return false;
   }
 
   if (!acceptedPolicy) {
-    alert("Please accept the Privacy Policy to continue.");
+    const checkbox = document.getElementById("confirm-check");
+    checkbox.style.borderColor = "#ff4646";
+    const errorMsg = document.createElement("span");
+    errorMsg.className = "error-message";
+    errorMsg.textContent = "Please accept the Privacy Policy";
+    checkbox.parentElement.appendChild(errorMsg);
     return false;
   }
 
@@ -106,7 +126,7 @@ export function showSuccessMessage() {
 export function initSignupPage(signupUserCallback, handleAuthErrorCallback) {
   const signupForm = document.querySelector("form");
   if (signupForm && document.querySelector('input[name="username"]')) {
-    // Clear error messages and red borders when user types
+    // Clear error messages when user types
     const inputs = signupForm.querySelectorAll('input[type="text"], input[type="email"], input[type="password"]');
     inputs.forEach(input => {
       input.addEventListener("input", clearFormErrors);
@@ -134,13 +154,13 @@ export function initSignupPage(signupUserCallback, handleAuthErrorCallback) {
     signupForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      const username = document.querySelector('input[name="username"]').value;
-      const email = document.querySelector('input[name="email"]').value;
+      const username = document.querySelector('input[name="username"]').value.trim();
+      const email = document.querySelector('input[name="email"]').value.trim();
       const password = document.querySelector('input[name="password"]').value;
       const confirmPassword = document.querySelector('input[name="confirm-password"]').value;
       const acceptedPolicy = document.getElementById("confirm-check").checked;
 
-      if (!validateSignupForm(password, confirmPassword, acceptedPolicy)) {
+      if (!validateSignupForm(username, email, password, confirmPassword, acceptedPolicy)) {
         return;
       }
 

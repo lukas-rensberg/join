@@ -17,5 +17,22 @@ export function createAuthErrorMessage(message) {
 };
 
 
+export function generateSectionTemplate(letter) {
+  return `
+            <h2 class="section-header">` + letter + `</h2>
+            <div class="section-separator"></div>
+        `
+};
+
+export function generateContactItemTemplate(contact) {
+  return `
+                <div class="contact-avatar" style="background-color: ${contact.avatarColor};">${contact.initials}</div>
+                <div class="contact-info">
+                    <div class="contact-name">${contact.name}</div>
+                    <div class="contact-email">${contact.email}</div>
+                </div>
+            `;
+}
+
 
 

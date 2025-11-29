@@ -1,17 +1,11 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-import {
-  getDatabase,
-  ref,
-  set,
-  get,
-} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+import { getDatabase, ref, set, get, update } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyA_jMGVxtdphe5xhWwkHQFh7T7a5wQLA0Y",
   authDomain: "join-826aa.firebaseapp.com",
-  databaseURL:
-    "https://join-826aa-default-rtdb.europe-west1.firebasedatabase.app",
+  databaseURL: "https://join-826aa-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "join-826aa",
   storageBucket: "join-826aa.firebasestorage.app",
   messagingSenderId: "78529793935",
@@ -22,83 +16,58 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const database = getDatabase(app);
 
-// Avatar colors for contacts
-const AVATAR_COLORS = ["#ff7a00", "#ff5eb3", "#4589ff", "#ffc701", "#1fd7c1", "#9327ff", "#00bee8", "#ff4646"];
-
 /**
- * Get random avatar color from predefined palette
+ * Creates a new contact in the RTDB
+ * @param {String} uid The user ID of the new contact
+ * @param {String} username The name of the new contact
+ * @param {String} email The e-mail-address of the new contact
+ * @param {String} phone The phone number of the new contact
+ * @param {String} avatarColor The avatar color of the new contact
+ * @param {String} initials The initials of the new contact
+ * @param {Boolean} isAuthUser @default false Whether the contact is the authenticated user
+ * @return {Promise<void>} A promise that resolves when the contact is created
  */
-function getRandomColor() {
-  return AVATAR_COLORS[Math.floor(Math.random() * AVATAR_COLORS.length)];
-}
-
-/**
- * Generate initials from name
- */
-function getInitials(name) {
-  const nameParts = name.trim().split(" ");
-  const initials = nameParts
-    .map((part) => part.charAt(0).toUpperCase())
-    .join("")
-    .substring(0, 2);
-  return initials || "U";
-}
-
-/**
- * Generate random phone number
- */
-function generatePhoneNumber() {
-  const random = Math.floor(Math.random() * 1000000000);
-  return `+49 ${String(random).padStart(9, '0').match(/.{1,3}/g).join(' ')}`;
+async function createContact(uid, username, email, phone, avatarColor, initials, isAuthUser = false) {
+  await set(ref(database, `contacts/${uid}`), {
+    id: uid,
+    name: username,
+    email: email,
+    phone: phone,
+    avatarColor: avatarColor,
+    initials: initials,
+    isAuthUser: isAuthUser,
+  });
 }
 
 /**
  * Ensure authenticated user exists as contact in RTDB
  */
-export async function ensureUserAsContact(user) {
+export async function ensureUserAsContact(user, generatePhoneNumber, getRandomColor, getInitials) {
   if (!user || user.isAnonymous) return;
 
-  try {
-    const contactRef = ref(database, `contacts/${user.uid}`);
-    const snapshot = await get(contactRef);
+  const contactRef = ref(database, `contacts/${user.uid}`);
+  const snapshot = await get(contactRef);
 
-    if (!snapshot.exists()) {
-      // User doesn't exist as contact, create one
-      await set(contactRef, {
-        id: user.uid,
-        name: user.displayName || user.email.split("@")[0],
-        email: user.email,
-        phone: generatePhoneNumber(),
-        avatarColor: getRandomColor(),
-        initials: getInitials(user.displayName || user.email.split("@")[0]),
-        isAuthUser: true,
-      });
-      console.log("User added to contacts:", user.email);
-    }
-  } catch (error) {
-    console.error("Error ensuring user as contact:", error);
+  if (!snapshot.exists()) {
+    await createContact(user.uid, "Example User", user.email, generatePhoneNumber(), getRandomColor(), getInitials("Example User"), true);
   }
 }
 
 /**
- * Create contact in RTDB for a user
+ * Updates an existing contact in the RTDB
+ * @param {String} name The new name of the updated contact
+ * @param {String} email The new mail address of the updated contact
+ * @param {String} phone The new phone number of the updated contact
+ * @param {String} initials The new initials of the updated contact based on the new name
+ * @return {Promise<void>} A promise that resolves when the contact is updated
  */
-export async function createContactForUser(uid, username, email) {
-  try {
-    await set(ref(database, `contacts/${uid}`), {
-      id: uid,
-      name: username,
-      email: email,
-      phone: generatePhoneNumber(),
-      avatarColor: getRandomColor(),
-      initials: getInitials(username),
-      isAuthUser: true,
-    });
-    console.log("Contact created in RTDB for new user");
-  } catch (error) {
-    console.error("Error creating contact in RTDB:", error);
-  }
+async function updateContact(uid, name, email, phone, initials) {
+  await update(ref(database, `contacts/${uid}`), {
+    name: name,
+    email: email,
+    phone: phone,
+    initials: initials,
+  });
 }
 
-export { auth, database };
-
+export { auth, database, createContact, updateContact };

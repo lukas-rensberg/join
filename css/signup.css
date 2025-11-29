@@ -338,4 +338,16 @@ footer {
   }
 }
 
+.error-message {
+  color: #ff4646;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+.input-field input:focus,
+.input-field input:invalid {
+  outline: none;
+}
+
 @media (min-width: 3000px) {}

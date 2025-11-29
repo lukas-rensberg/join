@@ -1,136 +1,182 @@
 <!DOCTYPE html>
 <html lang="de">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="./assets/icons/logo-blue.svg" type="image/svg+xml">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="shortcut icon"
+      href="./assets/icons/logo-blue.svg"
+      type="image/svg+xml"
+    />
     <title>Join | Contacts</title>
-    <link rel="stylesheet" href="./style.css">
-    <link rel="stylesheet" href="./css/font.css">
-    <link rel="stylesheet" href="./css/header-footer.css">
-    <link rel="stylesheet" href="./css/contacts.css">
-</head>
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./css/font.css" />
+    <link rel="stylesheet" href="./css/header-footer.css" />
+    <link rel="stylesheet" href="./css/contacts.css" />
+  </head>
 
-<body class="body-contacts">
+  <body class="body-contacts" onload="init()">
     <header>
-        <img src="./assets/icons/logo-white.svg" alt="Join Logo">
-        <input type="checkbox" id="slideInSideMenu">
-        <label class="avatar" for="slideInSideMenu">GU</label>
-        <div class="side-menu">
-            <nav>
-                <a href="help.html">Help</a>
-                <a href="legal_notice.html">Legal Notice</a>
-                <a href="legal_notice.html">Privacy Policy</a>
-                <a href="index.html">Log Out</a>
-            </nav>
-        </div>
+      <img src="./assets/icons/logo-white.svg" alt="Join Logo" />
+      <input type="checkbox" id="slideInSideMenu" />
+      <label class="avatar" for="slideInSideMenu"></label>
+      <div class="side-menu">
+        <nav>
+          <a href="help.html">Help</a>
+          <a href="legal_notice.html">Legal Notice</a>
+          <a href="legal_notice.html">Privacy Policy</a>
+          <a href="index.html">Log Out</a>
+        </nav>
+      </div>
     </header>
     <main class="contacts-main">
-        <div class="contacts-container">
-            <!-- Contacts will be dynamically rendered here -->
-        </div>
+      <div class="contacts-container">
+        <!-- Contacts will be dynamically rendered here -->
+      </div>
     </main>
 
     <!-- Contact Detail View -->
     <div class="contact-detail-view" id="contactDetailView">
-        <div class="contact-detail-header">
-            <h1>Contact Information</h1>
-            <div class="detail-header-actions">
-                <button class="back-button" id="backButton">
-                    <img src="./assets/icons/arrow-left-line.svg" alt="Back">
-                </button>
-            </div>
+      <div class="contact-detail-header">
+        <h1>Contact Information</h1>
+        <div class="detail-header-actions">
+          <button
+            class="back-button"
+            id="backButton"
+          >
+            <img src="./assets/icons/arrow-left-line.svg" alt="Back" />
+          </button>
         </div>
-        
-        <div class="contact-detail-content">
-            <div class="contact-detail-container">
-                <div class="contact-detail-avatar" id="detailAvatar"></div>
-                <div class="contact-detail-name" id="detailName"></div>
-            </div>
-            
-            <div class="contact-info-section">
-                <div class="info-label">Email</div>
-                <div class="info-value email-value" id="detailEmail"></div>
-            </div>
-            
-            <div class="contact-info-section">
-                <div class="info-label">Phone</div>
-                <div class="info-value" id="detailPhone"></div>
-            </div>
+      </div>
+
+      <div class="contact-detail-content">
+        <div class="contact-detail-container">
+          <div class="contact-detail-avatar" id="detailAvatar"></div>
+          <div class="contact-detail-name" id="detailName"></div>
         </div>
+
+        <div class="contact-info-section">
+          <div class="info-label">Email</div>
+          <div class="info-value email-value" id="detailEmail"></div>
+        </div>
+
+        <div class="contact-info-section">
+          <div class="info-label">Phone</div>
+          <div class="info-value" id="detailPhone"></div>
+        </div>
+      </div>
     </div>
 
     <!-- Floating Action Button -->
     <button class="fab" id="fabButton">
-        <img src="./assets/icons/person_add.svg" alt="Add Contact" id="fabIcon">
+      <img src="./assets/icons/person_add.svg" alt="Add Contact" id="fabIcon" />
     </button>
-    
+
     <!-- FAB Menu Dropdown -->
     <div class="fab-menu" id="fabMenu">
-        <nav>
-            <a href="#" id="editContactLink">Edit</a>
-            <a href="#" id="deleteContactLink">Delete</a>
-        </nav>
+      <nav>
+        <a href="#" id="editContactLink">Edit</a>
+        <a href="#" id="deleteContactLink">Delete</a>
+      </nav>
     </div>
 
     <!-- Contact Modal (Edit/Create) -->
     <div class="contact-modal" id="contactModal">
-        <div class="modal-backdrop" id="modalBackdrop"></div>
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modalTitle">Edit contact</h2>
-                <p class="modal-subtitle">Tasks are better with a team!</p>
-                <button class="modal-close" id="modalCloseBtn">
-                    <img src="./assets/icons/close.svg" alt="Close">
-                </button>
-            </div>
-            <div class="modal-avatar" id="modalAvatar"></div>
-            <form class="contact-form" id="contactForm">
-                <div class="form-group">
-                    <input type="text" id="contactName" name="name" placeholder="Name" required>
-                    <img src="./assets/icons/person.svg" alt="Person" class="input-icon">
-                </div>
-                <div class="form-group">
-                    <input type="email" id="contactEmail" name="email" placeholder="Email" required>
-                    <img src="./assets/icons/mail.svg" alt="Email" class="input-icon">
-                </div>
-                <div class="form-group">
-                    <input type="tel" id="contactPhone" name="phone" placeholder="Phone" required>
-                    <img src="./assets/icons/phone.svg" alt="Phone" class="input-icon">
-                </div>
-                <div class="form-actions">
-                    <button type="button" class="btn-delete" id="deleteButton" style="display: none;">Delete</button>
-                    <button type="submit" class="btn-save">
-                        <span id="saveButtonText">Save</span>
-                        <img src="./assets/icons/check.svg" alt="Save" class="save-icon">
-                    </button>
-                </div>
-            </form>
+      <div
+        class="modal-backdrop"
+        id="modalBackdrop"
+      ></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="modalTitle">Edit contact</h2>
+          <p class="modal-subtitle">Tasks are better with a team!</p>
+          <button
+            class="modal-close"
+            id="modalCloseBtn"
+          >
+            <img src="./assets/icons/close_white.svg" alt="Close" />
+          </button>
         </div>
+        <div class="modal-avatar" id="modalAvatar"></div>
+        <form class="contact-form" id="contactForm" onsubmit="saveContact()">
+          <div class="form-group">
+            <input
+              type="text"
+              id="contactName"
+              name="name"
+              placeholder="Name"
+            />
+            <img
+              src="./assets/icons/person.svg"
+              alt="Person"
+              class="input-icon"
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="email"
+              id="contactEmail"
+              name="email"
+              placeholder="Email"
+            />
+            <img src="./assets/icons/mail.svg" alt="Email" class="input-icon" />
+          </div>
+          <div class="form-group">
+            <input
+              type="tel"
+              id="contactPhone"
+              name="phone"
+              placeholder="Phone"
+            />
+            <img
+              src="./assets/icons/phone.svg"
+              alt="Phone"
+              class="input-icon"
+            />
+          </div>
+          <div class="form-actions">
+            <button
+              type="button"
+              class="btn-delete"
+              id="deleteButton"
+              style="display: none"
+            >
+              Delete
+            </button>
+            <button type="submit" class="btn-save">
+              <span id="saveButtonText">Save</span>
+              <img
+                src="./assets/icons/check.svg"
+                alt="Save"
+                class="save-icon"
+              />
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
 
     <footer>
-        <a class="nav-item" href="overview.html">
-            <img src="./assets/menu_icons/summary.svg" alt="Summary Icon">
-            <span>Summary</span>
-        </a>
-        <a class="nav-item" href="add-task.html">
-            <img src="./assets/menu_icons/add-task.svg" alt="Add Task Icon">
-            <span>Add Task</span>
-        </a>
-        <a class="nav-item" href="board.html">
-            <img src="./assets/menu_icons/board.svg" alt="Board Icon">
-            <span>Board</span>
-        </a>
-        <a class="nav-item active" href="contacts.html">
-            <img src="./assets/menu_icons/contacts.svg" alt="Contacts Icon">
-            <span>Contacts</span>
-        </a>
+      <a class="nav-item" href="overview.html">
+        <img src="./assets/menu_icons/summary.svg" alt="Summary Icon" />
+        <span>Summary</span>
+      </a>
+      <a class="nav-item" href="add-task.html">
+        <img src="./assets/menu_icons/add-task.svg" alt="Add Task Icon" />
+        <span>Add Task</span>
+      </a>
+      <a class="nav-item" href="board.html">
+        <img src="./assets/menu_icons/board.svg" alt="Board Icon" />
+        <span>Board</span>
+      </a>
+      <a class="nav-item active" href="contacts.html">
+        <img src="./assets/menu_icons/contacts.svg" alt="Contacts Icon" />
+        <span>Contacts</span>
+      </a>
     </footer>
+    <script type="module" src="./js/template.js"></script>
     <script type="module" src="./js/auth.js"></script>
     <script type="module" src="./js/user-profile.js"></script>
     <script type="module" src="./js/contacts.js"></script>
-</body>
-
+  </body>
 </html>
