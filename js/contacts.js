@@ -305,31 +305,38 @@ function clearModalFormFields() {
 
 /** Generates the modal avatar based on contact data or default state
  * @param {Object} [contact] The contact object
- * @return {void} The modal avatar element if no contact is provided
+ * @return {void}
  */
 function generateModalAvatar(contact) {
+  const modalAvatar = document.getElementById("modalAvatar");
+  modalAvatar.innerHTML = '';
+  
   if (!contact) {
-    const modalAvatar = document.getElementById("modalAvatar");
     modalAvatar.style.backgroundColor = "#D1D1D1";
 
     const modalIcon = document.createElement("img");
     modalIcon.src = "./assets/icons/person.svg";
     modalIcon.alt = "No avatar";
     modalAvatar.appendChild(modalIcon);
-  };
-  const modalAvatar = document.getElementById("modalAvatar");
-  modalAvatar.textContent = contact.initials;
-  modalAvatar.style.backgroundColor = contact.avatarColor;
+    return;
+  } else {
+    modalAvatar.textContent = contact.initials;
+    modalAvatar.style.backgroundColor = contact.avatarColor;
+  }
 }
 
 /**
  * Deletes a contact according to the currentContactId
  */
 async function deleteContact() {
-  await remove(ref(database, `contacts/${currentContactId}`));
-
-  hideContactDetail();
-  closeFabMenu();
+  try {
+    await remove(ref(database, `contacts/${currentContactId}`));
+    hideContactDetail();
+    closeFabMenu();
+  } catch (error) {
+    console.error("Failed to delete contact:", error);
+    alert("Failed to delete contact. Please try again.");
+  }
 
   // TODO: Remove contact from all assigned tasks when task functionality is implemented
 }

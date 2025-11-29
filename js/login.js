@@ -1,16 +1,4 @@
-/**
- * Login & Logout Module - Handles login/logout page functionality
- */
-
-/**
- * Validates email format
- * @param {string} email Email address
- * @return {boolean} True if valid
- */
-function validateEmailFormat(email) {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-}
+import { validateEmailFormat } from "./utils/email.js";
 
 /**
  * Clear error messages and red borders from form inputs

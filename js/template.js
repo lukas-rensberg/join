@@ -19,7 +19,7 @@ export function createAuthErrorMessage(message) {
 
 export function generateSectionTemplate(letter) {
   return `
-            <h2 class="section-header">` + letter + `</h2>
+            <h2 class="section-header">${letter}</h2>
             <div class="section-separator"></div>
         `
 };

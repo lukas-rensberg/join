@@ -1,3 +1,5 @@
+import { validateEmailFormat } from "./utils/email.js";
+
 /**
  * Clear error messages and red borders from form inputs
  */
@@ -24,16 +26,6 @@ function clearFormErrors() {
       checkbox.style.borderColor = "";
     }
   }
-}
-
-/**
- * Validates email format
- * @param {string} email Email address
- * @return {boolean} True if valid
- */
-function validateEmailFormat(email) {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
 }
 
 /**
@@ -130,12 +122,12 @@ function validateSignupForm(username, email, password, confirmPassword, accepted
   }
 
   if (!password) {
-    showFormError("password", "Password is required");
+    showFormError("signup-password", "Password is required");
     return false;
   }
 
   if (password.length < 6) {
-    showFormError("password", "Password must be at least 6 characters");
+    showFormError("signup-password", "Password must be at least 6 characters");
     return false;
   }
 

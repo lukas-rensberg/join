@@ -24,19 +24,24 @@ const database = getDatabase(app);
  * @param {String} phone The phone number of the new contact
  * @param {String} avatarColor The avatar color of the new contact
  * @param {String} initials The initials of the new contact
- * @param {Boolean} isAuthUser @default false Whether the contact is the authenticated user
+ * @param {Boolean} [isAuthUser=false] Whether the contact is the authenticated user
  * @return {Promise<void>} A promise that resolves when the contact is created
  */
 async function createContact(uid, username, email, phone, avatarColor, initials, isAuthUser = false) {
-  await set(ref(database, `contacts/${uid}`), {
-    id: uid,
-    name: username,
-    email: email,
-    phone: phone,
-    avatarColor: avatarColor,
-    initials: initials,
-    isAuthUser: isAuthUser,
-  });
+  try {
+    await set(ref(database, `contacts/${uid}`), {
+      id: uid,
+      name: username,
+      email: email,
+      phone: phone,
+      avatarColor: avatarColor,
+      initials: initials,
+      isAuthUser: isAuthUser,
+    });
+  } catch (error) {
+    console.error("Error creating contact:", error);
+    alert("Failed to create contact. Please try again.");
+  }
 }
 
 /**
@@ -49,7 +54,7 @@ export async function ensureUserAsContact(user, generatePhoneNumber, getRandomCo
   const snapshot = await get(contactRef);
 
   if (!snapshot.exists()) {
-    await createContact(user.uid, user.displayName, user.email, generatePhoneNumber(), getRandomColor(), getInitials(user.displayName), true);
+    await createContact(user.uid, user.displayName || "Undefined User", user.email, generatePhoneNumber(), getRandomColor(), getInitials(user.displayName), true);
   }
 }
 
@@ -63,12 +68,17 @@ export async function ensureUserAsContact(user, generatePhoneNumber, getRandomCo
  * @return {Promise<void>} A promise that resolves when the contact is updated
  */
 async function updateContact(uid, name, email, phone, initials) {
-  await update(ref(database, `contacts/${uid}`), {
-    name: name,
-    email: email,
-    phone: phone,
-    initials: initials,
-  });
+  try {
+    await update(ref(database, `contacts/${uid}`), {
+      name: name,
+      email: email,
+      phone: phone,
+      initials: initials,
+    });
+  } catch (error) {
+    console.error("Error updating contact:", error);
+    alert("Failed to update contact. Please try again.");
+  }
 }
 
 export { auth, database, createContact, updateContact };

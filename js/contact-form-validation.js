@@ -30,6 +30,8 @@ export function validatePhone(phone) {
  */
 export function showFieldError(fieldId, errorMessage) {
   const field = document.getElementById(fieldId);
+  if (!field) return;
+  
   const formGroup = field.closest(".form-group");
   
   let errorSpan = formGroup.querySelector(".error-message");
@@ -49,6 +51,8 @@ export function showFieldError(fieldId, errorMessage) {
  */
 export function clearFieldError(fieldId) {
   const field = document.getElementById(fieldId);
+  if (!field) return;
+  
   const formGroup = field.closest(".form-group");
   
   const errorSpan = formGroup.querySelector(".error-message");
