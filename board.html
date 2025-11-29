@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="./css/task-dialog.css" />
 </head>
 
-<body class="body-board" onload="updateHTML()">
+  <body class="body-board">
     <header>
         <img src="./assets/icons/logo-white.svg" alt="Join Logo" />
         <input type="checkbox" id="slideInSideMenu" />
@@ -67,32 +67,39 @@
                 </div>
                 <div class="task-card-container" id="to-do" ondrop="moveTo('to-do')"
                     ondragleave="bgContainerRemove('to-do')"
-                    ondragover="allowDrop(event); bgContainer('to-do'); showDashedBoxOnce('to-do')"></div>
+                    ondragover="handleDragOver(event, 'to-do')"></div>
                 <div class="task-title">
                     <div class="task-headline">In progress</div>
                     <div class="add-task-icon"></div>
                 </div>
                 <div class="task-card-container" id="in-progress" ondrop="moveTo('in-progress')"
                     ondragleave="bgContainerRemove('in-progress')"
-                    ondragover="allowDrop(event); bgContainer('in-progress'); showDashedBoxOnce('in-progress')"></div>
+                    ondragover="handleDragOver(event, 'in-progress')"></div>
 
-                <div class="task-title">
-                    <div class="task-headline">Await feedback</div>
-                    <div class="add-task-icon"></div>
-                </div>
-                <div class="task-card-container" id="await-feedback" ondrop="moveTo('await-feedback')"
-                    ondragleave="bgContainerRemove('await-feedback')"
-                    ondragover="allowDrop(event); bgContainer('await-feedback'); showDashedBoxOnce('await-feedback')">
-                </div>
+          <div class="task-title">
+            <div class="task-headline">Await feedback</div>
+            <div class="add-task-icon"></div>
+          </div>
+          <div
+            class="task-card-container"
+            id="await-feedback"
+            ondrop="moveTo('await-feedback')"
+            ondragleave="bgContainerRemove('await-feedback')"
+            ondragover="handleDragOver(event, 'await-feedback')"
+          ></div>
 
-                <div class="task-title">
-                    <div class="task-headline">Done</div>
-                </div>
-                <div class="task-card-container" id="done" ondrop="moveTo('done')"
-                    ondragleave="bgContainerRemove('done')"
-                    ondragover="allowDrop(event); bgContainer('done'); showDashedBoxOnce('done')"></div>
-            </div>
-        </section>
+          <div class="task-title">
+            <div class="task-headline">Done</div>
+          </div>
+          <div
+            class="task-card-container"
+            id="done"
+            ondrop="moveTo('done')"
+            ondragleave="bgContainerRemove('done')"
+            ondragover="handleDragOver(event, 'done')"
+          ></div>
+        </div>
+      </section>
 
         <dialog></dialog>
     </main>
@@ -116,7 +123,8 @@
     </footer>
 
     <script type="module" src="./js/template.js"></script>
-    <script src="./js/board.js"></script>
-</body>
-
+    <script type="module" src="./js/auth.js"></script>
+    <script type="module" src="./js/user-profile.js"></script>
+    <script type="module" src="./js/board.js"></script>
+  </body>
 </html>

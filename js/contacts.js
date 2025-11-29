@@ -340,14 +340,18 @@ function generateModalAvatar(contact) {
 async function deleteContact() {
   try {
     await remove(ref(database, `contacts/${currentContactId}`));
+    
+    // Remove contact from all assigned tasks
+    if (typeof window.removeContactFromAllTasks === 'function') {
+      await window.removeContactFromAllTasks(currentContactId);
+    }
+    
     hideContactDetail();
     closeFabMenu();
   } catch (error) {
     console.error("Failed to delete contact:", error);
     showInlineError("Failed to delete contact. Please try again.");
   }
-
-  // TODO: Remove contact from all assigned tasks when task functionality is implemented
 }
 
 /**
