@@ -49,12 +49,13 @@ export async function ensureUserAsContact(user, generatePhoneNumber, getRandomCo
   const snapshot = await get(contactRef);
 
   if (!snapshot.exists()) {
-    await createContact(user.uid, "Example User", user.email, generatePhoneNumber(), getRandomColor(), getInitials("Example User"), true);
+    await createContact(user.uid, user.displayName, user.email, generatePhoneNumber(), getRandomColor(), getInitials(user.displayName), true);
   }
 }
 
 /**
  * Updates an existing contact in the RTDB
+ * @param {String} uid The user ID of the updated contact
  * @param {String} name The new name of the updated contact
  * @param {String} email The new mail address of the updated contact
  * @param {String} phone The new phone number of the updated contact

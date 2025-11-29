@@ -56,7 +56,7 @@ input[type="submit"],
 .btn-secondary,
 .btn-signup {
   cursor: pointer;
-  border: unset;
+  border: none;
 }
 
 input[type="text"],
@@ -65,7 +65,7 @@ input[type="password"],
 input[type="tel"],
 textarea,
 select {
-  border: unset;
+  border: none;
 }
 
 html {

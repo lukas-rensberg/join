@@ -137,8 +137,8 @@ function renderTasksByCategory(category, displayName) {
     return;
   }
 
-  filteredTasks.forEach((task, index) => {
-    containerRef.innerHTML += getTemplateTaskCard(task, index + 1);
+  filteredTasks.forEach((task) => {
+    containerRef.innerHTML += getTemplateTaskCard(task);
     initMarkedUsers(task);
   });
 }

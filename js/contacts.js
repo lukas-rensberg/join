@@ -382,7 +382,7 @@ async function saveContact(event) {
   } else {
     const newContactId = generateContactId();
     currentContactId = newContactId;
-    await createContact(newContactId, name, email, phone, getRandomColor(), getInitialsFromName(name));
+    await createContact(newContactId, name, email, phone, getRandomColor(), getInitialsFromName(name), false);
   }
 
   if (document.getElementById("contactDetailView").classList.contains("active")) {
@@ -397,20 +397,40 @@ async function saveContact(event) {
  * @returns {void}
  */
 function setupClickListener() {
-  document.getElementById("fabButton").addEventListener("click", handleFabClick);
-  document.getElementById("editContactLink").addEventListener("click", (e) => {
-    e.preventDefault();
-    editContact();
-  });
-  document.getElementById("deleteContactLink").addEventListener("click", (e) => {
-    e.preventDefault();
-    deleteContact();
-  });
-  document.getElementById("backButton").addEventListener("click", hideContactDetail);
-  document.getElementById("modalBackdrop").addEventListener("click", closeContactModal);
-  document.getElementById("modalCloseBtn").addEventListener("click", closeContactModal);
-  document.getElementById("deleteButton").addEventListener("click", deleteContactFromModal);
-  document.getElementById("contactForm").addEventListener("submit", saveContact);
+  const fabButton = document.getElementById("fabButton");
+  if (fabButton) {
+    fabButton.addEventListener("click", handleFabClick);
+  }
+  const editContactLink = document.getElementById("editContactLink");
+  if (editContactLink) {
+    editContactLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      editContact();
+    });
+  }
+  const deleteContactLink = document.getElementById("deleteContactLink");
+  if (deleteContactLink) {
+    deleteContactLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      deleteContact();
+    });
+  }
+  const backButton = document.getElementById("backButton");
+  if (backButton) {
+    backButton.addEventListener("click", hideContactDetail);
+  }
+  const modalBackdrop = document.getElementById("modalBackdrop");
+  if (modalBackdrop) {
+    modalBackdrop.addEventListener("click", closeContactModal);
+  }
+  const modalCloseBtn = document.getElementById("modalCloseBtn");
+  if (modalCloseBtn) {
+    modalCloseBtn.addEventListener("click", closeContactModal);
+  }
+  const deleteButton = document.getElementById("deleteButton");
+  if (deleteButton) {
+    deleteButton.addEventListener("click", deleteContactFromModal);
+  }
 }
 
 // Initialize contacts and event listeners when page loads

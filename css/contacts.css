@@ -125,11 +125,11 @@
     transform: translateX(200%);
     transition: transform 0.3s ease-in-out;
     z-index: 1001;
-    display: block;
-    pointer-events: none;
+    display: none;
 }
 
 .fab-menu.active {
+    display: block;
     transform: translateX(0);
     pointer-events: auto;
 }

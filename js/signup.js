@@ -6,12 +6,62 @@ function clearFormErrors() {
   if (existingError) {
     existingError.remove();
   }
+  
+  // Clear field-specific error messages
+  const fieldErrors = document.querySelectorAll(".error-message");
+  fieldErrors.forEach(error => error.remove());
+  
   const form = document.querySelector("form");
   if (form) {
     const formInputs = form.querySelectorAll('input[type="email"], input[type="password"], input[type="text"]');
     formInputs.forEach(inp => {
       inp.style.borderBottom = "";
     });
+    
+    // Clear checkbox border color
+    const checkbox = document.getElementById("confirm-check");
+    if (checkbox) {
+      checkbox.style.borderColor = "";
+    }
+  }
+}
+
+/**
+ * Validates email format
+ * @param {string} email Email address
+ * @return {boolean} True if valid
+ */
+function validateEmailFormat(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+/**
+ * Show form validation error for a specific field
+ * @param {string} fieldId The ID of the input field
+ * @param {string} message The error message to display
+ */
+function showFormError(fieldId, message) {
+  const field = document.getElementById(fieldId);
+  if (field) {
+    field.style.borderBottom = "1px solid #ff4646";
+    
+    // Check for existing error message and remove it
+    const existingError = field.parentElement.querySelector(".error-message");
+    if (existingError) {
+      existingError.remove();
+    }
+    
+    const errorMsg = document.createElement("span");
+    errorMsg.className = "error-message";
+    errorMsg.textContent = message;
+    errorMsg.style.cssText = `
+      color: #ff4646;
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+      display: block;
+    `;
+    field.parentElement.appendChild(errorMsg);
   }
 }
 
@@ -96,6 +146,13 @@ function validateSignupForm(username, email, password, confirmPassword, accepted
 
   if (!acceptedPolicy) {
     const checkbox = document.getElementById("confirm-check");
+    
+    // Check for existing error message and remove it
+    const existingError = checkbox.parentElement.querySelector(".error-message");
+    if (existingError) {
+      existingError.remove();
+    }
+    
     checkbox.style.borderColor = "#ff4646";
     const errorMsg = document.createElement("span");
     errorMsg.className = "error-message";
