@@ -50,6 +50,16 @@ label[for="slideInSideMenu"] {
   border: 3px solid #ffffff;
 }
 
+label[for="slideInSideMenu"] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 3px solid #ffffff;
+}
+
 #slideInSideMenu {
   display: none;
 }

@@ -1,119 +1,122 @@
 <!DOCTYPE html>
 <html lang="de">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Join | Board</title>
-    <link
-      rel="shortcut icon"
-      href="./assets/icons/logo-blue.svg"
-      type="image/svg+xml"
-    />
+    <link rel="shortcut icon" href="./assets/icons/logo-blue.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./style.css" />
     <link rel="stylesheet" href="./css/font.css" />
     <link rel="stylesheet" href="./css/board.css" />
     <link rel="stylesheet" href="./css/header-footer.css" />
     <link rel="stylesheet" href="./css/task-dialog.css" />
-  </head>
+</head>
 
-  <body class="body-board" onload="updateHTML()">
+<body class="body-board" onload="updateHTML()">
     <header>
-      <img src="./assets/icons/logo-white.svg" alt="Join Logo" />
-      <input type="checkbox" id="slideInSideMenu" />
-      <label class="avatar" for="slideInSideMenu"></label>
-      <div class="side-menu">
-        <nav>
-          <a href="help.html">Help</a>
-          <a href="legal_notice.html">Legal Notice</a>
-          <a href="legal_notice.html">Privacy Policy</a>
-          <a href="index.html">Log Out</a>
-        </nav>
-      </div>
+        <img src="./assets/icons/logo-white.svg" alt="Join Logo" />
+        <input type="checkbox" id="slideInSideMenu" />
+        <label class="avatar" for="slideInSideMenu"></label>
+        <div class="side-menu">
+            <nav>
+                <a href="help.html">Help</a>
+                <a href="legal_notice.html">Legal Notice</a>
+                <a href="legal_notice.html">Privacy Policy</a>
+                <a href="index.html">Log Out</a>
+            </nav>
+        </div>
     </header>
     <main>
-      <section class="src-container">
-        <div class="input-container">
-          <input
-            type="name"
-            name="search-task"
-            id="search-task"
-            placeholder="Find Task"
-          />
-          <div class="inp-src-icon"></div>
-        </div>
-      </section>
-      <section class="section-tasks">
-        <div class="tasks-container">
-          <div class="task-title">
-            <div class="task-headline">To do</div>
-            <div class="add-task-icon"></div>
-          </div>
-          <div
-            class="task-card-container"
-            id="to-do"
-            ondrop="moveTo('to-do')"
-            ondragleave="bgContainerRemove('to-do')"
-            ondragover="allowDrop(event); bgContainer('to-do'); showDashedBoxOnce('to-do')"
-          ></div>
-          <div class="task-title">
-            <div class="task-headline">In progress</div>
-            <div class="add-task-icon"></div>
-          </div>
-          <div
-            class="task-card-container"
-            id="in-progress"
-            ondrop="moveTo('in-progress')"
-            ondragleave="bgContainerRemove('in-progress')"
-            ondragover="allowDrop(event); bgContainer('in-progress'); showDashedBoxOnce('in-progress')"
-          ></div>
+        <aside>
+            <div class="aside-navbar">
+                <a href="overview.html">
+                    <img src="./assets/menu_icons/summary.svg" alt="Summary Icon" />
+                    Summary
+                </a>
+                <a href="add-task.html">
+                    <img src="./assets/menu_icons/add-task.svg" alt="Add Task Icon" />
+                    Add Task
+                </a>
+                <a href="board.html">
+                    <img src="./assets/menu_icons/board.svg" alt="Board Icon" />
+                    Board
+                </a>
+                <a href="contacts.html">
+                    <img src="./assets/menu_icons/contacts.svg" alt="Contacts Icon" />
+                    Contacts
+                </a>
+            </div>
+            <div class="aside-links">
+                <a href="legal_notice.html">Legal Notice</a>
+                <a href="legal_notice.html">Privacy Policy</a>
+            </div>
+        </aside>
+        <section class="src-container">
+            <div class="input-container">
+                <input type="name" name="search-task" id="search-task" placeholder="Find Task" />
+                <div class="inp-src-icon"></div>
+            </div>
+            <button>Add Task <img src="./assets/icons/plus_symbol.svg" alt="Plus Symbol"></button>
+        </section>
+        <section class="section-tasks">
+            <div class="tasks-container">
+                <div class="task-title">
+                    <div class="task-headline">To do</div>
+                    <div class="add-task-icon"></div>
+                </div>
+                <div class="task-card-container" id="to-do" ondrop="moveTo('to-do')"
+                    ondragleave="bgContainerRemove('to-do')"
+                    ondragover="allowDrop(event); bgContainer('to-do'); showDashedBoxOnce('to-do')"></div>
+                <div class="task-title">
+                    <div class="task-headline">In progress</div>
+                    <div class="add-task-icon"></div>
+                </div>
+                <div class="task-card-container" id="in-progress" ondrop="moveTo('in-progress')"
+                    ondragleave="bgContainerRemove('in-progress')"
+                    ondragover="allowDrop(event); bgContainer('in-progress'); showDashedBoxOnce('in-progress')"></div>
 
-          <div class="task-title">
-            <div class="task-headline">Await feedback</div>
-            <div class="add-task-icon"></div>
-          </div>
-          <div
-            class="task-card-container"
-            id="await-feedback"
-            ondrop="moveTo('await-feedback')"
-            ondragleave="bgContainerRemove('await-feedback')"
-            ondragover="allowDrop(event); bgContainer('await-feedback'); showDashedBoxOnce('await-feedback')"
-          ></div>
+                <div class="task-title">
+                    <div class="task-headline">Await feedback</div>
+                    <div class="add-task-icon"></div>
+                </div>
+                <div class="task-card-container" id="await-feedback" ondrop="moveTo('await-feedback')"
+                    ondragleave="bgContainerRemove('await-feedback')"
+                    ondragover="allowDrop(event); bgContainer('await-feedback'); showDashedBoxOnce('await-feedback')">
+                </div>
 
-          <div class="task-title">
-            <div class="task-headline">Done</div>
-          </div>
-          <div
-            class="task-card-container"
-            id="done"
-            ondrop="moveTo('done')"
-            ondragleave="bgContainerRemove('done')"
-            ondragover="allowDrop(event); bgContainer('done'); showDashedBoxOnce('done')"
-          ></div>
-        </div>
-      </section>
+                <div class="task-title">
+                    <div class="task-headline">Done</div>
+                </div>
+                <div class="task-card-container" id="done" ondrop="moveTo('done')"
+                    ondragleave="bgContainerRemove('done')"
+                    ondragover="allowDrop(event); bgContainer('done'); showDashedBoxOnce('done')"></div>
+            </div>
+        </section>
 
-      <dialog></dialog>
+        <dialog></dialog>
     </main>
     <footer>
-      <a class="nav-item" href="overview.html">
-        <img src="./assets/menu_icons/summary.svg" alt="Summary Icon" />
-        <span class="nav-text">Summary</span>
-      </a>
-      <a class="nav-item" href="add-task.html">
-        <img src="./assets/menu_icons/add-task.svg" alt="Add Task Icon" />
-        <span class="nav-text">Add Task</span>
-      </a>
-      <a class="nav-item" href="board.html">
-        <img src="./assets/menu_icons/board.svg" alt="Board Icon" />
-        <span class="nav-text">Board</span>
-      </a>
-      <a class="nav-item" href="contacts.html">
-        <img src="./assets/menu_icons/contacts.svg" alt="Contacts Icon" />
-        <span class="nav-text">Contacts</span>
-      </a>
+        <a class="nav-item" href="overview.html">
+            <img src="./assets/menu_icons/summary.svg" alt="Summary Icon" />
+            <span class="nav-text">Summary</span>
+        </a>
+        <a class="nav-item" href="add-task.html">
+            <img src="./assets/menu_icons/add-task.svg" alt="Add Task Icon" />
+            <span class="nav-text">Add Task</span>
+        </a>
+        <a class="nav-item" href="board.html">
+            <img src="./assets/menu_icons/board.svg" alt="Board Icon" />
+            <span class="nav-text">Board</span>
+        </a>
+        <a class="nav-item" href="contacts.html">
+            <img src="./assets/menu_icons/contacts.svg" alt="Contacts Icon" />
+            <span class="nav-text">Contacts</span>
+        </a>
     </footer>
 
     <script type="module" src="./js/template.js"></script>
     <script src="./js/board.js"></script>
-  </body>
+</body>
+
 </html>
