@@ -46,8 +46,13 @@ async function createContact(uid, username, email, phone, avatarColor, initials,
 }
 
 /**
- * Ensure authenticated user exists as contact in RTDB
- */
+ * Ensures the authenticated user exists as a contact in the RTDB.
+ * @param {Object} user The authenticated user object from Firebase Auth.
+ * @param {Function} generatePhoneNumber Function to generate a phone number for the contact.
+ * @param {Function} getRandomColor Function to generate a random avatar color for the contact.
+ * @param {Function} getInitials Function to generate initials from the user's name.
+ * @returns {Promise<void>} A promise that resolves when the contact is ensured.
+*/
 export async function ensureUserAsContact(user, generatePhoneNumber, getRandomColor, getInitials) {
   if (!user || user.isAnonymous) return;
 

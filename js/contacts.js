@@ -26,6 +26,8 @@ function generateContactId() {
 
 /**
  * Generate initials from name
+ * @param {string} name - The name to generate initials from
+ * @returns {string} The initials (up to 2 characters)
  */
 function getInitialsFromName(name) {
   const nameParts = name.trim().split(" ");
@@ -313,7 +315,7 @@ function clearModalFormFields() {
  */
 function generateModalAvatar(contact) {
   const modalAvatar = document.getElementById("modalAvatar");
-  
+
   if (!contact) {
     modalAvatar.innerHTML = '';
     modalAvatar.style.backgroundColor = "#D1D1D1";
@@ -323,10 +325,10 @@ function generateModalAvatar(contact) {
     modalIcon.alt = "No avatar";
     modalAvatar.appendChild(modalIcon);
     return;
-  } else {
-    modalAvatar.textContent = contact.initials;
-    modalAvatar.style.backgroundColor = contact.avatarColor;
   }
+
+  modalAvatar.textContent = contact.initials;
+  modalAvatar.style.backgroundColor = contact.avatarColor;
 }
 
 /**
@@ -380,7 +382,7 @@ async function saveContact(event) {
   event.preventDefault();
 
   const formData = getFormData();
-  
+
   if (!validateContactForm(formData)) {
     return;
   }

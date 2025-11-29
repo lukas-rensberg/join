@@ -12,7 +12,7 @@ import { validateEmailFormat } from "../utils/contact.js";
  */
 export function validatePhone(phone) {
   const phoneRegex = /^\+?[\d\s\-().]{5,}$/;
-  return phoneRegex.test(phone) && phone.length >= 5;
+  return phoneRegex.test(phone);
 }
 
 /**

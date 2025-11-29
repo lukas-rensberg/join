@@ -10,13 +10,16 @@ import { auth, ensureUserAsContact, createContact } from "./database.js";
 import { initLoginPage, initLogout } from "./login.js";
 import { initSignupPage, showSuccessMessage } from "./signup.js";
 import { handleAuthError, showInlineError } from "./error-handler.js";
+import { getRandomColor } from "../utils/contact.js";
 
 const PROTECTED_PAGES = ["overview.html", "contacts.html", "help.html", "legal_notice.html", "kanban.html"];
 const LOGIN_PAGE = "index.html";
 const OVERVIEW_PAGE = "overview.html";
 
 /**
- * Generate initials from name
+ * Generate initials from a name string.
+ * @param {string} name - The name to generate initials from.
+ * @returns {string} The initials (up to 2 characters), or "U" if not available.
  */
 function getInitials(name) {
   const nameParts = name.trim().split(" ");
@@ -29,6 +32,7 @@ function getInitials(name) {
 
 /**
  * Generate random phone number
+ * @returns {string} A phone number string in the format "+49 XXX XXX XXX"
  */
 function generatePhoneNumber() {
   const random = Math.floor(Math.random() * 1000000000);

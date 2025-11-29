@@ -12,6 +12,7 @@ const AVATAR_COLORS = ["#ff7a00", "#ff5eb3", "#4589ff", "#ffc701", "#1fd7c1", "#
 
 /**
  * Get random avatar color from predefined palette
+ * @returns {string} A color hex code from the predefined palette
  */
 function getRandomColor() {
   return AVATAR_COLORS[Math.floor(Math.random() * AVATAR_COLORS.length)];
