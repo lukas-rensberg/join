@@ -76,7 +76,7 @@ export async function ensureUserAsContact(user, generatePhoneNumber, getRandomCo
  * Updates an existing contact in the RTDB
  * @param {String} uid The user ID of the updated contact
  * @param {String} name The new name of the updated contact
- * @param {String} email The new mail address of the updated contact
+ * @param {String} email The new email address of the updated contact
  * @param {String} phone The new phone number of the updated contact
  * @param {String} initials The new initials of the updated contact based on the new name
  * @return {Promise<void>} A promise that resolves when the contact is updated
