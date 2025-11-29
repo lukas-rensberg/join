@@ -166,7 +166,7 @@ function setupClickOutsideListener() {
     const fabMenu = document.getElementById("fabMenu");
 
     if (
-      (fabButton && fabMenu) && !fabButton.contains(event.target) && !fabMenu.contains(event.target)
+      fabButton && fabMenu && !fabButton.contains(event.target) && !fabMenu.contains(event.target)
     ) {
       closeFabMenu();
     }
@@ -317,7 +317,10 @@ function generateModalAvatar(contact) {
   const modalAvatar = document.getElementById("modalAvatar");
 
   if (!contact) {
-    modalAvatar.innerHTML = '';
+    modalAvatar.textContent = '';
+    while (modalAvatar.firstChild) {
+      modalAvatar.removeChild(modalAvatar.firstChild);
+    }
     modalAvatar.style.backgroundColor = "#D1D1D1";
 
     const modalIcon = document.createElement("img");
