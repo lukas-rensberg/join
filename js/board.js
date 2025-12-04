@@ -529,7 +529,7 @@ function openDialog(index) {
   const dueDate = element["dueDate"] ? formatDate(element["dueDate"]) : "No due date set";
   dialogRef.innerHTML = getTemplateDialog(element, dueDate);
   initMembers(element["member"]);
-  iniSubtasks(element["subtasks"], element["id"]); // Pass only subtasks array as expected
+  iniSubtasks(element["id"]);
 
   dialogRef.showModal();
 }
