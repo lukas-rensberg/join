@@ -47,7 +47,13 @@ export function generateContactItemTemplate(contact) {
             `;
 }
 
-export function getTemplateDialog(element) {
+/**
+ * Returns the full dialog HTML for a task element.
+ * Note: the caller should provide or set `dueDate` into the template scope before inserting.
+ * @param {Object} element - Task object containing title, text, priority, task, id, etc.
+ * @returns {string} HTML string for the dialog.
+ */
+export function getTemplateDialog(element, dueDate) {
   return `<div class="dialog-content">
         <div class="d-card-header">
           <div class="card-label card-bg-${element["task"].split(" ")[0].toLowerCase()}-${element["task"].split(" ")[1].toLowerCase()}">${element["task"]}</div>
@@ -60,7 +66,7 @@ export function getTemplateDialog(element) {
           <p>${element["text"]}</p>
           <div class="d-due-date-prio">
             <p><strong>Due date:</strong></p>
-            <p>10/05/2025</p>
+            <p>${dueDate}</p>
           </div>
           <div class="d-due-date-prio">
             <p><strong>Priority:</strong></p>
@@ -84,7 +90,15 @@ export function getTemplateDialog(element) {
       </div>`;
 }
 
-export function getTemplateTaskCard(element) {
+/**
+ * Returns the HTML for a task card used in the board columns.
+ * @param {Object} element - Task object with id, title, text, priority, task, etc.
+ * @param {Array} subtasksDone - Array of completed subtasks for progress display.
+ * @param {number} totalSubtasks - Total number of subtasks for progress calculation.
+ * @param {number} progressWidth - Calculated width percentage for progress bar.
+ * @returns {string} HTML string for the task card.
+ */
+export function getTemplateTaskCard(element, subtasksDone, totalSubtasks, progressWidth) {
   return `<div class="task-card" id="${element["id"]}" draggable="true" onclick="openDialog('${element["id"]}')" ondragstart="startDragging('${element["id"]}')">
                             <div class="card-headline">
                                 <div class="card-label card-bg-${element["task"].split(" ")[0].toLowerCase()}-${element["task"].split(" ")[1].toLowerCase()}">${element["task"]}</div>
@@ -94,9 +108,9 @@ export function getTemplateTaskCard(element) {
                             <div class="card-task-text">${element["text"]}</div>
                             <div class="card-progress-container">
                                 <div class="card-progress-bar">
-                                    <div class="card-sub-progress-bar" style="width: ${((element["subtasks_done"].length) / (element["subtasks_done"].length + element["subtasks"].length)) * 100}%;"></div>
+                                    <div class="card-sub-progress-bar" style="width: ${progressWidth}%;"></div>
                                 </div>
-                                <div id="tasks-done">${element["subtasks_done"].length}/${(element["subtasks"].length + element["subtasks_done"].length)} Subtasks</div>
+                                <div id="tasks-done">${subtasksDone.length}/${totalSubtasks} Subtasks</div>
                             </div>
                             <div class="user-prio-container">
                                 <div class="marked-user-container" id="marked-user-container-${element["id"]}">
@@ -108,26 +122,55 @@ export function getTemplateTaskCard(element) {
                         </div>`;
 }
 
-export function getTemplateMember(member, memberInitials, memberIndex) {
+/**
+ * Returns HTML for a member card used inside the task dialog's assigned members.
+ * @param {string} memberName - Full name of the member.
+ * @param {string} memberInitials - Initials to display in the avatar.
+ * @param {string} avatarColor - Background color for the avatar.
+ * @returns {string} HTML string for a member card.
+ */
+export function getTemplateMember(memberName, memberInitials, avatarColor) {
   return `<div class="d-assigned-member-cards">
-                <div class="d-assigned-member-icon" style="background-color: var(--color-variant${memberIndex})">
+                <div class="d-assigned-member-icon" style="background-color: ${avatarColor}">
                   ${memberInitials}
                 </div>
-                <p>${member}</p>
+                <p>${memberName}</p>
               </div>`;
 }
 
-export function getTemplateSubtask(subtask, taskId) {
+/**
+ * Returns HTML for a single subtask checkbox entry.
+ * @param {string} subtask - Subtask text.
+ * @param {string} taskId - Parent task id.
+ * @param {number} index - Index of the subtask.
+ * @param {boolean} isCompleted - Whether the subtask is completed.
+ * @returns {string} HTML markup for the subtask.
+ */
+export function getTemplateSubtask(subtask, taskId, index, isCompleted) {
+  const uniqueId = `subtask-${taskId}-${index}`;
   return `<div class="d-subtask">
-                <input type="checkbox" id="d-subtask-${taskId}" value="${subtask}"/>
-                <label for="d-subtask-${taskId}">${subtask}</label>
+                <input type="checkbox" id="${uniqueId}" value="${subtask}" ${isCompleted ? 'checked' : ''} data-task-id="${taskId}" data-subtask="${subtask}"/>
+                <label for="${uniqueId}">${subtask}</label>
               </div>`;
 }
 
-export function getTemplateMarkedUser(memberIndex, memberInitials) {
-  return `<div class="marked-user marked-user-${memberIndex}" style="background-color: var(--color-variant${memberIndex});">${memberInitials}</div>`
+/**
+ * Returns HTML for a small marked user avatar shown on task cards.
+ * @param {number} memberIndex - Index used for generating class names and fallback color.
+ * @param {string} memberInitials - Initials to display inside the avatar.
+ * @param {string} [avatarColor] - Optional avatar background color.
+ * @returns {string} HTML string for the marked user avatar.
+ */
+export function getTemplateMarkedUser(memberIndex, memberInitials, avatarColor) {
+  return `<div class="marked-user marked-user-${memberIndex}" style="background-color: ${avatarColor || `var(--color-variant${memberIndex})`};">${memberInitials}</div>`
 }
 
+/**
+ * Returns HTML for the "+N" remaining-members indicator shown when a task has more than three members.
+ * @param {number} memberIndex - Index used for generating class name.
+ * @param {number} remainingMembers - Number of additional members to show.
+ * @returns {string} HTML string for the remaining-members indicator.
+ */
 export function getTemplateRemainingMembers(memberIndex, remainingMembers) {
   return `<div class="marked-user marked-user-${memberIndex}" style="background-color: var(--color-variant-over);">+${remainingMembers}</div>`
 }

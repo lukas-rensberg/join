@@ -1,21 +1,23 @@
-import { 
-  createTask, 
-  updateTask, 
-  deleteTask, 
-  loadTasks, 
+import {
+  createTask,
+  updateTask,
+  deleteTask,
+  loadTasks,
   migrateDefaultTasks,
-  auth,
   database
 } from './database.js';
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 import { ref, onValue } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
-import { getTemplateDialog } from "./template.js";
+import { getTemplateDialog, getTemplateTaskCard, getTemplateMember, getTemplateSubtask, getTemplateMarkedUser, getTemplateRemainingMembers } from "./template.js";
+
 
 let dialogRef = document.querySelector("dialog");
 
 let tasks = [];
 let contacts = [];
+
+let activeDragOverSection = null;
+let dragOverThrottle = null;
 
 // Load contacts from Firebase
 function loadContacts() {
@@ -39,9 +41,9 @@ function getContactById(contactId) {
  */
 function formatDate(dateString) {
   if (!dateString) return "No due date";
-  
+
   try {
-    const date = new Date(dateString + 'T00:00:00'); 
+    const date = new Date(dateString + 'T00:00:00');
     return date.toLocaleDateString('en-GB', {
       year: 'numeric',
       month: '2-digit',
@@ -59,10 +61,10 @@ function formatDate(dateString) {
  */
 function getRandomContactIds(count = 3) {
   if (!contacts || contacts.length === 0) return [];
-  
+
   const availableContacts = contacts.filter(c => !c.isAuthUser); // Exclude auth user from random assignment
   if (availableContacts.length === 0) return [];
-  
+
   const shuffled = [...availableContacts].sort(() => 0.5 - Math.random());
   const selectedCount = Math.min(count, Math.max(1, Math.floor(Math.random() * 4) + 1)); // 1-4 members
   return shuffled.slice(0, selectedCount).map(c => c.id);
@@ -190,7 +192,7 @@ const defaultTasks = [
     text: "Create reusable HTML base templates...",
     subtasks: ["Beta Test", "Double Check", "Extra Subtask", "Another Subtask"],
     subtasks_done: ["Double Check"],
-    member: [], 
+    member: [],
     priority: "low",
     category: "done",
   },
@@ -202,12 +204,12 @@ const defaultTasks = [
 function initializeTasks() {
   try {
     loadContacts();
-    
+
     loadTasks((loadedTasks) => {
       tasks = loadedTasks;
       updateHTML();
     });
-    
+
     // Wait for contacts to load before migrating tasks with random members
     setTimeout(() => {
       migrateDefaultTasksWithMembers();
@@ -268,17 +270,16 @@ async function removeTask(taskId) {
 
 let currentDraggedElement;
 
+
 /**
- * Slide in menu
+ * Slide the card swap menu into view and attach an outside-click handler to close it.
  */
 function swapMenuSlideIn() {
   const swapMenu = document.getElementById("card-swap-menu");
   swapMenu.classList.remove("slide-out-swap-menu");
   swapMenu.classList.add("slide-in-swap-menu");
 
-  /**
-   * Listener for clicking outside menu to close menu
-   */
+
   document.addEventListener("mousedown", handleOutsideClick);
 
   function handleOutsideClick(event) {
@@ -288,8 +289,9 @@ function swapMenuSlideIn() {
     }
   }
 }
+
 /**
- * Slide out menu
+ * Slide the card swap menu out of view.
  */
 function slideOutMenu() {
   const swapMenu = document.getElementById("card-swap-menu");
@@ -299,15 +301,17 @@ function slideOutMenu() {
 
 
 
-/**
- * Start of Dragging and updating HTML
- * vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
- */
 
+
+/**
+ * Render marked user avatars for a task card up to three members,
+ * and show a "+N" indicator when more members exist.
+ * @param {Object} element - Task object containing `id` and `member` array.
+ */
 function initMarkedUsers(element) {
   let markedUserContainer = document.getElementById(`marked-user-container-${element["id"]}`);
   const memberIds = element["member"] || [];
-  
+
   for (let index = 0; index < memberIds.length; index++) {
     const memberIndex = index + 1;
     if (index == 3) {
@@ -322,14 +326,6 @@ function initMarkedUsers(element) {
       }
     }
   }
-}
-
-function getTemplateMarkedUser(memberIndex, memberInitials, avatarColor) {
-  return `<div class="marked-user marked-user-${memberIndex}" style="background-color: ${avatarColor || `var(--color-variant${memberIndex})`};">${memberInitials}</div>`
-}
-
-function getTemplateRemainingMembers(memberIndex, remainingMembers) {
-  return `<div class="marked-user marked-user-${memberIndex}" style="background-color: var(--color-variant-over);">+${remainingMembers}</div>`
 }
 
 /**
@@ -348,7 +344,11 @@ function renderTasksByCategory(category, displayName) {
   }
 
   filteredTasks.forEach((task) => {
-    containerRef.innerHTML += getTemplateTaskCard(task);
+    const subtasks = task["subtasks"] || [];
+    const subtasksDone = task["subtasks_done"] || [];
+    const totalSubtasks = subtasks.length + subtasksDone.length;
+    const progressWidth = totalSubtasks > 0 ? (subtasksDone.length / totalSubtasks) * 100 : 0;
+    containerRef.innerHTML += getTemplateTaskCard(task, subtasksDone, totalSubtasks, progressWidth);
     initMarkedUsers(task);
   });
 }
@@ -367,33 +367,49 @@ function updateHTML() {
     renderTasksByCategory("done", "done");
   }, 100); // Increased debounce to 100ms
 }
-
+/**
+ * Mark the task as being dragged and add dragging CSS class.
+ * @param {string} id - DOM id of the dragged task element.
+ */
 function startDragging(id) {
   currentDraggedElement = id;
   document.getElementById(currentDraggedElement).classList.add("is-dragging");
 }
 
+
+/**
+ * Allow dropping by preventing default browser behavior.
+ * @param {Event} event - Dragover event.
+ */
 function allowDrop(event) {
   event.preventDefault();
 }
 
+
 /**
- * Optimized drag over handler to prevent flickering
+ * Handle dragover events for board columns, with lightweight throttling
+ * and visual feedback (highlight container and show placeholder).
+ * @param {Event} event - The dragover event.
+ * @param {string} section - The id of the column being dragged over.
  */
 function handleDragOver(event, section) {
   event.preventDefault();
-  
+
   // Throttle the calls to prevent excessive DOM manipulation
   if (dragOverThrottle) return;
-  
+
   dragOverThrottle = setTimeout(() => {
     dragOverThrottle = null;
   }, 16); // ~60fps throttling
-  
+
   bgContainer(section);
   showDashedBoxOnce(section);
 }
 
+/**
+ * Move the currently dragged task to a new category and persist the change.
+ * @param {string} category - Target category id (e.g. "to-do", "in-progress").
+ */
 function moveTo(category) {
   const taskToUpdate = tasks.find(task => task.id == currentDraggedElement);
   if (taskToUpdate) {
@@ -406,159 +422,130 @@ function moveTo(category) {
   // Remove updateHTML() call as Firebase listener will handle the update
 }
 
+
+/**
+ * Add dragover CSS class to the container with the given id.
+ * @param {string} id - Container element id.
+ */
 function bgContainer(id) {
   document.getElementById(id).classList.add("task-card-container-dragover");
 }
 
+
+
+
+/**
+ * Remove dragover CSS class and hide the dashed placeholder for a container.
+ * @param {string} id - Container element id.
+ */
 function bgContainerRemove(id) {
   hideDashedBox(id);
   document.getElementById(id).classList.remove("task-card-container-dragover");
 }
 
-function getTemplateTaskCard(element) {
-  // Ensure subtasks arrays exist
-  const subtasks = element["subtasks"] || [];
-  const subtasksDone = element["subtasks_done"] || [];
-  const totalSubtasks = subtasks.length + subtasksDone.length;
-  const progressWidth = totalSubtasks > 0 ? (subtasksDone.length / totalSubtasks) * 100 : 0;
-  
-  return `<div class="task-card" id="${element["id"]}" draggable="true" onclick="openDialog('${element["id"]}')" ondragstart="startDragging('${element["id"]}')">
-                            <div class="card-headline">
-                                <div class="card-label card-bg-${element["task"].split(" ")[0].toLowerCase()}-${element["task"].split(" ")[1].toLowerCase()}">${element["task"]}</div>
-                                <div class="card-swap-icon"></div>
-                            </div>
-                            <div class="card-task-title">${element["title"]}</div>
-                            <div class="card-task-text">${element["text"]}</div>
-                            <div class="card-progress-container">
-                                <div class="card-progress-bar">
-                                    <div class="card-sub-progress-bar" style="width: ${progressWidth}%;"></div>
-                                </div>
-                                <div id="tasks-done">${subtasksDone.length}/${totalSubtasks} Subtasks</div>
-                            </div>
-                            <div class="user-prio-container">
-                                <div class="marked-user-container" id="marked-user-container-${element["id"]}">
-                                </div>
-                                <div class="card-prio-icon"
-                                    style="background: url(./assets/priority_icons/prio_${element["priority"]}_colored.svg) center center no-repeat;">
-                                </div>
-                            </div>
-                        </div>`;
-}
 
+
+
+/**
+ * Returns HTML shown when a column has no tasks.
+ * @param {string} section - Display name for empty state.
+ * @returns {string} HTML string for the empty state.
+ */
 function getNoTaskTemplate(section) {
   return `<div class="no-tasks">No tasks ${section}</div>`;
 }
 
-let activeDragOverSection = null;
-let dragOverThrottle = null;
 
+
+/**
+ * Show a dashed placeholder card in a column once during dragover.
+ * Prevents duplicate placeholders for the same section while dragging.
+ * @param {string} section - Column id where placeholder should appear.
+ */
 function showDashedBoxOnce(section) {
   // Prevent repeated calls for the same section
   if (activeDragOverSection === section) return;
-  
+
   const container = document.getElementById(section);
   if (!container) return;
-  
+
   // Check if already has empty card to avoid duplicate additions
   if (container.querySelector(".empty-card")) {
     activeDragOverSection = section;
     return;
   }
-  
+
   const noTasksElem = container.querySelector(".no-tasks");
   if (noTasksElem) {
     noTasksElem.style.display = "none";
   }
-  
+
   // Use insertAdjacentHTML instead of innerHTML += to avoid reflow
   container.insertAdjacentHTML('beforeend', generateEmptyCard());
   activeDragOverSection = section;
 }
 
+
+
+/**
+ * Hide the dashed placeholder and restore the "no tasks" message.
+ * @param {string} section - Column id.
+ */
 function hideDashedBox(section) {
   const container = document.getElementById(section);
   if (!container) return;
-  
+
   const noTasksElem = container.querySelector(".no-tasks");
   if (noTasksElem) {
     noTasksElem.style.display = "flex";
   }
-  
+
   const emptyCard = container.querySelector(".empty-card");
   if (emptyCard) {
     emptyCard.remove(); // Use remove() instead of parentNode.removeChild
   }
-  
+
   // Reset the active section flag
   if (activeDragOverSection === section) {
     activeDragOverSection = null;
   }
 }
 
+/**
+ * Generate markup for the empty dashed card used during dragover.
+ * @returns {string} HTML string for an empty card.
+ */
 function generateEmptyCard() {
   return `<div class="empty-card"></div>`;
 }
 
 /**
- * Open dialog
+ * Open the task dialog for a given task id.
+ * @param {string} index - The task id to open in the dialog.
  */
 function openDialog(index) {
   let element = tasks.filter((t) => t["id"] == `${index}`)[0];
   dialogRef.classList.add("dialog-swipe-in");
-  dialogRef.innerHTML = getTemplateDialog(element);
+  const dueDate = element["dueDate"] ? formatDate(element["dueDate"]) : "No due date set";
+  dialogRef.innerHTML = getTemplateDialog(element, dueDate);
   initMembers(element["member"]);
   iniSubtasks(element["subtasks"], element["id"]); // Pass only subtasks array as expected
-  
+
   dialogRef.showModal();
 }
 
 /**
- * Close Dialog
+ * Close the currently open task dialog.
  */
 function closeDialog() {
   dialogRef.classList.remove("dialog-swipe-in");
   dialogRef.close();
 }
 
-function getTemplateDialog(element) {
-  const dueDate = element["dueDate"] ? formatDate(element["dueDate"]) : "No due date set";
-  
-  return `<div class="dialog-content">
-        <div class="d-card-header">
-          <div class="card-label card-bg-${element["task"].split(" ")[0].toLowerCase()}-${element["task"].split(" ")[1].toLowerCase()}">${element["task"]}</div>
-          <div class="close-dialog" onclick="closeDialog()"></div>
-        </div>
-        <section>
-          <div class="d-card-headline">
-            <h2>${element["title"]}</h2>
-          </div>
-          <p>${element["text"]}</p>
-          <div class="d-due-date-prio">
-            <p><strong>Due date:</strong></p>
-            <p>${dueDate}</p>
-          </div>
-          <div class="d-due-date-prio">
-            <p><strong>Priority:</strong></p>
-            <p class="p-prio">${element["priority"].charAt(0).toUpperCase() + element["priority"].slice(1)}</p>
-            <img src="./assets/priority_icons/prio_${element["priority"]}_colored.svg" alt="prio ${element["priority"]}" />
-          </div>
-          <div class="d-assigned-to">
-            <p><strong>Assigned to:</strong></p>
-            <div class="d-assigned-members" id="d-assigned-members" onload="initMembers()">
-            </div>
-          </div>
-          <div class="d-subtasks">
-            <p><strong>Subtasks:</strong></p>
-            <div class="d-subtasks-check">
-          </div>
-        </section>
-        <div class="d-card-footer">
-          <div class="d-card-footer-d">Delete</div>
-          <div class="d-card-footer-e">Edit</div>
-        </div>
-      </div>`;
-}
-
+/**
+ * Populate the dialog's assigned members section from an array of contact ids.
+ * @param {Array<string>} memberIds - Array of contact ids assigned to the task.
+ */
 function initMembers(memberIds) {
   let membersContainer = document.getElementById("d-assigned-members");
   membersContainer.innerHTML = "";
@@ -567,51 +554,33 @@ function initMembers(memberIds) {
     const contactId = memberIdArray[index];
     const contact = getContactById(contactId);
     if (contact) {
-      const memberIndex = index + 1;
       membersContainer.innerHTML += getTemplateMember(contact.name, contact.initials, contact.avatarColor);
     }
   }
 }
 
-function getTemplateMember(memberName, memberInitials, avatarColor) {
-  return `<div class="d-assigned-member-cards">
-                <div class="d-assigned-member-icon" style="background-color: ${avatarColor}">
-                  ${memberInitials}
-                </div>
-                <p>${memberName}</p>
-              </div>`;
-}
-
-function iniSubtasks(subtasks, taskId) {
+function iniSubtasks(taskId) {
   let subtasksContainer = document.querySelector(".d-subtasks-check");
   subtasksContainer.innerHTML = "";
-  
+
   const task = tasks.find(t => t.id === taskId);
   if (!task) return;
-  
+
   const pendingSubtasks = task.subtasks || [];
   const completedSubtasks = task.subtasks_done || [];
-  
+
   // Add pending subtasks
   pendingSubtasks.forEach((subtask, index) => {
     subtasksContainer.innerHTML += getTemplateSubtask(subtask, taskId, index, false);
   });
-  
+
   // Add completed subtasks
   completedSubtasks.forEach((subtask, index) => {
     subtasksContainer.innerHTML += getTemplateSubtask(subtask, taskId, index + pendingSubtasks.length, true);
   });
-  
+
   // Add event listeners after DOM is updated
   setTimeout(() => addSubtaskEventListeners(taskId), 0);
-}
-
-function getTemplateSubtask(subtask, taskId, index, isCompleted) {
-  const uniqueId = `subtask-${taskId}-${index}`;
-  return `<div class="d-subtask">
-                <input type="checkbox" id="${uniqueId}" value="${subtask}" ${isCompleted ? 'checked' : ''} data-task-id="${taskId}" data-subtask="${subtask}"/>
-                <label for="${uniqueId}">${subtask}</label>
-              </div>`;
 }
 
 /**
@@ -620,7 +589,7 @@ function getTemplateSubtask(subtask, taskId, index, isCompleted) {
 function addSubtaskEventListeners(taskId) {
   const checkboxes = document.querySelectorAll(`input[data-task-id="${taskId}"]`);
   checkboxes.forEach(checkbox => {
-    checkbox.addEventListener('change', function() {
+    checkbox.addEventListener('change', function () {
       const subtask = this.dataset.subtask;
       const isCompleted = this.checked;
       updateSubtaskStatus(taskId, subtask, isCompleted);
@@ -643,11 +612,11 @@ async function createNewTask(taskData) {
       category: taskData.category || "to-do",
       dueDate: taskData.dueDate || null
     };
-    
+
     // Add to local array first for immediate UI feedback
     tasks.push(newTask);
     updateHTML();
-    
+
     // Save to Firebase
     await saveTask(newTask);
   } catch (error) {
@@ -667,7 +636,7 @@ async function createNewTask(taskData) {
 async function addContactToTask(taskId, contactId) {
   const task = tasks.find(t => t.id === taskId);
   if (!task) return;
-  
+
   if (!task.member.includes(contactId)) {
     task.member.push(contactId);
     await saveTask(task);
@@ -681,7 +650,7 @@ async function addContactToTask(taskId, contactId) {
 async function removeContactFromTask(taskId, contactId) {
   const task = tasks.find(t => t.id === taskId);
   if (!task) return;
-  
+
   const index = task.member.indexOf(contactId);
   if (index > -1) {
     task.member.splice(index, 1);
@@ -695,7 +664,7 @@ async function removeContactFromTask(taskId, contactId) {
  */
 async function removeContactFromAllTasks(contactId) {
   const tasksWithContact = tasks.filter(t => t.member && t.member.includes(contactId));
-  
+
   for (const task of tasksWithContact) {
     const index = task.member.indexOf(contactId);
     if (index > -1) {
@@ -703,7 +672,7 @@ async function removeContactFromAllTasks(contactId) {
       await saveTask(task);
     }
   }
-  
+
   updateHTML();
 }
 
