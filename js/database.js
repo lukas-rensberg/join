@@ -109,38 +109,43 @@ export async function createContactForUser(uid, username, email) {
 export async function createTask(taskData) {
   try {
     const user = auth.currentUser;
-    if (!user) {
-      throw new Error("User must be authenticated to create tasks");
-    }
+    if (!user) throw new Error("User must be authenticated to create tasks");
 
     const tasksRef = ref(database, 'tasks');
     const newTaskRef = push(tasksRef);
 
     const now = Date.now();
 
-    const task = {
-      id: newTaskRef.key,
-      title: taskData.title,
-      text: taskData.text || "",
-      dueDate: taskData.dueDate,
-      priority: taskData.priority,
-      task: taskData.task, // Category name (e.g., "Technical Task" or "User Story")
-      category: taskData.category || "to-do", // Status: "to-do", "in-progress", "awaiting-feedback", "done"
-      member: taskData.member || [],
-      subtasks: taskData.subtasks || [],
-      subtasks_done: [],
-      createdAt: now,
-      updatedAt: now
-    };
+    const task = getTaskObject(newTaskRef, taskData, now);
 
     await set(newTaskRef, task);
-    console.log("Task created successfully:", task.id);
-    return task.id;
   } catch (error) {
-    console.error("Error creating task:", error);
     throw error;
   }
 }
 
+/**
+ * Construct task object for RTDB
+ * @param newTaskRef
+ * @param taskData
+ * @param now
+ * @returns {{id: *, title: *, text, dueDate: string|*, priority: *, task: *|Promise<void>, category, member, subtasks, subtasks_done: *[], createdAt: *, updatedAt: *}}
+ */
+function getTaskObject(newTaskRef,taskData, now) {
+    return {
+        id: newTaskRef.key,
+        title: taskData.title,
+        text: taskData.text || "",
+        dueDate: taskData.dueDate,
+        priority: taskData.priority,
+        task: taskData.task,
+        category: taskData.category || "to-do",
+        member: taskData.member || [],
+        subtasks: taskData.subtasks || [],
+        subtasks_done: [],
+        createdAt: now,
+        updatedAt: now
+    };
+}
 export { auth, database };
 
