@@ -145,8 +145,7 @@ async function handleCreateTask() {
         showSuccess();
         handleClearForm();
 
-        // Optionally redirect to board page
-        // window.location.href = 'board.html';
+        window.location.href = 'board.html';
     } catch (error) {
         console.error('Error creating task:', error);
         alert('Error creating task. Please try again.');
