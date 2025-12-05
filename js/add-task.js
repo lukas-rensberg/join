@@ -143,9 +143,10 @@ async function handleCreateTask() {
         const taskData = collectTaskData();
         await createTask(taskData);
         showSuccess();
-        handleClearForm();
 
-        window.location.href = 'board.html';
+        setTimeout(() => {
+            window.location.href = 'board.html';
+        }, 500);
     } catch (error) {
         console.error('Error creating task:', error);
         alert('Error creating task. Please try again.');
