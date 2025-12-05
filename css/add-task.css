@@ -100,6 +100,7 @@
   background-color: transparent;
 }
 
+
 .input-with-icon .icon {
   padding: 0 15px;
 }
@@ -114,10 +115,10 @@
   flex-grow: 1;
   font-size: 0.9rem;
   padding: 12px 10px;
-  border: 1px solid var(--color-light-gray);
+  border: none;
+  box-shadow: 0 -1px 6px rgba(0, 0, 0, 0.1);
   border-radius: var(--button-radius);
   background-color: #ffffff;
-  font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
@@ -211,7 +212,7 @@
   bottom: 60px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 999;
+  z-index: 1100;
 }
 
 .button-group button {
@@ -469,4 +470,221 @@ button.btn-clear {
 
 .subtask-icons img.icon-confirm {
   width: 1rem;
+}
+
+/* Contact Chip Styles */
+.dropzone {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.contact-chip {
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  border-radius: 50%;
+  padding: 2px;
+  border: none;
+  transition: transform 0.2s ease;
+}
+
+.contact-chip:hover {
+  transform: scale(1.05);
+}
+
+.contact-avatar-small {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: white;
+  cursor: pointer;
+}
+
+/* Custom Dropdown Styles */
+.custom-dropdown {
+  position: relative;
+  width: 100%;
+}
+
+.dropdown-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  border-bottom: 1px solid var(--color-light-gray);
+  cursor: pointer;
+  transition: border-color 0.2s;
+  background-color: transparent;
+  position: relative;
+}
+
+.dropdown-header:hover {
+  border-bottom: 1px solid var(--main-color);
+}
+
+/* Contact dropdown specific styles - no padding for header */
+#contactDropdownWrapper .dropdown-header {
+  padding: 0;
+}
+
+.dropdown-search-input {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  background: transparent;
+  font-size: 0.9rem;
+  color: var(--color-menu-text);
+  outline: none;
+  cursor: text;
+}
+
+.dropdown-search-input::placeholder {
+  color: var(--color-menu-text);
+  opacity: 1;
+}
+
+.dropdown-display-text {
+  font-size: 0.9rem;
+  color: var(--color-menu-text);
+}
+
+.dropdown-arrow {
+  width: 7px;
+  height: 7px;
+  transition: transform 0.2s ease;
+  margin-right: 12px;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.dropdown-header.active .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+.dropdown-content {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border: 1px solid var(--color-light-gray);
+  border-radius: 0 0 8px 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  display: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-content.active {
+  display: block;
+}
+
+.contact-option {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.contact-option:hover {
+  background-color: #f5f5f5;
+}
+
+.contact-option.selected {
+  background-color: #e3f2fd;
+}
+
+.contact-option-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: white;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.contact-option-info {
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.contact-option-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-menu-text);
+  margin-bottom: 2px;
+}
+
+.contact-option-email {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.contact-option-checkbox {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ddd;
+  border-radius: 2px;
+  margin-left: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.contact-option-checkbox.checked {
+  background-color: var(--main-color);
+  border-color: var(--main-color);
+}
+
+.contact-option-checkbox.checked::after {
+  content: '✓';
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+/* Category Option Styles */
+.category-option {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.category-option:hover {
+  background-color: #f5f5f5;
+}
+
+.category-option.selected {
+  background-color: #e3f2fd;
+}
+
+.category-option-indicator {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.category-option-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-menu-text);
+  flex-grow: 1;
 }

@@ -55,3 +55,30 @@ export function createNormalActionsHTML() {
     <img src="./assets/icons/delete.svg" alt="Delete" onclick="deleteSubtask(this)" />
   `;
 }
+
+export function generateContactOptionHTML(contact) {
+    return `
+      <div class="contact-option-avatar" style="background-color: ${contact.avatarColor};">
+        ${contact.initials}
+      </div>
+      <div class="contact-option-info">
+        <div class="contact-option-name">${contact.name}</div>
+        <div class="contact-option-email">${contact.email}</div>
+      </div>
+      <div class="contact-option-checkbox" id="checkbox-${contact.id}"></div>
+    `;
+}
+
+export function getContactChipHTML(contact) {
+    return `
+      <div class="contact-avatar-small" style="background-color: ${contact.avatarColor};" title="${contact.name}">
+        ${contact.initials}
+      </div>
+    `;
+}
+
+export function getCategoryOptionHTML(category) {
+    return `
+      <div class="category-option-name">${category.name}</div>
+    `;
+}

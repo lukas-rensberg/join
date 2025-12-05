@@ -5,6 +5,7 @@ import {
   ref,
   set,
   get,
+  push,
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
 const firebaseConfig = {
@@ -97,6 +98,47 @@ export async function createContactForUser(uid, username, email) {
     console.log("Contact created in RTDB for new user");
   } catch (error) {
     console.error("Error creating contact in RTDB:", error);
+  }
+}
+
+/**
+ * Create a new task in RTDB
+ * @param {Object} taskData - Task data object
+ * @returns {Promise<string>} - The ID of the created task
+ */
+export async function createTask(taskData) {
+  try {
+    const user = auth.currentUser;
+    if (!user) {
+      throw new Error("User must be authenticated to create tasks");
+    }
+
+    const tasksRef = ref(database, 'tasks');
+    const newTaskRef = push(tasksRef);
+
+    const now = Date.now();
+
+    const task = {
+      id: newTaskRef.key,
+      title: taskData.title,
+      text: taskData.text || "",
+      dueDate: taskData.dueDate,
+      priority: taskData.priority,
+      task: taskData.task, // Category name (e.g., "Technical Task" or "User Story")
+      category: taskData.category || "to-do", // Status: "to-do", "in-progress", "awaiting-feedback", "done"
+      member: taskData.member || [],
+      subtasks: taskData.subtasks || [],
+      subtasks_done: [],
+      createdAt: now,
+      updatedAt: now
+    };
+
+    await set(newTaskRef, task);
+    console.log("Task created successfully:", task.id);
+    return task.id;
+  } catch (error) {
+    console.error("Error creating task:", error);
+    throw error;
   }
 }
 

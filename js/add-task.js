@@ -1,186 +1,232 @@
-/**
- * Subtask Management Functions
- * Simple functions for managing subtasks
- */
+import {
+    toggleSubtaskIcons,
+    clearSubtaskInput,
+    handleSubtaskEnter,
+    addNewSubtask,
+    handleEditEnter,
+    initializeSubtasks,
+    getSubtasks
+} from "./subtask-manager.js";
 
 import {
-  createSubtaskHTML,
-  createEditActionsHTML,
-  createNormalActionsHTML,
-} from "./template.js";
+    selectPriority,
+    initializePriorityButtons,
+    getSelectedPriority
+} from "./priority-manager.js";
+
+import {
+    initializeDateInput,
+    isValidDate
+} from "./date-input-manager.js";
+
+import {
+    toggleDropdown,
+    filterOptions,
+    selectContact,
+    selectCategory,
+    initializeDropdowns,
+    getSelectedContacts,
+    getSelectedCategory,
+    clearSelectedContacts,
+    clearSelectedCategory
+} from "./dropdown-manager.js";
+
+import { createTask } from "./database.js";
+
 
 /**
- * Toggles visibility of subtask input icons based on input content
+ * Export functions to window for HTML onclick handlers
+ * @return {void}
  */
-function toggleSubtaskIcons() {
-  const input = document.querySelector(".subtask-input");
-  const icons = document.querySelector(".subtask-icons");
-  if (input.value.trim().length > 0) {
-    icons.classList.add("visible");
-  } else {
-    icons.classList.remove("visible");
-  }
-}
-
-/**
- * Clears the subtask input field and hides icons
- */
-function clearSubtaskInput() {
-  const input = document.querySelector(".subtask-input");
-  const icons = document.querySelector(".subtask-icons");
-  input.value = "";
-  icons.classList.remove("visible");
-  input.focus();
-}
-
-/**
- * Handles Enter key press in input field
- * @param {KeyboardEvent} event - The keyboard event
- */
-function handleSubtaskEnter(event) {
-  if (event.key === "Enter") {
-    event.preventDefault();
-    addNewSubtask();
-  }
-}
-
-/**
- * Adds a new subtask to the list
- */
-function addNewSubtask() {
-  const input = document.querySelector(".subtask-input");
-  const text = input.value.trim();
-  if (!text) return;
-
-  const list = document.getElementById("subtaskList");
-  const listItem = document.createElement("li");
-  listItem.className = "subtask-item";
-  const escapedText = escapeHtml(text);
-  const html = createSubtaskHTML(escapedText);
-  listItem.innerHTML = html;
-
-  list.appendChild(listItem);
-  clearSubtaskInput();
-}
-
-/**
- * Escapes HTML special characters to prevent XSS attacks
- * @param {string} text - The text to escape
- * @returns {string} The escaped text
- */
-function escapeHtml(text) {
-  const div = document.createElement("div");
-  div.textContent = text;
-  return div.innerHTML;
-}
-
-/**
- * Deletes a subtask from the list
- * @param {HTMLElement} button - The delete button element
- */
-function deleteSubtask(button) {
-  const listItem = button.closest(".subtask-item");
-  listItem.remove();
-}
-
-/**
- * Creates an edit input element
- * @param {string} text - The current text value
- * @returns {HTMLInputElement} The input element
- */
-function createEditInput(text) {
-  const input = document.createElement("input");
-  input.type = "text";
-  input.className = "subtask-edit-input";
-  input.value = text;
-  input.setAttribute("data-original", text);
-  input.addEventListener("keypress", (event) => handleEditEnter(event, input));
-  return input;
-}
-
-/**
- * Starts editing mode for a subtask
- * @param {HTMLElement} button - The edit button element
- */
-function startEditingSubtask(button) {
-  const listItem = button.closest(".subtask-item");
-  const textSpan = listItem.querySelector(".subtask-text");
-  const currentText = textSpan.textContent;
-
-  listItem.classList.add("subtask-item-editing");
-  const input = createEditInput(currentText);
-  textSpan.replaceWith(input);
-  input.focus();
-
-  const actions = listItem.querySelector(".subtask-actions");
-  actions.innerHTML = createEditActionsHTML();
-}
-
-/**
- * Handles Enter key press during editing
- * @param {KeyboardEvent} event - The keyboard event
- * @param {HTMLInputElement} input - The input field element
- */
-function handleEditEnter(event, input) {
-  if (event.key === "Enter") {
-    event.preventDefault();
-    const saveBtn = input.closest(".subtask-item").querySelector(".save-edit");
-    if (saveBtn) {
-      saveEdit(saveBtn);
-    }
-  }
-}
-
-/**
- * Cancels editing and restores original text
- * @param {HTMLElement} button - The cancel button element
- */
-function cancelEdit(button) {
-  const listItem = button.closest(".subtask-item");
-  const input = listItem.querySelector(".subtask-edit-input");
-  const originalText = input.getAttribute("data-original");
-  exitEditMode(listItem, input, originalText);
-}
-
-/**
- * Saves edited text
- * @param {HTMLElement} button - The save button element
- */
-function saveEdit(button) {
-  const listItem = button.closest(".subtask-item");
-  const input = listItem.querySelector(".subtask-edit-input");
-  const newText = input.value.trim();
-
-  if (newText) {
-    exitEditMode(listItem, input, newText);
-  }
-}
-
-/**
- * Exits edit mode and restores normal view
- * @param {HTMLElement} listItem - The list item element
- * @param {HTMLInputElement} input - The input field element
- * @param {string} text - The text to display
- */
-function exitEditMode(listItem, input, text) {
-  listItem.classList.remove("subtask-item-editing");
-
-  const span = document.createElement("span");
-  span.className = "subtask-text";
-  span.textContent = text;
-  input.replaceWith(span);
-
-  const actions = listItem.querySelector(".subtask-actions");
-  actions.innerHTML = createNormalActionsHTML();
-}
-
-// Make functions globally available for onclick handlers
 window.toggleSubtaskIcons = toggleSubtaskIcons;
 window.clearSubtaskInput = clearSubtaskInput;
 window.handleSubtaskEnter = handleSubtaskEnter;
 window.addNewSubtask = addNewSubtask;
-window.deleteSubtask = deleteSubtask;
-window.startEditingSubtask = startEditingSubtask;
 window.handleEditEnter = handleEditEnter;
-window.cancelEdit = cancelEdit;
-window.saveEdit = saveEdit;
+window.selectPriority = selectPriority;
+window.initializePriorityButtons = initializePriorityButtons;
+window.toggleDropdown = toggleDropdown;
+window.filterOptions = filterOptions;
+window.selectContact = selectContact;
+window.selectCategory = selectCategory;
+
+/**
+ * Initialize all components when DOM is fully loaded
+ * Sets up priority buttons, date input, dropdowns, and subtasks
+ * @return {void}
+ */
+document.addEventListener('DOMContentLoaded', () => {
+    initializePriorityButtons();
+    initializeDateInput();
+    initializeDropdowns();
+    initializeSubtasks();
+    initializeFormButtons();
+});
+
+/**
+ * Initialize form button event listeners
+ * @return {void}
+ */
+function initializeFormButtons() {
+    const createButton = document.querySelector('.btn-create');
+    const clearButton = document.querySelector('.btn-clear');
+
+    if (createButton) {
+        createButton.addEventListener('click', handleCreateTask);
+    }
+
+    if (clearButton) {
+        clearButton.addEventListener('click', handleClearForm);
+    }
+}
+
+/**
+ * Validates the task form
+ * @returns {Object} Object with isValid flag and errors array
+ */
+function validateTaskForm() {
+    const errors = [];
+
+    const title = document.querySelector('.task-title')?.value?.trim();
+    if (!title) {
+        errors.push('Title is required');
+    }
+
+    const dueDate = document.getElementById('dueDate')?.value;
+    if (!dueDate || !isValidDate(dueDate)) {
+        errors.push('Valid due date is required (dd/mm/yyyy)');
+    }
+
+    const category = getSelectedCategory();
+    if (!category) {
+        errors.push('Category is required');
+    }
+
+    return {
+        isValid: errors.length === 0,
+        errors
+    };
+}
+
+/**
+ * Shows error messages to the user
+ * @param {Array} errors - Array of error messages
+ * @return {void}
+ */
+function showErrors(errors) {
+    // For now, use alert. Can be replaced with a better UI notification later
+    alert('Please fix the following errors:\n\n' + errors.join('\n'));
+}
+
+/**
+ * Shows success message to the user
+ * @return {void}
+ */
+function showSuccess() {
+    // For now, use alert. Can be replaced with a better UI notification later
+    alert('Task created successfully!');
+}
+
+/**
+ * Handles task creation
+ * @return {Promise<void>}
+ */
+async function handleCreateTask() {
+    const validation = validateTaskForm();
+
+    if (!validation.isValid) {
+        showErrors(validation.errors);
+        return;
+    }
+
+    try {
+        const taskData = collectTaskData();
+        await createTask(taskData);
+        showSuccess();
+        handleClearForm();
+
+        // Optionally redirect to board page
+        // window.location.href = 'board.html';
+    } catch (error) {
+        console.error('Error creating task:', error);
+        alert('Error creating task. Please try again.');
+    }
+}
+
+/**
+ * Collects all task data from the form
+ * @returns {Object} Task data object
+ */
+function collectTaskData() {
+    const title = document.querySelector('.task-title')?.value?.trim();
+    const text = document.querySelector('.task-description')?.value?.trim();
+    const dueDate = document.getElementById('dueDate')?.value;
+    const priority = getSelectedPriority();
+    const category = getSelectedCategory();
+    const assignedContacts = getSelectedContacts();
+    const subtasks = getSubtasks();
+
+    // Convert dd/mm/yyyy to ISO format for storage
+    const [day, month, year] = dueDate.split('/');
+    const isoDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+
+    return {
+        title,
+        text, // Description field maps to "text"
+        dueDate: isoDate,
+        priority,
+        task: category.name, // Category name (e.g., "Technical Task" or "User Story")
+        category: 'to-do', // Status: new tasks start as "to-do"
+        member: assignedContacts.map(c => c.id), // Assigned contacts map to "member"
+        subtasks: subtasks.map(s => s.text) // Subtasks as array of strings
+    };
+}
+
+/**
+ * Clears the entire form
+ * @return {void}
+ */
+function handleClearForm() {
+    // Clear title
+    const titleInput = document.querySelector('.task-title');
+    if (titleInput) titleInput.value = '';
+
+    // Clear description
+    const descriptionInput = document.querySelector('.task-description');
+    if (descriptionInput) descriptionInput.value = '';
+
+    // Clear due date
+    const dueDateInput = document.getElementById('dueDate');
+    if (dueDateInput) dueDateInput.value = '';
+
+    // Reset priority to medium
+    const mediumButton = document.querySelector('.priority-btn.medium');
+    if (mediumButton) selectPriority(mediumButton);
+
+    // Clear selected contacts
+    clearSelectedContacts();
+    const dropzone = document.querySelector('.dropzone');
+    if (dropzone) dropzone.innerHTML = '';
+
+    // Clear contact checkboxes
+    document.querySelectorAll('.contact-option').forEach(option => {
+        option.classList.remove('selected');
+        const checkbox = option.querySelector('.contact-checkbox');
+        if (checkbox) checkbox.classList.remove('checked');
+    });
+
+    // Clear selected category
+    clearSelectedCategory();
+    const categoryDisplay = document.getElementById('categoryDisplay');
+    if (categoryDisplay) categoryDisplay.textContent = 'Select task category';
+    document.querySelectorAll('.category-option').forEach(option => {
+        option.classList.remove('selected');
+    });
+
+    // Clear subtasks
+    const subtaskList = document.getElementById('subtaskList');
+    if (subtaskList) subtaskList.innerHTML = '';
+
+    // Clear subtask input
+    clearSubtaskInput();
+}
