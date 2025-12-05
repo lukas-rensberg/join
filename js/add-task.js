@@ -4,39 +4,50 @@ import {
     handleSubtaskEnter,
     addNewSubtask,
     handleEditEnter,
-    initializeSubtasks,
-    getSubtasks
+    initializeSubtasks
 } from "./subtask-manager.js";
 
 import {
     selectPriority,
-    initializePriorityButtons,
-    getSelectedPriority
+    initializePriorityButtons
 } from "./priority-manager.js";
 
-import {
-    initializeDateInput,
-    isValidDate
-} from "./date-input-manager.js";
+import { initializeDateInput } from "./date-input-manager.js";
 
 import {
     toggleDropdown,
     filterOptions,
     selectContact,
     selectCategory,
-    initializeDropdowns,
-    getSelectedContacts,
-    getSelectedCategory,
-    clearSelectedContacts,
-    clearSelectedCategory
+    initializeDropdowns
 } from "./dropdown-manager.js";
 
 import { createTask } from "./database.js";
 
+import {
+    showFieldError,
+    clearFieldError,
+    clearAllFieldErrors,
+    showSuccessBanner,
+    showErrorBanner
+} from "./error-handler.js";
+
+import { validateTaskForm } from "./form-validation.js";
+
+import { collectTaskData } from "./task-data-collector.js";
+
+import {
+    clearFormInputs,
+    resetPriorityToMedium,
+    clearContactSelections,
+    clearCategorySelection,
+    clearSubtasksSection
+} from "./form-utils.js";
+
 
 /**
  * Export functions to window for HTML onclick handlers
- * @return {void}
+ * @returns {void}
  */
 window.toggleSubtaskIcons = toggleSubtaskIcons;
 window.clearSubtaskInput = clearSubtaskInput;
@@ -52,8 +63,7 @@ window.selectCategory = selectCategory;
 
 /**
  * Initialize all components when DOM is fully loaded
- * Sets up priority buttons, date input, dropdowns, and subtasks
- * @return {void}
+ * @returns {void}
  */
 document.addEventListener('DOMContentLoaded', () => {
     initializePriorityButtons();
@@ -63,11 +73,23 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeFormButtons();
 });
 
+
 /**
  * Initialize form button event listeners
- * @return {void}
+ * @returns {void}
  */
 function initializeFormButtons() {
+    attachButtonListeners();
+    attachInputListeners();
+    attachCategoryListener();
+}
+
+
+/**
+ * Attach event listeners to form buttons
+ * @returns {void}
+ */
+function attachButtonListeners() {
     const createButton = document.querySelector('.btn-create');
     const clearButton = document.querySelector('.btn-clear');
 
@@ -80,56 +102,60 @@ function initializeFormButtons() {
     }
 }
 
+
 /**
- * Validates the task form
- * @returns {Object} Object with isValid flag and errors array
+ * Attach input event listeners to clear errors on typing
+ * @returns {void}
  */
-function validateTaskForm() {
-    const errors = [];
-
-    const title = document.querySelector('.task-title')?.value?.trim();
-    if (!title) {
-        errors.push('Title is required');
+function attachInputListeners() {
+    const titleInput = document.querySelector('.task-title');
+    if (titleInput) {
+        titleInput.addEventListener('input', () => clearFieldError('title'));
     }
 
-    const dueDate = document.getElementById('dueDate')?.value;
-    if (!dueDate || !isValidDate(dueDate)) {
-        errors.push('Valid due date is required (dd/mm/yyyy)');
+    const dueDateInput = document.getElementById('dueDate');
+    if (dueDateInput) {
+        dueDateInput.addEventListener('input', () => clearFieldError('dueDate'));
     }
+}
 
-    const category = getSelectedCategory();
-    if (!category) {
-        errors.push('Category is required');
-    }
-
-    return {
-        isValid: errors.length === 0,
-        errors
+/**
+ * Attach listener to clear category error on selection
+ * @returns {void}
+ */
+function attachCategoryListener() {
+    const originalSelectCategory = window.selectCategory;
+    window.selectCategory = function(categoryId) {
+        clearFieldError('category');
+        originalSelectCategory(categoryId);
     };
 }
 
+
 /**
- * Shows error messages to the user
- * @param {Array} errors - Array of error messages
- * @return {void}
+ * Shows error messages under the respective fields
+ * @param {{title: string|null, dueDate: string|null, category: string|null}} errors - Field-specific error messages
+ * @returns {void}
  */
 function showErrors(errors) {
-    // For now, use alert. Can be replaced with a better UI notification later
-    alert('Please fix the following errors:\n\n' + errors.join('\n'));
+    clearAllFieldErrors();
+
+    if (errors.title) {
+        showFieldError('title', errors.title);
+    }
+
+    if (errors.dueDate) {
+        showFieldError('dueDate', errors.dueDate);
+    }
+
+    if (errors.category) {
+        showFieldError('category', errors.category);
+    }
 }
 
 /**
- * Shows success message to the user
- * @return {void}
- */
-function showSuccess() {
-    // For now, use alert. Can be replaced with a better UI notification later
-    alert('Task created successfully!');
-}
-
-/**
- * Handles task creation
- * @return {Promise<void>}
+ * Handles task creation and validation
+ * @returns {Promise<void>}
  */
 async function handleCreateTask() {
     const validation = validateTaskForm();
@@ -139,94 +165,55 @@ async function handleCreateTask() {
         return;
     }
 
+    await createAndRedirect();
+}
+
+/**
+ * Creates task and redirects to board page
+ * @returns {Promise<void>}
+ */
+async function createAndRedirect() {
     try {
         const taskData = collectTaskData();
         await createTask(taskData);
-        showSuccess();
-
-        setTimeout(() => {
-            window.location.href = 'board.html';
-        }, 500);
+        showSuccessBanner('Task created successfully!');
+        redirectToBoard();
     } catch (error) {
-        console.error('Error creating task:', error);
-        alert('Error creating task. Please try again.');
+        handleCreateTaskError(error);
     }
 }
 
 /**
- * Collects all task data from the form
- * @returns {Object} Task data object
+ * Handles errors during task creation
+ * @param {Error} error - The error object
+ * @returns {void}
  */
-function collectTaskData() {
-    const title = document.querySelector('.task-title')?.value?.trim();
-    const text = document.querySelector('.task-description')?.value?.trim();
-    const dueDate = document.getElementById('dueDate')?.value;
-    const priority = getSelectedPriority();
-    const category = getSelectedCategory();
-    const assignedContacts = getSelectedContacts();
-    const subtasks = getSubtasks();
-
-    // Convert dd/mm/yyyy to ISO format for storage
-    const [day, month, year] = dueDate.split('/');
-    const isoDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-
-    return {
-        title,
-        text, // Description field maps to "text"
-        dueDate: isoDate,
-        priority,
-        task: category.name, // Category name (e.g., "Technical Task" or "User Story")
-        category: 'to-do', // Status: new tasks start as "to-do"
-        member: assignedContacts.map(c => c.id), // Assigned contacts map to "member"
-        subtasks: subtasks.map(s => s.text) // Subtasks as array of strings
-    };
+function handleCreateTaskError(error) {
+    console.error('Error creating task:', error);
+    showErrorBanner('Error creating task. Please try again.');
 }
+
+
+/**
+ * Redirects to board page after short delay
+ * @returns {void}
+ */
+function redirectToBoard() {
+    setTimeout(() => {
+        window.location.href = 'board.html';
+    }, 500);
+}
+
 
 /**
  * Clears the entire form
- * @return {void}
+ * @returns {void}
  */
 function handleClearForm() {
-    // Clear title
-    const titleInput = document.querySelector('.task-title');
-    if (titleInput) titleInput.value = '';
-
-    // Clear description
-    const descriptionInput = document.querySelector('.task-description');
-    if (descriptionInput) descriptionInput.value = '';
-
-    // Clear due date
-    const dueDateInput = document.getElementById('dueDate');
-    if (dueDateInput) dueDateInput.value = '';
-
-    // Reset priority to medium
-    const mediumButton = document.querySelector('.priority-btn.medium');
-    if (mediumButton) selectPriority(mediumButton);
-
-    // Clear selected contacts
-    clearSelectedContacts();
-    const dropzone = document.querySelector('.dropzone');
-    if (dropzone) dropzone.innerHTML = '';
-
-    // Clear contact checkboxes
-    document.querySelectorAll('.contact-option').forEach(option => {
-        option.classList.remove('selected');
-        const checkbox = option.querySelector('.contact-checkbox');
-        if (checkbox) checkbox.classList.remove('checked');
-    });
-
-    // Clear selected category
-    clearSelectedCategory();
-    const categoryDisplay = document.getElementById('categoryDisplay');
-    if (categoryDisplay) categoryDisplay.textContent = 'Select task category';
-    document.querySelectorAll('.category-option').forEach(option => {
-        option.classList.remove('selected');
-    });
-
-    // Clear subtasks
-    const subtaskList = document.getElementById('subtaskList');
-    if (subtaskList) subtaskList.innerHTML = '';
-
-    // Clear subtask input
-    clearSubtaskInput();
+    clearFormInputs();
+    resetPriorityToMedium();
+    clearContactSelections();
+    clearCategorySelection();
+    clearSubtasksSection();
 }
+

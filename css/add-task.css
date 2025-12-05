@@ -105,6 +105,112 @@
   padding: 0 15px;
 }
 
+/* Error and Success Message Styles */
+.field-error {
+  display: none;
+  color: #ff3d00;
+  font-size: 0.75rem;
+  margin-top: 4px;
+  margin-left: 2px;
+  font-weight: 500;
+}
+
+.field-error.visible {
+  display: block;
+}
+
+.form-group.has-error .task-title,
+.form-group.has-error .task-description,
+.form-group.has-error .input-with-icon {
+  border-color: #ff3d00;
+}
+
+.form-group.has-error .dropdown-header {
+  border-bottom-color: #ff3d00;
+}
+
+.success-banner {
+  position: fixed;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 40px);
+  max-width: 460px;
+  background-color: #4caf50;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  z-index: 2000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.success-banner.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.success-banner::before {
+  content: '✓';
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  font-weight: bold;
+}
+
+.error-banner {
+  position: fixed;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 40px);
+  max-width: 460px;
+  background-color: #ff3d00;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  z-index: 2000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.error-banner.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.error-banner::before {
+  content: '✕';
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  font-weight: bold;
+}
+
 .priority-selection {
   display: flex;
   justify-content: space-between;
