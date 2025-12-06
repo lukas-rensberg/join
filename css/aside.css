@@ -65,3 +65,8 @@ aside {
 
 }
 
+@media (width <812px) {
+    aside {
+        display: none;
+    }
+}
