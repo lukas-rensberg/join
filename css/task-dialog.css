@@ -155,8 +155,7 @@ strong {
 
 .d-subtasks {
     margin: .5rem 0;
-    overflow: visible;
-    height: auto;
+    overflow: hidden;
 
     p {
         width: 100%;
@@ -168,6 +167,7 @@ strong {
     width: 100%;
     border: none;
     overflow: auto;
+    height: 123px;
 }
 
 .d-subtask {
