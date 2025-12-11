@@ -64,8 +64,8 @@ h2 {
 }
 
 .close-dialog {
-    height: 24px;
-    width: 24px;
+    height: 1.5rem;
+    width: 1.5rem;
     background: url(../assets/icons/close_blue.svg) center center no-repeat;
 
     &:hover {

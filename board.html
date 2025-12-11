@@ -18,7 +18,9 @@
     <header>
         <img src="./assets/icons/logo-white.svg" alt="Join Logo" />
         <input type="checkbox" id="slideInSideMenu" />
-        <label for="slideInSideMenu"><div class="avatar"></div></label>
+        <label for="slideInSideMenu">
+            <div class="avatar"></div>
+        </label>
         <div class="side-menu">
             <nav>
                 <a href="help.html">Help</a>
@@ -29,7 +31,7 @@
         </div>
     </header>
     <main>
-        <aside>
+        <aside class="aside-desktop">
             <div class="aside-navbar">
                 <a href="overview.html">
                     <img src="./assets/menu_icons/summary.svg" alt="Summary Icon" />
@@ -58,7 +60,7 @@
                 <input type="name" name="search-task" id="search-task" placeholder="Find Task" />
                 <div class="inp-src-icon"></div>
             </div>
-            <button>Add Task <img src="./assets/icons/plus_symbol.svg" alt="Plus Symbol"></button>
+            <button class="add-task-btn">Add Task <img src="./assets/icons/plus_symbol.svg" alt="Plus Symbol"></button>
             <div class="task-title-desk-container">
                 <div class="task-title-desk">
                     <div class="task-headline">To do</div>
@@ -108,6 +110,57 @@
                     ondragleave="bgContainerRemove('done')" ondragover="handleDragOver(event, 'done')"></div>
             </div>
         </section>
+        <aside class="aside-add-task">
+            <div class="close-add-task"></div>
+            <h1>Add Task</h1>
+            <section class="task-description">
+                <input id="input-title" type="text" placeholder="Enter a title">
+                <p><strong>Description</strong> (optional)</p>
+                <textarea name="description" id="description" placeholder="Enter a description"></textarea>
+                <p><strong>Due date</strong></p>
+                <input type="date" name="due-date" id="input-due-date" placeholder="dd.mm.yyyy">
+                <span>This field is required!</span>
+                <p><strong>Priority</strong></p>
+                <div class="prio-btn-container">
+                    <button class="urgent"></button>
+                    <button class="medium"></button>
+                    <button class="low"></button>
+                </div>
+                <p><strong>Assigned to</strong> (optional)</p>
+                <select class="assigned-member" name="assigned-member" id="assigned-member">
+                    <button>
+                        <selectedcontent></selectedcontent>
+                    </button>
+                    <option class="pls-select" selected disabled>Select contacts to assign</option>
+                    <option value="Marcel Bauer">Marcel Bauer</option>
+                    <option value="Anton Mayer">Anton Mayer</option>
+                    <option value="Emmanuel Mauer">Emmanuel Mauer</option>
+                    <option value="Eva Fischer">Eva Fischer</option>
+                    <option value="Benedikt Ziegler">Benedikt Ziegler</option>
+                </select>
+                <p><strong>Category</strong></p>
+                <select class="select-category" name="select-category" id="select-category">
+                    <button>
+                        <selectedcontent></selectedcontent>
+                    </button>
+                    <option class="pls-select" selected disabled>Select task category</option>
+                    <option value="Technical Task">Technical Task</option>
+                    <option value="User Story">Anton Mayer</option>
+                </select>
+                <p><strong>Subtask</strong> (optional)</p>
+                <div class="subtask-input-wrapper">
+                    <input id="input-subtask" type="text" placeholder="Add new subtask">
+                    <div class="subtask-icons">
+                        <div class="subtask-icon subtask-icon-close"></div>
+                        <div class="subtask-icon subtask-icon-check"></div>
+                    </div>
+                </div>
+            </section>
+            <section class="btn-section-add-task">
+                <button class="btn-create-task">Create Task <img src="./assets/icons/check.svg" alt="Check Icon"></button>
+            </section>
+
+        </aside>
 
         <dialog></dialog>
     </main>

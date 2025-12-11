@@ -8,7 +8,7 @@
     max-width: 120rem;
 }
 
-button {
+.add-task-btn {
     height: 3.125rem;
     width: 8.625rem;
     border: 0.0625rem solid var(--main-color);
