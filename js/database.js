@@ -2,20 +2,30 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebas
 import { getAuth } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 import { getDatabase, ref, set, get, update, remove, push, onValue } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 import { showInlineError } from "./error-handler.js";
+import { Credentials } from "./credentials.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyA_jMGVxtdphe5xhWwkHQFh7T7a5wQLA0Y",
-  authDomain: "join-826aa.firebaseapp.com",
-  databaseURL: "https://join-826aa-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "join-826aa",
-  storageBucket: "join-826aa.firebasestorage.app",
-  messagingSenderId: "78529793935",
-  appId: "1:78529793935:web:447cc3226ea44f8d2bc5fa",
-};
+const firebaseConfig = getFirebaseConfig();
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const database = getDatabase(app);
+
+/**
+ * Retrieves Firebase configuration from Credentials
+ * @returns {{apiKey: string, authDomain: string, databaseURL: string, projectId: string, storageBucket: string, messagingSenderId: string, appId: string}}
+ */
+function getFirebaseConfig() {
+    const cred = new Credentials();
+    return {
+        apiKey: cred.firebaseApiKey,
+        authDomain: cred.firebaseAuthDomain,
+        databaseURL: cred.firebaseDatabaseURL,
+        projectId: cred.firebaseProjectId,
+        storageBucket: cred.firebaseStorageBucket,
+        messagingSenderId: cred.firebaseMessagingSenderId,
+        appId: cred.firebaseAppId,
+    };
+}
 
 /**
  * Creates a new contact in the RTDB
@@ -250,4 +260,16 @@ async function migrateDefaultTasks(defaultTasks) {
   }
 }
 
-export { auth, database, createContact, updateContact, createTask, updateTask, deleteTask, loadTasks, getTask, migrateDefaultTasks, ensureUserAsContact };
+export {
+    auth,
+    database,
+    createContact,
+    updateContact,
+    createTask,
+    updateTask,
+    deleteTask,
+    loadTasks,
+    getTask,
+    migrateDefaultTasks,
+    ensureUserAsContact
+};
