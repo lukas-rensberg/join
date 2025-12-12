@@ -11,7 +11,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    padding-top: 4rem;
+    padding-top: 8.375rem;
 
     .aside-navbar {
         display: flex;
@@ -19,7 +19,6 @@
         justify-content: center;
         width: 190px;
         height: auto;
-        margin-top: 42px;
         row-gap: 1rem;
 
         a {
@@ -454,7 +453,7 @@
     color: #ffffff;
     border: none;
     border-radius: 0.625rem;
-    font-size: 1rem;
+    font-size: 1.25rem;
     cursor: pointer;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: all 300ms ease;
@@ -470,7 +469,6 @@
     }
 
     &:active {
-        transform: translateY(0);
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 }

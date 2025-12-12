@@ -17,17 +17,20 @@
 <body class="body-board">
     <header>
         <img src="./assets/icons/logo-white.svg" alt="Join Logo" />
-        <input type="checkbox" id="slideInSideMenu" />
-        <label for="slideInSideMenu">
-            <div class="avatar"></div>
-        </label>
-        <div class="side-menu">
-            <nav>
-                <a href="help.html">Help</a>
-                <a href="legal_notice.html">Legal Notice</a>
-                <a href="legal_notice.html">Privacy Policy</a>
-                <a href="index.html">Log Out</a>
-            </nav>
+        <div class="header-right">
+            <a class="help-container" href="help.html">Kanban Project Management Tool</a>
+            <input type="checkbox" id="slideInSideMenu" />
+            <label for="slideInSideMenu">
+                <div class="avatar"></div>
+            </label>
+            <div class="side-menu">
+                <nav>
+                    <a class="link-none" href="help.html">Help</a>
+                    <a href="legal_notice.html">Legal Notice</a>
+                    <a href="legal_notice.html">Privacy Policy</a>
+                    <a href="index.html">Log Out</a>
+                </nav>
+            </div>
         </div>
     </header>
     <main>
@@ -110,7 +113,7 @@
                     ondragleave="bgContainerRemove('done')" ondragover="handleDragOver(event, 'done')"></div>
             </div>
         </section>
-        <aside class="aside-add-task">
+        <!-- <aside class="aside-add-task">
             <div class="close-add-task"></div>
             <h1>Add Task</h1>
             <section class="task-description">
@@ -159,27 +162,22 @@
             <section class="btn-section-add-task">
                 <button class="btn-create-task">Create Task <img src="./assets/icons/check.svg" alt="Check Icon"></button>
             </section>
-
-        </aside>
+        </aside> -->
 
         <dialog></dialog>
     </main>
     <footer>
         <a class="nav-item" href="overview.html">
-            <img src="./assets/menu_icons/summary.svg" alt="Summary Icon" />
-            <span class="nav-text">Summary</span>
+            <span class="nav-summary">Summary</span>
         </a>
         <a class="nav-item" href="add-task.html">
-            <img src="./assets/menu_icons/add-task.svg" alt="Add Task Icon" />
-            <span class="nav-text">Add Task</span>
+            <span class="nav-add-task">Add Task</span>
         </a>
         <a class="nav-item" href="board.html">
-            <img src="./assets/menu_icons/board.svg" alt="Board Icon" />
-            <span class="nav-text">Board</span>
+            <span class="nav-board">Board</span>
         </a>
         <a class="nav-item" href="contacts.html">
-            <img src="./assets/menu_icons/contacts.svg" alt="Contacts Icon" />
-            <span class="nav-text">Contacts</span>
+            <span class="nav-contacts">Contacts</span>
         </a>
     </footer>
 
