@@ -33,6 +33,11 @@ export function showErrorMessage(message) {
 }
 
 /**
+ * Alias for showErrorMessage (for inline errors)
+ */
+export const showInlineError = showErrorMessage;
+
+/**
  * Handle authentication errors (login page, signup page, protected pages)
  */
 export function handleAuthError(error, context = "auth") {

@@ -116,7 +116,7 @@ export function getTemplateTaskCard(element, subtasksDone, totalSubtasks, progre
                                 <div class="marked-user-container" id="marked-user-container-${element["id"]}">
                                 </div>
                                 <div class="card-prio-icon"
-                                    style="background: url(./assets/priority_icons/prio_${element["priority"]}_colored.svg) center center no-repeat;">
+                                    style="background: url('./assets/priority_icons/prio_${element["priority"]}_colored.svg') center center no-repeat;">
                                 </div>
                             </div>
                         </div>`;
@@ -174,6 +174,8 @@ export function getTemplateMarkedUser(memberIndex, memberInitials, avatarColor) 
 export function getTemplateRemainingMembers(memberIndex, remainingMembers) {
   return `<div class="marked-user marked-user-${memberIndex}" style="background-color: var(--color-variant-over);">+${remainingMembers}</div>`
 }
+
+/**
  * Creates HTML structure for a subtask item
  * @param {string} text - The subtask text content (will be escaped to prevent XSS)
  * @returns {string} HTML string for the subtask

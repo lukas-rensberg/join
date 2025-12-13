@@ -4,7 +4,7 @@
  */
 
 import { getCategoryOptionHTML, generateContactOptionHTML, getContactChipHTML } from "./template.js";
-import { database } from "./auth.js";
+import { database } from "./database.js";
 import { ref, onValue } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
 let contacts = [];

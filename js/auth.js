@@ -21,7 +21,7 @@ const OVERVIEW_PAGE = "overview.html";
  * @param {string} name - The name to generate initials from.
  * @returns {string} The initials (up to 2 characters), or "U" if not available.
  */
-function getInitials(name) {
+export function getInitials(name) {
   const nameParts = name.trim().split(" ");
   const initials = nameParts
     .map((part) => part.charAt(0).toUpperCase())
@@ -34,7 +34,7 @@ function getInitials(name) {
  * Generate random phone number
  * @returns {string} A phone number string in the format "+49 XXX XXX XXX"
  */
-function generatePhoneNumber() {
+export function generatePhoneNumber() {
   const random = Math.floor(Math.random() * 1000000000);
   return `+49 ${String(random).padStart(9, '0').match(/.{1,3}/g).join(' ')}`;
 }
@@ -75,23 +75,23 @@ onAuthStateChanged(auth, async (user) => {
 /**
  * Login user with email and password (login page)
  */
-async function loginUser(email, password) {
-  const userCredential = await signInWithEmailAndPassword(auth, email, password);
+export async function loginUser(email, password) {
+  await signInWithEmailAndPassword(auth, email, password);
   window.location.href = `./${OVERVIEW_PAGE}`;
 }
 
 /**
  * Guest login using anonymous authentication (login page)
  */
-async function guestLogin() {
-  const userCredential = await signInAnonymously(auth);
+export async function guestLogin() {
+  await signInAnonymously(auth);
   window.location.href = `./${OVERVIEW_PAGE}`;
 }
 
 /**
  * Create new user account (signup page)
  */
-async function signupUser(email, password, username) {
+export async function signupUser(email, password, username) {
   const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
   await updateProfile(userCredential.user, {
@@ -119,7 +119,7 @@ async function signupUser(email, password, username) {
 /**
  * Handle user logout (protected pages)
  */
-async function handleLogout() {
+export async function handleLogout() {
   try {
     await signOut(auth);
     window.location.href = `./${LOGIN_PAGE}`;
@@ -132,7 +132,7 @@ async function handleLogout() {
 /**
  * Initialize appropriate functionality based on current page (all pages)
  */
-function initAuth() {
+export function initAuth() {
   const currentPage = window.location.pathname.split("/").pop();
 
   if (currentPage === LOGIN_PAGE || currentPage === "") {

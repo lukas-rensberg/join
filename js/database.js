@@ -6,7 +6,12 @@ import {
   set,
   get,
   push,
+  update,
+  remove,
+  onValue,
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+import { showInlineError } from "./error-handler.js";
+import { Credentials } from "./credentials.js";
 
 const firebaseConfig = getFirebaseConfig();
 
@@ -42,7 +47,7 @@ function getFirebaseConfig() {
  * @param {Boolean} [isAuthUser=false] Whether the contact is the authenticated user
  * @return {Promise<void>} A promise that resolves when the contact is created
  */
-async function createContact(uid, username, email, phone, avatarColor, initials, isAuthUser = false) {
+export async function createContact(uid, username, email, phone, avatarColor, initials, isAuthUser = false) {
   try {
     await set(ref(database, `contacts/${uid}`), {
       id: uid,
@@ -67,7 +72,7 @@ async function createContact(uid, username, email, phone, avatarColor, initials,
  * @param {Function} getInitials Function to generate initials from the user's name.
  * @returns {Promise<void>} A promise that resolves when the contact is ensured.
 */
-async function ensureUserAsContact(user, generatePhoneNumber, getRandomColor, getInitials) {
+export async function ensureUserAsContact(user, generatePhoneNumber, getRandomColor, getInitials) {
   if (!user || user.isAnonymous) return;
 
   const contactRef = ref(database, `contacts/${user.uid}`);
@@ -95,7 +100,7 @@ async function ensureUserAsContact(user, generatePhoneNumber, getRandomColor, ge
  * @param {String} initials The new initials of the updated contact based on the new name
  * @return {Promise<void>} A promise that resolves when the contact is updated
  */
-async function updateContact(uid, name, email, phone, initials) {
+export async function updateContact(uid, name, email, phone, initials) {
   try {
     await update(ref(database, `contacts/${uid}`), {
       name: name,
@@ -110,38 +115,12 @@ async function updateContact(uid, name, email, phone, initials) {
 }
 
 /**
- * Creates a new task in the RTDB
- * @param {Object} task The task object to create
- * @return {Promise<string>} A promise that resolves with the task ID when the task is created
- */
-async function createTask(task) {
-  try {
-    const tasksRef = ref(database, 'tasks');
-    const newTaskRef = push(tasksRef);
-    const taskWithId = {
-      ...task,
-      id: newTaskRef.key,
-      createdAt: Date.now(),
-      updatedAt: Date.now()
-    };
-    
-    await set(newTaskRef, taskWithId);
-    console.log("Task created in RTDB:", newTaskRef.key);
-    return newTaskRef.key;
-  } catch (error) {
-    console.error("Error creating task:", error);
-    showInlineError("Failed to create task. Please try again.");
-    throw error;
-  }
-}
-
-/**
  * Updates an existing task in the RTDB
  * @param {String} taskId The ID of the task to update
  * @param {Object} updates The task fields to update
  * @return {Promise<void>} A promise that resolves when the task is updated
  */
-async function updateTask(taskId, updates) {
+export async function updateTask(taskId, updates) {
   try {
     const updateData = {
       ...updates,
@@ -161,7 +140,7 @@ async function updateTask(taskId, updates) {
  * @param {String} taskId The ID of the task to delete
  * @return {Promise<void>} A promise that resolves when the task is deleted
  */
-async function deleteTask(taskId) {
+export async function deleteTask(taskId) {
   try {
     await remove(ref(database, `tasks/${taskId}`));
     console.log("Task deleted from RTDB:", taskId);
@@ -177,7 +156,7 @@ async function deleteTask(taskId) {
  * @param {Function} callback Function to call when tasks are loaded or updated
  * @return {Function} Unsubscribe function to stop listening for changes
  */
-function loadTasks(callback) {
+export function loadTasks(callback) {
   const tasksRef = ref(database, 'tasks');
   return onValue(tasksRef, (snapshot) => {
     let tasks = [];
@@ -194,7 +173,7 @@ function loadTasks(callback) {
  * @param {String} taskId The ID of the task to get
  * @return {Promise<Object|null>} A promise that resolves with the task data or null if not found
  */
-async function getTask(taskId) {
+export async function getTask(taskId) {
   try {
     const snapshot = await get(ref(database, `tasks/${taskId}`));
     return snapshot.exists() ? snapshot.val() : null;
@@ -209,7 +188,7 @@ async function getTask(taskId) {
  * @param {Array} defaultTasks Array of default task objects to migrate
  * @return {Promise<void>} A promise that resolves when migration is complete
  */
-async function migrateDefaultTasks(defaultTasks) {
+export async function migrateDefaultTasks(defaultTasks) {
   try {
     const tasksRef = ref(database, 'tasks');
     const snapshot = await get(tasksRef);
@@ -272,7 +251,7 @@ async function migrateDefaultTasks(defaultTasks) {
 export async function createTask(taskData) {
   try {
     const user = auth.currentUser;
-    if (!user) throw new Error("User must be authenticated to create tasks");
+    if (!user) console.error("User must be authenticated to create tasks");
 
     const tasksRef = ref(database, 'tasks');
     const newTaskRef = push(tasksRef);
