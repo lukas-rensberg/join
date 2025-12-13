@@ -18,7 +18,9 @@
 
 .contacts-container {
     padding: 1rem;
-    max-width: 100%;
+    margin-left: 250px;
+    /* max-width: 100%; */
+    width: 546px;
 }
 
 .contact-section {
@@ -131,6 +133,7 @@
 .fab-menu.active {
     display: block;
     transform: translateX(0);
+    pointer-events: auto;
 }
 
 .fab-menu nav {
@@ -483,4 +486,18 @@
     width: 7rem;
     height: 7rem;
     font-size: 2.5rem;
+}
+
+.error-message {
+    display: block;
+    color: #ff4646;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+    margin-left: 0.75rem;
+}
+
+.form-group input[type="text"].error,
+.form-group input[type="email"].error,
+.form-group input[type="tel"].error {
+    border-bottom-color: #ff4646;
 }

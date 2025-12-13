@@ -3,10 +3,11 @@ html:has(dialog[open]) {
 }
 
 dialog {
+    display: flex;
     border: none;
     width: 90%;
     max-width: calc(25rem + (2*var(--padding-side)));
-    height: min(700px, calc(100vh - 152px));
+    height: min(700px, calc(100vh - 1rem));
     position: fixed;
     z-index: 1100;
     top: 50%;
@@ -38,14 +39,15 @@ dialog {
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: min(700px, calc(100vh - 152px));
-    padding: 1.5rem 1rem;
+    height: 100%;
+    padding: 1.25rem 1rem;
 
     section {
         display: flex;
         flex-direction: column;
         flex: 1;
-        height: 100%;
+        min-height: 0;
+        overflow: hidden;
     }
 
 }
@@ -63,9 +65,10 @@ h2 {
 }
 
 .close-dialog {
-    height: 24px;
-    width: 24px;
+    height: 1.5rem;
+    width: 1.5rem;
     background: url(../assets/icons/close_blue.svg) center center no-repeat;
+    transition: background 200ms ease;
 
     &:hover {
         cursor: pointer;
@@ -76,7 +79,7 @@ h2 {
 .d-card-headline {
     height: auto;
     width: 100%;
-    margin: 1rem 0 .5rem 0;
+    margin: .5rem 0 .5rem 0;
 }
 
 .d-due-date-prio {
@@ -107,15 +110,20 @@ strong {
 
 .d-assigned-to {
     margin-top: .5rem;
-    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    flex: 0 1 auto;
+    min-height: 3rem;
+    overflow: hidden;
 }
 
 .d-assigned-members {
     border: none;
     width: 100%;
-    max-height: 16rem;
+    flex: 1;
     margin-top: .5rem;
-    overflow: auto;
+    overflow-y: auto;
+    min-height: 0;
 }
 
 .d-assigned-member-cards {
@@ -153,24 +161,26 @@ strong {
 }
 
 .d-subtasks {
-    margin-top: .5rem;
-    overflow: visible;
+    margin: .5rem 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    flex: 0 1 auto;
+    min-height: 3rem;
 
     p {
         width: 100%;
+        flex-shrink: 0;
     }
 }
 
 .d-subtasks-check {
-    display: flex;
-    flex-direction: column;
-    row-gap: .5rem;
     margin-top: .5rem;
     width: 100%;
-    max-height: 6rem;
     border: none;
-    overflow: auto;
-
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
 }
 
 .d-subtask {
@@ -181,6 +191,18 @@ strong {
         cursor: pointer;
         display: flex;
         align-items: center;
+        border-radius: 0.625rem;
+        padding: .25rem .5rem .25rem .25rem;
+
+        &:hover {
+            cursor: pointer;
+            background-color: var(--color-menu-hover);
+        }
+
+        &:active {
+            background-color: var(--color-menu-hover);
+        }
+
 
         &::before {
             content: url(../assets/icons/unchecked.svg);
@@ -188,10 +210,6 @@ strong {
             width: 1rem;
             height: 1rem;
             margin: 0 1rem 0 .5rem;
-
-            &:hover {
-                cursor: pointer;
-            }
 
         }
     }
@@ -297,19 +315,11 @@ strong {
 
 @media (width < 500px) {
     .d-assigned-members {
-        max-height: 6rem;
-    }
-
-    .d-subtasks-check {
-        max-height: 3rem;
+        max-height: 9rem;
     }
 
     dialog {
         transform: translateX(50%) translateY(-50%);
-
-        p {
-            font-size: 0.75rem;
-        }
 
         section {
             overflow: auto;
@@ -325,7 +335,6 @@ strong {
         align-items: center;
 
         label {
-            font-size: 12px;
 
             &::before {
                 transform: scale(0.8);

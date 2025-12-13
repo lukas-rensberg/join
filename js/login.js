@@ -1,6 +1,4 @@
-/**
- * Login & Logout Module - Handles login/logout page functionality
- */
+import { validateEmailFormat } from "../utils/contact.js";
 
 /**
  * Clear error messages and red borders from form inputs
@@ -20,11 +18,60 @@ function clearFormErrors() {
 }
 
 /**
+ * Shows validation error message
+ * @param {string} fieldName Form field name
+ * @param {string} errorMessage Error message
+ */
+function showValidationError(fieldName, errorMessage) {
+  const input = document.getElementById(fieldName);
+  if (input) {
+    input.style.borderBottom = "2px solid #ff4646";
+    
+    const errorSpan = document.createElement("span");
+    errorSpan.className = "auth-error-message";
+    errorSpan.textContent = errorMessage;
+    errorSpan.style.color = "#ff4646";
+    errorSpan.style.fontSize = "0.875rem";
+    errorSpan.style.marginTop = "0.25rem";
+    errorSpan.style.display = "block";
+    
+    input.parentElement.appendChild(errorSpan);
+  }
+}
+
+/**
+ * Validates login form
+ * @param {string} email Email address
+ * @param {string} password Password
+ * @return {boolean} True if valid
+ */
+function validateLoginForm(email, password) {
+  clearFormErrors();
+  
+  if (!email.trim()) {
+    showValidationError("email", "Email is required");
+    return false;
+  }
+  
+  if (!validateEmailFormat(email)) {
+    showValidationError("email", "Invalid email format");
+    return false;
+  }
+  
+  if (!password) {
+    showValidationError("password", "Password is required");
+    return false;
+  }
+  
+  return true;
+}
+
+/**
  * Update password icon based on input value
  */
 function updatePasswordIcon(passwordInput, iconElement) {
   const img = iconElement.querySelector("img");
-  
+
   if (passwordInput.value.length === 0) {
     // No text: show lock icon
     img.src = "./assets/icons/lock.svg";
@@ -48,7 +95,7 @@ function togglePasswordVisibility(toggleElement) {
   const targetId = toggleElement.getAttribute("data-target");
   const passwordInput = document.getElementById(targetId);
   const img = toggleElement.querySelector("img");
-  
+
   // Only toggle if there's text
   if (passwordInput.value.length > 0) {
     if (passwordInput.type === "password") {
@@ -75,10 +122,10 @@ export function initLoginPage(loginUserCallback, guestLoginCallback, handleAuthE
 
   const loginForm = document.querySelector("form");
   if (loginForm && document.getElementById("email")) {
-    // Clear error messages and red borders when user types
+    // Clear error messages when user types
     const emailInput = document.getElementById("email");
     const passwordInput = document.getElementById("password");
-    
+
     [emailInput, passwordInput].forEach(input => {
       if (input) {
         input.addEventListener("input", clearFormErrors);
@@ -92,7 +139,7 @@ export function initLoginPage(loginUserCallback, guestLoginCallback, handleAuthE
       passwordInput.addEventListener("input", () => {
         updatePasswordIcon(passwordInput, passwordIconToggle);
       });
-      
+
       // Toggle visibility on click
       passwordIconToggle.addEventListener("click", () => {
         togglePasswordVisibility(passwordIconToggle);
@@ -101,8 +148,12 @@ export function initLoginPage(loginUserCallback, guestLoginCallback, handleAuthE
 
     loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const email = document.getElementById("email").value;
+      const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
+
+      if (!validateLoginForm(email, password)) {
+        return;
+      }
 
       try {
         await loginUserCallback(email, password);
