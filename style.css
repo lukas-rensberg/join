@@ -20,8 +20,6 @@
   --color-variant12: #ffe62b;
   --color-variant13: #ff4646;
   --color-variant14: #ffbb2b;
-  --color-variant15: #2bff9e;
-  --color-variant-over: #2b9eff;
   --color-primary-button-hover: #005dff;
   --color-primary-button-click: #ffffff;
   --color-menu-active: #d2e3ff;
@@ -37,7 +35,6 @@
   --color-no-tasks-bg: #E7E7E7;
   --color-no-tasks-border: #A8A8A8;
   --color-card-progress-bar-bg: #F4F4F4;
-  --color-active-button: #091931;
 
 }
 
@@ -47,26 +44,6 @@
   box-sizing: border-box;
   font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   font-size: 16px;
-}
-
-button,
-input[type="button"],
-input[type="submit"],
-.fab,
-.btn-primary,
-.btn-secondary,
-.btn-signup {
-  cursor: pointer;
-  border: none;
-}
-
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="tel"],
-textarea,
-select {
-  border: none;
 }
 
 html {

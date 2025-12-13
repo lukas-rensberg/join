@@ -22,7 +22,7 @@
     <!-- Login Form Container -->
     <div class="login-container">
       <div class="login-card">
-        <form>
+        <form action="#" method="post">
           <h2 class="login-title">Log in</h2>
           <div class="input-group">
             <input
@@ -32,6 +32,7 @@
               id="email"
               name="email"
               autocomplete="email"
+              required
             /><span class="user-email"></span>
           </div>
 
@@ -42,6 +43,7 @@
               class="input-field"
               id="password"
               name="password"
+              required
             />
             <span class="password-icon-toggle" data-target="password">
               <img src="./assets/icons/lock.svg" alt="Password" />
