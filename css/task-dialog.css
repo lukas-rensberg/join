@@ -46,7 +46,8 @@ dialog {
         display: flex;
         flex-direction: column;
         flex: 1;
-        height: 100%;
+        min-height: 0;
+        overflow: hidden;
     }
 
 }
@@ -67,6 +68,7 @@ h2 {
     height: 1.5rem;
     width: 1.5rem;
     background: url(../assets/icons/close_blue.svg) center center no-repeat;
+    transition: background 200ms ease;
 
     &:hover {
         cursor: pointer;
@@ -108,15 +110,20 @@ strong {
 
 .d-assigned-to {
     margin-top: .5rem;
-    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    flex: 0 1 auto;
+    min-height: 3rem;
+    overflow: hidden;
 }
 
 .d-assigned-members {
     border: none;
     width: 100%;
-    max-height: 13rem;
+    flex: 1;
     margin-top: .5rem;
-    overflow: auto;
+    overflow-y: auto;
+    min-height: 0;
 }
 
 .d-assigned-member-cards {
@@ -156,9 +163,14 @@ strong {
 .d-subtasks {
     margin: .5rem 0;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    flex: 0 1 auto;
+    min-height: 3rem;
 
     p {
         width: 100%;
+        flex-shrink: 0;
     }
 }
 
@@ -166,8 +178,9 @@ strong {
     margin-top: .5rem;
     width: 100%;
     border: none;
-    overflow: auto;
-    height: 123px;
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
 }
 
 .d-subtask {
@@ -303,14 +316,6 @@ strong {
 @media (width < 500px) {
     .d-assigned-members {
         max-height: 9rem;
-    }
-
-    .d-subtasks {
-        height: 6rem;
-    }
-
-    .d-subtasks-check {
-        height: 5rem;
     }
 
     dialog {
