@@ -2,18 +2,34 @@
 <html lang="de">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Aufgabe hinzufügen</title>
-    <link rel="stylesheet" href="./css/add-task.css">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="./css/header-footer.css">
-
+    <link rel="stylesheet" href="./style.css"/>
+    <link rel="stylesheet" href="./css/font.css"/>
+    <link rel="stylesheet" href="./css/header-footer.css"/>
+    <link rel="stylesheet" href="./css/add-task.css"/>
 </head>
-
 <body>
+<header>
+    <img src="./assets/icons/logo-white.svg" alt="Join Logo"/>
+    <input type="checkbox" id="slideInSideMenu"/>
+    <label class="avatar" for="slideInSideMenu">SM</label>
+    <div class="side-menu">
+        <nav>
+            <a href="help.html">Help</a>
+            <a href="legal_notice.html">Legal Notice</a>
+            <a href="legal_notice.html">Privacy Policy</a>
+            <a href="index.html">Log Out</a>
+        </nav>
+    </div>
+</header>
 
-    <div class="page-container">
+<div class="page-container">
+    <main class="add-task-form-container">
+        <div class="form-group form-group-title">
+            <input aria-label="Task Title" type="text" class="task-title" placeholder="Enter a title"/>
+        </div>
 
         <header>
             <img src="./assets/icons/logo-white.svg" alt="Join Logo" />
@@ -33,109 +49,135 @@
                 </div>
             </div>
         </header>
+        <div class="form-group">
+            <label id="desc">Description <span class="optional">(optional)</span></label>
+            <textarea
+                    aria-labelledby="desc"
+                    class="task-description"
+                    placeholder="Enter a Description"
+            ></textarea>
+        </div>
 
-        <main class="add-task-form-container">
-            <div class="form-group form-group-title">
-                <input type="text" id="task-title" placeholder="Enter a title">
+        <div class="form-group">
+            <label>Due date</label>
+            <div class="input-with-icon">
+                <input aria-label="Enter Due Date" type="text" class="due-date" id="dueDate" placeholder="dd/mm/yyyy"
+                       maxlength="10"/>
+                <span class="icon">
+              <img src="./assets/menu_icons/event.png" alt="Calendar Symbol (not working)"/>
+            </span>
             </div>
+        </div>
 
-            <div class="form-group">
-                <label for="task-description">Description (optional)</label>
-                <textarea id="task-description" placeholder="Enter a Description"></textarea>
+        <div class="form-group">
+            <label>Priority</label>
+            <div class="priority-selection">
+                <button class="priority-btn urgent">
+                    Urgent
+                    <img src="./assets/priority_icons/prio_urgent_colored.svg" alt="Image with two arrows up"/>
+                </button>
+                <button class="priority-btn medium active">
+                    Medium
+                    <img src="./assets/priority_icons/medium.svg" alt="Image with two stripes horizontal"/>
+                </button>
+                <button class="priority-btn low">
+                    Low
+                    <img src="./assets/priority_icons/prio_low_colored.svg" alt="Image with two arrows down"/>
+                </button>
             </div>
+        </div>
 
-            <div class="form-group">
-                <label for="due-date">Due date</label>
-                <div class="input-with-icon date-input-wrapper">
-                    <input type="text" id="due-date" placeholder="dd/mm/yyyy">
-                    <span class="icon calendar-icon">
-                        <img src="./assets/menu_icons/event.png">
-                    </span>
+        <div class="form-group">
+            <label>Assigned to <span class="optional">(optional)</span></label>
+            <div class="custom-dropdown" id="contactDropdownWrapper">
+                <div class="dropdown-header" onclick="toggleDropdown('contact')">
+                    <input
+                            type="text"
+                            id="contactSearchInput"
+                            class="dropdown-search-input"
+                            placeholder="Select contacts to assign"
+                            oninput="filterOptions('contact')"
+                            onclick="event.stopPropagation(); toggleDropdown('contact', true);"/>
+                    <img src="./assets/menu_icons/arrow-drop-down.svg" class="dropdown-arrow"
+                         alt="Little Image indicating an dropdown"/>
+                </div>
+                <div class="dropdown-content" id="contactDropdownContent">
+                    <!-- Contacts will be populated here -->
                 </div>
             </div>
+            <div class="dropzone"></div>
+        </div>
 
-            <div class="form-group">
-                <label>Priority</label>
-                <div class="priority-selection">
-                    <button class="priority-btn urgent">Urgent <span class="priority-icon"><img
-                                src="./assets/menu_icons/Capa2.svg"></span></button>
-                    <button class="priority-btn medium active">Medium <span class="priority-icon"><img
-                                src="./assets/menu_icons/Prio-Media.svg"></span></button>
-                    <button class="priority-btn low">Low <span class="priority-icon"><img
-                                src="./assets/menu_icons/Prio-baja.svg"></span></button>
+        <div class="form-group">
+            <label>Category</label>
+            <div class="custom-dropdown" id="categoryDropdownWrapper">
+                <div class="dropdown-header" onclick="toggleDropdown('category')">
+                    <span id="categoryDisplay" class="dropdown-display-text">Select task category</span>
+                    <img src="./assets/menu_icons/arrow-drop-down.svg" class="dropdown-arrow"
+                         alt="Little Image indicating an dropdown"/>
+                </div>
+                <div class="dropdown-content" id="categoryDropdownContent">
+                    <!-- Categories will be populated here -->
                 </div>
             </div>
+        </div>
 
-            <div class="form-group">
-                <label>Assigned to (optional)</label>
-                <div class="select-wrapper">
-                    <select>
-                        <option selected disabled>Select contacts to assign</option>
-                    </select>
-                    <span class="select-arrow">
-                        <img src="./assets/menu_icons/arrow-drop-down.svg">
-                    </span>
+        <div class="form-group">
+            <label>Subtasks <span class="optional">(optional)</span></label>
+            <div class="input-with-icon subtask-input-wrapper">
+                <input
+                        type="text"
+                        class="subtask-input"
+                        placeholder="Add a subtask"
+                        oninput="toggleSubtaskIcons()"/>
+                <div class="subtask-icons">
+                    <img
+                            src="./assets/icons/close.svg"
+                            alt="Cancel"
+                            class="icon-cancel"
+                            onclick="clearSubtaskInput()"/>
+                    <span class="icon-separator"></span>
+                    <img
+                            src="./assets/icons/check-blue.svg"
+                            alt="Confirm"
+                            class="icon-confirm"
+                            onclick="addNewSubtask()"/>
                 </div>
-                <div class="dropzone "></div>
             </div>
+            <ul class="subtask-list" id="subtaskList"></ul>
+        </div>
 
-            <div class="form-group">
-                <label>Category</label>
-                <div class="select-wrapper">
-                    <select>
-                        <option selected disabled>Select task category</option>
-                    </select>
-                    <span class="select-arrow">
-                        <img src="./assets/menu_icons/arrow-drop-down.svg">
-                    </span>
-                </div>
-                <div class="dropzone "></div>
-            </div>
-
-            <div class="form-group">
-                <label>Subtasks (optional)</label>
-                <div class="select-wrapper">
-                    <select id="subtask-select">
-                        <option selected disabled>Add new subtask</option>
-                        <option>Contact Form</option>
-                    </select>
-                    <div class="subtask-icons">
-                        <img src="./assets/icons/close.svg" alt="Cancel" class="icon-btn-close-btn">
-                        <img src="./assets/icons/check.svg" alt="Confirm" class="icon-btn-confirm-btn">
-                    </div>
-                    <span class="select-arrow">
-
-                    </span>
-                </div>
-                <div class="dropzone "></div>
-            </div>
-
-
-            <div class="button-group">
-                <button class="btn-clear">Clear <span><img src="./assets/menu_icons/iconoir_cancel.svg"
-                            alt=""></span></button>
-                <button class="btn-create">Create Task <span class="check-icon"><img src="./assets/menu_icons/check.svg"
-                            alt=""></span></button>
-            </div>
-
-        </main>
-
-        <footer>
-            <a class="nav-item" href="overview.html">
-                <span class="nav-summary">Summary</span>
-            </a>
-            <a class="nav-item" href="add-task.html">
-                <span class="nav-add-task">Add Task</span>
-            </a>
-            <a class="nav-item" href="board.html">
-                <span class="nav-board">Board</span>
-            </a>
-            <a class="nav-item" href="contacts.html">
-                <span class="nav-contacts">Contacts</span>
-            </a>
-        </footer>
-    </div>
-
+        <div class="button-group">
+            <button class="btn-clear">
+                Clear
+                <img src="./assets/menu_icons/iconoir_cancel.svg" alt=""/>
+            </button>
+            <button class="btn-create">
+                Create Task
+                <img src="./assets/menu_icons/check.svg" alt=""/>
+            </button>
+        </div>
+    </main>
+</div>
+<footer>
+    <a class="nav-item" href="overview.html">
+        <img src="./assets/menu_icons/summary.svg" alt="Summary Icon"/>
+        <span>Summary</span>
+    </a>
+    <a class="nav-item active" href="add-task.html">
+        <img src="./assets/menu_icons/add-task.svg" alt="Add Task Icon"/>
+        <span>Add Task</span>
+    </a>
+    <a class="nav-item" href="board.html">
+        <img src="./assets/menu_icons/board.svg" alt="Board Icon"/>
+        <span>Board</span>
+    </a>
+    <a class="nav-item" href="contacts.html">
+        <img src="./assets/menu_icons/contacts.svg" alt="Contacts Icon"/>
+        <span>Contacts</span>
+    </a>
+</footer>
+<script type="module" src="./js/add-task.js"></script>
 </body>
 
 </html>

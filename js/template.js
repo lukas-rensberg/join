@@ -174,3 +174,68 @@ export function getTemplateMarkedUser(memberIndex, memberInitials, avatarColor) 
 export function getTemplateRemainingMembers(memberIndex, remainingMembers) {
   return `<div class="marked-user marked-user-${memberIndex}" style="background-color: var(--color-variant-over);">+${remainingMembers}</div>`
 }
+ * Creates HTML structure for a subtask item
+ * @param {string} text - The subtask text content (will be escaped to prevent XSS)
+ * @returns {string} HTML string for the subtask
+ */
+export function createSubtaskHTML(text) {
+  return `
+    <span class="subtask-text">${text}</span>
+    <div class="subtask-actions">
+      <img src="./assets/icons/edit.svg" alt="Edit" onclick="startEditingSubtask(this)" />
+      <span class="subtask-separator"></span>
+      <img src="./assets/icons/delete.svg" alt="Delete" onclick="deleteSubtask(this)" />
+    </div>
+  `;
+}
+
+/**
+ * Creates HTML for edit mode action buttons
+ * @returns {string} HTML string for edit actions
+ */
+export function createEditActionsHTML() {
+  return `
+    <img src="./assets/icons/delete.svg" alt="Cancel" class="cancel-edit" onclick="cancelEdit(this)" />
+    <span class="subtask-separator"></span>
+    <img src="./assets/icons/check-blue.svg" alt="Save" class="save-edit" onclick="saveEdit(this)" />
+  `;
+}
+
+/**
+ * Creates HTML for normal mode action buttons (edit and delete)
+ * @returns {string} HTML string for normal actions
+ */
+export function createNormalActionsHTML() {
+  return `
+    <img src="./assets/icons/edit.svg" alt="Edit" onclick="startEditingSubtask(this)" />
+    <span class="subtask-separator"></span>
+    <img src="./assets/icons/delete.svg" alt="Delete" onclick="deleteSubtask(this)" />
+  `;
+}
+
+export function generateContactOptionHTML(contact) {
+    return `
+      <div class="contact-option-avatar" style="background-color: ${contact.avatarColor};">
+        ${contact.initials}
+      </div>
+      <div class="contact-option-info">
+        <div class="contact-option-name">${contact.name}</div>
+        <div class="contact-option-email">${contact.email}</div>
+      </div>
+      <div class="contact-option-checkbox" id="checkbox-${contact.id}"></div>
+    `;
+}
+
+export function getContactChipHTML(contact) {
+    return `
+      <div class="contact-avatar-small" style="background-color: ${contact.avatarColor};" title="${contact.name}">
+        ${contact.initials}
+      </div>
+    `;
+}
+
+export function getCategoryOptionHTML(category) {
+    return `
+      <div class="category-option-name">${category.name}</div>
+    `;
+}

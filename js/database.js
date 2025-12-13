@@ -1,8 +1,12 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-import { getDatabase, ref, set, get, update, remove, push, onValue } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
-import { showInlineError } from "./error-handler.js";
-import { Credentials } from "./credentials.js";
+import {
+  getDatabase,
+  ref,
+  set,
+  get,
+  push,
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
 const firebaseConfig = getFirebaseConfig();
 
@@ -260,16 +264,51 @@ async function migrateDefaultTasks(defaultTasks) {
   }
 }
 
-export {
-    auth,
-    database,
-    createContact,
-    updateContact,
-    createTask,
-    updateTask,
-    deleteTask,
-    loadTasks,
-    getTask,
-    migrateDefaultTasks,
-    ensureUserAsContact
-};
+/**
+ * Create a new task in RTDB
+ * @param {Object} taskData - Task data object
+ * @returns {Promise<string>} - The ID of the created task
+ */
+export async function createTask(taskData) {
+  try {
+    const user = auth.currentUser;
+    if (!user) throw new Error("User must be authenticated to create tasks");
+
+    const tasksRef = ref(database, 'tasks');
+    const newTaskRef = push(tasksRef);
+
+    const now = Date.now();
+
+    const task = getTaskObject(newTaskRef, taskData, now);
+
+    await set(newTaskRef, task);
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * Construct task object for RTDB
+ * @param newTaskRef
+ * @param taskData
+ * @param now
+ * @returns {{id: *, title: *, text, dueDate: string|*, priority: *, task: *|Promise<void>, category, member, subtasks, subtasks_done: *[], createdAt: *, updatedAt: *}}
+ */
+function getTaskObject(newTaskRef,taskData, now) {
+    return {
+        id: newTaskRef.key,
+        title: taskData.title,
+        text: taskData.text || "",
+        dueDate: taskData.dueDate,
+        priority: taskData.priority,
+        task: taskData.task,
+        category: taskData.category || "to-do",
+        member: taskData.member || [],
+        subtasks: taskData.subtasks || [],
+        subtasks_done: [],
+        createdAt: now,
+        updatedAt: now
+    };
+}
+export { auth, database };
+
