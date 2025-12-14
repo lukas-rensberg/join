@@ -14,7 +14,7 @@ export function createAuthErrorMessage(message) {
     width: 90%;
   `;
   return errorDiv;
-};
+}
 
 /**
  * Generates an HTML template for a section header with the given letter.
@@ -26,7 +26,7 @@ export function generateSectionTemplate(letter) {
             <h2 class="section-header">${letter}</h2>
             <div class="section-separator"></div>
         `
-};
+}
 
 /**
  * Generates an HTML template string for a contact item.
@@ -51,6 +51,7 @@ export function generateContactItemTemplate(contact) {
  * Returns the full dialog HTML for a task element.
  * Note: the caller should provide or set `dueDate` into the template scope before inserting.
  * @param {Object} element - Task object containing title, text, priority, task, id, etc.
+ * @param {string} dueDate - Formatted due date string to display.
  * @returns {string} HTML string for the dialog.
  */
 export function getTemplateDialog(element, dueDate) {
@@ -224,7 +225,10 @@ export function generateContactOptionHTML(contact) {
         <div class="contact-option-name">${contact.name}</div>
         <div class="contact-option-email">${contact.email}</div>
       </div>
-      <div class="contact-option-checkbox" id="checkbox-${contact.id}"></div>
+      <div class="contact-option-checkbox">
+        <input type="checkbox" name="checkbox-${contact.id}" id="checkbox-${contact.id}">
+        <label for="checkbox-${contact.id}"></label>
+      </div>
     `;
 }
 

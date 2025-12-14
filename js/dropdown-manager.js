@@ -70,11 +70,11 @@ function toggleContactSelection(contactId, isSelected) {
     if (isSelected) {
         selectedContacts = selectedContacts.filter(c => c.id !== contactId);
         contactOption.classList.remove('selected');
-        checkbox.classList.remove('checked');
+        checkbox.checked = false;
     } else {
         selectedContacts.push(contact);
         contactOption.classList.add('selected');
-        checkbox.classList.add('checked');
+        checkbox.checked = true;
     }
 }
 

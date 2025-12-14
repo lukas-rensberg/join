@@ -60,9 +60,9 @@ export function clearContactDropzone() {
 export function clearContactCheckboxes() {
     document.querySelectorAll('.contact-option').forEach(option => {
         option.classList.remove('selected');
-        const checkbox = option.querySelector('.contact-checkbox');
+        const checkbox = option.querySelector('input[type="checkbox"]');
         if (checkbox) {
-            checkbox.classList.remove('checked');
+            checkbox.checked = false;
         }
     });
 }
