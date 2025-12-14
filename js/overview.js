@@ -70,7 +70,7 @@ function updateGreeting() {
  */
 function updateAvatarInitials(user) {
   const avatarElement = document.querySelector(".avatar");
-  
+
   if (avatarElement) {
     let initials = "U"; // Default
 
@@ -91,10 +91,26 @@ function updateAvatarInitials(user) {
   }
 }
 
+/**
+ * Add click event listeners to all dashboard cards
+ */
+function addCardListeners() {
+  const cards = document.querySelectorAll('.card, .card-urgent-deadline');
+  cards.forEach(card => {
+    card.addEventListener('click', () => {
+      window.location.href = 'board.html';
+    });
+  });
+}
+
 // Initialize greeting when page loads
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", updateGreeting);
+  document.addEventListener("DOMContentLoaded", () => {
+    updateGreeting();
+    addCardListeners();
+  });
 } else {
   updateGreeting();
+  addCardListeners();
 }
 

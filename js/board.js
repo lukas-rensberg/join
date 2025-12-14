@@ -10,8 +10,9 @@ import { ref, onValue } from "https://www.gstatic.com/firebasejs/12.4.0/firebase
 
 import { getTemplateDialog, getTemplateTaskCard, getTemplateMember, getTemplateSubtask, getTemplateMarkedUser, getTemplateRemainingMembers } from "./template.js";
 
-
-let dialogRef = document.querySelector("dialog");
+let currentDraggedElement;
+let dialogRef = document.getElementById("dialog-task");
+let addTaskRef = document.getElementById("aside-add-task");
 
 let tasks = [];
 let contacts = [];
@@ -27,6 +28,31 @@ function loadContacts() {
       contacts = Object.values(snapshot.val());
     }
   });
+}
+
+function SwipeInAddTaskAside() {
+  addTaskRef.classList.remove("add-task-swipe-out");
+  addTaskRef.classList.add("add-task-swipe-in");
+  addTaskRef.showModal();
+}
+
+function SwipeOutAddTaskAside() {
+  addTaskRef.classList.remove("add-task-swipe-in");
+  addTaskRef.classList.add("add-task-swipe-out");
+  addTaskRef.close();
+}
+
+function initAddTaskEventListeners() {
+  const openButtons = document.querySelectorAll('.add-task-icon, .add-task-btn');
+  openButtons.forEach(button => {
+    button.addEventListener('click', SwipeInAddTaskAside);
+  });
+
+  const closeButton = document.querySelector('.close-add-task');
+  if (closeButton) {
+    closeButton.addEventListener('click', SwipeOutAddTaskAside);
+    
+  }
 }
 
 // Helper function to get contact by ID
@@ -267,9 +293,6 @@ async function removeTask(taskId) {
     console.error('Error deleting task:', error);
   }
 }
-
-let currentDraggedElement;
-
 
 /**
  * Slide the card swap menu into view and attach an outside-click handler to close it.
@@ -712,6 +735,7 @@ async function updateSubtaskStatus(taskId, subtask, isCompleted) {
 // Initialize the board when the page loads
 document.addEventListener('DOMContentLoaded', () => {
   initializeTasks();
+  initAddTaskEventListeners();
 });
 
 // Also initialize immediately if the DOM is already loaded
@@ -719,6 +743,7 @@ if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initializeTasks);
 } else {
   initializeTasks();
+  initAddTaskEventListeners();
 }
 
 // Make functions globally accessible for inline event handlers
@@ -740,3 +765,8 @@ window.removeContactFromAllTasks = removeContactFromAllTasks;
 window.updateSubtaskStatus = updateSubtaskStatus;
 window.getRandomContactIds = getRandomContactIds;
 window.formatDate = formatDate;
+window.SwipeInAddTaskAside = SwipeInAddTaskAside;
+window.SwipeOutAddTaskAside = SwipeOutAddTaskAside;
+window.createNewTask = createNewTask;
+window.initAddTaskEventListeners = initAddTaskEventListeners;
+

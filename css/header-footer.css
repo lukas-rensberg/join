@@ -30,20 +30,19 @@ header {
       font-size: 1.25rem;
       text-decoration: none;
       color: #ffffff;
+      align-items: center;
 
-      &::after {
+      img {
+        display: flex;
         width: 2rem;
         height: 2rem;
-        content: '';
-        background-image: url(../assets/icons/question_mark_.svg);
-      }
 
-      &:hover::after {
-        transition: transform 200ms;
-        cursor: pointer;
-        transform: scale(1.1);
+        &:hover {
+          transition: transform 200ms;
+          cursor: pointer;
+          transform: scale(1.1);
+        }
       }
-
     }
   }
 

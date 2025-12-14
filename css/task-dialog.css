@@ -2,9 +2,10 @@ html:has(dialog[open]) {
     overflow: hidden;
 }
 
-dialog {
+.dialog-task {
     display: flex;
     border: none;
+    outline: none;
     width: 90%;
     max-width: calc(25rem + (2*var(--padding-side)));
     height: min(700px, calc(100vh - 1rem));
@@ -119,6 +120,7 @@ strong {
 
 .d-assigned-members {
     border: none;
+    outline: none;
     width: 100%;
     flex: 1;
     margin-top: .5rem;
@@ -175,6 +177,8 @@ strong {
 }
 
 .d-subtasks-check {
+    border: none;
+    outline: none;
     margin-top: .5rem;
     width: 100%;
     border: none;
@@ -184,6 +188,8 @@ strong {
 }
 
 .d-subtask {
+    border: none;
+    outline: none;
     display: flex;
     align-items: center;
 

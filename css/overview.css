@@ -22,6 +22,7 @@ main {
   grid-auto-rows: 6.5rem;
   gap: 1rem;
   align-items: center;
+  justify-content: flex-start;
   padding: 2rem var(--padding-side) 0;
   opacity: 0;
   transform: translateY(100%);
@@ -273,7 +274,7 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
+  flex-direction: row;
   width: auto;
   height: auto;
   animation: slideOutToTop 500ms ease-in 1000ms forwards;
@@ -310,15 +311,15 @@ h1 {
   color: var(--color-light-blue);
 }
 
-p {
+/* p {
   font-size: 1.5rem;
   margin-bottom: 0.25rem;
-}
+} */
 
 .greeting-guest {
-  font-size: 2.5rem !important;
+  font-size: 2.5rem;
   font-weight: 700 !important;
-  margin-bottom: 0 !important;
+  margin-bottom: 0;
 }
 
 .m-left {
@@ -347,12 +348,17 @@ p {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: auto;
+    width: 100%;
     height: auto;
     animation: none;
     opacity: 1;
     visibility: visible;
   }
+
+  .greeting-guest {
+  font-size: 4rem;
+  margin-bottom: 4rem;
+}
 
   .card-urgent-deadline {
     justify-content: center;

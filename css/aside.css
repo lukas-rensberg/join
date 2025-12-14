@@ -72,17 +72,48 @@
 
 
 
+.add-task-swipe-in {
+    animation: addTaskSwipeIn 300ms ease-in-out forwards;
+}
+
+@keyframes addTaskSwipeIn {
+    100% {
+        opacity: 1;
+        transform: translateX(-100%) translateY(-50%);
+
+    }
+}
+
+.add-task-swipe-out {
+    animation: addTaskSwipeOut 300ms ease-in-out forwards;
+}
+
+@keyframes addTaskSwipeOut {
+    100% {
+        opacity: 0;
+        transform: translateX(0) translateY(-50%);
+    }
+}
+
 .aside-add-task {
     border-radius: var(--main-radius) 0 var(--main-radius) var(--main-radius);
     background-color: #ffffff;
     position: fixed;
     z-index: 1000;
-    right: 0;
+    left: 100%;
     top: 50%;
-    transform: translateY(-50%);
+    opacity: 1;
+    transform: translateX(0%) translateY(-50%);
     height: min(1024px, 100vh);
     width: 512px;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.16);
+    border: none;
+    outline: none;
+
+    &::backdrop {
+        background-color: rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(1px);
+    }
 
     h1 {
         padding: 3rem 0 0 2.5rem;
