@@ -4,7 +4,11 @@ import {
     handleSubtaskEnter,
     addNewSubtask,
     handleEditEnter,
-    initializeSubtasks
+    initializeSubtasks,
+    deleteSubtask,
+    startEditingSubtask,
+    saveEdit,
+    cancelEdit
 } from "./subtask-manager.js";
 
 import {
@@ -54,6 +58,10 @@ window.clearSubtaskInput = clearSubtaskInput;
 window.handleSubtaskEnter = handleSubtaskEnter;
 window.addNewSubtask = addNewSubtask;
 window.handleEditEnter = handleEditEnter;
+window.deleteSubtask = deleteSubtask;
+window.startEditingSubtask = startEditingSubtask;
+window.saveEdit = saveEdit;
+window.cancelEdit = cancelEdit;
 window.selectPriority = selectPriority;
 window.initializePriorityButtons = initializePriorityButtons;
 window.toggleDropdown = toggleDropdown;
@@ -61,11 +69,29 @@ window.filterOptions = filterOptions;
 window.selectContact = selectContact;
 window.selectCategory = selectCategory;
 
+// Debug: Verify functions are properly registered
+console.log('🟢 Subtask functions registered:', {
+    toggleSubtaskIcons: typeof window.toggleSubtaskIcons,
+    deleteSubtask: typeof window.deleteSubtask,
+    startEditingSubtask: typeof window.startEditingSubtask,
+    saveEdit: typeof window.saveEdit,
+    cancelEdit: typeof window.cancelEdit
+});
+
 /**
  * Initialize all components when DOM is fully loaded
  * @returns {void}
  */
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('🟢 DOM loaded, initializing components...');
+
+    // Debug: Check if critical DOM elements exist
+    console.log('🔍 DOM Element Check:', {
+        subtaskInput: !!document.querySelector('.subtask-input'),
+        subtaskIcons: !!document.querySelector('.subtask-icons'),
+        subtaskList: !!document.getElementById('subtaskList')
+    });
+
     initializePriorityButtons();
     initializeDateInput();
     initializeDropdowns();

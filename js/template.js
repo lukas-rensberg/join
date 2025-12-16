@@ -99,6 +99,7 @@ export function getTemplateDialog(element, dueDate) {
  * @param {number} progressWidth - Calculated width percentage for progress bar.
  * @returns {string} HTML string for the task card.
  */
+
 export function getTemplateTaskCard(element, subtasksDone, totalSubtasks, progressWidth) {
   return `<div class="task-card" id="${element["id"]}" draggable="true" onclick="openDialog('${element["id"]}')" ondragstart="startDragging('${element["id"]}')">
                             <div class="card-headline">
@@ -177,7 +178,7 @@ export function getTemplateRemainingMembers(memberIndex, remainingMembers) {
 }
 
 /**
- * Creates HTML structure for a subtask item
+ * Creates HTML for a subtask item
  * @param {string} text - The subtask text content (will be escaped to prevent XSS)
  * @returns {string} HTML string for the subtask
  */
@@ -185,9 +186,9 @@ export function createSubtaskHTML(text) {
   return `
     <span class="subtask-text">${text}</span>
     <div class="subtask-actions">
-      <img src="./assets/icons/edit.svg" alt="Edit" onclick="startEditingSubtask(this)" />
+      <img src="./assets/icons/edit.svg" alt="Edit" class="subtask-edit" onclick="startEditingSubtask(this)" />
       <span class="subtask-separator"></span>
-      <img src="./assets/icons/delete.svg" alt="Delete" onclick="deleteSubtask(this)" />
+      <img src="./assets/icons/delete.svg" alt="Delete" class="subtask-delete" onclick="deleteSubtask(this)" />
     </div>
   `;
 }
@@ -210,9 +211,9 @@ export function createEditActionsHTML() {
  */
 export function createNormalActionsHTML() {
   return `
-    <img src="./assets/icons/edit.svg" alt="Edit" onclick="startEditingSubtask(this)" />
+    <img src="./assets/icons/edit.svg" alt="Edit" class="subtask-edit" onclick="startEditingSubtask(this)" />
     <span class="subtask-separator"></span>
-    <img src="./assets/icons/delete.svg" alt="Delete" onclick="deleteSubtask(this)" />
+    <img src="./assets/icons/delete.svg" alt="Delete" class="subtask-delete" onclick="deleteSubtask(this)" />
   `;
 }
 

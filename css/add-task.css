@@ -227,9 +227,14 @@
 }
 
 .priority-selection {
+
   margin-top: 0.5rem;
   display: flex;
-  gap: 1rem;
+  gap: 0.5rem;
+
+  @media (min-width: 630px) {
+    gap: 1rem;
+  }
 }
 
 .priority-btn {
@@ -237,9 +242,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
+  gap: 0.5rem;
   padding: 0.5rem 0.75rem;
-  width: 8.5rem;
+  width: 33%;
   height: 3rem;
   border-radius: 0.625rem;
   background-color: #ffffff;
@@ -250,8 +255,8 @@
 }
 
 .priority-btn img {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1.125rem;
+  height: 1.125rem;
 }
 
 .priority-btn.urgent:hover {
@@ -340,7 +345,7 @@
   justify-content: center;
   gap: 15px;
   width: 100%;
-  max-width: 500px;
+  /* max-width: 500px; */
   padding: 15px var(--padding-side);
   background-color: #ffffff;
   position: fixed;
@@ -443,7 +448,7 @@ button.btn-clear {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s ease;
-  z-index: 200;
+  z-index: 1000;
 }
 
 .subtask-select:focus-within .subtask-icons {
@@ -468,6 +473,8 @@ button.btn-clear {
   position: relative;
   display: flex;
   align-items: center;
+  padding: 0;
+  border-bottom: none;
 }
 
 .subtask-input-wrapper input {
@@ -498,22 +505,25 @@ button.btn-clear {
   gap: 0.75rem;
   align-items: center;
   padding-right: 0.75rem;
+  pointer-events: none;
 }
 
-.subtask-input-wrapper input:focus ~ .subtask-icons,
 .subtask-input-wrapper .subtask-icons.visible {
   display: flex;
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .subtask-input-wrapper .subtask-icons img {
-  width: 1.2rem;
-  height: 1.2rem;
+  width: 1rem;
+  height: 1rem;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
   cursor: pointer;
   opacity: 0.7;
   transition: opacity 150ms ease;
+  pointer-events: auto;
 }
 
 .subtask-input-wrapper .subtask-icons img:hover {
@@ -626,7 +636,7 @@ button.btn-clear {
 }
 
 .subtask-icons img.icon-confirm {
-  width: 1rem;
+  width: 1.2rem;
 }
 
 /* Contact Chip Styles */
