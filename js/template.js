@@ -14,7 +14,7 @@ export function createAuthErrorMessage(message) {
     width: 90%;
   `;
   return errorDiv;
-};
+}
 
 /**
  * Generates an HTML template for a section header with the given letter.
@@ -26,7 +26,7 @@ export function generateSectionTemplate(letter) {
             <h2 class="section-header">${letter}</h2>
             <div class="section-separator"></div>
         `
-};
+}
 
 /**
  * Generates an HTML template string for a contact item.
@@ -51,6 +51,7 @@ export function generateContactItemTemplate(contact) {
  * Returns the full dialog HTML for a task element.
  * Note: the caller should provide or set `dueDate` into the template scope before inserting.
  * @param {Object} element - Task object containing title, text, priority, task, id, etc.
+ * @param {string} dueDate - Formatted due date string to display.
  * @returns {string} HTML string for the dialog.
  */
 export function getTemplateDialog(element, dueDate) {
@@ -98,6 +99,7 @@ export function getTemplateDialog(element, dueDate) {
  * @param {number} progressWidth - Calculated width percentage for progress bar.
  * @returns {string} HTML string for the task card.
  */
+
 export function getTemplateTaskCard(element, subtasksDone, totalSubtasks, progressWidth) {
   return `<div class="task-card" id="${element["id"]}" draggable="true" onclick="openDialog('${element["id"]}')" ondragstart="startDragging('${element["id"]}')">
                             <div class="card-headline">
@@ -116,7 +118,7 @@ export function getTemplateTaskCard(element, subtasksDone, totalSubtasks, progre
                                 <div class="marked-user-container" id="marked-user-container-${element["id"]}">
                                 </div>
                                 <div class="card-prio-icon"
-                                    style="background: url(./assets/priority_icons/prio_${element["priority"]}_colored.svg) center center no-repeat;">
+                                    style="background: url('./assets/priority_icons/prio_${element["priority"]}_colored.svg') center center no-repeat;">
                                 </div>
                             </div>
                         </div>`;
@@ -173,4 +175,74 @@ export function getTemplateMarkedUser(memberIndex, memberInitials, avatarColor) 
  */
 export function getTemplateRemainingMembers(memberIndex, remainingMembers) {
   return `<div class="marked-user marked-user-${memberIndex}" style="background-color: var(--color-variant-over);">+${remainingMembers}</div>`
+}
+
+/**
+ * Creates HTML for a subtask item
+ * @param {string} text - The subtask text content (will be escaped to prevent XSS)
+ * @returns {string} HTML string for the subtask
+ */
+export function createSubtaskHTML(text) {
+  return `
+    <span class="subtask-text">${text}</span>
+    <div class="subtask-actions">
+      <img src="./assets/icons/edit.svg" alt="Edit" class="subtask-edit" onclick="startEditingSubtask(this)" />
+      <span class="subtask-separator"></span>
+      <img src="./assets/icons/delete.svg" alt="Delete" class="subtask-delete" onclick="deleteSubtask(this)" />
+    </div>
+  `;
+}
+
+/**
+ * Creates HTML for edit mode action buttons
+ * @returns {string} HTML string for edit actions
+ */
+export function createEditActionsHTML() {
+  return `
+    <img src="./assets/icons/delete.svg" alt="Cancel" class="cancel-edit" onclick="cancelEdit(this)" />
+    <span class="subtask-separator"></span>
+    <img src="./assets/icons/check-blue.svg" alt="Save" class="save-edit" onclick="saveEdit(this)" />
+  `;
+}
+
+/**
+ * Creates HTML for normal mode action buttons (edit and delete)
+ * @returns {string} HTML string for normal actions
+ */
+export function createNormalActionsHTML() {
+  return `
+    <img src="./assets/icons/edit.svg" alt="Edit" class="subtask-edit" onclick="startEditingSubtask(this)" />
+    <span class="subtask-separator"></span>
+    <img src="./assets/icons/delete.svg" alt="Delete" class="subtask-delete" onclick="deleteSubtask(this)" />
+  `;
+}
+
+export function generateContactOptionHTML(contact) {
+    return `
+      <div class="contact-option-avatar" style="background-color: ${contact.avatarColor};">
+        ${contact.initials}
+      </div>
+      <div class="contact-option-info">
+        <div class="contact-option-name">${contact.name}</div>
+        <div class="contact-option-email">${contact.email}</div>
+      </div>
+      <div class="contact-option-checkbox">
+        <input type="checkbox" name="checkbox-${contact.id}" id="checkbox-${contact.id}">
+        <label for="checkbox-${contact.id}"></label>
+      </div>
+    `;
+}
+
+export function getContactChipHTML(contact) {
+    return `
+      <div class="contact-avatar-small" style="background-color: ${contact.avatarColor};" title="${contact.name}">
+        ${contact.initials}
+      </div>
+    `;
+}
+
+export function getCategoryOptionHTML(category) {
+    return `
+      <div class="category-option-name">${category.name}</div>
+    `;
 }

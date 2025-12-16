@@ -21,7 +21,7 @@ let activeDragOverSection = null;
 let dragOverThrottle = null;
 
 // Load contacts from Firebase
-function loadContacts() {
+export function loadContacts() {
   const contactsRef = ref(database, 'contacts');
   onValue(contactsRef, (snapshot) => {
     if (snapshot.exists()) {
@@ -56,7 +56,7 @@ function initAddTaskEventListeners() {
 }
 
 // Helper function to get contact by ID
-function getContactById(contactId) {
+export function getContactById(contactId) {
   return contacts.find(c => c.id === contactId);
 }
 
@@ -65,7 +65,7 @@ function getContactById(contactId) {
  * @param {string} dateString - Date in YYYY-MM-DD format
  * @returns {string} Formatted date string
  */
-function formatDate(dateString) {
+export function formatDate(dateString) {
   if (!dateString) return "No due date";
 
   try {
@@ -85,7 +85,7 @@ function formatDate(dateString) {
  * @param {number} count - Number of random contacts to return
  * @returns {Array} Array of contact IDs
  */
-function getRandomContactIds(count = 3) {
+export function getRandomContactIds(count = 3) {
   if (!contacts || contacts.length === 0) return [];
 
   const availableContacts = contacts.filter(c => !c.isAuthUser); // Exclude auth user from random assignment
@@ -100,7 +100,7 @@ function getRandomContactIds(count = 3) {
  * Create default tasks with random member assignments
  * @returns {Array} Array of default tasks with random members
  */
-function createDefaultTasksWithMembers() {
+export function createDefaultTasksWithMembers() {
   return [
     {
       id: "to-do-1",
@@ -286,7 +286,7 @@ async function saveTask(task) {
 /**
  * Delete task from Firebase
  */
-async function removeTask(taskId) {
+export async function removeTask(taskId) {
   try {
     await deleteTask(taskId);
   } catch (error) {
@@ -337,7 +337,7 @@ function initMarkedUsers(element) {
 
   for (let index = 0; index < memberIds.length; index++) {
     const memberIndex = index + 1;
-    if (index == 3) {
+    if (index === 3) {
       const remainingMembers = memberIds.length - 3;
       markedUserContainer.innerHTML += getTemplateRemainingMembers(memberIndex, remainingMembers);
       break;
@@ -434,7 +434,7 @@ function handleDragOver(event, section) {
  * @param {string} category - Target category id (e.g. "to-do", "in-progress").
  */
 function moveTo(category) {
-  const taskToUpdate = tasks.find(task => task.id == currentDraggedElement);
+  const taskToUpdate = tasks.find(task => task.id === currentDraggedElement);
   if (taskToUpdate) {
     taskToUpdate.category = category;
     // Save the updated task to Firebase
@@ -547,7 +547,7 @@ function generateEmptyCard() {
  * @param {string} index - The task id to open in the dialog.
  */
 function openDialog(index) {
-  let element = tasks.filter((t) => t["id"] == `${index}`)[0];
+  let element = tasks.filter((t) => t["id"] === `${index}`)[0];
   dialogRef.classList.add("dialog-swipe-in");
   const dueDate = element["dueDate"] ? formatDate(element["dueDate"]) : "No due date set";
   dialogRef.innerHTML = getTemplateDialog(element, dueDate);
@@ -623,7 +623,7 @@ function addSubtaskEventListeners(taskId) {
 /**
  * Create a new task and save it to Firebase
  */
-async function createNewTask(taskData) {
+export async function createNewTask(taskData) {
   try {
     const newTask = {
       ...taskData,

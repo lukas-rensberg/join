@@ -67,6 +67,8 @@ input[type="tel"],
 textarea,
 select {
   border: none;
+  flex:1;
+  outline: none;
 }
 
 html {

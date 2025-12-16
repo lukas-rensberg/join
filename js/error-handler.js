@@ -1,79 +1,14 @@
 /**
- * Error Handler Module - Handles authentication errors
+ * Error Handler Module - Handles authentication and form validation errors
  */
 
 import { createAuthErrorMessage } from "./template.js";
 
 /**
- * Show inline error message in a container or page
- * @param {string} message Error message to display
- * @param {string} containerId Optional container ID to show error in
+ * Show error message below form fields (for auth forms)
  */
-export function showInlineError(message, containerId = null) {
-  // Remove any existing inline errors
-  const existingErrors = document.querySelectorAll(".inline-error-message");
-  existingErrors.forEach(error => error.remove());
-
-  const errorDiv = document.createElement("div");
-  errorDiv.className = "inline-error-message";
-  errorDiv.textContent = message;
-  errorDiv.style.cssText = `
-    color: #ff4646;
-    background-color: #ffebee;
-    border: 1px solid #ff4646;
-    border-radius: 4px;
-    padding: 12px 16px;
-    font-size: 14px;
-    margin: 16px 0;
-    display: flex;
-    align-items: center;
-  `;
-
-  // Add error icon
-  const icon = document.createElement("span");
-  icon.innerHTML = "⚠️";
-  icon.style.marginRight = "8px";
-  errorDiv.insertBefore(icon, errorDiv.firstChild);
-
-  // Insert error in specific container or fallback locations
-  let targetContainer = null;
-  
-  if (containerId) {
-    targetContainer = document.getElementById(containerId);
-  }
-  
-  if (!targetContainer) {
-    // Try common containers
-    targetContainer = document.querySelector(".contact-modal") || 
-                     document.querySelector(".main-content") ||
-                     document.querySelector("main") ||
-                     document.body;
-  }
-  
-  if (targetContainer === document.body) {
-    // If inserting in body, position it at the top
-    errorDiv.style.position = "fixed";
-    errorDiv.style.top = "20px";
-    errorDiv.style.left = "50%";
-    errorDiv.style.transform = "translateX(-50%)";
-    errorDiv.style.zIndex = "10000";
-    errorDiv.style.maxWidth = "500px";
-  }
-  
-  targetContainer.insertBefore(errorDiv, targetContainer.firstChild);
-  
-  // Auto-remove after 5 seconds
-  setTimeout(() => {
-    if (errorDiv.parentNode) {
-      errorDiv.remove();
-    }
-  }, 5000);
-}
-
-/**
- * Show error message below form fields
- */
-export function showErrorMessage(message, context = "login") {
+export function showErrorMessage(message) {
+  // Remove any existing error messages
   const existingError = document.querySelector(".auth-error-message");
   if (existingError) {
     existingError.remove();
@@ -98,12 +33,17 @@ export function showErrorMessage(message, context = "login") {
 }
 
 /**
+ * Alias for showErrorMessage (for inline errors)
+ */
+export const showInlineError = showErrorMessage;
+
+/**
  * Handle authentication errors (login page, signup page, protected pages)
  */
 export function handleAuthError(error, context = "auth") {
   console.error(`${context} error:`, error);
 
-  let errorMessage = "An error occurred. Please try again.";
+  let errorMessage;
 
   switch (error.code) {
     case "auth/invalid-email":
@@ -139,6 +79,186 @@ export function handleAuthError(error, context = "auth") {
       errorMessage = error.message;
   }
 
-  showErrorMessage(errorMessage, context);
+  showErrorMessage(errorMessage);
 }
 
+/**
+ * Show field-specific error message below a form field
+ * @param {string} fieldName - Name of the field (e.g., 'title', 'dueDate', 'category')
+ * @param {string} message - Error message to display
+ * @return {void}
+ */
+export function showFieldError(fieldName, message) {
+  let formGroup;
+  let inputElement;
+
+  if (fieldName === 'title') {
+    formGroup = document.querySelector('.form-group-title');
+    inputElement = formGroup?.querySelector('.task-title');
+  } else if (fieldName === 'dueDate') {
+    const dueDateInput = document.getElementById('dueDate');
+    formGroup = dueDateInput?.closest('.form-group');
+    inputElement = dueDateInput;
+  } else if (fieldName === 'category') {
+    const categoryWrapper = document.getElementById('categoryDropdownWrapper');
+    formGroup = categoryWrapper?.closest('.form-group');
+    inputElement = categoryWrapper;
+  }
+
+  if (!formGroup) return;
+
+  // Remove existing error for this field
+  const existingError = formGroup.querySelector('.field-error');
+  if (existingError) {
+    existingError.remove();
+  }
+
+  // Create error message element
+  const errorDiv = document.createElement('div');
+  errorDiv.className = 'field-error visible';
+  errorDiv.textContent = message;
+
+  // Add red border to the input/dropdown
+  if (inputElement) {
+    if (fieldName === 'category') {
+      const dropdownHeader = inputElement.querySelector('.dropdown-header');
+      if (dropdownHeader) {
+        dropdownHeader.style.borderBottomColor = '#ff3d00';
+      }
+    } else if (fieldName === 'dueDate') {
+      const inputWrapper = inputElement.closest('.input-with-icon');
+      if (inputWrapper) {
+        inputWrapper.style.borderColor = '#ff3d00';
+      }
+    } else {
+      inputElement.style.borderColor = '#ff3d00';
+    }
+  }
+
+  // Add error message to form group
+  formGroup.appendChild(errorDiv);
+  formGroup.classList.add('has-error');
+}
+
+/**
+ * Clear error for a specific field
+ * @param {string} fieldName - Name of the field
+ * @return {void}
+ */
+export function clearFieldError(fieldName) {
+  let formGroup;
+  let inputElement;
+
+  if (fieldName === 'title') {
+    formGroup = document.querySelector('.form-group-title');
+    inputElement = formGroup?.querySelector('.task-title');
+  } else if (fieldName === 'dueDate') {
+    const dueDateInput = document.getElementById('dueDate');
+    formGroup = dueDateInput?.closest('.form-group');
+    inputElement = dueDateInput;
+  } else if (fieldName === 'category') {
+    const categoryWrapper = document.getElementById('categoryDropdownWrapper');
+    formGroup = categoryWrapper?.closest('.form-group');
+    inputElement = categoryWrapper;
+  }
+
+  if (formGroup) {
+    const errorElement = formGroup.querySelector('.field-error');
+    if (errorElement) {
+      errorElement.remove();
+    }
+
+    // Remove red border
+    if (inputElement) {
+      if (fieldName === 'category') {
+        const dropdownHeader = inputElement.querySelector('.dropdown-header');
+        if (dropdownHeader) {
+          dropdownHeader.style.borderBottomColor = '';
+        }
+      } else if (fieldName === 'dueDate') {
+        const inputWrapper = inputElement.closest('.input-with-icon');
+        if (inputWrapper) {
+          inputWrapper.style.borderColor = '';
+        }
+      } else {
+        inputElement.style.borderColor = '';
+      }
+    }
+
+    formGroup.classList.remove('has-error');
+  }
+}
+
+/**
+ * Clear all field errors
+ * @return {void}
+ */
+export function clearAllFieldErrors() {
+  document.querySelectorAll('.field-error').forEach(error => {
+    error.remove();
+  });
+
+  document.querySelectorAll('.form-group').forEach(group => {
+    group.classList.remove('has-error');
+  });
+
+  document.querySelectorAll('.task-title, #dueDate').forEach(input => {
+    input.style.borderColor = '';
+  });
+
+  document.querySelectorAll('.input-with-icon').forEach(wrapper => {
+    wrapper.style.borderColor = '';
+  });
+
+  document.querySelectorAll('.dropdown-header').forEach(header => {
+    header.style.borderBottomColor = '';
+  });
+}
+
+/**
+ * Show success banner at the top of the page
+ * @param {string} message - Success message to display
+ * @param {number} duration - Duration in milliseconds (default: 2000)
+ * @return {void}
+ */
+export function showSuccessBanner(message = 'Success!', duration = 2000) {
+  clearAllFieldErrors();
+
+  let successBanner = document.querySelector('.success-banner');
+
+  if (!successBanner) {
+    successBanner = document.createElement('div');
+    successBanner.className = 'success-banner';
+    document.body.appendChild(successBanner);
+  }
+
+  successBanner.textContent = message;
+  successBanner.classList.add('visible');
+
+  setTimeout(() => {
+    successBanner.classList.remove('visible');
+  }, duration);
+}
+
+/**
+ * Show error banner at the top of the page
+ * @param {string} message - Error message to display
+ * @param {number} duration - Duration in milliseconds (default: 4000)
+ * @return {void}
+ */
+export function showErrorBanner(message = 'An error occurred', duration = 4000) {
+  let errorBanner = document.querySelector('.error-banner');
+
+  if (!errorBanner) {
+    errorBanner = document.createElement('div');
+    errorBanner.className = 'error-banner';
+    document.body.appendChild(errorBanner);
+  }
+
+  errorBanner.textContent = message;
+  errorBanner.classList.add('visible');
+
+  setTimeout(() => {
+    errorBanner.classList.remove('visible');
+  }, duration);
+}
