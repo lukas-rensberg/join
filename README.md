@@ -14,17 +14,16 @@
 
 ##  Table of Contents
 
-- [ Overview](#-overview)
-- [ Features](#-features)
-- [ Getting Started](#-getting-started)
-  - [ Prerequisites](#-prerequisites)
-  - [ Installation](#-installation)
-  - [ Usage](#-usage)
-  - [ Testing](#-testing)
-- [ Project Roadmap](#-project-roadmap)
-- [ Our team](#-our-team)
-- [ License](#-license)
-- [ Acknowledgments](#-acknowledgments)
+- [ Overview](#overview)
+- [ Features](#features)
+- [ Getting Started](#getting-started)
+  - [ Prerequisites](#prerequisites)
+  - [ Installation](#installation)
+  - [ Usage](#usage)
+- [ Project Roadmap](#project-roadmap)
+- [ Our team](#our-team)
+- [ License](#license)
+- [ Acknowledgments](#acknowledgments)
 
 ---
 
