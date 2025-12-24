@@ -20,7 +20,10 @@ let contacts = [];
 let activeDragOverSection = null;
 let dragOverThrottle = null;
 
-// Load contacts from Firebase
+/**
+ * Loads contacts from Firebase database and stores them in the contacts array.
+ * Sets up a real-time listener that updates contacts when changes occur.
+ */
 export function loadContacts() {
   const contactsRef = ref(database, 'contacts');
   onValue(contactsRef, (snapshot) => {
@@ -30,18 +33,30 @@ export function loadContacts() {
   });
 }
 
+/**
+ * Opens the add task aside panel with a swipe-in animation.
+ * Removes any swipe-out class and adds the swipe-in class before showing the modal.
+ */
 function SwipeInAddTaskAside() {
   addTaskRef.classList.remove("add-task-swipe-out");
   addTaskRef.classList.add("add-task-swipe-in");
   addTaskRef.showModal();
 }
 
+/**
+ * Closes the add task aside panel with a swipe-out animation.
+ * Removes the swipe-in class and adds the swipe-out class before closing the modal.
+ */
 function SwipeOutAddTaskAside() {
   addTaskRef.classList.remove("add-task-swipe-in");
   addTaskRef.classList.add("add-task-swipe-out");
   addTaskRef.close();
 }
 
+/**
+ * Initializes event listeners for the add task functionality.
+ * Attaches click handlers to open and close buttons for the add task aside panel.
+ */
 function initAddTaskEventListeners() {
   const openButtons = document.querySelectorAll('.add-task-icon, .add-task-btn');
   openButtons.forEach(button => {
@@ -51,11 +66,15 @@ function initAddTaskEventListeners() {
   const closeButton = document.querySelector('.close-add-task');
   if (closeButton) {
     closeButton.addEventListener('click', SwipeOutAddTaskAside);
-    
+
   }
 }
 
-// Helper function to get contact by ID
+/**
+ * Retrieves a contact object by its unique identifier.
+ * @param {string} contactId - The unique identifier of the contact to find.
+ * @returns {Object|undefined} The contact object if found, undefined otherwise.
+ */
 export function getContactById(contactId) {
   return contacts.find(c => c.id === contactId);
 }
@@ -293,38 +312,6 @@ export async function removeTask(taskId) {
     console.error('Error deleting task:', error);
   }
 }
-
-/**
- * Slide the card swap menu into view and attach an outside-click handler to close it.
- */
-function swapMenuSlideIn() {
-  const swapMenu = document.getElementById("card-swap-menu");
-  swapMenu.classList.remove("slide-out-swap-menu");
-  swapMenu.classList.add("slide-in-swap-menu");
-
-
-  document.addEventListener("mousedown", handleOutsideClick);
-
-  function handleOutsideClick(event) {
-    if (!swapMenu.contains(event.target)) {
-      slideOutMenu();
-      document.removeEventListener("mousedown", handleOutsideClick);
-    }
-  }
-}
-
-/**
- * Slide the card swap menu out of view.
- */
-function slideOutMenu() {
-  const swapMenu = document.getElementById("card-swap-menu");
-  swapMenu.classList.remove("slide-in-swap-menu");
-  swapMenu.classList.add("slide-out-swap-menu");
-}
-
-
-
-
 
 /**
  * Render marked user avatars for a task card up to three members,
@@ -582,6 +569,11 @@ function initMembers(memberIds) {
   }
 }
 
+/**
+ * Initializes and renders the subtasks section in the task dialog.
+ * Displays both pending and completed subtasks with checkboxes.
+ * @param {string} taskId - The unique identifier of the task whose subtasks to render.
+ */
 function iniSubtasks(taskId) {
   let subtasksContainer = document.querySelector(".d-subtasks-check");
   subtasksContainer.innerHTML = "";
@@ -755,8 +747,6 @@ window.handleDragOver = handleDragOver;
 window.moveTo = moveTo;
 window.bgContainer = bgContainer;
 window.bgContainerRemove = bgContainerRemove;
-window.swapMenuSlideIn = swapMenuSlideIn;
-window.slideOutMenu = slideOutMenu;
 window.showDashedBoxOnce = showDashedBoxOnce;
 window.hideDashedBox = hideDashedBox;
 window.addContactToTask = addContactToTask;

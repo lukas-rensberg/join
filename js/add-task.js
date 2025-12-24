@@ -134,7 +134,7 @@ function attachButtonListeners() {
  * @returns {void}
  */
 function attachInputListeners() {
-    const titleInput = document.querySelector('.task-title');
+    const titleInput = document.querySelector('.input-title');
     if (titleInput) {
         titleInput.addEventListener('input', () => clearFieldError('title'));
     }

@@ -18,13 +18,13 @@
         <img src="./assets/icons/logo-white.svg" alt="Join Logo" />
         <div class="header-right">
             <div class="help-container">Kanban Project Management Tool
-                <a href="help.html"><img src="./assets/icons/question_mark_.svg" alt="Question Mark Icon"></a>
+                <a href="help.html"><img src="./assets/icons/question_mark_.svg" alt="Question Mark Help"></a>
             </div>
             <input type="checkbox" id="slideInSideMenu" />
             <label for="slideInSideMenu">
-                <div class="avatar"></div>
+                <div class="avatar" id="toggleSideMenu"></div>
             </label>
-            <div class="side-menu">
+            <div class="side-menu" id="cardLegalLinks">
                 <nav>
                     <a class="link-none" href="help.html">Help</a>
                     <a href="legal_notice.html">Legal Notice</a>
@@ -153,6 +153,7 @@
     </footer>
     <script type="module" src="./js/auth.js"></script>
     <script type="module" src="./js/overview.js"></script>
+    <script src="./script.js"></script>
 </body>
 
 </html>
