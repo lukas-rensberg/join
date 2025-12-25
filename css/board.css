@@ -35,7 +35,7 @@
     }
 
     &:active {
-        transition: background-color 1ms ease backwards;
+        transition: background-color 1ms ease forwards;
         background-color: var(--color-active-button);
         box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
     }
@@ -331,6 +331,10 @@ h5 {
     color: white;
 }
 
+.card-task-wrapper {
+    flex: 1;
+}
+
 .card-task-title {
     display: -webkit-box;
     font-weight: 700;
@@ -343,7 +347,6 @@ h5 {
 }
 
 .card-task-text {
-    display: -webkit-box;
     font-weight: 400;
     color: var(--color-border-gray);
     display: -webkit-box;

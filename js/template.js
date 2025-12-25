@@ -106,13 +106,15 @@ export function getTemplateTaskCard(element, subtasksDone, totalSubtasks, progre
                                 <div class="card-label card-bg-${element["task"].split(" ")[0].toLowerCase()}-${element["task"].split(" ")[1].toLowerCase()}">${element["task"]}</div>
                                 <div class="card-swap-icon"></div>
                             </div>
-                            <div class="card-task-title">${element["title"]}</div>
-                            <div class="card-task-text">${element["text"]}</div>
-                            <div class="card-progress-container">
-                                <div class="card-progress-bar">
-                                    <div class="card-sub-progress-bar" style="width: ${progressWidth}%;"></div>
-                                </div>
-                                <div id="tasks-done">${subtasksDone.length}/${totalSubtasks} Subtasks</div>
+                            <div class="card-task-wrapper">
+                              <div class="card-task-title">${element["title"]}</div>
+                              <div class="card-task-text">${element["text"]}</div>
+                              <div class="card-progress-container">
+                                  <div class="card-progress-bar">
+                                      <div class="card-sub-progress-bar" style="width: ${progressWidth}%;"></div>
+                                  </div>
+                                  <div id="tasks-done">${subtasksDone.length}/${totalSubtasks} Subtasks</div>
+                              </div>
                             </div>
                             <div class="user-prio-container">
                                 <div class="marked-user-container" id="marked-user-container-${element["id"]}">
@@ -218,7 +220,7 @@ export function createNormalActionsHTML() {
 }
 
 export function generateContactOptionHTML(contact) {
-    return `
+  return `
       <div class="contact-option-avatar" style="background-color: ${contact.avatarColor};">
         ${contact.initials}
       </div>
@@ -234,7 +236,7 @@ export function generateContactOptionHTML(contact) {
 }
 
 export function getContactChipHTML(contact) {
-    return `
+  return `
       <div class="contact-avatar-small" style="background-color: ${contact.avatarColor};" title="${contact.name}">
         ${contact.initials}
       </div>
@@ -242,7 +244,7 @@ export function getContactChipHTML(contact) {
 }
 
 export function getCategoryOptionHTML(category) {
-    return `
+  return `
       <div class="category-option-name">${category.name}</div>
     `;
 }
