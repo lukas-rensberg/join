@@ -1,11 +1,8 @@
 .priority-selection {
     margin-top: 0.5rem;
     display: flex;
+    justify-content: center;
     gap: 0.5rem;
-
-    @media (min-width: 630px) {
-        gap: 1rem;
-    }
 }
 
 .priority-btn {
@@ -562,7 +559,7 @@
     margin: 0 2px;
 }
 
-@media (max-width: 600px) {
+@media (width < 600px) {
     .priority-btn {
         font-size: 16px;
         padding: 0.5rem 0.125rem;
@@ -572,5 +569,11 @@
             width: 1rem;
             height: 1rem;
         }
+    }
+}
+
+@media (width >=812px) {
+    .priority-selection {
+        gap: 1rem;
     }
 }

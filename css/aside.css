@@ -70,6 +70,10 @@
     }
 }
 
+.active-nav-link {
+    background-color: var(--color-menu-active);
+}
+
 
 
 .add-task-swipe-in {

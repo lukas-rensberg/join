@@ -17,6 +17,8 @@
 }
 
 .add-task-form-container {
+  display: flex;
+  flex-direction: column;
   padding: 0 var(--padding-side);
   width: 100%;
   overflow-y: auto;
@@ -249,19 +251,18 @@
   display: flex;
   justify-content: center;
   gap: 15px;
-  width: 100%;
+  /* width: 100%; */
   /* max-width: 500px; */
   padding: 15px var(--padding-side);
   background-color: transparent;
   position: fixed;
+
   bottom: 60px;
-  left: 50%;
-  transform: translateX(-50%);
   z-index: 1100;
 }
 
 .button-group button {
-  padding: 5px 10px;
+  padding: 0.5rem 0.75rem;
   border-radius: var(--button-radius);
   cursor: pointer;
   display: flex;
@@ -591,22 +592,6 @@
   width: 100%;
 }
 
-.dropdown-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px;
-  border-bottom: 1px solid var(--color-light-gray);
-  cursor: pointer;
-  transition: border-color 0.2s;
-  background-color: transparent;
-  position: relative;
-}
-
-.dropdown-header:hover {
-  border-bottom: 1px solid var(--main-color);
-}
-
 /* Contact dropdown specific styles - no padding for header */
 #contactDropdownWrapper .dropdown-header {
   padding: 0;
@@ -802,8 +787,30 @@
   flex-grow: 1;
 }
 
-@media (max-width: 812px) {
+@media (width <812px) {
   .button-group {
+    width: 100%;
     background-color: white;
+
+    button {
+      padding: 0.5rem 0.5rem;
+      font-size: 1rem;
+    }
+  }
+}
+
+@media (width >=812px) {
+  .body-add-task {
+    align-items: unset;
+  }
+
+  .page-container {
+    margin-left: 16rem;
+  }
+
+  .button-group {
+    right: 4rem;
+    justify-content: flex-end;
+    background-color: transparent;
   }
 }

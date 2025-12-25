@@ -47,7 +47,7 @@
                     <img src="./assets/menu_icons/add-task.svg" alt="Add Task Icon" />
                     Add Task
                 </a>
-                <a href="board.html">
+                <a href="board.html" class="active-nav-link">
                     <img src="./assets/menu_icons/board.svg" alt="Board Icon" />
                     Board
                 </a>
@@ -116,6 +116,7 @@
                     ondragleave="bgContainerRemove('done')" ondragover="handleDragOver(event, 'done')"></div>
             </div>
         </section>
+
         <dialog class="aside-add-task" id="aside-add-task">
 
             <div class="close-add-task"></div>
@@ -191,7 +192,6 @@
                     </div>
                 </div>
 
-                <!-- FIXME!!!: Subtask broken ==> No add avail, doubled border-bottom, and more  -->
                 <div class="form-group">
                     <label>Subtasks <span class="optional">(optional)</span></label>
                     <div class="input-with-icon subtask-input-wrapper">
@@ -224,7 +224,7 @@
             <span class="nav-add-task">Add Task</span>
         </a>
         <a class="nav-item" href="board.html">
-            <span class="nav-board active active-icon-board">Board</span>
+            <span class="nav-board active-footer-icon active-icon-board">Board</span>
         </a>
         <a class="nav-item" href="contacts.html">
             <span class="nav-contacts">Contacts</span>

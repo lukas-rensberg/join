@@ -129,7 +129,7 @@ nav {
   }
 }
 
-.active {
+.active-footer-icon {
   color: var(--main-color);
 }
 
@@ -248,6 +248,16 @@ footer {
       transition: background-image 200ms;
       background-image: url(../assets/menu_icons/summary_hover.svg);
     }
+  }
+}
+
+@media (width <=350px) {
+
+  .nav-contacts,
+  .nav-board,
+  .nav-add-task,
+  .nav-summary {
+    font-size: 14px;
   }
 }
 
