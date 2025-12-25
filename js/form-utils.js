@@ -12,7 +12,7 @@ import { clearSelectedContacts, clearSelectedCategory } from "./dropdown-manager
  * @returns {void}
  */
 export function clearFormInputs() {
-    const titleInput = document.querySelector('.task-title');
+    const titleInput = document.querySelector('.input-title');
     const descriptionInput = document.querySelector('.task-description');
     const dueDateInput = document.getElementById('dueDate');
 

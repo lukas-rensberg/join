@@ -94,7 +94,7 @@ export function showFieldError(fieldName, message) {
 
   if (fieldName === 'title') {
     formGroup = document.querySelector('.form-group-title');
-    inputElement = formGroup?.querySelector('.task-title');
+    inputElement = formGroup?.querySelector('.input-title');
   } else if (fieldName === 'dueDate') {
     const dueDateInput = document.getElementById('dueDate');
     formGroup = dueDateInput?.closest('.form-group');
@@ -151,7 +151,7 @@ export function clearFieldError(fieldName) {
 
   if (fieldName === 'title') {
     formGroup = document.querySelector('.form-group-title');
-    inputElement = formGroup?.querySelector('.task-title');
+    inputElement = formGroup?.querySelector('.input-title');
   } else if (fieldName === 'dueDate') {
     const dueDateInput = document.getElementById('dueDate');
     formGroup = dueDateInput?.closest('.form-group');
@@ -202,7 +202,7 @@ export function clearAllFieldErrors() {
     group.classList.remove('has-error');
   });
 
-  document.querySelectorAll('.task-title, #dueDate').forEach(input => {
+  document.querySelectorAll('.input-title, #dueDate').forEach(input => {
     input.style.borderColor = '';
   });
 

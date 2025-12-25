@@ -27,7 +27,7 @@ export function validateTaskForm() {
  * @returns {string|null} Error message or null if valid
  */
 export function validateTitle() {
-    const title = document.querySelector('.task-title')?.value?.trim();
+    const title = document.querySelector('.input-title')?.value?.trim();
     return !title ? 'Title is required' : null;
 }
 
