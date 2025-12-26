@@ -17,9 +17,29 @@ function getTimeBasedGreeting() {
 }
 
 /**
+ * Handles responsive repositioning of the greeting container
+ * 
+ * Manages the DOM placement of the greeting container element based on the current viewport width.
+ * When the viewport is 812px or larger, inserts the greeting container as the first child of the dashboard.
+ * Otherwise, maintains the greeting container's current position in the DOM.
+ * This function is called on page load and during window resize events to ensure proper positioning.
+ */
+function moveGreetingContainer() {
+  const mediaQuery = window.matchMedia("(min-width: 812px)").matches;
+  const greetingContainer = document.querySelector(".greeting-container");
+  const dashboardContainer = document.querySelector(".dashboard-container");
+  
+  if (mediaQuery) {
+    dashboardContainer.insertBefore(greetingContainer, dashboardContainer.firstChild);
+  }
+
+}
+
+/**
  * Update greeting and user name on the overview page
  */
 function updateGreeting() {
+  const mediaQuery = window.matchMedia("(min-width: 812px)").matches;
   onAuthStateChanged(auth, (user) => {
     if (user) {
       const greetingContainer = document.querySelector(".greeting-container");
@@ -31,6 +51,11 @@ function updateGreeting() {
         if (user.isAnonymous) {
           greetingElement.textContent = getTimeBasedGreeting();
           greetingElement.classList.add("greeting-guest");
+          if (mediaQuery) {
+            greetingElement.style.fontWeight = "bold";
+            greetingElement.style.fontSize = "4rem";
+          }
+
         } else {
           greetingElement.textContent = getTimeBasedGreeting() + ",";
           greetingElement.classList.remove("greeting-guest");
@@ -104,11 +129,15 @@ function addCardListeners() {
 // Initialize greeting when page loads
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", () => {
+    moveGreetingContainer()
     updateGreeting();
     addCardListeners();
   });
 } else {
+  moveGreetingContainer()
   updateGreeting();
   addCardListeners();
 }
+// Update greeting container position on window resize
+window.addEventListener('resize', moveGreetingContainer);
 

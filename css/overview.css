@@ -11,7 +11,7 @@
 main {
   display: flex;
   align-items: center;
-  justify-content: center;
+  /* justify-content: center; */
   flex-direction: column;
   flex: 1;
 }
@@ -276,7 +276,7 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: row;
+  flex-direction: column;
   width: auto;
   height: auto;
   animation: slideOutToTop 500ms ease-in 1000ms forwards;
@@ -284,6 +284,20 @@ main {
   top: 50%;
   opacity: 0;
   visibility: hidden;
+
+  p {
+    font-size: 2rem;
+    font-weight: 400;
+  }
+
+  h1 {
+    font-size: 3rem;
+    font-weight: bold;
+  }
+
+  .h1-colorized {
+    color: var(--color-light-blue);
+  }
 }
 
 .greeting-container.loaded {
@@ -304,14 +318,9 @@ main {
   }
 }
 
-h1 {
-  font-size: 2.25rem;
-  letter-spacing: 0.1rem;
-}
 
-.h1-colorized {
-  color: var(--color-light-blue);
-}
+
+
 
 /* p {
   font-size: 1.5rem;
@@ -331,11 +340,12 @@ h1 {
 @media (width >=812px) {
 
   main {
-  display: grid;
-  align-items: unset;
-  justify-content: unset;
-  flex-direction: unset;
-}
+    display: grid;
+    align-items: unset;
+    justify-content: unset;
+    flex-direction: unset;
+  }
+
   .dashboard-container {
     margin-left: 300px;
     /* margin-top: 3.5rem; */
@@ -356,7 +366,7 @@ h1 {
 
   .greeting-container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
     width: 100%;
@@ -364,10 +374,21 @@ h1 {
     animation: none;
     opacity: 1;
     visibility: visible;
+
+    p {
+      font-size: 3rem;
+      font-weight: 400;
+    }
+
+    h1 {
+      font-size: 4rem;
+      margin-left: 1.25rem;
+      font-weight: bold;
+    }
   }
 
   .greeting-guest {
-    font-size: 4rem;
+    font-size: 3rem;
     margin-bottom: 4rem;
   }
 
