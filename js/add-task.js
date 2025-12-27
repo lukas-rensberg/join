@@ -48,6 +48,8 @@ import {
     clearSubtasksSection
 } from "./form-utils.js";
 
+import { getTemplateAddTask } from "./template.js";
+
 
 /**
  * Export functions to window for HTML onclick handlers
@@ -97,6 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeDropdowns();
     initializeSubtasks();
     initializeFormButtons();
+    createAddTask();
 });
 
 
@@ -151,7 +154,7 @@ function attachInputListeners() {
  */
 function attachCategoryListener() {
     const originalSelectCategory = window.selectCategory;
-    window.selectCategory = function(categoryId) {
+    window.selectCategory = function (categoryId) {
         clearFieldError('category');
         originalSelectCategory(categoryId);
     };
@@ -243,3 +246,14 @@ function handleClearForm() {
     clearSubtasksSection();
 }
 
+/**
+ * Creates and renders the add task form in the DOM.
+ * @function createAddTask
+ * @returns {void}
+ */
+function createAddTask() {
+    const container = document.querySelector(".add-task-form-container");
+    console.log(container);  
+    container.innerHTML += getTemplateAddTask();  
+
+}
