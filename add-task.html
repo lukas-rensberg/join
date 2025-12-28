@@ -2,95 +2,178 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Join | Add Task</title>
-    <link rel="shortcut icon" href="./assets/icons/logo-blue.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="./style.css" />
-    <link rel="stylesheet" href="./css/font.css" />
-    <link rel="stylesheet" href="./css/add-task.css" />
-    <link rel="stylesheet" href="./css/header-footer.css" />
-    <link rel="stylesheet" href="./css/task-dialog.css" />
+    <link rel="shortcut icon" href="./assets/icons/logo-blue.svg" type="image/svg+xml"/>
+    <link rel="stylesheet" href="./style.css"/>
+    <link rel="stylesheet" href="./css/font.css"/>
+    <link rel="stylesheet" href="./css/add-task.css"/>
+    <link rel="stylesheet" href="./css/header-footer.css"/>
+    <link rel="stylesheet" href="./css/task-dialog.css"/>
     <link rel="stylesheet" href="./css/aside.css">
-    <link rel="stylesheet" href="./css/shared.css" />
+    <link rel="stylesheet" href="./css/shared.css"/>
 
 </head>
 
 <body class="body-add-task">
-    <header>
-        <img src="./assets/icons/logo-white.svg" alt="Join Logo" />
-        <div class="header-right">
-            <div class="help-container">Kanban Project Management Tool
-                <a href="help.html"><img src="./assets/icons/question_mark_.svg" alt="Question Mark Help"></a>
+<header>
+    <img src="./assets/icons/logo-white.svg" alt="Join Logo"/>
+    <div class="header-right">
+        <div class="help-container">Kanban Project Management Tool
+            <a href="help.html"><img src="./assets/icons/question_mark_.svg" alt="Question Mark Help"></a>
+        </div>
+        <input type="checkbox" id="slideInSideMenu"/>
+        <label for="slideInSideMenu">
+            <div class="avatar" id="toggleSideMenu"></div>
+        </label>
+        <div class="side-menu" id="cardLegalLinks">
+            <nav>
+                <a class="link-none" href="help.html">Help</a>
+                <a href="legal_notice.html">Legal Notice</a>
+                <a href="legal_notice.html">Privacy Policy</a>
+                <a href="index.html">Log Out</a>
+            </nav>
+        </div>
+    </div>
+</header>
+
+<div class="page-container">
+    <main class="add-task-form-container">
+        <aside class="aside-desktop">
+            <div class="aside-navbar">
+                <a href="overview.html">
+                    <img src="./assets/menu_icons/summary.svg" alt="Summary Icon"/>
+                    Summary
+                </a>
+                <a href="add-task.html" class="active-nav-link">
+                    <img src="./assets/menu_icons/add-task.svg" alt="Add Task Icon"/>
+                    Add Task
+                </a>
+                <a href="board.html">
+                    <img src="./assets/menu_icons/board.svg" alt="Board Icon"/>
+                    Board
+                </a>
+                <a href="contacts.html">
+                    <img src="./assets/menu_icons/contacts.svg" alt="Contacts Icon"/>
+                    Contacts
+                </a>
             </div>
-            <input type="checkbox" id="slideInSideMenu" />
-            <label for="slideInSideMenu">
-                <div class="avatar" id="toggleSideMenu"></div>
-            </label>
-            <div class="side-menu" id="cardLegalLinks">
-                <nav>
-                    <a class="link-none" href="help.html">Help</a>
-                    <a href="legal_notice.html">Legal Notice</a>
-                    <a href="legal_notice.html">Privacy Policy</a>
-                    <a href="index.html">Log Out</a>
-                </nav>
+            <div class="aside-links">
+                <a href="legal_notice.html">Legal Notice</a>
+                <a href="legal_notice.html">Privacy Policy</a>
+            </div>
+        </aside>
+        <div class="form-group form-group-title">
+            <input aria-label="Task Title" type="text" class="input-title" placeholder="Enter a title"/>
+        </div>
+
+        <div class="form-group">
+            <label id="desc">Description <span class="optional">(optional)</span></label>
+            <textarea aria-labelledby="desc" class="task-description"
+                      placeholder="Enter a Description"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Due date</label>
+            <div class="input-with-icon">
+                <input aria-label="Enter Due Date" type="text" class="due-date" id="dueDate"
+                       placeholder="dd/mm/yyyy" maxlength="10"/>
+                <span class="icon">
+                            <img src="./assets/icons/calendar.svg" alt="Calendar Symbol, not working"/>
+                        </span>
             </div>
         </div>
-    </header>
 
-    <div class="page-container">
-        <main class="add-task-form-container">
-            <aside class="aside-desktop">
-                <div class="aside-navbar">
-                    <a href="overview.html">
-                        <img src="./assets/menu_icons/summary.svg" alt="Summary Icon" />
-                        Summary
-                    </a>
-                    <a href="add-task.html" class="active-nav-link">
-                        <img src="./assets/menu_icons/add-task.svg" alt="Add Task Icon" />
-                        Add Task
-                    </a>
-                    <a href="board.html">
-                        <img src="./assets/menu_icons/board.svg" alt="Board Icon" />
-                        Board
-                    </a>
-                    <a href="contacts.html">
-                        <img src="./assets/menu_icons/contacts.svg" alt="Contacts Icon" />
-                        Contacts
-                    </a>
+        <div class="form-group">
+            <label>Priority</label>
+            <div class="priority-selection">
+                <button class="priority-btn urgent">
+                    Urgent
+                    <img src="./assets/priority_icons/prio_urgent_colored.svg" alt="Image with two arrows up"/>
+                </button>
+                <button class="priority-btn medium active">
+                    Medium
+                    <img src="./assets/priority_icons/medium.svg" alt="Image with two stripes horizontal"/>
+                </button>
+                <button class="priority-btn low">
+                    Low
+                    <img src="./assets/priority_icons/prio_low_colored.svg" alt="Image with two arrows down"/>
+                </button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Assigned to <span class="optional">(optional)</span></label>
+            <div class="custom-dropdown" id="contactDropdownWrapper">
+                <div class="dropdown-header" onclick="toggleDropdown('contact')">
+                    <input type="text" id="contactSearchInput" class="dropdown-search-input"
+                           placeholder="Select contacts to assign" oninput="filterOptions('contact')"
+                           onclick="event.stopPropagation(); toggleDropdown('contact', true);"/>
+                    <img src="./assets/menu_icons/arrow-drop-down.svg" class="dropdown-arrow"
+                         alt="Little Image indicating an dropdown"/>
                 </div>
-                <div class="aside-links">
-                    <a href="legal_notice.html">Legal Notice</a>
-                    <a href="legal_notice.html">Privacy Policy</a>
+                <div class="dropdown-content" id="contactDropdownContent">
                 </div>
-            </aside>
-        </main>
-    </div>
-    <div class="button-group">
-        <button class="btn-clear">
-        </button>
-        <button class="btn-create">
-        </button>
-    </div>
-    <footer>
-        <a class="nav-item" href="overview.html">
-            <span class="nav-summary">Summary</span>
-        </a>
-        <a class="nav-item" href="add-task.html">
-            <span class="nav-add-task active-footer-icon active-icon-add-task">Add Task</span>
-        </a>
-        <a class="nav-item" href="board.html">
-            <span class="nav-board">Board</span>
-        </a>
-        <a class="nav-item" href="contacts.html">
-            <span class="nav-contacts">Contacts</span>
-        </a>
-    </footer>
-    <script type="module" src="./js/template.js"></script>
-    <script type="module" src="./js/auth.js"></script>
-    <script type="module" src="./js/user-profile.js"></script>
-    <script type="module" src="./js/add-task.js"></script>
-    <script src="./script.js"></script>
+            </div>
+            <div class="dropzone"></div>
+        </div>
+
+        <div class="form-group">
+            <label>Category</label>
+            <div class="custom-dropdown" id="categoryDropdownWrapper">
+                <div class="dropdown-header" onclick="toggleDropdown('category')">
+                    <span id="categoryDisplay" class="dropdown-display-text">Select task category</span>
+                    <img src="./assets/menu_icons/arrow-drop-down.svg" class="dropdown-arrow"
+                         alt="Little Image indicating an dropdown"/>
+                </div>
+                <div class="dropdown-content" id="categoryDropdownContent">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Subtasks <span class="optional">(optional)</span></label>
+            <div class="input-with-icon subtask-input-wrapper">
+                <input type="text" class="subtask-input" placeholder="Add a subtask"
+                       oninput="toggleSubtaskIcons()"/>
+                <div class="subtask-icons">
+                    <img src="./assets/icons/close.svg" alt="Cancel" class="icon-cancel"
+                         onclick="clearSubtaskInput()"/>
+                    <span class="icon-separator"></span>
+                    <img src="./assets/icons/check-blue.svg" alt="Confirm" class="icon-confirm"
+                         onclick="addNewSubtask()"/>
+                </div>
+            </div>
+            <ul class="subtask-list" id="subtaskList"></ul>
+        </div>
+    </main>
+</div>
+<div class="button-group">
+    <button class="btn-clear">
+    </button>
+    <button class="btn-create">
+    </button>
+</div>
+<footer>
+    <a class="nav-item" href="overview.html">
+        <span class="nav-summary">Summary</span>
+    </a>
+    <a class="nav-item" href="add-task.html">
+        <span class="nav-add-task active-footer-icon active-icon-add-task">Add Task</span>
+    </a>
+    <a class="nav-item" href="board.html">
+        <span class="nav-board">Board</span>
+    </a>
+    <a class="nav-item" href="contacts.html">
+        <span class="nav-contacts">Contacts</span>
+    </a>
+</footer>
+<script type="module" src="./js/template.js"></script>
+<script type="module" src="./js/auth.js"></script>
+<script type="module" src="./js/user-profile.js"></script>
+<script type="module" src="./js/add-task.js"></script>
+<script src="./script.js"></script>
 </body>
 
 </html>
