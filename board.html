@@ -122,6 +122,89 @@
             <div class="close-add-task"></div>
             <h1>Add Task</h1>
             <section class="add-task-form">
+                <div class="form-group form-group-title">
+                    <input aria-label="Task Title" type="text" class="input-title" placeholder="Enter a title"/>
+                </div>
+
+                <div class="form-group">
+                    <label id="desc">Description <span class="optional">(optional)</span></label>
+                    <textarea aria-labelledby="desc" class="task-description"
+                              placeholder="Enter a Description"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Due date</label>
+                    <div class="input-with-icon">
+                        <input aria-label="Enter Due Date" type="text" class="due-date" id="dueDate"
+                               placeholder="dd/mm/yyyy" maxlength="10"/>
+                        <span class="icon">
+                            <img src="./assets/icons/calendar.svg" alt="Calendar Symbol, not working"/>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Priority</label>
+                    <div class="priority-selection">
+                        <button class="priority-btn urgent">
+                            Urgent
+                            <img src="./assets/priority_icons/prio_urgent_colored.svg" alt="Image with two arrows up"/>
+                        </button>
+                        <button class="priority-btn medium active">
+                            Medium
+                            <img src="./assets/priority_icons/medium.svg" alt="Image with two stripes horizontal"/>
+                        </button>
+                        <button class="priority-btn low">
+                            Low
+                            <img src="./assets/priority_icons/prio_low_colored.svg" alt="Image with two arrows down"/>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Assigned to <span class="optional">(optional)</span></label>
+                    <div class="custom-dropdown" id="contactDropdownWrapper">
+                        <div class="dropdown-header" onclick="toggleDropdown('contact')">
+                            <input type="text" id="contactSearchInput" class="dropdown-search-input"
+                                   placeholder="Select contacts to assign" oninput="filterOptions('contact')"
+                                   onclick="event.stopPropagation(); toggleDropdown('contact', true);"/>
+                            <img src="./assets/menu_icons/arrow-drop-down.svg" class="dropdown-arrow"
+                                 alt="Little Image indicating an dropdown"/>
+                        </div>
+                        <div class="dropdown-content" id="contactDropdownContent">
+                        </div>
+                    </div>
+                    <div class="dropzone"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Category</label>
+                    <div class="custom-dropdown" id="categoryDropdownWrapper">
+                        <div class="dropdown-header" onclick="toggleDropdown('category')">
+                            <span id="categoryDisplay" class="dropdown-display-text">Select task category</span>
+                            <img src="./assets/menu_icons/arrow-drop-down.svg" class="dropdown-arrow"
+                                 alt="Little Image indicating an dropdown"/>
+                        </div>
+                        <div class="dropdown-content" id="categoryDropdownContent">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Subtasks <span class="optional">(optional)</span></label>
+                    <div class="input-with-icon subtask-input-wrapper">
+                        <input type="text" class="subtask-input" placeholder="Add a subtask"
+                               oninput="toggleSubtaskIcons()"/>
+                        <div class="subtask-icons">
+                            <img src="./assets/icons/close.svg" alt="Cancel" class="icon-cancel"
+                                 onclick="clearSubtaskInput()"/>
+                            <span class="icon-separator"></span>
+                            <img src="./assets/icons/check-blue.svg" alt="Confirm" class="icon-confirm"
+                                 onclick="addNewSubtask()"/>
+                        </div>
+                    </div>
+                    <ul class="subtask-list" id="subtaskList"></ul>
+                </div>
             </section>
             <section class="btn-section-add-task">
                 <button class="btn-create"></button>
