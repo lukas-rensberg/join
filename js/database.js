@@ -251,7 +251,9 @@ export async function migrateDefaultTasks(defaultTasks) {
 export async function createTask(taskData) {
   try {
     const user = auth.currentUser;
-    if (!user) console.error("User must be authenticated to create tasks");
+    if (!user) {
+      throw new Error("User must be authenticated to create tasks");
+    }
 
     const tasksRef = ref(database, 'tasks');
     const newTaskRef = push(tasksRef);
