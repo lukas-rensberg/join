@@ -52,13 +52,15 @@ function updateGreeting() {
           greetingElement.textContent = getTimeBasedGreeting();
           greetingElement.classList.add("greeting-guest");
           if (mediaQuery) {
-            greetingElement.style.fontWeight = "bold";
-            greetingElement.style.fontSize = "4rem";
+            greetingElement.classList.add("greeting-guest-large");
+          } else {
+            greetingElement.classList.remove("greeting-guest-large");
           }
 
         } else {
           greetingElement.textContent = getTimeBasedGreeting() + ",";
           greetingElement.classList.remove("greeting-guest");
+          greetingElement.classList.remove("greeting-guest-large");
         }
       }
 
