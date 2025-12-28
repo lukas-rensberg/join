@@ -3,7 +3,7 @@
  * Handles all subtask-related operations
  */
 
-import {createSubtaskHTML, createEditActionsHTML, createNormalActionsHTML} from "./template.js";
+import { createSubtaskHTML, createEditActionsHTML, createNormalActionsHTML } from "./template.js";
 
 /**
  * Toggles visibility of subtask input icons based on input content
