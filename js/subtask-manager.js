@@ -196,7 +196,6 @@ export function initializeSubtasks() {
     const subtaskList = document.getElementById('subtaskList');
     if (!subtaskList) return;
 
-
     subtaskList.addEventListener('click', (e) => {
         if (e.target.closest('.subtask-delete')) {
             deleteSubtask(e.target);
