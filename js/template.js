@@ -294,7 +294,7 @@ export function getTemplateAddTask() {
                         <input aria-label="Enter Due Date" type="text" class="due-date" id="dueDate"
                             placeholder="dd/mm/yyyy" maxlength="10" />
                         <span class="icon">
-                            <img src="./assets/icons/calendar.svg" alt="Calendar Symbol (not working)" />
+                            <img src="./assets/icons/calendar.svg" alt="Calendar Symbol, not working" />
                         </span>
                     </div>
                 </div>
@@ -363,5 +363,5 @@ export function getTemplateAddTask() {
                     </div>
                     <ul class="subtask-list" id="subtaskList"></ul>
                 </div>`;
-};
+}
 

@@ -45,7 +45,7 @@ export function loadContacts() {
  * Opens the add task aside panel with a swipe-in animation.
  * Removes any swipe-out class and adds the swipe-in class before showing the modal.
  */
-function SwipeInAddTaskAside() {
+function swipeInAddTaskAside() {
     addTaskRef.classList.remove("add-task-swipe-out");
     addTaskRef.classList.add("add-task-swipe-in");
     addTaskRef.showModal();
@@ -55,7 +55,7 @@ function SwipeInAddTaskAside() {
  * Closes the add task aside panel with a swipe-out animation.
  * Removes the swipe-in class and adds the swipe-out class before closing the modal.
  */
-function SwipeOutAddTaskAside() {
+function swipeOutAddTaskAside() {
     addTaskRef.classList.remove("add-task-swipe-in");
     addTaskRef.classList.add("add-task-swipe-out");
     addTaskRef.close();
@@ -78,7 +78,7 @@ function openAddTaskAside() {
     if (mediaQuery) {
         createAddTask();
         openButtons.forEach(button => {
-            button.addEventListener('click', SwipeInAddTaskAside);
+            button.addEventListener('click', swipeInAddTaskAside);
         })
     } else {
         createAddTask()
@@ -91,7 +91,7 @@ function openAddTaskAside() {
 
     const closeButton = document.querySelector('.close-add-task');
     if (closeButton) {
-        closeButton.addEventListener('click', SwipeOutAddTaskAside);
+        closeButton.addEventListener('click', swipeOutAddTaskAside);
 
     }
 }
@@ -788,9 +788,9 @@ window.removeContactFromAllTasks = removeContactFromAllTasks;
 window.updateSubtaskStatus = updateSubtaskStatus;
 window.getRandomContactIds = getRandomContactIds;
 window.formatDate = formatDate;
-window.SwipeInAddTaskAside = SwipeInAddTaskAside;
-window.SwipeOutAddTaskAside = SwipeOutAddTaskAside;
+window.SwipeInAddTaskAside = swipeInAddTaskAside;
+window.SwipeOutAddTaskAside = swipeOutAddTaskAside;
 window.createNewTask = createNewTask;
 window.openAddTaskAside = openAddTaskAside;
-window.addEventListener('resize', openAddTaskAside, updateSubtaskStatus);
-
+window.addEventListener('resize', openAddTaskAside);
+window.addEventListener('resize', updateSubtaskStatus);

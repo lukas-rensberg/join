@@ -7,9 +7,9 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/fi
 function getTimeBasedGreeting() {
   const hour = new Date().getHours();
 
-  if (hour >= 5 && hour <= 12) {
+  if (hour >= 5 && hour < 12) {
     return "Good morning";
-  } else if (hour > 12 && hour <= 18) {
+  } else if (hour => 12 && hour < 18) {
     return "Good afternoon";
   } else {
     return "Good evening";
@@ -36,7 +36,7 @@ function moveGreetingContainer() {
 }
 
 /**
- * Update greeting and user name on the overview page
+ * Update greeting and username on the overview page
  */
 function updateGreeting() {
   const mediaQuery = window.matchMedia("(min-width: 812px)").matches;
@@ -89,7 +89,7 @@ function updateGreeting() {
 }
 
 /**
- * Update avatar initials based on user name
+ * Update avatar initials based on username
  */
 function updateAvatarInitials(user) {
   const avatarElement = document.querySelector(".avatar");
@@ -129,12 +129,12 @@ function addCardListeners() {
 // Initialize greeting when page loads
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", () => {
-    moveGreetingContainer()
+    moveGreetingContainer();
     updateGreeting();
     addCardListeners();
   });
 } else {
-  moveGreetingContainer()
+  moveGreetingContainer();
   updateGreeting();
   addCardListeners();
 }
