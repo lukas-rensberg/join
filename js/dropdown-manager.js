@@ -4,7 +4,7 @@
  */
 
 import { getCategoryOptionHTML, generateContactOptionHTML, getContactChipHTML } from "./template.js";
-import { database } from "./auth.js";
+import { database } from "./database.js";
 import { ref, onValue } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
 let contacts = [];
@@ -70,11 +70,11 @@ function toggleContactSelection(contactId, isSelected) {
     if (isSelected) {
         selectedContacts = selectedContacts.filter(c => c.id !== contactId);
         contactOption.classList.remove('selected');
-        checkbox.classList.remove('checked');
+        checkbox.checked = false;
     } else {
         selectedContacts.push(contact);
         contactOption.classList.add('selected');
-        checkbox.classList.add('checked');
+        checkbox.checked = true;
     }
 }
 

@@ -15,23 +15,25 @@
 
 <body class="body-contacts">
   <header>
-        <img src="./assets/icons/logo-white.svg" alt="Join Logo" />
-        <div class="header-right">
-            <a class="help-container" href="help.html">Kanban Project Management Tool</a>
-            <input type="checkbox" id="slideInSideMenu" />
-            <label for="slideInSideMenu">
-                <div class="avatar"></div>
-            </label>
-            <div class="side-menu">
-                <nav>
-                    <a class="link-none" href="help.html">Help</a>
-                    <a href="legal_notice.html">Legal Notice</a>
-                    <a href="legal_notice.html">Privacy Policy</a>
-                    <a href="index.html">Log Out</a>
-                </nav>
-            </div>
-        </div>
-    </header>
+    <img src="./assets/icons/logo-white.svg" alt="Join Logo" />
+    <div class="header-right">
+      <div class="help-container">Kanban Project Management Tool
+        <a href="help.html"><img src="./assets/icons/question_mark_.svg" alt="Question Mark Help"></a>
+      </div>
+      <input type="checkbox" id="slideInSideMenu" />
+      <label for="slideInSideMenu">
+        <div class="avatar" id="toggleSideMenu"></div>
+      </label>
+      <div class="side-menu" id="cardLegalLinks">
+        <nav>
+          <a class="link-none" href="help.html">Help</a>
+          <a href="legal_notice.html">Legal Notice</a>
+          <a href="legal_notice.html">Privacy Policy</a>
+          <a href="index.html">Log Out</a>
+        </nav>
+      </div>
+    </div>
+  </header>
   <main class="contacts-main">
     <aside class="aside-desktop">
       <div class="aside-navbar">
@@ -47,7 +49,7 @@
           <img src="./assets/menu_icons/board.svg" alt="Board Icon" />
           Board
         </a>
-        <a href="contacts.html">
+        <a href="contacts.html" class="active-nav-link">
           <img src="./assets/menu_icons/contacts.svg" alt="Contacts Icon" />
           Contacts
         </a>
@@ -57,9 +59,15 @@
         <a href="legal_notice.html">Privacy Policy</a>
       </div>
     </aside>
-    <div class="contacts-container">
-      <!-- Contacts will be dynamically rendered here -->
-    </div>
+
+    <section>
+
+      <div class="contacts-container">
+
+        <!-- Contacts will be dynamically rendered here -->
+      </div>
+    </section>
+
   </main>
 
   <!-- Contact Detail View -->
@@ -92,7 +100,7 @@
   </div>
 
   <!-- Floating Action Button -->
-  <button class="fab" id="fabButton">
+  <button class="fab-mobile" id="fabButton">
     <img src="./assets/icons/person_add.svg" alt="Add Contact" id="fabIcon" />
   </button>
 
@@ -143,23 +151,24 @@
   </div>
 
   <footer>
-        <a class="nav-item" href="overview.html">
-            <span class="nav-summary">Summary</span>
-        </a>
-        <a class="nav-item" href="add-task.html">
-            <span class="nav-add-task">Add Task</span>
-        </a>
-        <a class="nav-item" href="board.html">
-            <span class="nav-board">Board</span>
-        </a>
-        <a class="nav-item" href="contacts.html">
-            <span class="nav-contacts">Contacts</span>
-        </a>
-    </footer>
+    <a class="nav-item" href="overview.html">
+      <span class="nav-summary">Summary</span>
+    </a>
+    <a class="nav-item" href="add-task.html">
+      <span class="nav-add-task">Add Task</span>
+    </a>
+    <a class="nav-item" href="board.html">
+      <span class="nav-board">Board</span>
+    </a>
+    <a class="nav-item" href="contacts.html">
+      <span class="nav-contacts active-footer-icon active-icon-contacts">Contacts</span>
+    </a>
+  </footer>
   <script type="module" src="./js/template.js"></script>
   <script type="module" src="./js/auth.js"></script>
   <script type="module" src="./js/user-profile.js"></script>
   <script type="module" src="./js/contacts.js"></script>
+  <script src="./script.js"></script>
 </body>
 
 </html>

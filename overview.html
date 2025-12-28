@@ -17,12 +17,14 @@
     <header>
         <img src="./assets/icons/logo-white.svg" alt="Join Logo" />
         <div class="header-right">
-            <a class="help-container" href="help.html">Kanban Project Management Tool</a>
+            <div class="help-container">Kanban Project Management Tool
+                <a href="help.html"><img src="./assets/icons/question_mark_.svg" alt="Question Mark Help"></a>
+            </div>
             <input type="checkbox" id="slideInSideMenu" />
             <label for="slideInSideMenu">
-                <div class="avatar"></div>
+                <div class="avatar" id="toggleSideMenu"></div>
             </label>
-            <div class="side-menu">
+            <div class="side-menu" id="cardLegalLinks">
                 <nav>
                     <a class="link-none" href="help.html">Help</a>
                     <a href="legal_notice.html">Legal Notice</a>
@@ -35,11 +37,11 @@
     <main>
         <aside class="aside-desktop">
             <div class="aside-navbar">
-                <a href="overview.html">
+                <a href="overview.html" class="active-nav-link">
                     <img src="./assets/menu_icons/summary.svg" alt="Summary Icon" />
                     Summary
                 </a>
-                <a href="kanban.html">
+                <a href="add-task.html">
                     <img src="./assets/menu_icons/add-task.svg" alt="Add Task Icon" />
                     Add Task
                 </a>
@@ -57,15 +59,11 @@
                 <a href="legal_notice.html">Privacy Policy</a>
             </div>
         </aside>
-        <!-- <section class="greeting-container">
+        <div class="greeting-container">
             <p></p>
             <h1 class="h1-colorized"></h1>
-        </section> -->
+        </div>
         <section class="dashboard-container">
-            <section class="greeting-container">
-                <p></p>
-                <h1 class="h1-colorized"></h1>
-            </section>
             <div class="card-urgent-deadline">
                 <div class="urgent-section">
                     <div class="icon-and-count">
@@ -137,7 +135,7 @@
     </main>
     <footer>
         <a class="nav-item" href="overview.html">
-            <span class="nav-summary">Summary</span>
+            <span class="nav-summary active-footer-icon active-icon-summary">Summary</span>
         </a>
         <a class="nav-item" href="add-task.html">
             <span class="nav-add-task">Add Task</span>
@@ -151,6 +149,7 @@
     </footer>
     <script type="module" src="./js/auth.js"></script>
     <script type="module" src="./js/overview.js"></script>
+    <script src="./script.js"></script>
 </body>
 
 </html>

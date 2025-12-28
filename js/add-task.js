@@ -4,7 +4,11 @@ import {
     handleSubtaskEnter,
     addNewSubtask,
     handleEditEnter,
-    initializeSubtasks
+    initializeSubtasks,
+    deleteSubtask,
+    startEditingSubtask,
+    saveEdit,
+    cancelEdit
 } from "./subtask-manager.js";
 
 import {
@@ -44,6 +48,8 @@ import {
     clearSubtasksSection
 } from "./form-utils.js";
 
+import { getTemplateAddTask } from "./template.js";
+
 
 /**
  * Export functions to window for HTML onclick handlers
@@ -54,6 +60,10 @@ window.clearSubtaskInput = clearSubtaskInput;
 window.handleSubtaskEnter = handleSubtaskEnter;
 window.addNewSubtask = addNewSubtask;
 window.handleEditEnter = handleEditEnter;
+window.deleteSubtask = deleteSubtask;
+window.startEditingSubtask = startEditingSubtask;
+window.saveEdit = saveEdit;
+window.cancelEdit = cancelEdit;
 window.selectPriority = selectPriority;
 window.initializePriorityButtons = initializePriorityButtons;
 window.toggleDropdown = toggleDropdown;
@@ -71,6 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeDropdowns();
     initializeSubtasks();
     initializeFormButtons();
+    createAddTask();
 });
 
 
@@ -108,7 +119,7 @@ function attachButtonListeners() {
  * @returns {void}
  */
 function attachInputListeners() {
-    const titleInput = document.querySelector('.task-title');
+    const titleInput = document.querySelector('.input-title');
     if (titleInput) {
         titleInput.addEventListener('input', () => clearFieldError('title'));
     }
@@ -125,7 +136,7 @@ function attachInputListeners() {
  */
 function attachCategoryListener() {
     const originalSelectCategory = window.selectCategory;
-    window.selectCategory = function(categoryId) {
+    window.selectCategory = function (categoryId) {
         clearFieldError('category');
         originalSelectCategory(categoryId);
     };
@@ -189,7 +200,6 @@ async function createAndRedirect() {
  * @returns {void}
  */
 function handleCreateTaskError(error) {
-    console.error('Error creating task:', error);
     showErrorBanner('Error creating task. Please try again.');
 }
 
@@ -217,3 +227,12 @@ function handleClearForm() {
     clearSubtasksSection();
 }
 
+/**
+ * Creates and renders the add task form in the DOM.
+ * @returns {void}
+ */
+function createAddTask() {
+    const container = document.querySelector(".add-task-form-container");
+    container.innerHTML += getTemplateAddTask();
+
+}

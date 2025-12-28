@@ -11,6 +11,9 @@ import { createSubtaskHTML, createEditActionsHTML, createNormalActionsHTML } fro
 export function toggleSubtaskIcons() {
     const input = document.querySelector(".subtask-input");
     const icons = document.querySelector(".subtask-icons");
+
+    if (!input || !icons) return;
+
     if (input.value.trim().length > 0) {
         icons.classList.add("visible");
     } else {
@@ -24,6 +27,9 @@ export function toggleSubtaskIcons() {
 export function clearSubtaskInput() {
     const input = document.querySelector(".subtask-input");
     const icons = document.querySelector(".subtask-icons");
+
+    if (!input || !icons) return;
+
     input.value = "";
     icons.classList.remove("visible");
     input.focus();
@@ -45,10 +51,13 @@ export function handleSubtaskEnter(event) {
  */
 export function addNewSubtask() {
     const input = document.querySelector(".subtask-input");
+    const list = document.getElementById("subtaskList");
+
+    if (!input || !list) return;
+
     const text = input.value.trim();
     if (!text) return;
 
-    const list = document.getElementById("subtaskList");
     const listItem = document.createElement("li");
     listItem.className = "subtask-item";
     const escapedText = escapeHtml(text);
@@ -75,6 +84,7 @@ function escapeHtml(text) {
  */
 export function deleteSubtask(button) {
     const listItem = button.closest(".subtask-item");
+    if (!listItem) return;
     listItem.remove();
 }
 
@@ -132,7 +142,11 @@ export function handleEditEnter(event, input) {
  */
 export function cancelEdit(button) {
     const listItem = button.closest(".subtask-item");
+    if (!listItem) return;
+
     const input = listItem.querySelector(".subtask-edit-input");
+    if (!input) return;
+
     const originalText = input.getAttribute("data-original");
     exitEditMode(listItem, input, originalText);
 }
@@ -143,7 +157,11 @@ export function cancelEdit(button) {
  */
 export function saveEdit(button) {
     const listItem = button.closest(".subtask-item");
+    if (!listItem) return;
+
     const input = listItem.querySelector(".subtask-edit-input");
+    if (!input) return;
+
     const newText = input.value.trim();
 
     if (newText) {
@@ -175,11 +193,22 @@ function exitEditMode(listItem, input, text) {
  * Initialize subtask event listeners
  */
 export function initializeSubtasks() {
-    document.getElementById('subtaskList')?.addEventListener('click', (e) => {
-        if (e.target.closest('.subtask-delete')) deleteSubtask(e.target);
-        if (e.target.closest('.subtask-edit')) startEditingSubtask(e.target);
-        if (e.target.closest('.save-edit')) saveEdit(e.target);
-        if (e.target.closest('.cancel-edit')) cancelEdit(e.target);
+    const subtaskList = document.getElementById('subtaskList');
+    if (!subtaskList) return;
+
+    subtaskList.addEventListener('click', (e) => {
+        if (e.target.closest('.subtask-delete')) {
+            deleteSubtask(e.target);
+        }
+        if (e.target.closest('.subtask-edit')) {
+            startEditingSubtask(e.target);
+        }
+        if (e.target.closest('.save-edit')) {
+            saveEdit(e.target);
+        }
+        if (e.target.closest('.cancel-edit')) {
+            cancelEdit(e.target);
+        }
     });
 }
 
@@ -203,6 +232,6 @@ export function getSubtasks() {
             });
         }
     });
-
     return subtasks;
 }
+

@@ -35,7 +35,7 @@
     }
 
     &:active {
-        transition: background-color 1ms ease backwards;
+        transition: background-color 1ms ease;
         background-color: var(--color-active-button);
         box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
     }
@@ -255,46 +255,6 @@ input[type="name"] {
     }
 }
 
-.card-swap-menu {
-    z-index: 5;
-    position: absolute;
-    opacity: 0;
-    top: 1rem;
-    left: calc(14rem - 1rem - 1.75rem);
-    width: 7rem;
-    transform: translateX(50%);
-    height: 7rem;
-    background-color: var(--main-color);
-    border-radius: 0 var(--border-rad-20) var(--border-rad-20) var(--border-rad-20);
-}
-
-.slide-in-swap-menu {
-    animation: slideInSwapMenu 0.3s ease-in-out forwards;
-}
-
-.slide-out-swap-menu {
-    animation: slideOutSwapMenu 0.3s ease-in-out forwards;
-}
-
-@keyframes slideInSwapMenu {
-    100% {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-@keyframes slideOutSwapMenu {
-    0% {
-        opacity: 1;
-        transform: translateX(0);
-    }
-
-    100% {
-        opacity: 0;
-        transform: translateX(50%);
-    }
-}
-
 h5 {
     color: var(--color-primary-button-click);
     margin-bottom: 0.5rem;
@@ -371,10 +331,19 @@ h5 {
     color: white;
 }
 
+.card-task-wrapper {
+    flex: 1;
+}
+
 .card-task-title {
+    display: -webkit-box;
     font-weight: 700;
     color: var(--main-color);
     margin-bottom: 0.25rem;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .card-task-text {

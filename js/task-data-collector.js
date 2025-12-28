@@ -29,7 +29,7 @@ export function collectTaskData() {
  * @returns {string} Task title
  */
 export function getTaskTitle() {
-    return document.querySelector('.task-title')?.value?.trim() || '';
+    return document.querySelector('.input-title')?.value?.trim() || '';
 }
 
 /**

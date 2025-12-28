@@ -18,7 +18,7 @@ let isEditMode = false;
  * Generates a unique ID for contacts
  * @returns {string} Unique contact ID
  */
-function generateContactId() {
+export function generateContactId() {
   return (
     "contact_" + Date.now() + "_" + Math.random().toString(36).substring(2, 9)
   );
@@ -29,7 +29,7 @@ function generateContactId() {
  * @param {string} name - The name to generate initials from
  * @returns {string} The initials (up to 2 characters)
  */
-function getInitialsFromName(name) {
+export function getInitialsFromName(name) {
   const nameParts = name.trim().split(" ");
   const initials = nameParts
     .map((part) => part.charAt(0).toUpperCase())
@@ -41,7 +41,7 @@ function getInitialsFromName(name) {
 /**
  * Load contacts from RTDB and call the render function
  */
-async function loadContactsFromRTDB() {
+export async function loadContactsFromRTDB() {
   const contactsRef = ref(database, 'contacts');
 
   onValue(contactsRef, (snapshot) => {
@@ -337,7 +337,7 @@ function generateModalAvatar(contact) {
 /**
  * Deletes a contact according to the currentContactId
  */
-async function deleteContact() {
+export async function deleteContact() {
   try {
     await remove(ref(database, `contacts/${currentContactId}`));
     
@@ -349,7 +349,6 @@ async function deleteContact() {
     hideContactDetail();
     closeFabMenu();
   } catch (error) {
-    console.error("Failed to delete contact:", error);
     showInlineError("Failed to delete contact. Please try again.");
   }
 }

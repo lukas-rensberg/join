@@ -70,19 +70,54 @@
     }
 }
 
+.active-nav-link {
+    background-color: var(--color-menu-active);
+}
 
+
+
+.add-task-swipe-in {
+    animation: addTaskSwipeIn 300ms ease-in-out forwards;
+}
+
+@keyframes addTaskSwipeIn {
+    100% {
+        opacity: 1;
+        transform: translateX(-100%) translateY(-50%);
+
+    }
+}
+
+.add-task-swipe-out {
+    animation: addTaskSwipeOut 300ms ease-in-out forwards;
+}
+
+@keyframes addTaskSwipeOut {
+    100% {
+        opacity: 0;
+        transform: translateX(0) translateY(-50%);
+    }
+}
 
 .aside-add-task {
     border-radius: var(--main-radius) 0 var(--main-radius) var(--main-radius);
     background-color: #ffffff;
     position: fixed;
     z-index: 1000;
-    right: 0;
+    left: 100%;
     top: 50%;
-    transform: translateY(-50%);
+    opacity: 1;
+    transform: translateX(0%) translateY(-50%);
     height: min(1024px, 100vh);
     width: 512px;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.16);
+    border: none;
+    outline: none;
+
+    &::backdrop {
+        background-color: rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(1px);
+    }
 
     h1 {
         padding: 3rem 0 0 2.5rem;
@@ -118,7 +153,8 @@
         overflow-y: auto;
         margin-bottom: 1rem;
 
-        #input-title {
+        .input-title {
+            width: 100%;
             height: auto;
             border: none;
             border-bottom: 0.0625rem solid var(--color-light-gray);
@@ -126,7 +162,7 @@
             padding: 0.5rem 1rem 0.5rem 1rem;
             font-size: 1.5rem;
             font-weight: 500;
-            color: var(--color-text, #333);
+            color: #333;
             outline: none;
 
             &:focus {
@@ -134,7 +170,7 @@
             }
         }
 
-        #input-title::placeholder {
+        .input-title::placeholder {
             color: #d6d6d6;
             font-weight: 400;
             font-size: 1.5rem;
@@ -168,213 +204,59 @@
             }
         }
 
-        #input-due-date {
-            cursor: text;
-            height: auto;
-            background: transparent;
-            border: none;
-            border-bottom: 0.0625rem solid var(--color-light-gray);
-            padding: 0.5rem 1rem 0.5rem 1rem;
-            outline: none;
-            background-image: url('../assets/icons/calendar.svg');
-            background-repeat: no-repeat;
-            background-position: right 1rem center;
-
-            &::-webkit-calendar-picker-indicator,
-            &::-webkit-inner-spin-button {
-                opacity: 0;
-                cursor: pointer;
-            }
-
-            &::-webkit-input-placeholder {
-                color: var(--color-light-gray);
-            }
-
-            &:focus {
-                border-bottom-color: var(--main-color);
-            }
-
-        }
-
-        span {
-            color: red;
-            font-size: 0.875rem;
-            margin-top: 0.25rem;
-        }
-
-        .prio-btn-container {
-            margin-top: 0.5rem;
+        .input-with-icon {
+            position: relative;
             display: flex;
-            gap: 1rem;
-        }
-
-        .urgent,
-        .medium,
-        .low {
-            transition: all 200ms ease;
-            display: inline-flex;
             align-items: center;
-            justify-content: center;
-            gap: 1rem;
-            padding: 0.5rem 0.75rem;
-            width: 8.5rem;
-            height: 3rem;
-            border-radius: 0.625rem;
-            background-color: #ffffff;
-            border: none;
-            box-shadow: 0 0 4px rgba(0, 0, 0, 0.16);
-            cursor: pointer;
-            border-bottom: 2px solid transparent;
-        }
-
-        .urgent {
-            &:hover {
-                border-bottom: 2px solid var(--color-priority-urgent);
-            }
-
-            &:active {
-                color: #ffffff;
-                background-color: var(--color-priority-urgent);
-
-                &::after {
-                    background: url(../assets/priority_icons/urgent.svg) center center no-repeat;
-                    transform: scale(1);
-                }
-            }
-
-            &::before {
-                content: 'Urgent';
-            }
-
-            &::after {
-                background: url(../assets/priority_icons/prio_urgent_colored.svg) center center no-repeat;
-                transform: scale(1.1);
-            }
-        }
-
-
-
-        .medium {
-            &:hover {
-                border-bottom: 2px solid var(--color-priority-medium);
-            }
-
-            &:active {
-                color: #ffffff;
-                background-color: var(--color-priority-medium);
-
-                &::after {
-                    background: url(../assets/priority_icons/medium.svg) center center no-repeat;
-                    transform: scale(1);
-                }
-            }
-
-            &::before {
-                content: 'Medium';
-            }
-
-            &::after {
-                background: url(../assets/priority_icons/prio_medium_colored.svg) center center no-repeat;
-                transform: scale(1.1);
-            }
-        }
-
-        .low {
-            &:hover {
-                border-bottom: 2px solid var(--color-priority-low);
-            }
-
-            &:active {
-                color: #ffffff;
-                background-color: var(--color-priority-low);
-
-                &::after {
-                    background: url(../assets/priority_icons/low.svg) center center no-repeat;
-                    transform: scale(1);
-                }
-            }
-
-            &::before {
-                content: 'Low';
-            }
-
-            &::after {
-                background: url(../assets/priority_icons/prio_low_colored.svg) center center no-repeat;
-                transform: scale(1.1);
-            }
-        }
-
-        .urgent::after,
-        .medium::after,
-        .low::after {
-            content: '';
-            width: 1.25rem;
-            height: 1.25rem;
-        }
-
-        .assigned-member,
-        .select-category {
-            background-color: #ffffff;
             width: 100%;
-            border: none;
+            padding: 12px;
             border-bottom: 0.0625rem solid var(--color-light-gray);
-            padding: 0.5rem 1rem 0.5rem 1rem;
-            color: var(--color-text, #111827);
-            outline: none;
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            background-image: url(../assets/menu_icons/arrow-drop-down.svg);
-            background-repeat: no-repeat;
-            background-position: right 1rem center;
-            background-size: 0.5rem;
-            cursor: pointer;
-
-
-            .pls-select {
-                color: var(--color-light-gray);
-            }
-
-            .assigned-member:focus {
-                border-bottom-color: var(--main-color);
-            }
-
-            .assigned-member::-ms-expand {
-                display: none;
-            }
-
-            .assigned-member::-moz-appearance {
-                appearance: none;
-            }
         }
 
-        /* Wrapper for subtask input with icon overlay */
+        .category-option-indicator {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .category-option-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--color-menu-text);
+            flex-grow: 1;
+        }
+
+        /* Subtask Input Wrapper */
         .subtask-input-wrapper {
             position: relative;
             display: flex;
             align-items: center;
+            padding: 0;
+            border-bottom: none;
         }
 
-        #input-subtask {
+        .subtask-input-wrapper input {
             width: 100%;
             height: auto;
             border: none;
             border-bottom: 0.0625rem solid var(--color-light-gray);
             border-radius: 0;
             padding: 0.5rem 3.5rem 0.5rem 1rem;
-            color: var(--color-text, #333);
+            color: #333;
             outline: none;
-
-            &:focus {
-                border-bottom: 0.0625rem solid var(--main-color);
-            }
-
-            &::placeholder {
-                color: var(--color-light-gray);
-            }
         }
 
-        .subtask-icons {
+        .subtask-input-wrapper input:focus {
+            border-bottom: 0.0625rem solid var(--main-color);
+        }
+
+        .subtask-input-wrapper input::placeholder {
+            color: var(--color-light-gray);
+        }
+
+        .subtask-input-wrapper .subtask-icons {
             position: absolute;
             right: 0;
             top: 50%;
@@ -383,93 +265,214 @@
             gap: 0.75rem;
             align-items: center;
             padding-right: 0.75rem;
+            pointer-events: none;
         }
 
-        #input-subtask:focus~.subtask-icons {
+        .subtask-input-wrapper .subtask-icons.visible {
             display: flex;
+            opacity: 1;
+            pointer-events: auto;
         }
 
-        .subtask-icon {
-            width: 1.2rem;
-            height: 1.2rem;
+        .subtask-input-wrapper .subtask-icons img {
+            width: 1rem;
+            height: 1rem;
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
             cursor: pointer;
             opacity: 0.7;
             transition: opacity 150ms ease;
-
-            &:hover {
-                opacity: 1;
-            }
+            pointer-events: auto;
         }
 
-        .subtask-icon-close::after {
-            content: '';
-            position: absolute;
-            right: -0.45rem;
-            top: 50%;
-            transform: translateY(-50%);
+        .subtask-input-wrapper .subtask-icons img:hover {
+            opacity: 1;
+        }
+
+        .subtask-input-wrapper .icon-separator {
             width: 0.0625rem;
             height: 1.5rem;
             background-color: var(--color-light-gray);
         }
 
-        .subtask-icon-close {
+        .subtask-list {
+            padding: 0 0 0 15px;
+            margin: 10px 0 0 1rem;
+            color: black;
+        }
+
+        .subtask-list li::marker {
+            font-size: 0.6rem;
+        }
+
+        .subtask-item {
+            padding: 2px 0 4px 0;
+            transition: background-color 0.2s;
             position: relative;
+            line-height: 1.4;
+            margin-bottom: 4px;
+            display: list-item;
+            list-style-position: outside;
+
+            &:hover {
+                cursor: pointer;
+                background-color: var(--color-menu-hover);
+            }
+
+            img {
+                width: 20px;
+                height: 20px;
+
+                &:hover {
+                    cursor: pointer;
+                }
+            }
+
+            .subtask-item .subtask-list li::marker:hover {
+                background-color: var(--color-menu-hover);
+            }
+
+            .subtask-text {
+                display: inline-block;
+                font-size: 0.9rem;
+                width: calc(100% - 60px);
+                line-height: 1.4;
+                vertical-align: baseline;
+                position: relative;
+                top: 2px;
+            }
+
+            .subtask-item-editing {
+                border-bottom: 1px solid red;
+                display: flex;
+                align-items: center;
+                padding: 0 !important;
+                list-style: none;
+                margin-left: calc(-15px - 1rem);
+            }
+
+            .subtask-item-editing .subtask-actions {
+                position: static;
+                transform: none;
+                padding-right: 12px;
+            }
+
+            .subtask-item-editing .subtask-actions img {
+                width: 20px;
+                height: 20px;
+
+                &:hover {
+                    cursor: pointer;
+                }
+            }
+
+            .subtask-edit-input {
+                flex-grow: 1;
+                border: none;
+                border-radius: 0;
+                font-size: 0.9rem;
+                outline: none;
+                background-color: transparent;
+                font-family: inherit;
+            }
+
+            .subtask-actions {
+                position: absolute;
+                right: 5px;
+                top: 50%;
+                transform: translateY(-50%);
+                display: inline-flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 2px;
+                flex-shrink: 0;
+            }
+
+            .subtask-item .edit-subtask,
+            .subtask-item .delete-subtask {
+                width: 16px;
+                height: 16px;
+                cursor: pointer;
+                transition: opacity 0.2s;
+                flex-shrink: 0;
+                display: block;
+            }
+
+            .subtask-item .edit-subtask:hover,
+            .subtask-item .delete-subtask:hover {
+                opacity: 1;
+            }
+
+            .subtask-separator {
+                width: 1px;
+                height: 16px;
+                background-color: var(--color-light-gray);
+                margin: 0 2px;
+            }
+
+            .subtask-icons img.icon-confirm {
+                width: 1.2rem;
+            }
         }
 
-        .subtask-icon-close {
-            background-image: url(../assets/icons/close_blue.svg);
+        /* Error and Success Message Styles */
+    }
+
+    .btn-section-add-task {
+
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        height: auto;
+        padding: 2rem 2.5rem;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        background-color: transparent;
+    }
+
+    .btn-create {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.625rem;
+        padding: 0.875rem 1.5rem;
+        background-color: var(--main-color);
+        color: #ffffff;
+        border: none;
+        border-radius: 0.625rem;
+        font-size: 1.25rem;
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: all 200ms ease;
+
+        &:hover {
+            background-color: var(--color-primary-button-hover);
         }
 
-        .subtask-icon-check {
-            background-image: url(../assets/icons/check_blue.svg);
+        &:active {
+            transition: all 1ms ease;
+            background-color: var(--color-primary-button-click);
+            color: var(--main-color);
+
+            &::after {
+                background: url('../assets/icons/check_blue.svg') center center no-repeat;
+            }
         }
-    }
-}
 
-.btn-section-add-task {
+        &::before {
+            content: 'Create Task';
+        }
 
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 100%;
-    height: auto;
-    padding: 2rem 2.5rem;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    background-color: transparent;
-}
-
-.btn-create-task {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.625rem;
-    padding: 0.875rem 1.5rem;
-    background-color: var(--main-color);
-    color: #ffffff;
-    border: none;
-    border-radius: 0.625rem;
-    font-size: 1.25rem;
-    cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: all 300ms ease;
-
-    img {
-        width: 1.25rem;
-        height: 1.25rem;
-    }
-
-    &:hover {
-        background-color: var(--color-primary-button-hover);
-        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.20);
-    }
-
-    &:active {
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        &::after {
+            content: '';
+            background: url('../assets/menu_icons/check.svg') center center no-repeat;
+            width: 20px;
+            height: 20px;
+            transform: scale(1);
+        }
     }
 }
 

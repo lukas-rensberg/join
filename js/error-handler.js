@@ -33,10 +33,14 @@ export function showErrorMessage(message) {
 }
 
 /**
+ * Alias for showErrorMessage (for inline errors)
+ */
+export const showInlineError = showErrorMessage;
+
+/**
  * Handle authentication errors (login page, signup page, protected pages)
  */
 export function handleAuthError(error, context = "auth") {
-  console.error(`${context} error:`, error);
 
   let errorMessage;
 
@@ -89,7 +93,7 @@ export function showFieldError(fieldName, message) {
 
   if (fieldName === 'title') {
     formGroup = document.querySelector('.form-group-title');
-    inputElement = formGroup?.querySelector('.task-title');
+    inputElement = formGroup?.querySelector('.input-title');
   } else if (fieldName === 'dueDate') {
     const dueDateInput = document.getElementById('dueDate');
     formGroup = dueDateInput?.closest('.form-group');
@@ -146,7 +150,7 @@ export function clearFieldError(fieldName) {
 
   if (fieldName === 'title') {
     formGroup = document.querySelector('.form-group-title');
-    inputElement = formGroup?.querySelector('.task-title');
+    inputElement = formGroup?.querySelector('.input-title');
   } else if (fieldName === 'dueDate') {
     const dueDateInput = document.getElementById('dueDate');
     formGroup = dueDateInput?.closest('.form-group');
@@ -197,7 +201,7 @@ export function clearAllFieldErrors() {
     group.classList.remove('has-error');
   });
 
-  document.querySelectorAll('.task-title, #dueDate').forEach(input => {
+  document.querySelectorAll('.input-title, #dueDate').forEach(input => {
     input.style.borderColor = '';
   });
 

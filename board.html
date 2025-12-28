@@ -8,6 +8,7 @@
     <link rel="shortcut icon" href="./assets/icons/logo-blue.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./style.css" />
     <link rel="stylesheet" href="./css/font.css" />
+    <link rel="stylesheet" href="./css/shared.css" />
     <link rel="stylesheet" href="./css/board.css" />
     <link rel="stylesheet" href="./css/header-footer.css" />
     <link rel="stylesheet" href="./css/task-dialog.css" />
@@ -18,12 +19,14 @@
     <header>
         <img src="./assets/icons/logo-white.svg" alt="Join Logo" />
         <div class="header-right">
-            <a class="help-container" href="help.html">Kanban Project Management Tool</a>
+            <div class="help-container">Kanban Project Management Tool
+                <a href="help.html"><img src="./assets/icons/question_mark_.svg" alt="Question Mark Help"></a>
+            </div>
             <input type="checkbox" id="slideInSideMenu" />
             <label for="slideInSideMenu">
-                <div class="avatar"></div>
+                <div class="avatar" id="toggleSideMenu"></div>
             </label>
-            <div class="side-menu">
+            <div class="side-menu" id="cardLegalLinks">
                 <nav>
                     <a class="link-none" href="help.html">Help</a>
                     <a href="legal_notice.html">Legal Notice</a>
@@ -44,7 +47,7 @@
                     <img src="./assets/menu_icons/add-task.svg" alt="Add Task Icon" />
                     Add Task
                 </a>
-                <a href="board.html">
+                <a href="board.html" class="active-nav-link">
                     <img src="./assets/menu_icons/board.svg" alt="Board Icon" />
                     Board
                 </a>
@@ -113,58 +116,20 @@
                     ondragleave="bgContainerRemove('done')" ondragover="handleDragOver(event, 'done')"></div>
             </div>
         </section>
-        <!-- <aside class="aside-add-task">
+
+        <dialog class="aside-add-task" id="aside-add-task" closedby="closedRequest" >
+
             <div class="close-add-task"></div>
             <h1>Add Task</h1>
             <section class="task-description">
-                <input id="input-title" type="text" placeholder="Enter a title">
-                <p><strong>Description</strong> (optional)</p>
-                <textarea name="description" id="description" placeholder="Enter a description"></textarea>
-                <p><strong>Due date</strong></p>
-                <input type="date" name="due-date" id="input-due-date" placeholder="dd.mm.yyyy">
-                <span>This field is required!</span>
-                <p><strong>Priority</strong></p>
-                <div class="prio-btn-container">
-                    <button class="urgent"></button>
-                    <button class="medium"></button>
-                    <button class="low"></button>
-                </div>
-                <p><strong>Assigned to</strong> (optional)</p>
-                <select class="assigned-member" name="assigned-member" id="assigned-member">
-                    <button>
-                        <selectedcontent></selectedcontent>
-                    </button>
-                    <option class="pls-select" selected disabled>Select contacts to assign</option>
-                    <option value="Marcel Bauer">Marcel Bauer</option>
-                    <option value="Anton Mayer">Anton Mayer</option>
-                    <option value="Emmanuel Mauer">Emmanuel Mauer</option>
-                    <option value="Eva Fischer">Eva Fischer</option>
-                    <option value="Benedikt Ziegler">Benedikt Ziegler</option>
-                </select>
-                <p><strong>Category</strong></p>
-                <select class="select-category" name="select-category" id="select-category">
-                    <button>
-                        <selectedcontent></selectedcontent>
-                    </button>
-                    <option class="pls-select" selected disabled>Select task category</option>
-                    <option value="Technical Task">Technical Task</option>
-                    <option value="User Story">Anton Mayer</option>
-                </select>
-                <p><strong>Subtask</strong> (optional)</p>
-                <div class="subtask-input-wrapper">
-                    <input id="input-subtask" type="text" placeholder="Add new subtask">
-                    <div class="subtask-icons">
-                        <div class="subtask-icon subtask-icon-close"></div>
-                        <div class="subtask-icon subtask-icon-check"></div>
-                    </div>
-                </div>
+                <!-- Insert Add Task Template here -->
             </section>
             <section class="btn-section-add-task">
-                <button class="btn-create-task">Create Task <img src="./assets/icons/check.svg" alt="Check Icon"></button>
+                <button class="btn-create"></button>
             </section>
-        </aside> -->
+        </dialog>
 
-        <dialog></dialog>
+        <dialog class="dialog-task" id="dialog-task"></dialog>
     </main>
     <footer>
         <a class="nav-item" href="overview.html">
@@ -174,7 +139,7 @@
             <span class="nav-add-task">Add Task</span>
         </a>
         <a class="nav-item" href="board.html">
-            <span class="nav-board">Board</span>
+            <span class="nav-board active-footer-icon active-icon-board">Board</span>
         </a>
         <a class="nav-item" href="contacts.html">
             <span class="nav-contacts">Contacts</span>
@@ -185,6 +150,8 @@
     <script type="module" src="./js/auth.js"></script>
     <script type="module" src="./js/user-profile.js"></script>
     <script type="module" src="./js/board.js"></script>
+    <script type="module" src="./js/add-task.js"></script>
+    <script src="./script.js"></script>
 </body>
 
 </html>

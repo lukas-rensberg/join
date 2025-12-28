@@ -17,9 +17,29 @@ function getTimeBasedGreeting() {
 }
 
 /**
- * Update greeting and user name on the overview page
+ * Handles responsive repositioning of the greeting container
+ * 
+ * Manages the DOM placement of the greeting container element based on the current viewport width.
+ * When the viewport is 812px or larger, inserts the greeting container as the first child of the dashboard.
+ * Otherwise, maintains the greeting container's current position in the DOM.
+ * This function is called on page load and during window resize events to ensure proper positioning.
+ */
+function moveGreetingContainer() {
+  const mediaQuery = window.matchMedia("(min-width: 812px)").matches;
+  const greetingContainer = document.querySelector(".greeting-container");
+  const dashboardContainer = document.querySelector(".dashboard-container");
+  if (!greetingContainer || !dashboardContainer) return;
+
+  if (mediaQuery && greetingContainer.parentNode !== dashboardContainer || dashboardContainer.firstChild !== greetingContainer) {
+      dashboardContainer.insertBefore(greetingContainer, dashboardContainer.firstChild);
+  }
+}
+
+/**
+ * Update greeting and username on the overview page
  */
 function updateGreeting() {
+  const mediaQuery = window.matchMedia("(min-width: 812px)").matches;
   onAuthStateChanged(auth, (user) => {
     if (user) {
       const greetingContainer = document.querySelector(".greeting-container");
@@ -31,9 +51,16 @@ function updateGreeting() {
         if (user.isAnonymous) {
           greetingElement.textContent = getTimeBasedGreeting();
           greetingElement.classList.add("greeting-guest");
+          if (mediaQuery) {
+            greetingElement.classList.add("greeting-guest-large");
+          } else {
+            greetingElement.classList.remove("greeting-guest-large");
+          }
+
         } else {
           greetingElement.textContent = getTimeBasedGreeting() + ",";
           greetingElement.classList.remove("greeting-guest");
+          greetingElement.classList.remove("greeting-guest-large");
         }
       }
 
@@ -64,11 +91,11 @@ function updateGreeting() {
 }
 
 /**
- * Update avatar initials based on user name
+ * Update avatar initials based on username
  */
 function updateAvatarInitials(user) {
   const avatarElement = document.querySelector(".avatar");
-  
+
   if (avatarElement) {
     let initials = "U"; // Default
 
@@ -89,10 +116,30 @@ function updateAvatarInitials(user) {
   }
 }
 
+/**
+ * Add click event listeners to all dashboard cards
+ */
+function addCardListeners() {
+  const cards = document.querySelectorAll('.card, .card-urgent-deadline');
+  cards.forEach(card => {
+    card.addEventListener('click', () => {
+      window.location.href = 'board.html';
+    });
+  });
+}
+
 // Initialize greeting when page loads
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", updateGreeting);
+  document.addEventListener("DOMContentLoaded", () => {
+    moveGreetingContainer();
+    updateGreeting();
+    addCardListeners();
+  });
 } else {
+  moveGreetingContainer();
   updateGreeting();
+  addCardListeners();
 }
+// Update greeting container position on window resize
+window.addEventListener('resize', moveGreetingContainer);
 

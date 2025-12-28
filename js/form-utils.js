@@ -12,7 +12,7 @@ import { clearSelectedContacts, clearSelectedCategory } from "./dropdown-manager
  * @returns {void}
  */
 export function clearFormInputs() {
-    const titleInput = document.querySelector('.task-title');
+    const titleInput = document.querySelector('.input-title');
     const descriptionInput = document.querySelector('.task-description');
     const dueDateInput = document.getElementById('dueDate');
 
@@ -60,9 +60,9 @@ export function clearContactDropzone() {
 export function clearContactCheckboxes() {
     document.querySelectorAll('.contact-option').forEach(option => {
         option.classList.remove('selected');
-        const checkbox = option.querySelector('.contact-checkbox');
+        const checkbox = option.querySelector('input[type="checkbox"]');
         if (checkbox) {
-            checkbox.classList.remove('checked');
+            checkbox.checked = false;
         }
     });
 }

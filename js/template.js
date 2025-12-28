@@ -14,7 +14,7 @@ export function createAuthErrorMessage(message) {
     width: 90%;
   `;
   return errorDiv;
-};
+}
 
 /**
  * Generates an HTML template for a section header with the given letter.
@@ -26,7 +26,7 @@ export function generateSectionTemplate(letter) {
             <h2 class="section-header">${letter}</h2>
             <div class="section-separator"></div>
         `
-};
+}
 
 /**
  * Generates an HTML template string for a contact item.
@@ -51,6 +51,7 @@ export function generateContactItemTemplate(contact) {
  * Returns the full dialog HTML for a task element.
  * Note: the caller should provide or set `dueDate` into the template scope before inserting.
  * @param {Object} element - Task object containing title, text, priority, task, id, etc.
+ * @param {string} dueDate - Formatted due date string to display.
  * @returns {string} HTML string for the dialog.
  */
 export function getTemplateDialog(element, dueDate) {
@@ -98,25 +99,28 @@ export function getTemplateDialog(element, dueDate) {
  * @param {number} progressWidth - Calculated width percentage for progress bar.
  * @returns {string} HTML string for the task card.
  */
+
 export function getTemplateTaskCard(element, subtasksDone, totalSubtasks, progressWidth) {
   return `<div class="task-card" id="${element["id"]}" draggable="true" onclick="openDialog('${element["id"]}')" ondragstart="startDragging('${element["id"]}')">
                             <div class="card-headline">
                                 <div class="card-label card-bg-${element["task"].split(" ")[0].toLowerCase()}-${element["task"].split(" ")[1].toLowerCase()}">${element["task"]}</div>
                                 <div class="card-swap-icon"></div>
                             </div>
-                            <div class="card-task-title">${element["title"]}</div>
-                            <div class="card-task-text">${element["text"]}</div>
-                            <div class="card-progress-container">
-                                <div class="card-progress-bar">
-                                    <div class="card-sub-progress-bar" style="width: ${progressWidth}%;"></div>
-                                </div>
-                                <div id="tasks-done">${subtasksDone.length}/${totalSubtasks} Subtasks</div>
+                            <div class="card-task-wrapper">
+                              <div class="card-task-title">${element["title"]}</div>
+                              <div class="card-task-text">${element["text"]}</div>
+                              <div class="card-progress-container">
+                                  <div class="card-progress-bar">
+                                      <div class="card-sub-progress-bar" style="width: ${progressWidth}%;"></div>
+                                  </div>
+                                  <div id="tasks-done">${subtasksDone.length}/${totalSubtasks} Subtasks</div>
+                              </div>
                             </div>
                             <div class="user-prio-container">
                                 <div class="marked-user-container" id="marked-user-container-${element["id"]}">
                                 </div>
                                 <div class="card-prio-icon"
-                                    style="background: url(./assets/priority_icons/prio_${element["priority"]}_colored.svg) center center no-repeat;">
+                                    style="background: url('./assets/priority_icons/prio_${element["priority"]}_colored.svg') center center no-repeat;">
                                 </div>
                             </div>
                         </div>`;
@@ -174,7 +178,9 @@ export function getTemplateMarkedUser(memberIndex, memberInitials, avatarColor) 
 export function getTemplateRemainingMembers(memberIndex, remainingMembers) {
   return `<div class="marked-user marked-user-${memberIndex}" style="background-color: var(--color-variant-over);">+${remainingMembers}</div>`
 }
- * Creates HTML structure for a subtask item
+
+/**
+ * Creates HTML for a subtask item
  * @param {string} text - The subtask text content (will be escaped to prevent XSS)
  * @returns {string} HTML string for the subtask
  */
@@ -182,9 +188,9 @@ export function createSubtaskHTML(text) {
   return `
     <span class="subtask-text">${text}</span>
     <div class="subtask-actions">
-      <img src="./assets/icons/edit.svg" alt="Edit" onclick="startEditingSubtask(this)" />
+      <img src="./assets/icons/edit.svg" alt="Edit" class="subtask-edit" onclick="startEditingSubtask(this)" />
       <span class="subtask-separator"></span>
-      <img src="./assets/icons/delete.svg" alt="Delete" onclick="deleteSubtask(this)" />
+      <img src="./assets/icons/delete.svg" alt="Delete" class="subtask-delete" onclick="deleteSubtask(this)" />
     </div>
   `;
 }
@@ -207,14 +213,24 @@ export function createEditActionsHTML() {
  */
 export function createNormalActionsHTML() {
   return `
-    <img src="./assets/icons/edit.svg" alt="Edit" onclick="startEditingSubtask(this)" />
+    <img src="./assets/icons/edit.svg" alt="Edit" class="subtask-edit" onclick="startEditingSubtask(this)" />
     <span class="subtask-separator"></span>
-    <img src="./assets/icons/delete.svg" alt="Delete" onclick="deleteSubtask(this)" />
+    <img src="./assets/icons/delete.svg" alt="Delete" class="subtask-delete" onclick="deleteSubtask(this)" />
   `;
 }
 
+/**
+ * Generates HTML for a contact option in the dropdown list
+ * @param {Object} contact - The contact object
+ * @param {string} contact.id - Contact ID
+ * @param {string} contact.avatarColor - Background color for the avatar
+ * @param {string} contact.initials - Contact initials
+ * @param {string} contact.name - Contact's full name
+ * @param {string} contact.email - Contact's email address
+ * @returns {string} HTML string for the contact option
+ */
 export function generateContactOptionHTML(contact) {
-    return `
+  return `
       <div class="contact-option-avatar" style="background-color: ${contact.avatarColor};">
         ${contact.initials}
       </div>
@@ -222,20 +238,128 @@ export function generateContactOptionHTML(contact) {
         <div class="contact-option-name">${contact.name}</div>
         <div class="contact-option-email">${contact.email}</div>
       </div>
-      <div class="contact-option-checkbox" id="checkbox-${contact.id}"></div>
+      <div class="contact-option-checkbox">
+        <input type="checkbox" name="checkbox-${contact.id}" id="checkbox-${contact.id}">
+        <label for="checkbox-${contact.id}"></label>
+      </div>
     `;
 }
 
+/**
+ * Generates HTML for a contact chip (small avatar representation)
+ * @param {Object} contact - The contact object
+ * @param {string} contact.avatarColor - Background color for the avatar
+ * @param {string} contact.name - Contact's full name (used for title attribute)
+ * @param {string} contact.initials - Contact initials to display
+ * @returns {string} HTML string for the contact chip
+ */
 export function getContactChipHTML(contact) {
-    return `
+  return `
       <div class="contact-avatar-small" style="background-color: ${contact.avatarColor};" title="${contact.name}">
         ${contact.initials}
       </div>
     `;
 }
 
+/**
+ * Generates HTML for a category option in the dropdown
+ * @param {Object} category - The category object
+ * @param {string} category.name - Category name to display
+ * @returns {string} HTML string for the category option
+ */
 export function getCategoryOptionHTML(category) {
-    return `
+  return `
       <div class="category-option-name">${category.name}</div>
     `;
 }
+
+/**
+ * Generates the complete HTML template for the add task form
+ * @returns {string} HTML string containing the entire add task form structure
+ */
+export function getTemplateAddTask() {
+  return `<div class="form-group form-group-title">
+                    <input aria-label="Task Title" type="text" class="input-title" placeholder="Enter a title" />
+                </div>
+
+                <div class="form-group">
+                    <label id="desc">Description <span class="optional">(optional)</span></label>
+                    <textarea aria-labelledby="desc" class="task-description"
+                        placeholder="Enter a Description"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Due date</label>
+                    <div class="input-with-icon">
+                        <input aria-label="Enter Due Date" type="text" class="due-date" id="dueDate"
+                            placeholder="dd/mm/yyyy" maxlength="10" />
+                        <span class="icon">
+                            <img src="./assets/icons/calendar.svg" alt="Calendar Symbol, not working" />
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Priority</label>
+                    <div class="priority-selection">
+                        <button class="priority-btn urgent">
+                            Urgent
+                            <img src="./assets/priority_icons/prio_urgent_colored.svg" alt="Image with two arrows up" />
+                        </button>
+                        <button class="priority-btn medium active">
+                            Medium
+                            <img src="./assets/priority_icons/medium.svg" alt="Image with two stripes horizontal" />
+                        </button>
+                        <button class="priority-btn low">
+                            Low
+                            <img src="./assets/priority_icons/prio_low_colored.svg" alt="Image with two arrows down" />
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Assigned to <span class="optional">(optional)</span></label>
+                    <div class="custom-dropdown" id="contactDropdownWrapper">
+                        <div class="dropdown-header" onclick="toggleDropdown('contact')">
+                            <input type="text" id="contactSearchInput" class="dropdown-search-input"
+                                placeholder="Select contacts to assign" oninput="filterOptions('contact')"
+                                onclick="event.stopPropagation(); toggleDropdown('contact', true);" />
+                            <img src="./assets/menu_icons/arrow-drop-down.svg" class="dropdown-arrow"
+                                alt="Little Image indicating an dropdown" />
+                        </div>
+                        <div class="dropdown-content" id="contactDropdownContent">
+                        </div>
+                    </div>
+                    <div class="dropzone"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Category</label>
+                    <div class="custom-dropdown" id="categoryDropdownWrapper">
+                        <div class="dropdown-header" onclick="toggleDropdown('category')">
+                            <span id="categoryDisplay" class="dropdown-display-text">Select task category</span>
+                            <img src="./assets/menu_icons/arrow-drop-down.svg" class="dropdown-arrow"
+                                alt="Little Image indicating an dropdown" />
+                        </div>
+                        <div class="dropdown-content" id="categoryDropdownContent">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Subtasks <span class="optional">(optional)</span></label>
+                    <div class="input-with-icon subtask-input-wrapper">
+                        <input type="text" class="subtask-input" placeholder="Add a subtask"
+                            oninput="toggleSubtaskIcons()" />
+                        <div class="subtask-icons">
+                            <img src="./assets/icons/close.svg" alt="Cancel" class="icon-cancel"
+                                onclick="clearSubtaskInput()" />
+                            <span class="icon-separator"></span>
+                            <img src="./assets/icons/check-blue.svg" alt="Confirm" class="icon-confirm"
+                                onclick="addNewSubtask()" />
+                        </div>
+                    </div>
+                    <ul class="subtask-list" id="subtaskList"></ul>
+                </div>`;
+}
+
