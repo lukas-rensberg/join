@@ -103,7 +103,7 @@ function openAddTaskAside() {
  * @returns {void}
  */
 function createAddTask() {
-    const refAddTask = document.querySelector('.description');
+    const refAddTask = document.querySelector('.task-description');
     refAddTask.innerHTML = "";
     refAddTask.innerHTML = getTemplateAddTask();
 };
