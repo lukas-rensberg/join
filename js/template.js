@@ -328,7 +328,6 @@ export function getTemplateAddTask() {
                                 alt="Little Image indicating an dropdown" />
                         </div>
                         <div class="dropdown-content" id="contactDropdownContent">
-                            <!-- Contacts will be populated here -->
                         </div>
                     </div>
                     <div class="dropzone"></div>
@@ -343,7 +342,6 @@ export function getTemplateAddTask() {
                                 alt="Little Image indicating an dropdown" />
                         </div>
                         <div class="dropdown-content" id="categoryDropdownContent">
-                            <!--Categories will be populated here-->
                         </div>
                     </div>
                 </div>

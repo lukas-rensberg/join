@@ -762,14 +762,6 @@ document.addEventListener('DOMContentLoaded', () => {
     openAddTaskAside();
 });
 
-// Also initialize immediately if the DOM is already loaded
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeTasks);
-} else {
-    initializeTasks();
-    openAddTaskAside();
-}
-
 // Make functions globally accessible for inline event handlers
 window.openDialog = openDialog;
 window.closeDialog = closeDialog;
