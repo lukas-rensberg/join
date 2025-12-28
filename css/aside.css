@@ -453,7 +453,7 @@
         }
 
         &:active {
-            transition: all 1ms ease backwards;
+            transition: all 1ms ease;
             background-color: var(--color-primary-button-click);
             color: var(--main-color);
 

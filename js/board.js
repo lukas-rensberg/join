@@ -312,7 +312,6 @@ async function migrateDefaultTasksWithMembers() {
         const tasksWithMembers = createDefaultTasksWithMembers();
         await migrateDefaultTasks(tasksWithMembers);
     } catch (error) {
-        console.error('Error migrating tasks with members:', error);
         // Fallback to default tasks without members
         await migrateDefaultTasks(defaultTasks);
     }
@@ -788,9 +787,6 @@ window.removeContactFromAllTasks = removeContactFromAllTasks;
 window.updateSubtaskStatus = updateSubtaskStatus;
 window.getRandomContactIds = getRandomContactIds;
 window.formatDate = formatDate;
-window.SwipeInAddTaskAside = swipeInAddTaskAside;
-window.SwipeOutAddTaskAside = swipeOutAddTaskAside;
 window.createNewTask = createNewTask;
 window.openAddTaskAside = openAddTaskAside;
 window.addEventListener('resize', openAddTaskAside);
-window.addEventListener('resize', updateSubtaskStatus);

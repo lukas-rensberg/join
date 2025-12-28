@@ -200,7 +200,6 @@ async function createAndRedirect() {
  * @returns {void}
  */
 function handleCreateTaskError(error) {
-    console.error('Error creating task:', error);
     showErrorBanner('Error creating task. Please try again.');
 }
 
@@ -230,7 +229,6 @@ function handleClearForm() {
 
 /**
  * Creates and renders the add task form in the DOM.
- * @function createAddTask
  * @returns {void}
  */
 function createAddTask() {
