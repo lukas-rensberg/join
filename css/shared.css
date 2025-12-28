@@ -103,7 +103,7 @@
     padding: 0.5rem 1rem 0.5rem 1rem;
     font-size: 1.5rem;
     font-weight: 500;
-    color: var(--color-text, #333);
+    color: var(--color-light-gray);
     outline: none;
 
     &:focus {
@@ -189,10 +189,15 @@
     margin-right: 0;
     flex-shrink: 0;
     pointer-events: none;
+
+    &::before:hover {
+        content: '';
+        bg: url(../assets/icons/dropdown_arrow.svg);
+    }
 }
 
 #categoryDropdownWrapper .dropdown-arrow {
-    margin-right: 1rem;
+    margin-right: .75rem;
 }
 
 .dropdown-content {
@@ -390,7 +395,7 @@
     border-bottom: 0.0625rem solid var(--color-light-gray);
     border-radius: 0;
     padding: 0.5rem 3.5rem 0.5rem 1rem;
-    color: var(--color-text, #333);
+    color: var(--color-light-gray);
     outline: none;
 }
 

@@ -28,9 +28,9 @@ function moveGreetingContainer() {
   const mediaQuery = window.matchMedia("(min-width: 812px)").matches;
   const greetingContainer = document.querySelector(".greeting-container");
   const dashboardContainer = document.querySelector(".dashboard-container");
-  if (!greetingContainer || !dashboardContainer) return;
+  // if (!greetingContainer || !dashboardContainer) return;
 
-  if (mediaQuery && greetingContainer.parentNode !== dashboardContainer || dashboardContainer.firstChild !== greetingContainer) {
+  if (mediaQuery) {
       dashboardContainer.insertBefore(greetingContainer, dashboardContainer.firstChild);
   }
 }

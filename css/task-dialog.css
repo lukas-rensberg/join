@@ -180,7 +180,6 @@ strong {
     outline: none;
     margin-top: .5rem;
     width: 100%;
-    border: none;
     overflow-y: auto;
     flex: 1;
     min-height: 0;
@@ -273,7 +272,7 @@ strong {
 
     &:active {
         &::before {
-            background-image: url('../assets/icons/delete_clicked.svg') center center no-repeat;
+            background: url('../assets/icons/delete_clicked.svg') center center no-repeat;
         }
 
         color: var(--main-color);
