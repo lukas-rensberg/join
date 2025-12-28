@@ -792,5 +792,5 @@ window.SwipeInAddTaskAside = SwipeInAddTaskAside;
 window.SwipeOutAddTaskAside = SwipeOutAddTaskAside;
 window.createNewTask = createNewTask;
 window.openAddTaskAside = openAddTaskAside;
-window.addEventListener('resize', openAddTaskAside, updateSubtaskStatus);
-
+window.addEventListener('resize', openAddTaskAside);
+window.addEventListener('resize', updateSubtaskStatus);

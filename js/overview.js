@@ -129,12 +129,12 @@ function addCardListeners() {
 // Initialize greeting when page loads
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", () => {
-    moveGreetingContainer()
+    moveGreetingContainer();
     updateGreeting();
     addCardListeners();
   });
 } else {
-  moveGreetingContainer()
+  moveGreetingContainer();
   updateGreeting();
   addCardListeners();
 }

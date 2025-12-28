@@ -363,5 +363,5 @@ export function getTemplateAddTask() {
                     </div>
                     <ul class="subtask-list" id="subtaskList"></ul>
                 </div>`;
-};
+}
 
