@@ -103,10 +103,10 @@ function openAddTaskAside() {
  * @returns {void}
  */
 function createAddTask() {
-    const refAddTask = document.querySelector('.task-description');
+    const refAddTask = document.querySelector('.add-task-form');
     refAddTask.innerHTML = "";
     refAddTask.innerHTML = getTemplateAddTask();
-};
+}
 
 /**
  * Retrieves a contact object by its unique identifier.
@@ -293,10 +293,9 @@ function initializeTasks() {
             updateHTML();
         });
 
-        // Wait for contacts to load before migrating tasks with random members
         setTimeout(() => {
             migrateDefaultTasksWithMembers();
-        }, 1000); // Give contacts time to load
+        }, 1000);
     } catch (error) {
         console.error('Error initializing tasks:', error);
         tasks = [...defaultTasks];
@@ -312,7 +311,6 @@ async function migrateDefaultTasksWithMembers() {
         const tasksWithMembers = createDefaultTasksWithMembers();
         await migrateDefaultTasks(tasksWithMembers);
     } catch (error) {
-        // Fallback to default tasks without members
         await migrateDefaultTasks(defaultTasks);
     }
 }
