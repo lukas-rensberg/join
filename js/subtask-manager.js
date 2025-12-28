@@ -3,32 +3,21 @@
  * Handles all subtask-related operations
  */
 
-import { createSubtaskHTML, createEditActionsHTML, createNormalActionsHTML } from "./template.js";
+import {createSubtaskHTML, createEditActionsHTML, createNormalActionsHTML} from "./template.js";
 
 /**
  * Toggles visibility of subtask input icons based on input content
  */
 export function toggleSubtaskIcons() {
-    console.log("🔵 toggleSubtaskIcons called");
     const input = document.querySelector(".subtask-input");
     const icons = document.querySelector(".subtask-icons");
 
-    if (!input) {
-        console.error("❌ Subtask input element not found!");
-        return;
-    }
-    if (!icons) {
-        console.error("❌ Subtask icons element not found!");
-        return;
-    }
+    if (!input || !icons) return;
 
-    console.log("Input length:", input.value.trim().length);
     if (input.value.trim().length > 0) {
         icons.classList.add("visible");
-        console.log("✅ Icons made visible");
     } else {
         icons.classList.remove("visible");
-        console.log("✅ Icons hidden");
     }
 }
 
@@ -36,20 +25,14 @@ export function toggleSubtaskIcons() {
  * Clears the subtask input field and hides icons
  */
 export function clearSubtaskInput() {
-    console.log("🔵 clearSubtaskInput called - BUTTON WORKS!");
     const input = document.querySelector(".subtask-input");
     const icons = document.querySelector(".subtask-icons");
 
-    if (!input || !icons) {
-        console.error("❌ Required elements not found:", { input: !!input, icons: !!icons });
-        return;
-    }
+    if (!input || !icons) return;
 
-    console.log("Before clear, input length:", input.value.trim().length);
     input.value = "";
     icons.classList.remove("visible");
     input.focus();
-    console.log("✅ Subtask input cleared");
 }
 
 /**
@@ -67,24 +50,13 @@ export function handleSubtaskEnter(event) {
  * Adds a new subtask to the list
  */
 export function addNewSubtask() {
-    console.log("🔵 addNewSubtask called - BUTTON WORKS!");
     const input = document.querySelector(".subtask-input");
     const list = document.getElementById("subtaskList");
 
-    if (!input) {
-        console.error("❌ Subtask input not found!");
-        return;
-    }
-    if (!list) {
-        console.error("❌ Subtask list not found!");
-        return;
-    }
+    if (!input || !list) return;
 
     const text = input.value.trim();
-    if (!text) {
-        console.log("⚠️ Empty input, not adding subtask");
-        return;
-    }
+    if (!text) return;
 
     const listItem = document.createElement("li");
     listItem.className = "subtask-item";
@@ -92,7 +64,6 @@ export function addNewSubtask() {
     listItem.innerHTML = createSubtaskHTML(escapedText);
 
     list.appendChild(listItem);
-    console.log("✅ Subtask added:", text);
     clearSubtaskInput();
 }
 
@@ -112,15 +83,9 @@ function escapeHtml(text) {
  * @param {HTMLElement} button - The delete button element
  */
 export function deleteSubtask(button) {
-    console.log("🔵 deleteSubtask called", button);
     const listItem = button.closest(".subtask-item");
-    if (!listItem) {
-        console.error("❌ Could not find parent subtask-item!");
-        return;
-    }
-    const text = listItem.querySelector('.subtask-text')?.textContent || '';
+    if (!listItem) return;
     listItem.remove();
-    console.log("✅ Subtask deleted:", text);
 }
 
 /**
@@ -176,23 +141,14 @@ export function handleEditEnter(event, input) {
  * @param {HTMLElement} button - The cancel button element
  */
 export function cancelEdit(button) {
-    console.log("🔵 cancelEdit called", button);
     const listItem = button.closest(".subtask-item");
-    if (!listItem) {
-        console.error("❌ Could not find parent subtask-item!");
-        return;
-    }
+    if (!listItem) return;
 
     const input = listItem.querySelector(".subtask-edit-input");
-    if (!input) {
-        console.error("❌ Could not find edit input!");
-        return;
-    }
+    if (!input) return;
 
     const originalText = input.getAttribute("data-original");
-    console.log("↩️ Restoring original text:", originalText);
     exitEditMode(listItem, input, originalText);
-    console.log("✅ Edit cancelled");
 }
 
 /**
@@ -200,28 +156,18 @@ export function cancelEdit(button) {
  * @param {HTMLElement} button - The save button element
  */
 export function saveEdit(button) {
-    console.log("🔵 saveEdit called", button);
     const listItem = button.closest(".subtask-item");
-    if (!listItem) {
-        console.error("❌ Could not find parent subtask-item!");
-        return;
-    }
+    if (!listItem) return;
 
     const input = listItem.querySelector(".subtask-edit-input");
-    if (!input) {
-        console.error("❌ Could not find edit input!");
-        return;
-    }
+    if (!input) return;
 
     const newText = input.value.trim();
-    console.log("💾 Saving text:", newText);
 
     if (newText) {
         exitEditMode(listItem, input, newText);
-        console.log("✅ Edit saved");
     } else {
         listItem.remove();
-        console.log("✅ Empty subtask removed");
     }
 }
 
@@ -248,33 +194,23 @@ function exitEditMode(listItem, input, text) {
  */
 export function initializeSubtasks() {
     const subtaskList = document.getElementById('subtaskList');
-    if (!subtaskList) {
-        console.error("❌ subtaskList element not found! Event delegation will not work.");
-        return;
-    }
+    if (!subtaskList) return;
 
-    console.log("🟢 Initializing subtask event delegation");
+
     subtaskList.addEventListener('click', (e) => {
-        console.log("🖱️ Click detected in subtaskList", e.target);
-
         if (e.target.closest('.subtask-delete')) {
-            console.log("Delete button clicked");
             deleteSubtask(e.target);
         }
         if (e.target.closest('.subtask-edit')) {
-            console.log("Edit button clicked");
             startEditingSubtask(e.target);
         }
         if (e.target.closest('.save-edit')) {
-            console.log("Save button clicked");
             saveEdit(e.target);
         }
         if (e.target.closest('.cancel-edit')) {
-            console.log("Cancel button clicked");
             cancelEdit(e.target);
         }
     });
-    console.log("✅ Subtask event delegation initialized");
 }
 
 /**
@@ -297,6 +233,6 @@ export function getSubtasks() {
             });
         }
     });
-
     return subtasks;
 }
+

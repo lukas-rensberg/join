@@ -124,7 +124,6 @@ export async function handleLogout() {
     await signOut(auth);
     window.location.href = `./${LOGIN_PAGE}`;
   } catch (error) {
-    console.error("Logout error:", error);
     showInlineError("An error occurred during logout. Please try again.");
   }
 }

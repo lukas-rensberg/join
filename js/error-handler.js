@@ -41,7 +41,6 @@ export const showInlineError = showErrorMessage;
  * Handle authentication errors (login page, signup page, protected pages)
  */
 export function handleAuthError(error, context = "auth") {
-  console.error(`${context} error:`, error);
 
   let errorMessage;
 

@@ -59,7 +59,6 @@ export async function createContact(uid, username, email, phone, avatarColor, in
       isAuthUser: isAuthUser,
     });
   } catch (error) {
-    console.error("Error creating contact:", error);
     showInlineError("Failed to create contact. Please try again.");
   }
 }
@@ -127,9 +126,7 @@ export async function updateTask(taskId, updates) {
       updatedAt: Date.now()
     };
     await update(ref(database, `tasks/${taskId}`), updateData);
-    console.log("Task updated in RTDB:", taskId);
   } catch (error) {
-    console.error("Error updating task:", error);
     showInlineError("Failed to update task. Please try again.");
     throw error;
   }
@@ -143,9 +140,7 @@ export async function updateTask(taskId, updates) {
 export async function deleteTask(taskId) {
   try {
     await remove(ref(database, `tasks/${taskId}`));
-    console.log("Task deleted from RTDB:", taskId);
   } catch (error) {
-    console.error("Error deleting task:", error);
     showInlineError("Failed to delete task. Please try again.");
     throw error;
   }
@@ -178,7 +173,6 @@ export async function getTask(taskId) {
     const snapshot = await get(ref(database, `tasks/${taskId}`));
     return snapshot.exists() ? snapshot.val() : null;
   } catch (error) {
-    console.error("Error getting task:", error);
     return null;
   }
 }
@@ -194,18 +188,13 @@ export async function migrateDefaultTasks(defaultTasks) {
     const snapshot = await get(tasksRef);
     
     if (!snapshot.exists()) {
-      console.log("No tasks found in RTDB, migrating default tasks...");
-      
       for (const task of defaultTasks) {
         await createTask(task);
       }
-      
-      console.log("Default tasks migrated to RTDB successfully");
     } else {
       // Check if existing tasks need member or due date updates
       const existingTasks = snapshot.val();
-      let tasksUpdated = false;
-      
+
       for (const [taskId, task] of Object.entries(existingTasks)) {
         const updates = {};
         let needsUpdate = false;
@@ -230,16 +219,11 @@ export async function migrateDefaultTasks(defaultTasks) {
         
         if (needsUpdate) {
           await updateTask(taskId, updates);
-          tasksUpdated = true;
         }
-      }
-      
-      if (tasksUpdated) {
-        console.log("Updated existing tasks with member assignments and due dates");
       }
     }
   } catch (error) {
-    console.error("Error migrating default tasks:", error);
+    // Silent error handling
   }
 }
 

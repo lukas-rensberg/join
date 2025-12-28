@@ -349,7 +349,6 @@ export async function deleteContact() {
     hideContactDetail();
     closeFabMenu();
   } catch (error) {
-    console.error("Failed to delete contact:", error);
     showInlineError("Failed to delete contact. Please try again.");
   }
 }
