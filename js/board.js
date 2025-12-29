@@ -6,7 +6,7 @@ import {
     migrateDefaultTasks,
     database
 } from './database.js';
-import { ref, onValue } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+import {ref, onValue} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
 import {
     getTemplateDialog,
@@ -58,7 +58,10 @@ function swipeInAddTaskAside() {
 function swipeOutAddTaskAside() {
     addTaskRef.classList.remove("add-task-swipe-in");
     addTaskRef.classList.add("add-task-swipe-out");
-    addTaskRef.close();
+    setTimeout(() => {
+        addTaskRef.close();
+    }, 300);
+
 }
 
 /**
@@ -66,7 +69,7 @@ function swipeOutAddTaskAside() {
  * On larger screens (min-width: 812px), displays an aside panel with swipe animations.
  * On smaller screens, redirects to the add-task.html page.
  * Sets up event listeners for opening and closing the add task interface.
- * 
+ *
  * @function openAddTaskAside
  * @returns {void}
  */
@@ -79,6 +82,7 @@ function openAddTaskAside() {
         createAddTask();
         openButtons.forEach(button => {
             button.addEventListener('click', swipeInAddTaskAside);
+
         })
     } else {
         createAddTask()
@@ -163,7 +167,7 @@ export function createDefaultTasksWithMembers() {
             id: "to-do-1",
             task: "User Story",
             title: "Kochwelt Page & Recipe Recommender",
-            text: "Build start page with recipe recommandation...",
+            text: "Build start page with recipe recommendation...",
             subtasks: ["Beta Test", "Double Check", "Design Mockup", "Gather Content"],
             subtasks_done: ["Start Layout", "Implement Recipe Recommendation"],
             member: getRandomContactIds(),
@@ -228,7 +232,7 @@ const defaultTasks = [
         id: "to-do-1",
         task: "User Story",
         title: "Kochwelt Page & Recipe Recommender",
-        text: "Build start page with recipe recommandation...",
+        text: "Build start page with recipe recommendation...",
         subtasks: ["Beta Test", "Double Check", "Design Mockup", "Gather Content"],
         subtasks_done: ["Start Layout", "Implement Recipe Recommendation"],
         member: [],
@@ -347,6 +351,17 @@ export async function removeTask(taskId) {
         console.error('Error deleting task:', error);
     }
 }
+
+function deleteTaskButton(taskId) {
+    const button = document.querySelector(".d-card-footer-d");
+
+    button.addEventListener("click", async () => {
+        await removeTask(taskId);
+        closeDialog();
+    });
+
+}
+
 
 /**
  * Render marked user avatars for a task card up to three members,
@@ -565,11 +580,13 @@ function generateEmptyCard() {
  */
 function openDialog(index) {
     let element = tasks.filter((t) => t["id"] === `${index}`)[0];
+    dialogRef.classList.remove("dialog-swipe-out");
     dialogRef.classList.add("dialog-swipe-in");
     const dueDate = element["dueDate"] ? formatDate(element["dueDate"]) : "No due date set";
     dialogRef.innerHTML = getTemplateDialog(element, dueDate);
     initMembers(element["member"]);
     iniSubtasks(element["id"]);
+    deleteTaskButton(element["id"])
 
     dialogRef.showModal();
 }
@@ -579,7 +596,12 @@ function openDialog(index) {
  */
 function closeDialog() {
     dialogRef.classList.remove("dialog-swipe-in");
-    dialogRef.close();
+    dialogRef.classList.add("dialog-swipe-out");
+    setTimeout(() => {
+        dialogRef.close();
+
+    }, 300);
+
 }
 
 /**
@@ -780,3 +802,4 @@ window.formatDate = formatDate;
 window.createNewTask = createNewTask;
 window.openAddTaskAside = openAddTaskAside;
 window.addEventListener('resize', openAddTaskAside);
+window.deleteTaskButton = deleteTaskButton;

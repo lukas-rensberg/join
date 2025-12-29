@@ -75,7 +75,6 @@
 }
 
 
-
 .add-task-swipe-in {
     animation: addTaskSwipeIn 300ms ease-in-out forwards;
 }
@@ -93,6 +92,10 @@
 }
 
 @keyframes addTaskSwipeOut {
+    0% {
+        opacity: 1;
+        transform: translateX(-100%) translateY(-50%);
+    }
     100% {
         opacity: 0;
         transform: translateX(0) translateY(-50%);
@@ -209,12 +212,9 @@
             outline: none;
         }
 
-        /* Einzigartige Regel erhalten (aus ehem. .subtask-item verschoben): */
         .subtask-icons img.icon-confirm {
             width: 1.2rem;
         }
-
-        /* Error and Success Message Styles */
     }
 
     .btn-section-add-task {
@@ -275,7 +275,7 @@
 }
 
 
-@media (width <812px) {
+@media (width < 812px) {
     .aside-desktop {
         display: none;
     }
