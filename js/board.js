@@ -356,10 +356,37 @@ function deleteTaskButton(taskId) {
     const button = document.querySelector(".d-card-footer-d");
 
     button.addEventListener("click", async () => {
-        await removeTask(taskId);
-        closeDialog();
-    });
+        const deleteButton = document.querySelector(".d-card-footer-d");
+        const editButton = document.querySelector(".d-card-footer-e");
 
+        deleteButton.innerHTML = "";
+        editButton.innerHTML = "";
+
+        deleteButton.classList.remove("d-card-footer-d");
+        deleteButton.classList.add("delete", "yes");
+
+        editButton.classList.remove("d-card-footer-e");
+        editButton.classList.add("delete", "no");
+
+        if (editButton) {
+            editButton.addEventListener("click", () => {
+                deleteButton.classList.remove("delete", "yes");
+                deleteButton.classList.add("d-card-footer-d");
+                deleteButton.innerHTML = "Delete";
+
+                editButton.classList.remove("delete", "no");
+                editButton.classList.add("d-card-footer-e");
+                editButton.innerHTML = "Edit";
+
+            });
+            return
+        }
+
+        deleteButton.addEventListener("click", async () => {
+            await removeTask(taskId);
+            closeDialog();
+        });
+    });
 }
 
 

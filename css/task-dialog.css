@@ -280,11 +280,10 @@ strong {
         margin: 0 .5rem;
     }
 
+    &:active,
     &:hover {
         cursor: pointer;
-    }
 
-    &:active {
         &::before {
             background: url('../assets/icons/delete_clicked.svg') center center no-repeat;
         }
@@ -315,11 +314,10 @@ strong {
         margin-right: 0.5rem;
     }
 
+    &:active,
     &:hover {
         cursor: pointer;
-    }
 
-    &:active {
         &::before {
             background-image: url('../assets/icons/edit_clicked.svg');
         }
@@ -328,6 +326,48 @@ strong {
         font-weight: 700;
     }
 }
+
+.delete {
+    display: flex;
+    background-color: var(--main-color);
+    height: 2rem;
+    width: 3rem;
+    color: #ffffff;
+    font-weight: 700;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.625rem;
+    border: none;
+    transition: all 200ms ease;
+
+    &:hover {
+        /*background-color: var(--color-primary-button-hover);*/
+        cursor: pointer;
+    }
+}
+
+.yes {
+    &:hover {
+        background-color: lightgreen;
+    }
+
+    &::before {
+        content: 'Yes';
+    }
+}
+
+.no {
+    margin-left: .5rem;
+
+    &:hover {
+        background-color: tomato;
+    }
+
+    &::before {
+        content: 'No';
+    }
+}
+
 
 @media (width < 500px) {
     .d-assigned-members {
