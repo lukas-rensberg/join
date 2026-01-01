@@ -22,7 +22,7 @@
     top: 2.4375rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
-    img {
+    & img {
         margin-left: 0.5rem;
         transform: scale(0.89);
     }
@@ -67,7 +67,7 @@ input[type="name"] {
     padding-left: 0.5rem;
 }
 
-.input-seperator {
+.input-separator {
     height: 80%;
     width: 0.0625rem;
     background-color: var(--color-border-gray);
@@ -435,7 +435,76 @@ h5 {
     height: 2rem;
 }
 
-@media (width >=1220px) {
+.task-added {
+    width: 18.5rem;
+    height: 4.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    position: fixed;
+    left: 50vw;
+    top: 120vh;
+    transform: translate(-50%, -50%);
+    background-color: var(--main-color);
+    color: #ffffff;
+    font-size: 1.25rem;
+    font-weight: 400;
+    border-radius: 1.25rem;
+    border: none;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.16);
+    overflow: hidden;
+    opacity: 0;
+
+
+    &::backdrop {
+        background-color: transparent;
+    }
+}
+
+.move-animation {
+    animation: move-to-middle-then-right 1500ms ease forwards;
+}
+
+@keyframes move-to-middle-then-right {
+    0% {
+        left: 50vw;
+        top: 110vh;
+    }
+    9% {
+        top: 50vh;
+        left: 50vw;
+        opacity: 1;
+    }
+    54% {
+        top: 50vh;
+        left: 50vw;
+        opacity: 1;
+    }
+    100% {
+        top: 50vh;
+        left: 120vw;
+        opacity: 0;
+    }
+}
+
+.task-added::after {
+    content: "";
+    display: inline-block;
+    width: 1.375rem;
+    height: 1.625rem;
+    background-image: url("../assets/menu_icons/board.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    filter: brightness(0) invert(1);
+}
+
+.d-none {
+    display: none;
+}
+
+@media (width >= 1220px) {
     .task-card-container {
         flex-direction: column;
         width: 15.625rem;
@@ -469,7 +538,7 @@ h5 {
     }
 }
 
-@media (width <812px) {
+@media (width < 812px) {
     button {
         display: none;
     }
@@ -484,7 +553,7 @@ h5 {
     }
 }
 
-@media (width >812px) {
+@media (width > 812px) {
     main {
         padding-left: 15.625rem;
     }
@@ -501,7 +570,7 @@ h5 {
 
 }
 
-@media (width >1219px) {
+@media (width > 1219px) {
     .src-container {
         height: auto;
     }

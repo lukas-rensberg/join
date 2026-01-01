@@ -18,9 +18,16 @@ import {
     getTemplateAddTask
 } from "./template.js";
 
+import {handleCreateTaskFromBoard} from "./add-task.js";
+import {initializeDateInput} from "./date-input-manager.js";
+import {initializePriorityButtons} from "./priority-manager.js";
+import {initializeDropdowns} from "./dropdown-manager.js";
+import {initializeSubtasks} from "./subtask-manager.js";
+
 let currentDraggedElement;
 let dialogRef = document.getElementById("dialog-task");
 let addTaskRef = document.getElementById("aside-add-task");
+let addedTaskRef = document.getElementById("taskAdded")
 
 let tasks = [];
 let contacts = [];
@@ -61,6 +68,42 @@ function swipeOutAddTaskAside() {
     setTimeout(() => {
         addTaskRef.close();
     }, 300);
+}
+
+/**
+ * Sets up the create button event listener for the add task aside panel.
+ * Handles task creation, success animation, and closing of modals.
+ * @returns {void}
+ */
+function addTaskCreateButton() {
+    const addedTaskBtn = document.querySelector(".btn-create-aside");
+
+    addedTaskBtn.addEventListener("click", async () => {
+        const successAdded = await handleCreateTaskFromBoard();
+
+        if (!successAdded) return;
+
+        swipeInAddedTask();
+        setTimeout(() => {
+            addTaskRef.classList.remove("add-task-swipe-in");
+            addTaskRef.classList.add("add-task-swipe-out");
+            addedTaskRef.classList.remove("move-animation");
+            setTimeout(() => {
+                addedTaskRef.close();
+                addTaskRef.close();
+            }, 200);
+        }, 1000);
+    });
+}
+
+/**
+ * Shows the task added confirmation dialog with a slide-in animation.
+ * Opens the modal and adds the animation class.
+ * @returns {void}
+ */
+function swipeInAddedTask() {
+    addedTaskRef.showModal();
+    addedTaskRef.classList.add("move-animation");
 
 }
 
@@ -98,11 +141,13 @@ function openAddTaskAside() {
         closeButton.addEventListener('click', swipeOutAddTaskAside);
 
     }
+    addTaskCreateButton()
 }
 
 /**
  * Creates and renders the add task dialog by clearing the description container
  * and inserting the add task template HTML.
+ * Initializes all form components after rendering.
  * @function createAddTask
  * @returns {void}
  */
@@ -110,6 +155,10 @@ function createAddTask() {
     const refAddTask = document.querySelector('.add-task-form');
     refAddTask.innerHTML = "";
     refAddTask.innerHTML = getTemplateAddTask();
+    initializeDateInput();
+    initializePriorityButtons();
+    initializeDropdowns();
+    initializeSubtasks();
 }
 
 /**
@@ -286,7 +335,9 @@ const defaultTasks = [
 ];
 
 /**
- * Initialize tasks by loading from Firebase
+ * Initializes tasks by loading contacts and tasks from Firebase.
+ * Sets up real-time listeners for task updates and handles migration of default tasks.
+ * @returns {void}
  */
 function initializeTasks() {
     try {
@@ -308,7 +359,9 @@ function initializeTasks() {
 }
 
 /**
- * Migrate default tasks with random member assignments
+ * Migrates default tasks with random member assignments to Firebase.
+ * Falls back to default tasks without members if random assignment fails.
+ * @returns {Promise<void>}
  */
 async function migrateDefaultTasksWithMembers() {
     try {
@@ -320,7 +373,10 @@ async function migrateDefaultTasksWithMembers() {
 }
 
 /**
- * Save task to Firebase when created or updated
+ * Saves a task to Firebase when created or updated.
+ * Handles both new tasks (with temporary IDs) and existing tasks.
+ * @param {Object} task - The task object to save.
+ * @returns {Promise<void>}
  */
 async function saveTask(task) {
     try {
@@ -342,7 +398,9 @@ async function saveTask(task) {
 }
 
 /**
- * Delete task from Firebase
+ * Deletes a task from Firebase database.
+ * @param {string} taskId - The unique identifier of the task to delete.
+ * @returns {Promise<void>}
  */
 export async function removeTask(taskId) {
     try {
@@ -352,10 +410,16 @@ export async function removeTask(taskId) {
     }
 }
 
+/**
+ * Initializes the delete button functionality in the task dialog.
+ * Sets up confirmation UI and event listeners for task deletion.
+ * @param {string} taskId - The unique identifier of the task to delete.
+ * @returns {void}
+ */
 function deleteTaskButton(taskId) {
     const button = document.querySelector(".d-card-footer-d");
 
-    button.addEventListener("click", async () => {
+    button.addEventListener("click", () => {
         const deleteButton = document.querySelector(".d-card-footer-d");
         const editButton = document.querySelector(".d-card-footer-e");
 
@@ -368,19 +432,15 @@ function deleteTaskButton(taskId) {
         editButton.classList.remove("d-card-footer-e");
         editButton.classList.add("delete", "no");
 
-        if (editButton) {
-            editButton.addEventListener("click", () => {
-                deleteButton.classList.remove("delete", "yes");
-                deleteButton.classList.add("d-card-footer-d");
-                deleteButton.innerHTML = "Delete";
+        editButton.addEventListener("click", () => {
+            deleteButton.classList.remove("delete", "yes");
+            deleteButton.classList.add("d-card-footer-d");
+            deleteButton.innerHTML = "Delete";
 
-                editButton.classList.remove("delete", "no");
-                editButton.classList.add("d-card-footer-e");
-                editButton.innerHTML = "Edit";
-
-            });
-            return
-        }
+            editButton.classList.remove("delete", "no");
+            editButton.classList.add("d-card-footer-e");
+            editButton.innerHTML = "Edit";
+        });
 
         deleteButton.addEventListener("click", async () => {
             await removeTask(taskId);
@@ -437,10 +497,23 @@ function renderTasksByCategory(category, displayName) {
         const progressWidth = totalSubtasks > 0 ? (subtasksDone.length / totalSubtasks) * 100 : 0;
         containerRef.innerHTML += getTemplateTaskCard(task, subtasksDone, totalSubtasks, progressWidth);
         initMarkedUsers(task);
+        hideEmptySubtasks(task)
     });
 }
 
 let updateTimeout;
+
+/**
+ * Hides the progress container for tasks that have no subtasks.
+ * @param {Object} task - The task object to check for subtasks.
+ * @returns {void}
+ */
+function hideEmptySubtasks(task) {
+    const progressContainer = document.getElementById(`card-progress-container-${task.id}`);
+    if (task.subtasks === undefined && task.subtasks_done === undefined) {
+        progressContainer.classList.add("d-none");
+    }
+}
 
 /**
  * Updates all task columns in the board with debouncing to prevent flickering
@@ -612,9 +685,8 @@ function openDialog(index) {
     const dueDate = element["dueDate"] ? formatDate(element["dueDate"]) : "No due date set";
     dialogRef.innerHTML = getTemplateDialog(element, dueDate);
     initMembers(element["member"]);
-    iniSubtasks(element["id"]);
-    deleteTaskButton(element["id"])
-
+    initSubtasks(element["id"]);
+    deleteTaskButton(element["id"]);
     dialogRef.showModal();
 }
 
@@ -626,7 +698,6 @@ function closeDialog() {
     dialogRef.classList.add("dialog-swipe-out");
     setTimeout(() => {
         dialogRef.close();
-
     }, 300);
 
 }
@@ -653,7 +724,7 @@ function initMembers(memberIds) {
  * Displays both pending and completed subtasks with checkboxes.
  * @param {string} taskId - The unique identifier of the task whose subtasks to render.
  */
-function iniSubtasks(taskId) {
+function initSubtasks(taskId) {
     let subtasksContainer = document.querySelector(".d-subtasks-check");
     subtasksContainer.innerHTML = "";
 
@@ -678,7 +749,10 @@ function iniSubtasks(taskId) {
 }
 
 /**
- * Add event listeners to subtask checkboxes
+ * Adds event listeners to subtask checkboxes in the task dialog.
+ * Listens for checkbox changes and updates subtask completion status.
+ * @param {string} taskId - The unique identifier of the task whose subtasks need listeners.
+ * @returns {void}
  */
 function addSubtaskEventListeners(taskId) {
     const checkboxes = document.querySelectorAll(`input[data-task-id="${taskId}"]`);
@@ -692,7 +766,19 @@ function addSubtaskEventListeners(taskId) {
 }
 
 /**
- * Create a new task and save it to Firebase
+ * Creates a new task and saves it to Firebase.
+ * Adds the task to the local array for immediate UI feedback before syncing with Firebase.
+ * @param {Object} taskData - The task data object containing task properties.
+ * @param {string} [taskData.task] - The task type (e.g., "User Story", "Technical Task").
+ * @param {string} [taskData.title] - The task title.
+ * @param {string} [taskData.text] - The task description.
+ * @param {Array<string>} [taskData.subtasks] - Array of pending subtask names.
+ * @param {Array<string>} [taskData.subtasks_done] - Array of completed subtask names.
+ * @param {Array<string>} [taskData.member] - Array of assigned contact IDs.
+ * @param {string} [taskData.priority] - Task priority ("low", "medium", "urgent").
+ * @param {string} [taskData.category] - Task category/column ("to-do", "in-progress", etc.).
+ * @param {string} [taskData.dueDate] - Due date in YYYY-MM-DD format.
+ * @returns {Promise<void>}
  */
 export async function createNewTask(taskData) {
     try {
@@ -725,7 +811,11 @@ export async function createNewTask(taskData) {
 }
 
 /**
- * Add contact to task
+ * Adds a contact to a task's member list.
+ * Prevents duplicate assignments and saves the update to Firebase.
+ * @param {string} taskId - The unique identifier of the task.
+ * @param {string} contactId - The unique identifier of the contact to add.
+ * @returns {Promise<void>}
  */
 async function addContactToTask(taskId, contactId) {
     const task = tasks.find(t => t.id === taskId);
@@ -739,7 +829,11 @@ async function addContactToTask(taskId, contactId) {
 }
 
 /**
- * Remove contact from task
+ * Removes a contact from a task's member list.
+ * Saves the update to Firebase after removal.
+ * @param {string} taskId - The unique identifier of the task.
+ * @param {string} contactId - The unique identifier of the contact to remove.
+ * @returns {Promise<void>}
  */
 async function removeContactFromTask(taskId, contactId) {
     const task = tasks.find(t => t.id === taskId);
@@ -754,7 +848,10 @@ async function removeContactFromTask(taskId, contactId) {
 }
 
 /**
- * Remove contact from all tasks (called when contact is deleted)
+ * Removes a contact from all tasks where they are assigned.
+ * Called when a contact is deleted from the system.
+ * @param {string} contactId - The unique identifier of the contact to remove.
+ * @returns {Promise<void>}
  */
 async function removeContactFromAllTasks(contactId) {
     const tasksWithContact = tasks.filter(t => t.member && t.member.includes(contactId));
@@ -771,7 +868,12 @@ async function removeContactFromAllTasks(contactId) {
 }
 
 /**
- * Update subtask completion status
+ * Updates the completion status of a subtask.
+ * Moves subtasks between pending and completed arrays and saves to Firebase.
+ * @param {string} taskId - The unique identifier of the task.
+ * @param {string} subtask - The name of the subtask to update.
+ * @param {boolean} isCompleted - Whether the subtask should be marked as completed.
+ * @returns {Promise<void>}
  */
 async function updateSubtaskStatus(taskId, subtask, isCompleted) {
     const task = tasks.find(t => t.id === taskId);

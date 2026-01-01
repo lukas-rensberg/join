@@ -162,22 +162,46 @@ function showErrors(errors) {
 
 /**
  * Handles task creation and validation
- * @returns {Promise<void>}
+ * @returns {Promise<boolean>} Returns true if task was created successfully, false otherwise
  */
-async function handleCreateTask() {
+export async function handleCreateTask() {
     const validation = validateTaskForm();
 
     if (!validation.isValid) {
         showErrors(validation.errors);
-        return;
+        return false;
     }
 
-    await createAndRedirect();
+    return await createAndRedirect();
+}
+
+/**
+ * Handles task creation without redirect (for board aside dialog)
+ * @returns {Promise<boolean>}
+ * Returns true if task was created successfully, false otherwise
+ */
+export async function handleCreateTaskFromBoard() {
+    const validation = validateTaskForm();
+
+    if (!validation.isValid) {
+        showErrors(validation.errors);
+        return false;
+    }
+
+    try {
+        const taskData = collectTaskData();
+        await createTask(taskData);
+        return true;
+    } catch (error) {
+        handleCreateTaskError(error);
+        return false;
+    }
 }
 
 /**
  * Creates task and redirects to board page
- * @returns {Promise<void>}
+ * @returns {Promise<boolean>}
+ * Returns true if task was created successfully, false otherwise
  */
 async function createAndRedirect() {
     try {
@@ -185,17 +209,18 @@ async function createAndRedirect() {
         await createTask(taskData);
         showSuccessBanner('Task created successfully!');
         redirectToBoard();
+        return true;
     } catch (error) {
         handleCreateTaskError(error);
+        return false;
     }
 }
 
 /**
  * Handles errors during task creation
- * @param {Error} error - The error object
  * @returns {void}
  */
-function handleCreateTaskError(error) {
+function handleCreateTaskError() {
     showErrorBanner('Error creating task. Please try again.');
 }
 

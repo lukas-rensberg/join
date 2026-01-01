@@ -3,6 +3,7 @@
     display: flex;
     justify-content: center;
     gap: 0.5rem;
+    padding: 0 0.05rem;
 }
 
 .priority-btn {
@@ -102,7 +103,7 @@
     padding: 0.5rem 1rem 0.5rem 1rem;
     font-size: 1.5rem;
     font-weight: 500;
-    color: var(--color-light-gray);
+    color: black;
     background-color: #ffffff;
     transition: border-color 0.2s;
 
@@ -157,18 +158,11 @@
     padding: 0;
 }
 
-#contactDropdownWrapper .dropdown-arrow {
-    margin-right: 1.5rem;
-}
-
 .dropdown-search-input {
-    flex: 1;
     padding: 12px;
-    border: none;
     background: transparent;
     font-size: 1rem;
     color: var(--color-menu-text);
-    outline: none;
     cursor: text;
 }
 
@@ -185,10 +179,17 @@
 .dropdown-arrow {
     width: 7px;
     height: 7px;
-    transition: transform 0.2s ease;
-    margin-right: 1.5rem;
+    padding: calc((1.5rem - 7px) / 2);
+    box-sizing: content-box;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+    margin-right: 0.75rem;
     flex-shrink: 0;
-    pointer-events: none;
+    border-radius: 50%;
+
+    &:hover {
+        cursor: pointer;
+        background-color: var(--color-menu-active);
+    }
 }
 
 .dropdown-content {
@@ -300,11 +301,11 @@
     position: absolute;
 }
 
-.contact-option-checkbox input[type="checkbox"]:hover+label::before {
+.contact-option-checkbox input[type="checkbox"]:hover + label::before {
     cursor: pointer;
 }
 
-.contact-option-checkbox input[type="checkbox"]:checked+label::before {
+.contact-option-checkbox input[type="checkbox"]:checked + label::before {
     content: url(../assets/icons/checked_white.svg);
 }
 
@@ -568,7 +569,7 @@
     }
 }
 
-@media (width >=812px) {
+@media (width >= 812px) {
     .priority-selection {
         gap: 1rem;
     }

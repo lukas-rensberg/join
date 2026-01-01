@@ -109,7 +109,7 @@ export function getTemplateTaskCard(element, subtasksDone, totalSubtasks, progre
                             <div class="card-task-wrapper">
                               <div class="card-task-title">${element["title"]}</div>
                               <div class="card-task-text">${element["text"]}</div>
-                              <div class="card-progress-container">
+                              <div class="card-progress-container" id="card-progress-container-${element["id"]}">
                                   <div class="card-progress-bar">
                                       <div class="card-sub-progress-bar" style="width: ${progressWidth}%;"></div>
                                   </div>

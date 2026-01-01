@@ -8,7 +8,6 @@
     max-width: 120rem;
 }
 
-
 .page-container {
     width: 100%;
     max-width: 500px;
@@ -30,17 +29,13 @@
     flex-direction: column;
     gap: 1rem;
 
-    p {
+    & p {
         margin: 2rem 0 0 0;
         font-size: 1rem;
         font-weight: 700;
         color: var(--color-menu-item);
     }
 }
-
-
-
-
 
 .task-description {
     margin-top: 1rem;
@@ -56,21 +51,18 @@
     resize: vertical;
     overflow-y: auto;
     transition: border-color 0.2s;
+
+    &::placeholder {
+        color: var(--color-light-gray);
+    }
+
+    &:focus {
+        border-color: var(--main-color);
+        cursor: text;
+    }
 }
-
-.task-description::placeholder {
-    color: var(--color-light-gray);
-}
-
-.task-description:focus {
-    border-color: var(--main-color);
-    cursor: text;
-}
-
-
 
 /* Error and Success Message Styles */
-
 .success-banner {
     position: fixed;
     top: 60px;
@@ -345,7 +337,7 @@
         width: 100%;
         background-color: white;
 
-        button {
+        & button {
             padding: 0.5rem 0.5rem;
             font-size: 1rem;
         }

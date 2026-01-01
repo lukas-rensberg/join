@@ -21,7 +21,7 @@
         height: auto;
         row-gap: 1rem;
 
-        a {
+        & a {
             display: flex;
             text-decoration: none;
             color: var(--color-menu-item);
@@ -51,7 +51,7 @@
         gap: 1rem;
 
 
-        a {
+        & a {
             display: flex;
             text-decoration: none;
             color: var(--color-menu-item);
@@ -106,7 +106,6 @@
     border-radius: var(--main-radius) 0 var(--main-radius) var(--main-radius);
     background-color: #ffffff;
     position: fixed;
-    z-index: 1000;
     left: 100%;
     top: 50%;
     opacity: 1;
@@ -116,13 +115,14 @@
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.16);
     border: none;
     outline: none;
+    overflow: visible;
 
     &::backdrop {
         background-color: rgba(255, 255, 255, 0.1);
         backdrop-filter: blur(1px);
     }
 
-    h1 {
+    & h1 {
         padding: 3rem 0 0 2.5rem;
         font-size: 3rem;
         font-weight: 700;
@@ -171,17 +171,19 @@
             }
         }
 
-        p {
+        & p {
             margin: 2rem 0 0 0;
             font-size: 1rem;
             color: var(--color-menu-item);
         }
 
-        textarea {
+        & textarea {
             cursor: pointer;
             margin-top: 1rem;
-            width: 100%;
+            min-width: 100%;
+            max-width: 100%;
             min-height: 6.5rem;
+            max-height: 19rem;
             border: 0.0625rem solid var(--color-light-gray);
             border-radius: 0 0.625rem 0.625rem 0.625rem;
             padding: 0.5rem 1rem;
@@ -231,7 +233,7 @@
         background-color: transparent;
     }
 
-    .btn-create {
+    .btn-create-aside {
         display: flex;
         align-items: center;
         justify-content: center;
