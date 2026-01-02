@@ -435,59 +435,6 @@ h5 {
     height: 2rem;
 }
 
-.task-added {
-    width: 18.5rem;
-    height: 4.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1.25rem;
-    position: fixed;
-    left: 50vw;
-    top: 120vh;
-    transform: translate(-50%, -50%);
-    background-color: var(--main-color);
-    color: #ffffff;
-    font-size: 1.25rem;
-    font-weight: 400;
-    border-radius: 1.25rem;
-    border: none;
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.16);
-    overflow: hidden;
-    opacity: 0;
-
-
-    &::backdrop {
-        background-color: transparent;
-    }
-}
-
-.move-animation {
-    animation: move-to-middle-then-right 1500ms ease forwards;
-}
-
-@keyframes move-to-middle-then-right {
-    0% {
-        left: 50vw;
-        top: 110vh;
-    }
-    9% {
-        top: 50vh;
-        left: 50vw;
-        opacity: 1;
-    }
-    54% {
-        top: 50vh;
-        left: 50vw;
-        opacity: 1;
-    }
-    100% {
-        top: 50vh;
-        left: 120vw;
-        opacity: 0;
-    }
-}
-
 .task-added::after {
     content: "";
     display: inline-block;

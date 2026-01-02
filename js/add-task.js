@@ -162,7 +162,8 @@ function showErrors(errors) {
 
 /**
  * Handles task creation and validation
- * @returns {Promise<boolean>} Returns true if task was created successfully, false otherwise
+ * @returns {Promise<boolean>}
+ * Returns true if task was created successfully, false otherwise
  */
 export async function handleCreateTask() {
     const validation = validateTaskForm();
@@ -207,7 +208,7 @@ async function createAndRedirect() {
     try {
         const taskData = collectTaskData();
         await createTask(taskData);
-        showSuccessBanner('Task created successfully!');
+        showSuccessBanner();
         redirectToBoard();
         return true;
     } catch (error) {
@@ -232,7 +233,7 @@ function handleCreateTaskError() {
 function redirectToBoard() {
     setTimeout(() => {
         window.location.href = 'board.html';
-    }, 500);
+    }, 1000);
 }
 
 

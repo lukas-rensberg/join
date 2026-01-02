@@ -87,7 +87,7 @@ function addTaskCreateButton() {
         setTimeout(() => {
             addTaskRef.classList.remove("add-task-swipe-in");
             addTaskRef.classList.add("add-task-swipe-out");
-            addedTaskRef.classList.remove("move-animation");
+            addedTaskRef.classList.remove("move-animation-board");
             setTimeout(() => {
                 addedTaskRef.close();
                 addTaskRef.close();
@@ -103,7 +103,7 @@ function addTaskCreateButton() {
  */
 function swipeInAddedTask() {
     addedTaskRef.showModal();
-    addedTaskRef.classList.add("move-animation");
+    addedTaskRef.classList.add("move-animation-board");
 
 }
 
