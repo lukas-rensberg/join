@@ -417,38 +417,75 @@ export async function removeTask(taskId) {
  * @returns {void}
  */
 function deleteTaskButton(taskId) {
-    const button = document.querySelector(".d-card-footer-d");
+    const deleteButton = document.querySelector(".d-card-footer-d");
+    const editButton = document.querySelector(".d-card-footer-e");
 
-    button.addEventListener("click", () => {
-        const deleteButton = document.querySelector(".d-card-footer-d");
-        const editButton = document.querySelector(".d-card-footer-e");
+    if (!deleteButton || !editButton) return;
 
-        deleteButton.innerHTML = "";
-        editButton.innerHTML = "";
+    const handleDeleteClick = () => showDeleteConfirmation(deleteButton, editButton, taskId, handleDeleteClick);
 
-        deleteButton.classList.remove("d-card-footer-d");
-        deleteButton.classList.add("delete", "yes");
-
-        editButton.classList.remove("d-card-footer-e");
-        editButton.classList.add("delete", "no");
-
-        editButton.addEventListener("click", () => {
-            deleteButton.classList.remove("delete", "yes");
-            deleteButton.classList.add("d-card-footer-d");
-            deleteButton.innerHTML = "Delete";
-
-            editButton.classList.remove("delete", "no");
-            editButton.classList.add("d-card-footer-e");
-            editButton.innerHTML = "Edit";
-        });
-
-        deleteButton.addEventListener("click", async () => {
-            await removeTask(taskId);
-            closeDialog();
-        });
-    });
+    deleteButton.addEventListener("click", handleDeleteClick, {once: true});
 }
 
+/**
+ * Shows the confirmation UI for task deletion (✔ and ✖ buttons).
+ * @param {HTMLElement} deleteButton - The delete button element.
+ * @param {HTMLElement} editButton - The edit button element.
+ * @param {string} taskId - The unique identifier of the task.
+ * @param {Function} handleDeleteClick - The click handler for initiating delete.
+ */
+function showDeleteConfirmation(deleteButton, editButton, taskId, handleDeleteClick) {
+    deleteButton.innerHTML = "";
+    editButton.innerHTML = "";
+
+    deleteButton.classList.remove("d-card-footer-d");
+    deleteButton.classList.add("delete", "yes");
+
+    editButton.classList.remove("d-card-footer-e");
+    editButton.classList.add("delete", "no");
+
+    let handleCancelClick;
+    let handleConfirmClick;
+
+    handleCancelClick = () => resetDeleteButtons(deleteButton, editButton, handleDeleteClick, handleConfirmClick);
+    handleConfirmClick = () => confirmDeleteTask(taskId, editButton, handleCancelClick);
+
+    editButton.addEventListener("click", handleCancelClick, {once: true});
+    deleteButton.addEventListener("click", handleConfirmClick, {once: true});
+}
+
+/**
+ * Confirms and executes the task deletion.
+ * @param {string} taskId - The unique identifier of the task to delete.
+ * @param {HTMLElement} editButton - The edit button element.
+ * @param {Function} handleCancelClick - The click handler for canceling delete.
+ */
+async function confirmDeleteTask(taskId, editButton, handleCancelClick) {
+    editButton.removeEventListener("click", handleCancelClick);
+    await removeTask(taskId);
+    closeDialog();
+}
+
+/**
+ * Resets the delete/edit buttons to their original state.
+ * @param {HTMLElement} deleteButton - The delete button element.
+ * @param {HTMLElement} editButton - The edit button element.
+ * @param {Function} handleDeleteClick - The click handler for initiating delete.
+ * @param {Function} handleConfirmClick - The click handler for confirming delete.
+ */
+function resetDeleteButtons(deleteButton, editButton, handleDeleteClick, handleConfirmClick) {
+    deleteButton.removeEventListener("click", handleConfirmClick);
+
+    deleteButton.classList.remove("delete", "yes");
+    deleteButton.classList.add("d-card-footer-d");
+    deleteButton.innerHTML = "Delete";
+
+    editButton.classList.remove("delete", "no");
+    editButton.classList.add("d-card-footer-e");
+    editButton.innerHTML = "Edit";
+
+    deleteButton.addEventListener("click", handleDeleteClick, {once: true});
+}
 
 /**
  * Render marked user avatars for a task card up to three members,
