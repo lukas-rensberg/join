@@ -65,7 +65,7 @@
     </aside>
     <section class="src-container">
         <div class="input-container">
-            <input type="name" name="search-task" id="search-task" placeholder="Find Task"/>
+            <input onkeyup="filterTasksBySearch()" type="text" name="search-task" id="search-task" placeholder="Find Task"/>
             <div class="inp-src-icon"></div>
         </div>
         <button class="add-task-btn">Add Task <img src="./assets/icons/plus_symbol.svg" alt="Plus Symbol"></button>
@@ -131,7 +131,7 @@
         </section>
     </dialog>
 
-    <dialog class="task-added" id="taskAdded">Task added to board</dialog>
+    <dialog class="task-added" id="task-added">Task added to board</dialog>
     <dialog class="dialog-task" id="dialog-task"></dialog>
 
 </main>

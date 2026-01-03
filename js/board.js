@@ -27,13 +27,65 @@ import {initializeSubtasks} from "./subtask-manager.js";
 let currentDraggedElement;
 let dialogRef = document.getElementById("dialog-task");
 let addTaskRef = document.getElementById("aside-add-task");
-let addedTaskRef = document.getElementById("taskAdded")
+let addedTaskRef = document.getElementById("task-added")
+let findTask = document.getElementById("search-task")
 
 let tasks = [];
 let contacts = [];
 
 let activeDragOverSection = null;
 let dragOverThrottle = null;
+
+
+/**
+ * Filters tasks by search input from the search field.
+ * Updates the board display with filtered results or resets to show all tasks if search is empty.
+ * @returns {void}
+ */
+function filterTasksBySearch() {
+    const searchInput = findTask.value.toLowerCase().trim();
+    const filteredTasks = tasks.filter(task =>
+        task.title.toLowerCase().includes(searchInput)
+    );
+    if (!searchInput) {
+        updateHTML();
+        return;
+    }
+
+    renderFilteredTasks(filteredTasks);
+}
+
+/**
+ * Renders filtered tasks organized by category on the board.
+ * Displays filtered tasks in their respective columns or shows empty state if no tasks match.
+ * @param {Array} filteredTasks - Array of task objects to render.
+ * @returns {void}
+ */
+function renderFilteredTasks(filteredTasks) {
+    const categories = ['to-do', 'in-progress', 'await-feedback', 'done'];
+
+    categories.forEach(category => {
+        const categoryTasks = filteredTasks.filter(task => task.category === category);
+        const containerRef = document.getElementById(category);
+        containerRef.innerHTML = "";
+
+        if (categoryTasks.length === 0) {
+            containerRef.innerHTML = getNoTaskTemplate(category);
+            return;
+        }
+
+        categoryTasks.forEach(task => {
+            const subtasks = task.subtasks || [];
+            const subtasksDone = task.subtasks_done || [];
+            const totalSubtasks = subtasks.length + subtasksDone.length;
+            const progressWidth = totalSubtasks > 0 ? (subtasksDone.length / totalSubtasks) * 100 : 0;
+            containerRef.innerHTML += getTemplateTaskCard(task, subtasksDone, totalSubtasks, progressWidth);
+            initMarkedUsers(task);
+            hideEmptySubtasks(task);
+        });
+    });
+}
+
 
 /**
  * Loads contacts from Firebase database and stores them in the contacts array.
@@ -969,3 +1021,4 @@ window.createNewTask = createNewTask;
 window.openAddTaskAside = openAddTaskAside;
 window.addEventListener('resize', openAddTaskAside);
 window.deleteTaskButton = deleteTaskButton;
+window.filterTasksBySearch = filterTasksBySearch;
