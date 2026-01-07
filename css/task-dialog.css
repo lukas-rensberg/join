@@ -374,6 +374,51 @@ strong {
     }
 }
 
+.confirm-edit-task-btn {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    border-radius: var(--button-radius);
+    gap: .5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 200ms ease;
+    padding: .5rem .5rem;
+    border: none;
+    background-color: var(--main-color);
+
+    &::before {
+        content: 'Ok';
+        color: #ffffff;
+        font-weight: 400;
+        font-size: 1.25rem;
+    }
+
+    &::after {
+        content: '';
+        background: url('../assets/icons/check.svg') center center no-repeat;
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+
+    &:hover {
+        cursor: pointer;
+        background-color: var(--color-primary-button-hover);
+    }
+
+    &:active {
+        background-color: var(--color-primary-button-click);
+
+
+        &::before {
+        color: var(--main-color)
+        }
+
+        &::after {
+            background: url('../assets/icons/check_blue.svg') center center no-repeat;
+        }
+    }
+}
+
 
 @media (width < 500px) {
     .d-assigned-members {

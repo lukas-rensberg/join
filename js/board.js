@@ -38,12 +38,90 @@ let dragOverThrottle = null;
 
 
 /**
+ * Enables editing mode for a task in the dialog by setting up the edit button event listener.
+ * @param {Object} element - The task object to be edited.
+ * @param {string} dueDate - The formatted due date string for display.
+ * @returns {void}
+ */
+function editTaskInDialog(element, dueDate) {
+    console.log(element);
+    console.error("Bis hier gekommen");
+    const deleteButton = document.querySelector(".d-card-footer-d");
+    const editButton = document.querySelector(".d-card-footer-e");
+    const dialogContentRef = document.querySelector(".dialog-content");
+
+    if (!deleteButton || !editButton) return;
+
+    const handleEditClick = () => {
+        showEditConfirmation(dialogContentRef, deleteButton, editButton, element, dueDate, handleEditClick);
+    };
+
+    editButton.addEventListener("click", handleEditClick, {once: true});
+}
+
+/**
+ * Displays the edit confirmation interface by replacing dialog content with edit form.
+ * Removes delete button, transforms edit button to confirm button, and loads the add task template.
+ * @param {HTMLElement} dialogContentRef - The dialog content container element.
+ * @param {HTMLElement} deleteButton - The delete button element.
+ * @param {HTMLElement} editButton - The edit button element.
+ * @param {Object} element - The task object being edited.
+ * @param {string} dueDate - The formatted due date string for display.
+ * @param {Function} handleEditClick - The click handler function for edit button.
+ * @returns {void}
+ */
+function showEditConfirmation(dialogContentRef, deleteButton, editButton, element, dueDate, handleEditClick) {
+    console.error("Bis hier weitergekommen");
+    deleteButton.innerHTML = "";
+    editButton.innerHTML = "";
+    dialogContentRef.innerHTML = "";
+    dialogContentRef.style.padding = "1.5rem 1.25rem";
+    dialogContentRef.style.overflow = "visible";
+
+    editButton.removeEventListener("click", handleEditClick);
+
+    deleteButton.classList.add("d-none");
+
+    editButton.classList.remove("d-card-footer-e");
+    editButton.classList.add("confirm-edit-task-btn");
+
+    dialogContentRef.innerHTML = getTemplateAddTask();
+    dialogContentRef.insertAdjacentHTML('beforeend', `<div class="d-card-footer"><div class="confirm-edit-task-btn"></div></div>`);
+    console.error("dialog footer eingefügt");
+
+    const handleConfirmEdit = () => confirmEdit(deleteButton, editButton, handleEditClick);
+    editButton.addEventListener("click", handleConfirmEdit, {once: true});
+}
+
+/**
+ * Confirms the task edit and restores the dialog footer to its original state.
+ * Resets delete and edit buttons to their default appearance and re-attaches event listeners.
+ * @param {HTMLElement} deleteButton - The delete button element to restore.
+ * @param {HTMLElement} editButton - The edit button element to restore.
+ * @param {Function} handleEditClick - The click handler function to re-attach to edit button.
+ * @returns {void}
+ */
+function confirmEdit(deleteButton, editButton, handleEditClick) {
+    deleteButton.classList.remove("d-none");
+    deleteButton.innerHTML = "Delete";
+
+    editButton.classList.remove("confirm-edit-task-btn");
+    editButton.classList.add("d-card-footer-e");
+    editButton.innerHTML = "Edit";
+
+    editButton.addEventListener("click", handleEditClick, {once: true});
+
+    // Hier kommt die Logik zum Speichern der Änderungen
+}
+
+/**
  * Filters tasks by search input from the search field.
+ * Searches for matches in task titles (case-insensitive).
  * Updates the board display with filtered results or resets to show all tasks if search is empty.
  * @returns {void}
  */
 function filterTasksBySearch() {
-    const searchInput = findTask.value.toLowerCase().trim();
+    const searchInput = findTask.value.toLowerCase();
     const filteredTasks = tasks.filter(task =>
         task.title.toLowerCase().includes(searchInput)
     );
@@ -57,8 +135,9 @@ function filterTasksBySearch() {
 
 /**
  * Renders filtered tasks organized by category on the board.
- * Displays filtered tasks in their respective columns or shows empty state if no tasks match.
- * @param {Array} filteredTasks - Array of task objects to render.
+ * Displays filtered tasks in their respective columns with progress bars and member avatars.
+ * Shows empty state message if no tasks match the filter for a category.
+ * @param {Array<Object>} filteredTasks - Array of task objects to render.
  * @returns {void}
  */
 function renderFilteredTasks(filteredTasks) {
@@ -89,7 +168,8 @@ function renderFilteredTasks(filteredTasks) {
 
 /**
  * Loads contacts from Firebase database and stores them in the contacts array.
- * Sets up a real-time listener that updates contacts when changes occur.
+ * Sets up a real-time listener that updates contacts when changes occur in the database.
+ * @returns {void}
  */
 export function loadContacts() {
     const contactsRef = ref(database, 'contacts');
@@ -102,7 +182,8 @@ export function loadContacts() {
 
 /**
  * Opens the add task aside panel with a swipe-in animation.
- * Removes any swipe-out class and adds the swipe-in class before showing the modal.
+ * Removes any swipe-out class and adds the swipe-in class before showing the modal dialog.
+ * @returns {void}
  */
 function swipeInAddTaskAside() {
     addTaskRef.classList.remove("add-task-swipe-out");
@@ -112,7 +193,8 @@ function swipeInAddTaskAside() {
 
 /**
  * Closes the add task aside panel with a swipe-out animation.
- * Removes the swipe-in class and adds the swipe-out class before closing the modal.
+ * Removes the swipe-in class and adds the swipe-out class, then closes the modal after 300ms delay.
+ * @returns {void}
  */
 function swipeOutAddTaskAside() {
     addTaskRef.classList.remove("add-task-swipe-in");
@@ -124,7 +206,7 @@ function swipeOutAddTaskAside() {
 
 /**
  * Sets up the create button event listener for the add task aside panel.
- * Handles task creation, success animation, and closing of modals.
+ * Handles task creation, success animation, and closing of modals with appropriate timing.
  * @returns {void}
  */
 function addTaskCreateButton() {
@@ -150,7 +232,7 @@ function addTaskCreateButton() {
 
 /**
  * Shows the task added confirmation dialog with a slide-in animation.
- * Opens the modal and adds the animation class.
+ * Opens the modal and applies the animation class to display the success message.
  * @returns {void}
  */
 function swipeInAddedTask() {
@@ -164,8 +246,6 @@ function swipeInAddedTask() {
  * On larger screens (min-width: 812px), displays an aside panel with swipe animations.
  * On smaller screens, redirects to the add-task.html page.
  * Sets up event listeners for opening and closing the add task interface.
- *
- * @function openAddTaskAside
  * @returns {void}
  */
 function openAddTaskAside() {
@@ -199,8 +279,7 @@ function openAddTaskAside() {
 /**
  * Creates and renders the add task dialog by clearing the description container
  * and inserting the add task template HTML.
- * Initializes all form components after rendering.
- * @function createAddTask
+ * Initializes all form components (date input, priority buttons, dropdowns, subtasks) after rendering.
  * @returns {void}
  */
 function createAddTask() {
@@ -223,9 +302,10 @@ export function getContactById(contactId) {
 }
 
 /**
- * Format date string for display
- * @param {string} dateString - Date in YYYY-MM-DD format
- * @returns {string} Formatted date string
+ * Formats a date string for display in DD/MM/YYYY format.
+ * Returns "No due date" if the date string is empty or undefined.
+ * @param {string} dateString - Date in YYYY-MM-DD format.
+ * @returns {string} Formatted date string in DD/MM/YYYY format or "No due date".
  */
 export function formatDate(dateString) {
     if (!dateString) return "No due date";
@@ -243,9 +323,10 @@ export function formatDate(dateString) {
 }
 
 /**
- * Get random contacts for task assignment
- * @param {number} count - Number of random contacts to return
- * @returns {Array} Array of contact IDs
+ * Gets random contacts for task assignment, excluding authenticated users.
+ * Returns 1-4 randomly selected contact IDs from available contacts.
+ * @param {number} [count=3] - Maximum number of random contacts to return.
+ * @returns {Array<string>} Array of contact IDs.
  */
 export function getRandomContactIds(count = 3) {
     if (!contacts || contacts.length === 0) return [];
@@ -259,8 +340,9 @@ export function getRandomContactIds(count = 3) {
 }
 
 /**
- * Create default tasks with random member assignments
- * @returns {Array} Array of default tasks with random members
+ * Creates default tasks with random member assignments for initial setup.
+ * Each task is assigned 1-4 random contacts from the available contacts list.
+ * @returns {Array<Object>} Array of default task objects with random members.
  */
 export function createDefaultTasksWithMembers() {
     return [
@@ -466,27 +548,31 @@ export async function removeTask(taskId) {
  * Initializes the delete button functionality in the task dialog.
  * Sets up confirmation UI and event listeners for task deletion.
  * @param {string} taskId - The unique identifier of the task to delete.
+ * @param {Function} handleEditClick - The click handler for the edit button.
  * @returns {void}
  */
-function deleteTaskButton(taskId) {
+function deleteTaskButton(taskId, handleEditClick) {
     const deleteButton = document.querySelector(".d-card-footer-d");
     const editButton = document.querySelector(".d-card-footer-e");
 
     if (!deleteButton || !editButton) return;
 
-    const handleDeleteClick = () => showDeleteConfirmation(deleteButton, editButton, taskId, handleDeleteClick);
+    const handleDeleteClick = () => showDeleteConfirmation(deleteButton, editButton, taskId, handleDeleteClick, handleEditClick);
 
     deleteButton.addEventListener("click", handleDeleteClick, {once: true});
 }
 
 /**
- * Shows the confirmation UI for task deletion (✔ and ✖ buttons).
- * @param {HTMLElement} deleteButton - The delete button element.
- * @param {HTMLElement} editButton - The edit button element.
- * @param {string} taskId - The unique identifier of the task.
+ * Shows the confirmation UI for task deletion by displaying checkmark and cancel buttons.
+ * Transforms delete and edit buttons into confirmation controls and sets up event handlers.
+ * @param {HTMLElement} deleteButton - The delete button element to transform.
+ * @param {HTMLElement} editButton - The edit button element to transform.
+ * @param {string} taskId - The unique identifier of the task to delete.
  * @param {Function} handleDeleteClick - The click handler for initiating delete.
+ * @param {Function} handleEditClick - The click handler for the edit button.
+ * @returns {void}
  */
-function showDeleteConfirmation(deleteButton, editButton, taskId, handleDeleteClick) {
+function showDeleteConfirmation(deleteButton, editButton, taskId, handleDeleteClick, handleEditClick) {
     deleteButton.innerHTML = "";
     editButton.innerHTML = "";
 
@@ -496,10 +582,12 @@ function showDeleteConfirmation(deleteButton, editButton, taskId, handleDeleteCl
     editButton.classList.remove("d-card-footer-e");
     editButton.classList.add("delete", "no");
 
+    editButton.removeEventListener("click", handleEditClick);
+
     let handleCancelClick;
     let handleConfirmClick;
 
-    handleCancelClick = () => resetDeleteButtons(deleteButton, editButton, handleDeleteClick, handleConfirmClick);
+    handleCancelClick = () => resetDeleteButtons(deleteButton, editButton, handleDeleteClick, handleConfirmClick, handleEditClick);
     handleConfirmClick = () => confirmDeleteTask(taskId, editButton, handleCancelClick);
 
     editButton.addEventListener("click", handleCancelClick, {once: true});
@@ -507,10 +595,12 @@ function showDeleteConfirmation(deleteButton, editButton, taskId, handleDeleteCl
 }
 
 /**
- * Confirms and executes the task deletion.
+ * Confirms and executes the task deletion by removing the task from Firebase and closing the dialog.
+ * Removes cancel event listener before proceeding with deletion.
  * @param {string} taskId - The unique identifier of the task to delete.
  * @param {HTMLElement} editButton - The edit button element.
  * @param {Function} handleCancelClick - The click handler for canceling delete.
+ * @returns {Promise<void>}
  */
 async function confirmDeleteTask(taskId, editButton, handleCancelClick) {
     editButton.removeEventListener("click", handleCancelClick);
@@ -519,13 +609,16 @@ async function confirmDeleteTask(taskId, editButton, handleCancelClick) {
 }
 
 /**
- * Resets the delete/edit buttons to their original state.
+ * Resets the delete/edit buttons to their original state after canceling deletion.
+ * Removes confirmation click handlers and restores original button appearance and event listeners.
  * @param {HTMLElement} deleteButton - The delete button element.
  * @param {HTMLElement} editButton - The edit button element.
  * @param {Function} handleDeleteClick - The click handler for initiating delete.
  * @param {Function} handleConfirmClick - The click handler for confirming delete.
+ * @param {Function} handleEditClick - The click handler for the edit button.
+ * @returns {void}
  */
-function resetDeleteButtons(deleteButton, editButton, handleDeleteClick, handleConfirmClick) {
+function resetDeleteButtons(deleteButton, editButton, handleDeleteClick, handleConfirmClick, handleEditClick) {
     deleteButton.removeEventListener("click", handleConfirmClick);
 
     deleteButton.classList.remove("delete", "yes");
@@ -537,12 +630,14 @@ function resetDeleteButtons(deleteButton, editButton, handleDeleteClick, handleC
     editButton.innerHTML = "Edit";
 
     deleteButton.addEventListener("click", handleDeleteClick, {once: true});
+    editButton.addEventListener("click", handleEditClick, {once: true});
 }
 
 /**
- * Render marked user avatars for a task card up to three members,
- * and show a "+N" indicator when more members exist.
+ * Renders marked user avatars for a task card up to three members,
+ * and shows a "+N" indicator when more members exist.
  * @param {Object} element - Task object containing `id` and `member` array.
+ * @returns {void}
  */
 function initMarkedUsers(element) {
     let markedUserContainer = document.getElementById(`marked-user-container-${element["id"]}`);
@@ -565,9 +660,11 @@ function initMarkedUsers(element) {
 }
 
 /**
- * Renders tasks for a specific category
- * @param {string} category Task category
- * @param {string} displayName Display name for empty state
+ * Renders tasks for a specific category by filtering tasks and displaying them in the category container.
+ * Shows empty state message if no tasks exist in the category.
+ * @param {string} category - Task category identifier (e.g., "todo", "in-progress", "done").
+ * @param {string} displayName - Display name for the empty state message.
+ * @returns {void}
  */
 function renderTasksByCategory(category, displayName) {
     const filteredTasks = tasks.filter((t) => t["category"] === category);
@@ -605,7 +702,9 @@ function hideEmptySubtasks(task) {
 }
 
 /**
- * Updates all task columns in the board with debouncing to prevent flickering
+ * Updates all task columns in the board with debouncing to prevent flickering.
+ * Clears previous update timeout and renders tasks for all categories after 50ms delay.
+ * @returns {void}
  */
 function updateHTML() {
     clearTimeout(updateTimeout);
@@ -618,8 +717,9 @@ function updateHTML() {
 }
 
 /**
- * Mark the task as being dragged and add dragging CSS class.
+ * Marks the task as being dragged and adds the dragging CSS class for visual feedback.
  * @param {string} id - DOM id of the dragged task element.
+ * @returns {void}
  */
 function startDragging(id) {
     currentDraggedElement = id;
@@ -628,8 +728,10 @@ function startDragging(id) {
 
 
 /**
- * Allow dropping by preventing default browser behavior.
- * @param {Event} event - Dragover event.
+ * Allows dropping by preventing the default browser dragover behavior.
+ * Required to enable drop functionality on the target element.
+ * @param {DragEvent} event - Dragover event object.
+ * @returns {void}
  */
 function allowDrop(event) {
     event.preventDefault();
@@ -637,10 +739,11 @@ function allowDrop(event) {
 
 
 /**
- * Handle dragover events for board columns, with lightweight throttling
- * and visual feedback (highlight container and show placeholder).
- * @param {Event} event - The dragover event.
+ * Handles dragover events for board columns with lightweight throttling (~60fps).
+ * Provides visual feedback by highlighting the container and showing a placeholder.
+ * @param {DragEvent} event - The dragover event object.
  * @param {string} section - The id of the column being dragged over.
+ * @returns {void}
  */
 function handleDragOver(event, section) {
     event.preventDefault();
@@ -657,8 +760,10 @@ function handleDragOver(event, section) {
 }
 
 /**
- * Move the currently dragged task to a new category and persist the change.
- * @param {string} category - Target category id (e.g. "to-do", "in-progress").
+ * Moves the currently dragged task to a new category and persists the change to Firebase.
+ * Removes dragging visual feedback and cleans up the drag state.
+ * @param {string} category - Target category id (e.g. "to-do", "in-progress", "await-feedback", "done").
+ * @returns {void}
  */
 function moveTo(category) {
     const taskToUpdate = tasks.find(task => task.id === currentDraggedElement);
@@ -674,8 +779,9 @@ function moveTo(category) {
 
 
 /**
- * Add dragover CSS class to the container with the given id.
+ * Adds the dragover CSS class to the container to provide visual feedback during drag operations.
  * @param {string} id - Container element id.
+ * @returns {void}
  */
 function bgContainer(id) {
     document.getElementById(id).classList.add("task-card-container-dragover");
@@ -683,8 +789,10 @@ function bgContainer(id) {
 
 
 /**
- * Remove dragover CSS class and hide the dashed placeholder for a container.
+ * Removes the dragover CSS class and hides the dashed placeholder for a container.
+ * Cleans up visual feedback after drag operation completes.
  * @param {string} id - Container element id.
+ * @returns {void}
  */
 function bgContainerRemove(id) {
     hideDashedBox(id);
@@ -693,9 +801,9 @@ function bgContainerRemove(id) {
 
 
 /**
- * Returns HTML shown when a column has no tasks.
- * @param {string} section - Display name for empty state.
- * @returns {string} HTML string for the empty state.
+ * Returns the HTML template shown when a column has no tasks.
+ * @param {string} section - Display name for the empty state message.
+ * @returns {string} HTML string for the empty state display.
  */
 function getNoTaskTemplate(section) {
     return `<div class="no-tasks">No tasks ${section}</div>`;
@@ -703,9 +811,10 @@ function getNoTaskTemplate(section) {
 
 
 /**
- * Show a dashed placeholder card in a column once during dragover.
+ * Shows a dashed placeholder card in a column once during dragover.
  * Prevents duplicate placeholders for the same section while dragging.
- * @param {string} section - Column id where placeholder should appear.
+ * @param {string} section - Column id where the placeholder should appear.
+ * @returns {void}
  */
 function showDashedBoxOnce(section) {
     // Prevent repeated calls for the same section
@@ -732,8 +841,10 @@ function showDashedBoxOnce(section) {
 
 
 /**
- * Hide the dashed placeholder and restore the "no tasks" message.
+ * Hides the dashed placeholder and restores the "no tasks" message.
+ * Cleans up drag visual feedback after drag operation ends.
  * @param {string} section - Column id.
+ * @returns {void}
  */
 function hideDashedBox(section) {
     const container = document.getElementById(section);
@@ -756,31 +867,49 @@ function hideDashedBox(section) {
 }
 
 /**
- * Generate markup for the empty dashed card used during dragover.
- * @returns {string} HTML string for an empty card.
+ * Generates the HTML markup for the empty dashed card placeholder used during dragover.
+ * @returns {string} HTML string for an empty card placeholder.
  */
 function generateEmptyCard() {
     return `<div class="empty-card"></div>`;
 }
 
 /**
- * Open the task dialog for a given task id.
+ * Opens the task dialog for a given task id, displaying task details with swipe-in animation.
+ * Initializes members and subtasks display within the dialog.
  * @param {string} index - The task id to open in the dialog.
+ * @returns {void}
  */
 function openDialog(index) {
-    let element = tasks.filter((t) => t["id"] === `${index}`)[0];
+    let element = tasks.filter((task) => task["id"] === `${index}`)[0];
     dialogRef.classList.remove("dialog-swipe-out");
     dialogRef.classList.add("dialog-swipe-in");
     const dueDate = element["dueDate"] ? formatDate(element["dueDate"]) : "No due date set";
     dialogRef.innerHTML = getTemplateDialog(element, dueDate);
     initMembers(element["member"]);
     initSubtasks(element["id"]);
-    deleteTaskButton(element["id"]);
+
+    const handleEditClick = () => {
+        const deleteButton = document.querySelector(".d-card-footer-d");
+        const editButton = document.querySelector(".d-card-footer-e");
+        const dialogContentRef = document.querySelector(".dialog-content");
+        showEditConfirmation(dialogContentRef, deleteButton, editButton, element, dueDate, handleEditClick);
+    };
+
+    deleteTaskButton(element["id"], handleEditClick);
+
+    const editButton = document.querySelector(".d-card-footer-e");
+    if (editButton) {
+        editButton.addEventListener("click", handleEditClick, {once: true});
+    }
+
     dialogRef.showModal();
 }
 
 /**
- * Close the currently open task dialog.
+ * Closes the currently open task dialog with a swipe-out animation.
+ * Removes the dialog after a 300ms delay to allow animation to complete.
+ * @returns {void}
  */
 function closeDialog() {
     dialogRef.classList.remove("dialog-swipe-in");
@@ -792,8 +921,10 @@ function closeDialog() {
 }
 
 /**
- * Populate the dialog's assigned members section from an array of contact ids.
+ * Populates the dialog's assigned members section from an array of contact ids.
+ * Renders member cards with name, initials, and avatar color for each assigned member.
  * @param {Array<string>} memberIds - Array of contact ids assigned to the task.
+ * @returns {void}
  */
 function initMembers(memberIds) {
     let membersContainer = document.getElementById("d-assigned-members");
@@ -1022,3 +1153,4 @@ window.openAddTaskAside = openAddTaskAside;
 window.addEventListener('resize', openAddTaskAside);
 window.deleteTaskButton = deleteTaskButton;
 window.filterTasksBySearch = filterTasksBySearch;
+window.editTaskInDialog = editTaskInDialog;

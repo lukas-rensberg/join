@@ -577,6 +577,18 @@
     overflow: hidden;
     opacity: 0;
 
+    &::after {
+        content: "";
+        display: inline-block;
+        width: 1.375rem;
+        height: 1.625rem;
+        background-image: url("../assets/menu_icons/board.svg");
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        filter: brightness(0) invert(1);
+    }
+
     &::backdrop {
         background-color: transparent;
     }

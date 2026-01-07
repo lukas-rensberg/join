@@ -1,32 +1,32 @@
 .body-overview {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  width: 100vw;
-  max-width: 1920px;
-  position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100vw;
+    max-width: 1920px;
+    position: relative;
 }
 
 main {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  flex: 1;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    flex: 1;
 }
 
 .dashboard-container {
-  z-index: 15;
-  display: grid;
-  grid-auto-columns: 8.5rem;
-  grid-auto-rows: 6.5rem;
-  gap: 1rem;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem var(--padding-side) 0;
-  opacity: 0;
-  transform: translateY(100%);
-  animation: slideBottomToTop 600ms 1300ms ease-in forwards;
-  grid-template-areas:
+    z-index: 15;
+    display: grid;
+    grid-auto-columns: 8.5rem;
+    grid-auto-rows: 6.5rem;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem var(--padding-side) 0;
+    opacity: 0;
+    transform: translateY(100%);
+    animation: slideBottomToTop 600ms 1300ms ease-in forwards;
+    grid-template-areas:
     "card-urgent-deadline card-urgent-deadline"
     "card-todo card-todo"
     "card-board card-progress"
@@ -34,436 +34,437 @@ main {
 }
 
 @keyframes slideBottomToTop {
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .card {
-  background-color: #ffffff;
-  border-radius: var(--main-radius);
-  border: none;
-  height: 6.5rem;
+    background-color: #ffffff;
+    border-radius: var(--main-radius);
+    border: none;
+    height: 6.5rem;
 
-  &:hover {
-    cursor: pointer;
+    &:hover {
+        cursor: pointer;
 
-  }
+    }
 }
 
 .border-none {
-  border: none !important;
+    border: none !important;
 }
 
 .card-urgent-deadline {
-  height: 6.5rem;
-  border-radius: var(--main-radius);
-  grid-area: card-urgent-deadline;
-  background: var(--main-color);
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  padding: 12px 20px;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.16);
+    height: 6.5rem;
+    border-radius: var(--main-radius);
+    grid-area: card-urgent-deadline;
+    background: var(--main-color);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.16);
 
-  &:hover,
-  :active {
-    animation: borderFade 300ms forwards;
-    transition: background-color 300ms, color 300ms;
-    background-color: #ffffff;
-    color: var(--main-color);
+    &:hover,
+    :active {
+        cursor: pointer;
+        animation: borderFade 300ms forwards;
+        transition: background-color 300ms, color 300ms;
+        background-color: #ffffff;
+        color: var(--main-color);
 
 
-    .separator {
-      background-color: var(--main-color);
+        .separator {
+            background-color: var(--main-color);
+        }
+
+        span {
+            color: var(--main-color);
+        }
     }
-
-    span {
-      color: var(--main-color);
-    }
-  }
 }
 
 @keyframes borderFade {
-  to {
-    border-radius: 0 var(--main-radius) var(--main-radius) var(--main-radius);
-  }
+    to {
+        border-radius: 0 var(--main-radius) var(--main-radius) var(--main-radius);
+    }
 }
 
 .urgent-section {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: left;
-  padding-right: 12px;
-  height: 100%;
-  margin: 4px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+    padding-right: 12px;
+    height: 100%;
+    margin: 4px 0;
 }
 
 .separator {
-  width: 2px;
-  height: 100%;
-  background-color: #ffffff;
-  border-radius: 4px;
+    width: 2px;
+    height: 100%;
+    background-color: #ffffff;
+    border-radius: 4px;
 }
 
 .icon-and-count {
-  display: flex;
-  align-items: center;
-  gap: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
 .deadline-section {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding-left: 12px;
-  justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 12px;
+    justify-content: center;
 }
 
 .deadline-section .date {
-  font-size: 1rem;
-  font-weight: bold;
-  line-height: 1.2rem;
+    font-size: 1rem;
+    font-weight: bold;
+    line-height: 1.2rem;
 }
 
 .card-todo {
-  grid-area: card-todo;
-  background: var(--color-menu-active);
-  padding: 12px 20px;
-  display: flex;
-  align-items: center;
-  height: 90px;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.16);
+    grid-area: card-todo;
+    background: var(--color-menu-active);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    height: 90px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.16);
 
-  &:hover,
-  :active {
-    animation: borderFade 300ms forwards;
-    transition: background-color 300ms, color 300ms;
-    background-color: #ffffff;
+    &:hover,
+    :active {
+        animation: borderFade 300ms forwards;
+        transition: background-color 300ms, color 300ms;
+        background-color: #ffffff;
 
 
-    span {
-      color: var(--main-color);
+        span {
+            color: var(--main-color);
+        }
     }
-  }
 
-  .number {
-    color: black;
-  }
+    .number {
+        color: black;
+    }
 
-  .title {
-    color: var(--main-color);
-    font-size: 1rem;
-    margin-left: 1rem;
-  }
+    .title {
+        color: var(--main-color);
+        font-size: 1rem;
+        margin-left: 1rem;
+    }
 }
 
 .todo-content {
-  display: flex;
-  align-items: center;
-  gap: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
 
 .card-board {
-  grid-area: card-board;
+    grid-area: card-board;
 }
 
 .card-progress {
-  grid-area: card-progress;
+    grid-area: card-progress;
 }
 
 .card-feedback {
-  grid-area: card-feedback;
+    grid-area: card-feedback;
 }
 
 .card-done {
-  grid-area: card-done;
+    grid-area: card-done;
 }
 
 .card-board,
 .card-progress,
 .card-feedback,
 .card-done {
-  padding: 10px var(--padding-side);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  border-radius: var(--main-radius);
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.16);
+    padding: 10px var(--padding-side);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: var(--main-radius);
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.16);
 
-  &:hover,
-  :active {
-    animation: borderFade 300ms forwards;
-    transition: background-color 300ms, color 300ms;
-    background-color: var(--main-color);
-    color: #ffffff;
+    &:hover,
+    :active {
+        animation: borderFade 300ms forwards;
+        transition: background-color 300ms, color 300ms;
+        background-color: var(--main-color);
+        color: #ffffff;
 
-    span {
-      color: #ffffff;
+        span {
+            color: #ffffff;
+        }
     }
-  }
 }
 
 .card-board .icon-section,
 .card-progress .icon-section,
 .card-feedback .icon-section,
 .card-done .icon-section {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  gap: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 10px;
 }
 
 .icon-circle {
-  width: 3rem;
-  height: 3rem;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 3px solid #ffffff;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 3px solid #ffffff;
 
-  img {
-    border-radius: 999px;
-    width: 100%;
-    height: 100px;
+    img {
+        border-radius: 999px;
+        width: 100%;
+        height: 100px;
 
-  }
+    }
 }
 
 .number {
-  font-size: 2rem;
-  font-weight: 700;
-  color: black;
-  line-height: 1;
+    font-size: 2rem;
+    font-weight: 700;
+    color: black;
+    line-height: 1;
 }
 
 .card-urgent-deadline .number {
-  color: #ffffff;
-  font-size: 2.2rem;
+    color: #ffffff;
+    font-size: 2.2rem;
 }
 
 .title {
-  font-size: 0.8rem;
-  font-weight: 400;
-  color: var(--main-color);
-  text-align: center;
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--main-color);
+    text-align: center;
 }
 
 .title-date {
-  font-size: 0.8rem;
-  font-weight: 400;
-  color: #ffffff;
-  text-align: center;
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: #ffffff;
+    text-align: center;
 }
 
 .urgent-section .title,
 .deadline-section .title {
-  color: #ffffff;
-  font-weight: 400;
+    color: #ffffff;
+    font-weight: 400;
 }
 
 .greeting-container {
-  grid-area: greeting;
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  width: auto;
-  height: auto;
-  animation: slideOutToTop 500ms ease-in 1000ms forwards;
-  z-index: 20;
-  top: 50%;
-  opacity: 0;
-  visibility: hidden;
-
-  p {
-    font-size: 2rem;
-    font-weight: 400;
-  }
-
-  h1 {
-    font-size: 3rem;
-    font-weight: bold;
-  }
-
-  .h1-colorized {
-    color: var(--color-light-blue);
-  }
-}
-
-.greeting-container.loaded {
-  opacity: 1;
-  visibility: visible;
-}
-
-@keyframes slideOutToTop {
-  0% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  100% {
-    opacity: 0;
-    transform: translateY(-4rem);
-    display: none;
-  }
-}
-
-.greeting-guest {
-  font-size: 2.5rem;
-  font-weight: 700 !important;
-  margin-bottom: 0;
-}
-
-.greeting-guest-large {
-  font-weight: bold;
-  font-size: 4rem !important;
-}
-
-.m-left {
-  margin-left: 1rem;
-}
-
-@media (width >=812px) {
-
-  main {
-    display: grid;
-    align-items: unset;
-    justify-content: unset;
-    flex-direction: unset;
-  }
-
-  .dashboard-container {
-    margin-left: 300px;
-    grid-auto-rows: 10.5rem;
-    grid-auto-columns: 10.5rem;
-    justify-content: flex-start;
-    transform: translateY(0%);
-    opacity: 1;
-    animation: none;
-    column-gap: 2rem;
-    row-gap: 2rem;
-    grid-template-areas:
-      "greeting greeting greeting greeting"
-      "card-urgent-deadline card-urgent-deadline card-urgent-deadline card-board"
-      "card-todo card-progress card-feedback card-done";
-  }
-
-
-  .greeting-container {
+    grid-area: greeting;
+    position: absolute;
     display: flex;
-    flex-direction: row;
     justify-content: center;
     align-items: center;
-    width: 100%;
+    flex-direction: column;
+    width: auto;
     height: auto;
-    animation: none;
-    opacity: 1;
-    visibility: visible;
+    animation: slideOutToTop 500ms ease-in 1000ms forwards;
+    z-index: 20;
+    top: 50%;
+    opacity: 0;
+    visibility: hidden;
 
     p {
-      font-size: 3rem;
-      font-weight: 400;
+        font-size: 2rem;
+        font-weight: 400;
     }
 
     h1 {
-      font-size: 4rem;
-      margin-left: 1.25rem;
-      font-weight: bold;
-    }
-  }
-
-  .greeting-guest {
-    font-size: 3rem;
-    margin-bottom: 4rem;
-  }
-
-  .card-urgent-deadline {
-    justify-content: center;
-    height: 10.5rem;
-
-    .number {
-      font-size: 2.5rem;
+        font-size: 3rem;
+        font-weight: bold;
     }
 
-    .urgent-section {
-      padding-right: 1.5rem;
-
-      .title {
-        margin-top: .5rem;
-      }
+    .h1-colorized {
+        color: var(--color-light-blue);
     }
-
-    .deadline-section {
-      padding-left: 1.5rem;
-
-      .date {
-        font-size: 1.75rem;
-        margin-bottom: .75rem;
-      }
-
-      .title-date {
-        font-size: 1.125rem;
-      }
-
-    }
-  }
-
-  .icon-circle {
-    width: 4rem;
-    height: 4rem;
-  }
-
-  .todo-content {
-    align-items: center;
-    gap: 10px;
-  }
-
-  .card-board,
-  .card-progress,
-  .card-feedback,
-  .card-done {
-    padding: 24px var(--padding-side);
-    justify-content: space-between;
-  }
-
-  .card-todo {
-    height: 6.5rem;
-    padding: 24px var(--padding-side);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    row-gap: .5rem;
-    border-radius: var(--main-radius);
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.16);
-
-    .title {
-      font-size: 1.25rem;
-    }
-  }
-
-  .card {
-    height: 10.5rem;
-    width: 10.5rem;
-
-    .number {
-      font-size: 2.5rem;
-    }
-  }
-
-  .title {
-    font-size: 1.25rem;
-  }
 }
 
-@media (width >=1110px) {
-  .dashboard-container {
-    margin-left: 380px;
-  }
+.greeting-container.loaded {
+    opacity: 1;
+    visibility: visible;
+}
+
+@keyframes slideOutToTop {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-4rem);
+        display: none;
+    }
+}
+
+.greeting-guest {
+    font-size: 2.5rem;
+    font-weight: 700 !important;
+    margin-bottom: 0;
+}
+
+.greeting-guest-large {
+    font-weight: bold;
+    font-size: 4rem !important;
+}
+
+.m-left {
+    margin-left: 1rem;
+}
+
+@media (width >= 812px) {
+
+    main {
+        display: grid;
+        align-items: unset;
+        justify-content: unset;
+        flex-direction: unset;
+    }
+
+    .dashboard-container {
+        margin-left: 300px;
+        grid-auto-rows: 10.5rem;
+        grid-auto-columns: 10.5rem;
+        justify-content: flex-start;
+        transform: translateY(0%);
+        opacity: 1;
+        animation: none;
+        column-gap: 2rem;
+        row-gap: 2rem;
+        grid-template-areas:
+      "greeting greeting greeting greeting"
+      "card-urgent-deadline card-urgent-deadline card-urgent-deadline card-board"
+      "card-todo card-progress card-feedback card-done";
+    }
+
+
+    .greeting-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: auto;
+        animation: none;
+        opacity: 1;
+        visibility: visible;
+
+        p {
+            font-size: 3rem;
+            font-weight: 400;
+        }
+
+        h1 {
+            font-size: 4rem;
+            margin-left: 1.25rem;
+            font-weight: bold;
+        }
+    }
+
+    .greeting-guest {
+        font-size: 3rem;
+        margin-bottom: 4rem;
+    }
+
+    .card-urgent-deadline {
+        justify-content: center;
+        height: 10.5rem;
+
+        .number {
+            font-size: 2.5rem;
+        }
+
+        .urgent-section {
+            padding-right: 1.5rem;
+
+            .title {
+                margin-top: .5rem;
+            }
+        }
+
+        .deadline-section {
+            padding-left: 1.5rem;
+
+            .date {
+                font-size: 1.75rem;
+                margin-bottom: .75rem;
+            }
+
+            .title-date {
+                font-size: 1.125rem;
+            }
+
+        }
+    }
+
+    .icon-circle {
+        width: 4rem;
+        height: 4rem;
+    }
+
+    .todo-content {
+        align-items: center;
+        gap: 10px;
+    }
+
+    .card-board,
+    .card-progress,
+    .card-feedback,
+    .card-done {
+        padding: 24px var(--padding-side);
+        justify-content: space-between;
+    }
+
+    .card-todo {
+        height: 6.5rem;
+        padding: 24px var(--padding-side);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        row-gap: .5rem;
+        border-radius: var(--main-radius);
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.16);
+
+        .title {
+            font-size: 1.25rem;
+        }
+    }
+
+    .card {
+        height: 10.5rem;
+        width: 10.5rem;
+
+        .number {
+            font-size: 2.5rem;
+        }
+    }
+
+    .title {
+        font-size: 1.25rem;
+    }
+}
+
+@media (width >= 1110px) {
+    .dashboard-container {
+        margin-left: 380px;
+    }
 }
