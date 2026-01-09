@@ -87,7 +87,8 @@ console.log('🟢 Subtask functions registered:', {
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🟢 DOM loaded, initializing components...');
 
-    // Debug: Check if critical DOM elements exist
+    createAddTask();
+
     console.log('🔍 DOM Element Check:', {
         subtaskInput: !!document.querySelector('.subtask-input'),
         subtaskIcons: !!document.querySelector('.subtask-icons'),
@@ -99,7 +100,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeDropdowns();
     initializeSubtasks();
     initializeFormButtons();
-    createAddTask();
 });
 
 

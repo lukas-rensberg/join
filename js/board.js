@@ -66,7 +66,7 @@ function swipeOutAddTaskAside() {
  * On larger screens (min-width: 812px), displays an aside panel with swipe animations.
  * On smaller screens, redirects to the add-task.html page.
  * Sets up event listeners for opening and closing the add task interface.
- * 
+ *
  * @function openAddTaskAside
  * @returns {void}
  */
@@ -76,12 +76,10 @@ function openAddTaskAside() {
     const openIcons = document.querySelectorAll('.add-task-icon');
 
     if (mediaQuery) {
-        createAddTask();
         openButtons.forEach(button => {
             button.addEventListener('click', swipeInAddTaskAside);
         })
     } else {
-        createAddTask()
         openIcons.forEach(icon => {
             icon.addEventListener('click', () => {
                 window.location.href = 'add-task.html';
@@ -95,18 +93,6 @@ function openAddTaskAside() {
 
     }
 }
-
-/**
- * Creates and renders the add task dialog by clearing the description container
- * and inserting the add task template HTML.
- * @function createAddTask
- * @returns {void}
- */
-function createAddTask() {
-    const refAddTask = document.querySelector('.description');
-    refAddTask.innerHTML = "";
-    refAddTask.innerHTML = getTemplateAddTask();
-};
 
 /**
  * Retrieves a contact object by its unique identifier.
@@ -293,10 +279,9 @@ function initializeTasks() {
             updateHTML();
         });
 
-        // Wait for contacts to load before migrating tasks with random members
         setTimeout(() => {
             migrateDefaultTasksWithMembers();
-        }, 1000); // Give contacts time to load
+        }, 1000);
     } catch (error) {
         console.error('Error initializing tasks:', error);
         tasks = [...defaultTasks];
@@ -312,8 +297,6 @@ async function migrateDefaultTasksWithMembers() {
         const tasksWithMembers = createDefaultTasksWithMembers();
         await migrateDefaultTasks(tasksWithMembers);
     } catch (error) {
-        console.error('Error migrating tasks with members:', error);
-        // Fallback to default tasks without members
         await migrateDefaultTasks(defaultTasks);
     }
 }
@@ -572,7 +555,7 @@ function openDialog(index) {
     const dueDate = element["dueDate"] ? formatDate(element["dueDate"]) : "No due date set";
     dialogRef.innerHTML = getTemplateDialog(element, dueDate);
     initMembers(element["member"]);
-    iniSubtasks(element["id"]);
+    initSubtasks(element["id"]);
 
     dialogRef.showModal();
 }
@@ -607,7 +590,7 @@ function initMembers(memberIds) {
  * Displays both pending and completed subtasks with checkboxes.
  * @param {string} taskId - The unique identifier of the task whose subtasks to render.
  */
-function iniSubtasks(taskId) {
+function initSubtasks(taskId) {
     let subtasksContainer = document.querySelector(".d-subtasks-check");
     subtasksContainer.innerHTML = "";
 
@@ -763,14 +746,6 @@ document.addEventListener('DOMContentLoaded', () => {
     openAddTaskAside();
 });
 
-// Also initialize immediately if the DOM is already loaded
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeTasks);
-} else {
-    initializeTasks();
-    openAddTaskAside();
-}
-
 // Make functions globally accessible for inline event handlers
 window.openDialog = openDialog;
 window.closeDialog = closeDialog;
@@ -788,9 +763,6 @@ window.removeContactFromAllTasks = removeContactFromAllTasks;
 window.updateSubtaskStatus = updateSubtaskStatus;
 window.getRandomContactIds = getRandomContactIds;
 window.formatDate = formatDate;
-window.SwipeInAddTaskAside = swipeInAddTaskAside;
-window.SwipeOutAddTaskAside = swipeOutAddTaskAside;
 window.createNewTask = createNewTask;
 window.openAddTaskAside = openAddTaskAside;
 window.addEventListener('resize', openAddTaskAside);
-window.addEventListener('resize', updateSubtaskStatus);

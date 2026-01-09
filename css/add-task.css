@@ -146,6 +146,11 @@
   pointer-events: auto;
 }
 
+.success-banner.visible ~ main,
+main:has(~ .success-banner.visible) {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
 .success-banner::before {
   content: '✓';
   display: flex;
@@ -515,6 +520,15 @@
   outline: none;
   background-color: transparent;
   font-family: inherit;
+}
+
+.subtask-edit-input:focus {
+  border: none;
+}
+
+.subtask-edit-input:focus + .subtask-actions,
+.subtask-item-editing:has(.subtask-edit-input:focus) {
+  border-bottom-color: var(--main-color);
 }
 
 .subtask-actions {
