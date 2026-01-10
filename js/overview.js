@@ -28,11 +28,11 @@ function moveGreetingContainer() {
   const mediaQuery = window.matchMedia("(min-width: 812px)").matches;
   const greetingContainer = document.querySelector(".greeting-container");
   const dashboardContainer = document.querySelector(".dashboard-container");
-  
-  if (mediaQuery) {
-    dashboardContainer.insertBefore(greetingContainer, dashboardContainer.firstChild);
-  }
+  if (!greetingContainer || !dashboardContainer) return;
 
+  if (mediaQuery && greetingContainer.parentNode !== dashboardContainer || dashboardContainer.firstChild !== greetingContainer) {
+      dashboardContainer.insertBefore(greetingContainer, dashboardContainer.firstChild);
+  }
 }
 
 /**
@@ -52,13 +52,15 @@ function updateGreeting() {
           greetingElement.textContent = getTimeBasedGreeting();
           greetingElement.classList.add("greeting-guest");
           if (mediaQuery) {
-            greetingElement.style.fontWeight = "bold";
-            greetingElement.style.fontSize = "4rem";
+            greetingElement.classList.add("greeting-guest-large");
+          } else {
+            greetingElement.classList.remove("greeting-guest-large");
           }
 
         } else {
           greetingElement.textContent = getTimeBasedGreeting() + ",";
           greetingElement.classList.remove("greeting-guest");
+          greetingElement.classList.remove("greeting-guest-large");
         }
       }
 

@@ -100,6 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeDropdowns();
     initializeSubtasks();
     initializeFormButtons();
+    createAddTask();
 });
 
 
@@ -218,7 +219,6 @@ async function createAndRedirect() {
  * @returns {void}
  */
 function handleCreateTaskError(error) {
-    console.error('Error creating task:', error);
     showErrorBanner('Error creating task. Please try again.');
 }
 
@@ -248,12 +248,9 @@ function handleClearForm() {
 
 /**
  * Creates and renders the add task form in the DOM.
- * @function createAddTask
  * @returns {void}
  */
 function createAddTask() {
     const container = document.querySelector(".add-task-form-container");
-    console.log(container);  
-    container.innerHTML += getTemplateAddTask();  
-
+    container.innerHTML += getTemplateAddTask();
 }

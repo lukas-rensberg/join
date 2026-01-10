@@ -318,10 +318,6 @@ main {
   }
 }
 
-
-
-
-
 /* p {
   font-size: 1.5rem;
   margin-bottom: 0.25rem;
@@ -331,6 +327,11 @@ main {
   font-size: 2.5rem;
   font-weight: 700 !important;
   margin-bottom: 0;
+}
+
+.greeting-guest-large {
+  font-weight: bold;
+  font-size: 4rem;
 }
 
 .m-left {
@@ -468,7 +469,6 @@ main {
   .title {
     font-size: 1.25rem
   }
-}
 
 /* @media (width >500px) and (width <811px) {
   .dashboard-container {

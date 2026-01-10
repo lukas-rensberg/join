@@ -66,8 +66,6 @@ function swipeOutAddTaskAside() {
  * On larger screens (min-width: 812px), displays an aside panel with swipe animations.
  * On smaller screens, redirects to the add-task.html page.
  * Sets up event listeners for opening and closing the add task interface.
- *
- * @function openAddTaskAside
  * @returns {void}
  */
 function openAddTaskAside() {
@@ -76,10 +74,12 @@ function openAddTaskAside() {
     const openIcons = document.querySelectorAll('.add-task-icon');
 
     if (mediaQuery) {
+        createAddTask();
         openButtons.forEach(button => {
             button.addEventListener('click', swipeInAddTaskAside);
         })
     } else {
+        createAddTask()
         openIcons.forEach(icon => {
             icon.addEventListener('click', () => {
                 window.location.href = 'add-task.html';
@@ -92,6 +92,18 @@ function openAddTaskAside() {
         closeButton.addEventListener('click', swipeOutAddTaskAside);
 
     }
+}
+
+/**
+ * Creates and renders the add task dialog by clearing the description container
+ * and inserting the add task template HTML.
+ * @function createAddTask
+ * @returns {void}
+ */
+function createAddTask() {
+    const refAddTask = document.querySelector('.add-task-form');
+    refAddTask.innerHTML = "";
+    refAddTask.innerHTML = getTemplateAddTask();
 }
 
 /**
@@ -555,7 +567,7 @@ function openDialog(index) {
     const dueDate = element["dueDate"] ? formatDate(element["dueDate"]) : "No due date set";
     dialogRef.innerHTML = getTemplateDialog(element, dueDate);
     initMembers(element["member"]);
-    initSubtasks(element["id"]);
+    iniSubtasks(element["id"]);
 
     dialogRef.showModal();
 }
