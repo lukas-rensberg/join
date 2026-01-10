@@ -124,7 +124,6 @@
         font-size: 3rem;
         font-weight: 700;
         line-height: 120%;
-        font-style: bold;
     }
 
     .close-add-task {
@@ -369,7 +368,6 @@
 
             .subtask-edit-input {
                 flex-grow: 1;
-                /* padding: 12px; */
                 border: none;
                 border-radius: 0;
                 font-size: 0.9rem;

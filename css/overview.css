@@ -1,7 +1,6 @@
 .body-overview {
   display: flex;
   flex-direction: column;
-  /* align-items: center; */
   min-height: 100vh;
   width: 100vw;
   max-width: 1920px;
@@ -11,7 +10,6 @@
 main {
   display: flex;
   align-items: center;
-  /* justify-content: center; */
   flex-direction: column;
   flex: 1;
 }
@@ -64,11 +62,10 @@ main {
   grid-area: card-urgent-deadline;
   background: var(--main-color);
   color: #ffffff;
-  height: 120px;
   display: flex;
   align-items: center;
   padding: 12px 20px;
-  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.16);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.16);
 
   &:hover,
   :active {
@@ -138,7 +135,7 @@ main {
   display: flex;
   align-items: center;
   height: 90px;
-  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.16);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.16);
 
   &:hover,
   :active {
@@ -195,7 +192,7 @@ main {
   align-items: center;
   justify-content: space-between;
   border-radius: var(--main-radius);
-  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.16);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.16);
 
   &:hover,
   :active {
@@ -318,11 +315,6 @@ main {
   }
 }
 
-/* p {
-  font-size: 1.5rem;
-  margin-bottom: 0.25rem;
-} */
-
 .greeting-guest {
   font-size: 2.5rem;
   font-weight: 700 !important;
@@ -349,7 +341,6 @@ main {
 
   .dashboard-container {
     margin-left: 300px;
-    /* margin-top: 3.5rem; */
     grid-auto-rows: 10.5rem;
     grid-auto-columns: 10.5rem;
     justify-content: flex-start;
@@ -450,7 +441,7 @@ main {
     align-items: center;
     row-gap: .5rem;
     border-radius: var(--main-radius);
-    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.16);
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.16);
 
     .title {
       font-size: 1.25rem;
@@ -469,12 +460,7 @@ main {
   .title {
     font-size: 1.25rem
   }
-
-/* @media (width >500px) and (width <811px) {
-  .dashboard-container {
-    margin-left: 100px;
-  }
-} */
+}
 
 @media (width >=1110px) {
   .dashboard-container {
