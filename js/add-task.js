@@ -100,7 +100,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeDropdowns();
     initializeSubtasks();
     initializeFormButtons();
-    createAddTask();
 });
 
 
@@ -131,6 +130,8 @@ function attachButtonListeners() {
         clearButton.addEventListener('click', handleClearForm);
     }
 }
+
+
 
 
 /**
@@ -215,10 +216,9 @@ async function createAndRedirect() {
 
 /**
  * Handles errors during task creation
- * @param {Error} error - The error object
  * @returns {void}
  */
-function handleCreateTaskError(error) {
+function handleCreateTaskError() {
     showErrorBanner('Error creating task. Please try again.');
 }
 
