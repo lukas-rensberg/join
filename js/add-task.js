@@ -100,7 +100,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeDropdowns();
     initializeSubtasks();
     initializeFormButtons();
-    createAddTask();
 });
 
 
