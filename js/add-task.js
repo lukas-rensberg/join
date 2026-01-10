@@ -71,29 +71,12 @@ window.filterOptions = filterOptions;
 window.selectContact = selectContact;
 window.selectCategory = selectCategory;
 
-// Debug: Verify functions are properly registered
-console.log('🟢 Subtask functions registered:', {
-    toggleSubtaskIcons: typeof window.toggleSubtaskIcons,
-    deleteSubtask: typeof window.deleteSubtask,
-    startEditingSubtask: typeof window.startEditingSubtask,
-    saveEdit: typeof window.saveEdit,
-    cancelEdit: typeof window.cancelEdit
-});
-
 /**
  * Initialize all components when DOM is fully loaded
  * @returns {void}
  */
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('🟢 DOM loaded, initializing components...');
-
     createAddTask();
-
-    console.log('🔍 DOM Element Check:', {
-        subtaskInput: !!document.querySelector('.subtask-input'),
-        subtaskIcons: !!document.querySelector('.subtask-icons'),
-        subtaskList: !!document.getElementById('subtaskList')
-    });
 
     initializePriorityButtons();
     initializeDateInput();
@@ -210,7 +193,7 @@ async function createAndRedirect() {
         showSuccessBanner('Task created successfully!');
         redirectToBoard();
     } catch (error) {
-        handleCreateTaskError(error);
+        handleCreateTaskError();
     }
 }
 
