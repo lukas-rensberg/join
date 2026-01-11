@@ -306,7 +306,7 @@ export function getTemplateAddTask() {
                             Urgent
                             <img src="./assets/priority_icons/prio_urgent_colored.svg" alt="Image with two arrows up" />
                         </button>
-                        <button class="priority-btn medium">
+                        <button class="priority-btn medium active">
                             Medium
                             <img src="./assets/priority_icons/medium.svg" alt="Image with two stripes horizontal" />
                         </button>

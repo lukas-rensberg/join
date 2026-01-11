@@ -71,7 +71,6 @@ function editTaskInDialog(element, dueDate) {
  * @returns {void}
  */
 function showEditConfirmation(dialogContentRef, deleteButton, editButton, element, dueDate, handleEditClick) {
-    console.error("Bis hier weitergekommen");
     deleteButton.innerHTML = "";
     editButton.innerHTML = "";
     dialogContentRef.innerHTML = "";
@@ -87,7 +86,6 @@ function showEditConfirmation(dialogContentRef, deleteButton, editButton, elemen
 
     dialogContentRef.innerHTML = getTemplateAddTask();
     dialogContentRef.insertAdjacentHTML('beforeend', `<div class="d-card-footer"><div class="confirm-edit-task-btn"></div></div>`);
-    console.error("dialog footer eingefügt");
 
     const handleConfirmEdit = () => confirmEdit(deleteButton, editButton, handleEditClick);
     editButton.addEventListener("click", handleConfirmEdit, {once: true});
@@ -123,7 +121,7 @@ function confirmEdit(deleteButton, editButton, handleEditClick) {
 function filterTasksBySearch() {
     const searchInput = findTask.value.toLowerCase();
     const filteredTasks = tasks.filter(task =>
-        task.title.toLowerCase().includes(searchInput)
+        task.title.toLowerCase().includes(searchInput) || task.text.toLowerCase().includes(searchInput)
     );
     if (!searchInput) {
         updateHTML();

@@ -377,6 +377,10 @@ main {
             font-size: 4rem;
             margin-left: 1.25rem;
             font-weight: bold;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
         }
     }
 
