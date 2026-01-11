@@ -87,7 +87,7 @@ Run join using the following methods:
 ### Q4 2025 + Q1 (Jan.) 2026
 
 - [X] **`Add the board`**: <strike>Add the entire board with drag & drop</strike>
-- [ ] **`Add Task`**: Add functions to add tasks to the board
+- [X] **`Add Task`**: <strike>Add functions to add tasks to the board</strike>
 - [ ] **`Responsive Design`**: Make the app responsive.
 - [ ] **`Fix mobile drag & drop`**: Mobile Drag and Drop not working - make it works.
 
