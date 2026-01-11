@@ -1,6 +1,6 @@
 /**
  * Dropdown Management Functions
- * Handles contact and category dropdown functionality
+ * Handles contact and category dropdown functionality with scoped container support
  */
 
 import { getCategoryOptionHTML, generateContactOptionHTML, getContactChipHTML } from "./template.js";
@@ -10,6 +10,7 @@ import { ref, onValue } from "https://www.gstatic.com/firebasejs/12.4.0/firebase
 let contacts = [];
 let selectedContacts = [];
 let selectedCategory = null;
+let activeContainer = null;
 
 const categories = [
     { id: 'technical', name: 'Technical Task' },
@@ -18,23 +19,25 @@ const categories = [
 
 /**
  * Load contacts from database for dropdown
+ * @param {HTMLElement} container - The container element to scope queries
  */
-async function loadContacts() {
+async function loadContacts(container = document) {
     const contactsRef = ref(database, 'contacts');
 
     onValue(contactsRef, (snapshot) => {
         if (snapshot.exists()) {
             contacts = Object.values(snapshot.val());
-            populateContactsDropdown();
+            populateContactsDropdown(container);
         }
     });
 }
 
 /**
  * Populate the contacts dropdown with available contacts
+ * @param {HTMLElement} container - The container element to scope queries
  */
-function populateContactsDropdown() {
-    const dropdownContent = document.getElementById('contactDropdownContent');
+function populateContactsDropdown(container = document) {
+    const dropdownContent = container.querySelector('.contact-dropdown-content');
     if (!dropdownContent) return;
     dropdownContent.innerHTML = '';
     const sortedContacts = contacts.sort((a, b) => a.name.localeCompare(b.name));
@@ -42,7 +45,6 @@ function populateContactsDropdown() {
         const contactOption = document.createElement('div');
         contactOption.className = 'contact-option';
         contactOption.setAttribute('data-contact-id', contact.id);
-        contactOption.onclick = () => selectContact(contact.id);
         contactOption.innerHTML = generateContactOptionHTML(contact);
         dropdownContent.appendChild(contactOption);
     });
@@ -50,21 +52,24 @@ function populateContactsDropdown() {
 
 /**
  * Select/deselect a contact
+ * @param {string} contactId - The contact ID
+ * @param {HTMLElement} container - The container element to scope queries
  */
-export function selectContact(contactId) {
+export function selectContact(contactId, container = document) {
     const isSelected = selectedContacts.find(c => c.id === contactId);
-    toggleContactSelection(contactId, isSelected);
-    updateSelectedContactsDisplay();
+    toggleContactSelection(contactId, isSelected, container);
+    updateSelectedContactsDisplay(container);
 }
 
 /**
  * Toggles contact selection state
  * @param {string} contactId - The contact ID
  * @param {object|null} isSelected - The currently selected contact or null
+ * @param {HTMLElement} container - The container element to scope queries
  * @returns {void}
  */
-function toggleContactSelection(contactId, isSelected) {
-    const { contact, contactOption, checkbox } = getContactElements(contactId);
+function toggleContactSelection(contactId, isSelected, container = document) {
+    const { contact, contactOption, checkbox } = getContactElements(contactId, container);
     if (!contact || !contactOption || !checkbox) return;
 
     if (isSelected) {
@@ -81,21 +86,23 @@ function toggleContactSelection(contactId, isSelected) {
 /**
  * Get contact elements by ID
  * @param {string} contactId - The contact ID
+ * @param {HTMLElement} container - The container element to scope queries
  * @returns {object} - Object containing contact, option, and checkbox elements
  */
-function getContactElements(contactId) {
+function getContactElements(contactId, container = document) {
     const contact = contacts.find(c => c.id === contactId);
-    const contactOption = document.querySelector(`[data-contact-id="${contactId}"]`);
-    const checkbox = document.getElementById(`checkbox-${contactId}`);
+    const contactOption = container.querySelector(`[data-contact-id="${contactId}"]`);
+    const checkbox = contactOption?.querySelector(`input[type="checkbox"]`);
 
     return { contact, contactOption, checkbox };
 }
 
 /**
  * Update the display of selected contacts
+ * @param {HTMLElement} container - The container element to scope queries
  */
-function updateSelectedContactsDisplay() {
-    const dropzone = document.querySelector('.dropzone');
+function updateSelectedContactsDisplay(container = document) {
+    const dropzone = container.querySelector('.dropzone');
     if (!dropzone) return;
 
     dropzone.innerHTML = '';
@@ -110,16 +117,17 @@ function updateSelectedContactsDisplay() {
 
 /**
  * Populate the category dropdown with available categories
+ * @param {HTMLElement} container - The container element to scope queries
  */
-function populateCategoriesDropdown() {
-    const dropdownContent = document.getElementById('categoryDropdownContent');
+function populateCategoriesDropdown(container = document) {
+    const dropdownContent = container.querySelector('.category-dropdown-content');
     if (!dropdownContent) return;
 
     dropdownContent.innerHTML = `
-        <div class="category-option" data-category-id="technical" onclick="selectCategory('technical')">
+        <div class="category-option" data-category-id="technical">
             ${getCategoryOptionHTML({id: 'technical', name: 'Technical Task'})}
         </div>
-        <div class="category-option" data-category-id="user-story" onclick="selectCategory('user-story')">
+        <div class="category-option" data-category-id="user-story">
             ${getCategoryOptionHTML({id: 'user-story', name: 'User Story'})}
         </div>
     `;
@@ -127,55 +135,62 @@ function populateCategoriesDropdown() {
 
 /**
  * Select a category
+ * @param {string} categoryId - The category ID
+ * @param {HTMLElement} container - The container element to scope queries
  */
-export function selectCategory(categoryId) {
+export function selectCategory(categoryId, container = document) {
     const category = categories.find(c => c.id === categoryId);
-    const categoryDisplay = document.getElementById('categoryDisplay');
+    const categoryDisplay = container.querySelector('.category-display');
     if (!category) return;
 
     selectedCategory = category;
     categoryDisplay.textContent = category.name;
 
-    document.querySelectorAll('.category-option').forEach(option => {
+    container.querySelectorAll('.category-option').forEach(option => {
         option.classList.remove('selected');
     });
 
-    const selectedOption = document.querySelector(`[data-category-id="${categoryId}"]`);
+    const selectedOption = container.querySelector(`[data-category-id="${categoryId}"]`);
     if (selectedOption) {
         selectedOption.classList.add('selected');
     }
 
-    toggleDropdown('category', false);
+    toggleDropdown('category', false, container);
 }
 
 /**
  * Toggle dropdown visibility
  * @param {string} type - Type of dropdown ('contact' or 'category')
  * @param {boolean} forceOpen - Force dropdown to open
+ * @param {HTMLElement} container - The container element to scope queries
  * @returns {void}
  */
-export function toggleDropdown(type, forceOpen = false) {
-    const { wrapper, dropdownContent, dropdownHeader } = getDropdownElements(type);
+export function toggleDropdown(type, forceOpen = false, container = document) {
+    const { wrapper, dropdownContent, dropdownHeader } = getDropdownElements(type, container);
     if (!wrapper || !dropdownContent || !dropdownHeader) return;
 
     if (forceOpen || !dropdownContent.classList.contains('active')) {
-        closeAllDropdowns(type);
+        closeAllDropdowns(type, container);
         dropdownHeader.classList.add('active');
         dropdownContent.classList.add('active');
-        if (type === 'contact') document.getElementById('contactSearchInput').focus();
+        if (type === 'contact') {
+            const searchInput = container.querySelector('.contact-search-input');
+            if (searchInput) searchInput.focus();
+        }
     } else {
-        clearDropdown(type)
+        clearDropdown(type, container);
     }
 }
 
 /**
  * Get dropdown elements by type
  * @param {string} type - Type of dropdown
+ * @param {HTMLElement} container - The container element to scope queries
  * @returns {object} - Object containing wrapper, content, and header elements
  */
-function getDropdownElements(type) {
-    const wrapper = document.getElementById(`${type}DropdownWrapper`);
-    const dropdownContent = document.getElementById(`${type}DropdownContent`);
+function getDropdownElements(type, container = document) {
+    const wrapper = container.querySelector(`.${type}-dropdown-wrapper`);
+    const dropdownContent = container.querySelector(`.${type}-dropdown-content`);
     const dropdownHeader = wrapper ? wrapper.querySelector('.dropdown-header') : null;
 
     return { wrapper, dropdownContent, dropdownHeader };
@@ -183,16 +198,17 @@ function getDropdownElements(type) {
 
 /**
  * Close all dropdowns except the specified one
- * @param {null} except - Type to exclude from closing
+ * @param {string|null} except - Type to exclude from closing
+ * @param {HTMLElement} container - The container element to scope queries
  * @returns {void}
  */
-function closeAllDropdowns(except = null) {
+function closeAllDropdowns(except = null, container = document) {
     const types = ['contact', 'category'];
 
     types.forEach(type => {
         if (type !== except && type === 'contact') {
-            clearDropdown(type);
-            filterOptions('contact');
+            clearDropdown(type, container);
+            filterOptions('contact', container);
         }
     });
 }
@@ -200,69 +216,133 @@ function closeAllDropdowns(except = null) {
 /**
  * Clear the dropdown section
  * @param {string} type - Type of dropdown to clear
+ * @param {HTMLElement} container - The container element to scope queries
  * @returns {void}
  */
-function clearDropdown(type) {
-    const { dropdownContent, dropdownHeader } = getDropdownElements(type);
+function clearDropdown(type, container = document) {
+    const { dropdownContent, dropdownHeader } = getDropdownElements(type, container);
     if (!dropdownContent || !dropdownHeader) return;
-    const searchInput = document.getElementById('contactSearchInput');
+    const searchInput = container.querySelector('.contact-search-input');
 
     dropdownContent.classList.remove('active');
     dropdownHeader.classList.remove('active');
-    searchInput.value = '';
+    if (searchInput) searchInput.value = '';
 }
 
 /**
  * Filter options based on search input
  * @param {string} type - Type of dropdown to filter
+ * @param {HTMLElement} container - The container element to scope queries
  * @returns {void}
  */
-export function filterOptions(type) {
+export function filterOptions(type, container = document) {
     if (type === 'contact') {
-        const searchTerm = document.getElementById('contactSearchInput').value.toLowerCase();
-        const contactOptions = document.querySelectorAll('.contact-option');
+        const searchInput = container.querySelector('.contact-search-input');
+        const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+        const contactOptions = container.querySelectorAll('.contact-option');
 
         contactOptions.forEach(option => {
             const name = option.querySelector('.contact-option-name').textContent.toLowerCase();
             name.includes(searchTerm) ? option.style.display = 'flex' : option.style.display = 'none';
         });
 
-        if (searchTerm.length > 0) toggleDropdown('contact', true);
+        if (searchTerm.length > 0) toggleDropdown('contact', true, container);
     }
 }
 
 /**
  * Close dropdown when clicking outside
  * @param {MouseEvent} event - The mouse event
+ * @param {HTMLElement} container - The container element to scope queries
  * @returns {void}
  */
-function closeDropdownOnClickOutside(event) {
+function closeDropdownOnClickOutside(event, container = document) {
     const types = ['contact', 'category'];
 
     types.forEach(type => {
-        const { wrapper, dropdownContent, dropdownHeader } = getDropdownElements(type);
+        const { wrapper, dropdownContent, dropdownHeader } = getDropdownElements(type, container);
 
         if (!wrapper || !dropdownContent || !dropdownHeader) return;
 
         if (!wrapper.contains(event.target) && type === 'contact') {
-            clearDropdown(type);
+            clearDropdown(type, container);
+        }
+    });
+}
+
+/**
+ * Setup event delegation for dropdowns
+ * @param {HTMLElement} container - The container element to scope events
+ */
+function setupDropdownEventDelegation(container = document) {
+    // Contact dropdown header click
+    container.addEventListener('click', (event) => {
+        const contactHeader = event.target.closest('.contact-dropdown-header');
+        if (contactHeader && !event.target.closest('.contact-search-input')) {
+            toggleDropdown('contact', false, container);
+            return;
+        }
+
+        // Contact search input click
+        const searchInput = event.target.closest('.contact-search-input');
+        if (searchInput) {
+            event.stopPropagation();
+            toggleDropdown('contact', true, container);
+            return;
+        }
+
+        // Category dropdown header click
+        const categoryHeader = event.target.closest('.category-dropdown-header');
+        if (categoryHeader) {
+            toggleDropdown('category', false, container);
+            return;
+        }
+
+        // Contact option click
+        const contactOption = event.target.closest('.contact-option');
+        if (contactOption) {
+            const contactId = contactOption.getAttribute('data-contact-id');
+            if (contactId) {
+                selectContact(contactId, container);
+            }
+            return;
+        }
+
+        // Category option click
+        const categoryOption = event.target.closest('.category-option');
+        if (categoryOption) {
+            const categoryId = categoryOption.getAttribute('data-category-id');
+            if (categoryId) {
+                selectCategory(categoryId, container);
+            }
+            return;
+        }
+    });
+
+    // Contact search input
+    container.addEventListener('input', (event) => {
+        if (event.target.closest('.contact-search-input')) {
+            filterOptions('contact', container);
         }
     });
 }
 
 /**
  * Initialize dropdown functionality
+ * @param {HTMLElement} container - The container element to scope queries (default: document)
  * @returns {void}
  */
-export function initializeDropdowns() {
-    loadContacts();
-    populateCategoriesDropdown();
+export function initializeDropdowns(container = document) {
+    activeContainer = container;
+    loadContacts(container);
+    populateCategoriesDropdown(container);
+    setupDropdownEventDelegation(container);
 
-    document.addEventListener('click', closeDropdownOnClickOutside);
+    document.addEventListener('click', (event) => closeDropdownOnClickOutside(event, container));
 
     document.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') {
-            closeAllDropdowns();
+            closeAllDropdowns(null, container);
         }
     });
 }
@@ -298,3 +378,112 @@ export function clearSelectedContacts() {
 export function clearSelectedCategory() {
     selectedCategory = null;
 }
+
+/**
+ * Re-populate dropdowns for a new container (useful when switching contexts)
+ * @param {HTMLElement} container - The new container element
+ */
+export function refreshDropdowns(container = document) {
+    activeContainer = container;
+    populateContactsDropdown(container);
+    populateCategoriesDropdown(container);
+}
+
+/**
+ * Waits for contacts array to be populated
+ * @param {number} timeout - Maximum wait time in ms
+ * @returns {Promise<void>}
+ */
+function waitForContacts(timeout) {
+    return new Promise((resolve) => {
+        if (contacts.length > 0) {
+            resolve();
+            return;
+        }
+
+        const startTime = Date.now();
+        const interval = setInterval(() => {
+            if (contacts.length > 0) {
+                clearInterval(interval);
+                resolve();
+            } else if (Date.now() - startTime > timeout) {
+                clearInterval(interval);
+                resolve(); // Resolve anyway to not block the UI
+            }
+        }, 50);
+    });
+}
+
+/**
+ * Waits for contacts to be loaded, then preselects the given member IDs
+ * @param {string[]} memberIds - Array of contact IDs to preselect
+ * @param {HTMLElement} container - The container element to scope queries
+ * @param {number} timeout - Maximum wait time in ms (default: 3000)
+ * @returns {Promise<void>}
+ */
+export async function preselectContacts(memberIds, container = document, timeout = 3000) {
+    if (!memberIds || memberIds.length === 0) return;
+
+    await waitForContacts(timeout);
+
+    // Clear any existing selections first
+    selectedContacts = [];
+
+    // Select each contact by ID
+    memberIds.forEach(contactId => {
+        const contact = contacts.find(c => c.id === contactId);
+        if (contact) {
+            selectedContacts.push(contact);
+            const contactOption = container.querySelector(`[data-contact-id="${contactId}"]`);
+            if (contactOption) {
+                contactOption.classList.add('selected');
+                const checkbox = contactOption.querySelector('input[type="checkbox"]');
+                if (checkbox) checkbox.checked = true;
+            }
+        }
+    });
+
+    updateSelectedContactsDisplay(container);
+}
+
+/**
+ * Preselects a category based on task type name
+ * Sets the category without opening/toggling the dropdown
+ * @param {string} taskType - The task type name (e.g., "User Story", "Technical Task")
+ * @param {HTMLElement} container - The container element to scope queries
+ */
+export function preselectCategory(taskType, container = document) {
+    if (!taskType) return;
+
+    // Map task type name to category ID
+    const categoryMap = {
+        'User Story': 'user-story',
+        'Technical Task': 'technical'
+    };
+
+    const categoryId = categoryMap[taskType];
+    if (!categoryId) return;
+
+    const category = categories.find(c => c.id === categoryId);
+    if (!category) return;
+
+    // Set the selected category
+    selectedCategory = category;
+
+    // Update the display text
+    const categoryDisplay = container.querySelector('.category-display');
+    if (categoryDisplay) {
+        categoryDisplay.textContent = category.name;
+    }
+
+    // Mark the option as selected (without opening dropdown)
+    container.querySelectorAll('.category-option').forEach(option => {
+        option.classList.remove('selected');
+    });
+
+    const selectedOption = container.querySelector(`[data-category-id="${categoryId}"]`);
+    if (selectedOption) {
+        selectedOption.classList.add('selected');
+    }
+}
+

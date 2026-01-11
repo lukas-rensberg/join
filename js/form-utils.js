@@ -1,6 +1,6 @@
 /**
  * Form Utility Functions
- * Helper functions for form manipulation and clearing
+ * Helper functions for form manipulation and clearing with scoped container support
  */
 
 import { selectPriority } from "./priority-manager.js";
@@ -9,12 +9,13 @@ import { clearSelectedContacts, clearSelectedCategory } from "./dropdown-manager
 
 /**
  * Clears all form input fields
+ * @param {HTMLElement} container - The container element to scope queries (default: document)
  * @returns {void}
  */
-export function clearFormInputs() {
-    const titleInput = document.querySelector('.input-title');
-    const descriptionInput = document.querySelector('.task-description');
-    const dueDateInput = document.getElementById('dueDate');
+export function clearFormInputs(container = document) {
+    const titleInput = container.querySelector('.input-title');
+    const descriptionInput = container.querySelector('.task-description');
+    const dueDateInput = container.querySelector('.due-date-input');
 
     if (titleInput) titleInput.value = '';
     if (descriptionInput) descriptionInput.value = '';
@@ -23,31 +24,34 @@ export function clearFormInputs() {
 
 /**
  * Resets priority selection to medium
+ * @param {HTMLElement} container - The container element to scope queries (default: document)
  * @returns {void}
  */
-export function resetPriorityToMedium() {
-    const mediumButton = document.querySelector('.priority-btn.medium');
+export function resetPriorityToMedium(container = document) {
+    const mediumButton = container.querySelector('.priority-btn.medium');
     if (mediumButton) {
-        selectPriority(mediumButton);
+        selectPriority(mediumButton, container);
     }
 }
 
 /**
  * Clears all contact selections
+ * @param {HTMLElement} container - The container element to scope queries (default: document)
  * @returns {void}
  */
-export function clearContactSelections() {
+export function clearContactSelections(container = document) {
     clearSelectedContacts();
-    clearContactDropzone();
-    clearContactCheckboxes();
+    clearContactDropzone(container);
+    clearContactCheckboxes(container);
 }
 
 /**
  * Clears the contact dropzone display
+ * @param {HTMLElement} container - The container element to scope queries (default: document)
  * @returns {void}
  */
-export function clearContactDropzone() {
-    const dropzone = document.querySelector('.dropzone');
+export function clearContactDropzone(container = document) {
+    const dropzone = container.querySelector('.dropzone');
     if (dropzone) {
         dropzone.innerHTML = '';
     }
@@ -55,10 +59,11 @@ export function clearContactDropzone() {
 
 /**
  * Clears all contact checkboxes
+ * @param {HTMLElement} container - The container element to scope queries (default: document)
  * @returns {void}
  */
-export function clearContactCheckboxes() {
-    document.querySelectorAll('.contact-option').forEach(option => {
+export function clearContactCheckboxes(container = document) {
+    container.querySelectorAll('.contact-option').forEach(option => {
         option.classList.remove('selected');
         const checkbox = option.querySelector('input[type="checkbox"]');
         if (checkbox) {
@@ -69,20 +74,22 @@ export function clearContactCheckboxes() {
 
 /**
  * Clears category selection
+ * @param {HTMLElement} container - The container element to scope queries (default: document)
  * @returns {void}
  */
-export function clearCategorySelection() {
+export function clearCategorySelection(container = document) {
     clearSelectedCategory();
-    resetCategoryDisplay();
-    clearCategoryOptions();
+    resetCategoryDisplay(container);
+    clearCategoryOptions(container);
 }
 
 /**
  * Resets category display to default text
+ * @param {HTMLElement} container - The container element to scope queries (default: document)
  * @returns {void}
  */
-export function resetCategoryDisplay() {
-    const categoryDisplay = document.getElementById('categoryDisplay');
+export function resetCategoryDisplay(container = document) {
+    const categoryDisplay = container.querySelector('.category-display');
     if (categoryDisplay) {
         categoryDisplay.textContent = 'Select task category';
     }
@@ -90,23 +97,24 @@ export function resetCategoryDisplay() {
 
 /**
  * Clears all category option selections
+ * @param {HTMLElement} container - The container element to scope queries (default: document)
  * @returns {void}
  */
-export function clearCategoryOptions() {
-    document.querySelectorAll('.category-option').forEach(option => {
+export function clearCategoryOptions(container = document) {
+    container.querySelectorAll('.category-option').forEach(option => {
         option.classList.remove('selected');
     });
 }
 
 /**
  * Clears subtasks section
+ * @param {HTMLElement} container - The container element to scope queries (default: document)
  * @returns {void}
  */
-export function clearSubtasksSection() {
-    const subtaskList = document.getElementById('subtaskList');
+export function clearSubtasksSection(container = document) {
+    const subtaskList = container.querySelector('.subtask-list');
     if (subtaskList) {
         subtaskList.innerHTML = '';
     }
-    clearSubtaskInput();
+    clearSubtaskInput(container);
 }
-

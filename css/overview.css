@@ -15,6 +15,7 @@ main {
 }
 
 .dashboard-container {
+    text-wrap-mode: nowrap;
     z-index: 15;
     display: grid;
     grid-auto-columns: 8.5rem;

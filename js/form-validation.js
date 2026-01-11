@@ -1,6 +1,6 @@
 /**
  * Form Validation Functions
- * Handles validation logic for task forms
+ * Handles validation logic for task forms with scoped container support
  */
 
 import { isValidDate } from "./date-input-manager.js";
@@ -8,12 +8,13 @@ import { getSelectedCategory } from "./dropdown-manager.js";
 
 /**
  * Validates the task form
+ * @param {HTMLElement} container - The container element to scope queries (default: document)
  * @returns {{isValid: boolean, errors: Object}} Validation result
  */
-export function validateTaskForm() {
+export function validateTaskForm(container = document) {
     const errors = {
-        title: validateTitle(),
-        dueDate: validateDueDate(),
+        title: validateTitle(container),
+        dueDate: validateDueDate(container),
         category: validateCategory()
     };
 
@@ -24,19 +25,21 @@ export function validateTaskForm() {
 
 /**
  * Validates the title field
+ * @param {HTMLElement} container - The container element to scope queries
  * @returns {string|null} Error message or null if valid
  */
-export function validateTitle() {
-    const title = document.querySelector('.input-title')?.value?.trim();
+export function validateTitle(container = document) {
+    const title = container.querySelector('.input-title')?.value?.trim();
     return !title ? 'Title is required' : null;
 }
 
 /**
  * Validates the due date field
+ * @param {HTMLElement} container - The container element to scope queries
  * @returns {string|null} Error message or null if valid
  */
-export function validateDueDate() {
-    const dueDate = document.getElementById('dueDate')?.value;
+export function validateDueDate(container = document) {
+    const dueDate = container.querySelector('.due-date-input')?.value;
 
     if (!dueDate) {
         return 'Due date is required';
@@ -57,4 +60,3 @@ export function validateCategory() {
     const category = getSelectedCategory();
     return !category ? 'Please select a category' : null;
 }
-

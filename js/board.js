@@ -21,8 +21,11 @@ import {
 import {handleCreateTaskFromBoard} from "./add-task.js";
 import {initializeDateInput} from "./date-input-manager.js";
 import {initializePriorityButtons} from "./priority-manager.js";
-import {initializeDropdowns} from "./dropdown-manager.js";
-import {initializeSubtasks} from "./subtask-manager.js";
+import {initializeDropdowns, preselectContacts, preselectCategory} from "./dropdown-manager.js";
+import {initializeSubtasks, populateSubtasks, resetSubtaskInitialization} from "./subtask-manager.js";
+import {validateTaskForm} from "./form-validation.js";
+import {collectEditTaskData} from "./task-data-collector.js";
+import {showFieldError, clearAllFieldErrors} from "./error-handler.js";
 
 let currentDraggedElement;
 let dialogRef = document.getElementById("dialog-task");
@@ -44,72 +47,243 @@ let dragOverThrottle = null;
  * @returns {void}
  */
 function editTaskInDialog(element, dueDate) {
-    console.log(element);
-    console.error("Bis hier gekommen");
-    const deleteButton = document.querySelector(".d-card-footer-d");
-    const editButton = document.querySelector(".d-card-footer-e");
     const dialogContentRef = document.querySelector(".dialog-content");
-
-    if (!deleteButton || !editButton) return;
+    if (!dialogContentRef) return;
 
     const handleEditClick = () => {
-        showEditConfirmation(dialogContentRef, deleteButton, editButton, element, dueDate, handleEditClick);
+        showEditConfirmation(dialogContentRef, element, dueDate);
     };
 
-    editButton.addEventListener("click", handleEditClick, {once: true});
+    const editButton = document.querySelector(".d-card-footer-e");
+    if (editButton) {
+        editButton.addEventListener("click", handleEditClick, {once: true});
+    }
 }
 
 /**
  * Displays the edit confirmation interface by replacing dialog content with edit form.
- * Removes delete button, transforms edit button to confirm button, and loads the add task template.
  * @param {HTMLElement} dialogContentRef - The dialog content container element.
- * @param {HTMLElement} deleteButton - The delete button element.
- * @param {HTMLElement} editButton - The edit button element.
  * @param {Object} element - The task object being edited.
  * @param {string} dueDate - The formatted due date string for display.
- * @param {Function} handleEditClick - The click handler function for edit button.
  * @returns {void}
  */
-function showEditConfirmation(dialogContentRef, deleteButton, editButton, element, dueDate, handleEditClick) {
-    deleteButton.innerHTML = "";
-    editButton.innerHTML = "";
+function showEditConfirmation(dialogContentRef, element, dueDate) {
     dialogContentRef.innerHTML = "";
-    dialogContentRef.style.padding = "1.5rem 1.25rem";
+    dialogContentRef.style.padding = "0";
     dialogContentRef.style.overflow = "visible";
 
-    editButton.removeEventListener("click", handleEditClick);
+    dialogContentRef.innerHTML = getEditTaskTemplate();
 
-    deleteButton.classList.add("d-none");
+    dialogContentRef.dataset.taskId = element.id;
 
-    editButton.classList.remove("d-card-footer-e");
-    editButton.classList.add("confirm-edit-task-btn");
+    initializeDateInput(dialogContentRef);
+    initializePriorityButtons(dialogContentRef);
+    initializeDropdowns(dialogContentRef);
+    resetSubtaskInitialization(dialogContentRef);
+    initializeSubtasks(dialogContentRef);
+    populateEditForm(dialogContentRef, element);
 
-    dialogContentRef.innerHTML = getTemplateAddTask();
-    dialogContentRef.insertAdjacentHTML('beforeend', `<div class="d-card-footer"><div class="confirm-edit-task-btn"></div></div>`);
+    const closeEditBtn = dialogContentRef.querySelector('.close-edit-dialog');
+    if (closeEditBtn) {
+        closeEditBtn.addEventListener('click', () => {
+            cancelEditMode(element, dueDate);
+        });
+    }
 
-    const handleConfirmEdit = () => confirmEdit(deleteButton, editButton, handleEditClick);
-    editButton.addEventListener("click", handleConfirmEdit, {once: true});
+    const confirmEditBtn = dialogContentRef.querySelector('.confirm-edit-task-btn');
+    if (confirmEditBtn) {
+        confirmEditBtn.addEventListener("click", () => confirmEdit(element, dueDate), {once: true});
+    }
 }
 
 /**
- * Confirms the task edit and restores the dialog footer to its original state.
- * Resets delete and edit buttons to their default appearance and re-attaches event listeners.
- * @param {HTMLElement} deleteButton - The delete button element to restore.
- * @param {HTMLElement} editButton - The edit button element to restore.
- * @param {Function} handleEditClick - The click handler function to re-attach to edit button.
+ * Returns the HTML template for the edit task form with proper wrapper and close button
+ * @returns {string} HTML string for the edit task form
+ */
+function getEditTaskTemplate() {
+    return `
+        <div class="edit-task-header">
+            <div class="close-edit-dialog"></div>
+        </div>
+        <div class="add-task-form edit-task-form">
+            ${getTemplateAddTask()}
+        </div>
+        <div class="d-card-footer">
+            <div class="confirm-edit-task-btn"></div>
+        </div>
+    `;
+}
+
+/**
+ * Cancels the edit mode and returns to the view mode
+ * @param {Object} element - The task object
+ * @param {string} dueDate - The formatted due date string
+ */
+function cancelEditMode(element, dueDate) {
+    dialogRef.innerHTML = getTemplateDialog(element, dueDate);
+
+    // Reset dialog content styles
+    const dialogContentRef = document.querySelector('.dialog-content');
+    if (dialogContentRef) {
+        dialogContentRef.style.padding = "1.25rem 1rem";
+        dialogContentRef.style.overflow = "";
+    }
+
+    // Re-initialize members and subtasks display
+    initMembers(element["member"]);
+    initSubtasks(element["id"]);
+
+    // Re-attach edit and delete button handlers
+    const handleEditClick = () => {
+        const newDialogContentRef = document.querySelector(".dialog-content");
+        showEditConfirmation(newDialogContentRef, element, dueDate);
+    };
+
+    deleteTaskButton(element["id"], handleEditClick);
+
+    const editButton = document.querySelector(".d-card-footer-e");
+    if (editButton) {
+        editButton.addEventListener("click", handleEditClick, {once: true});
+    }
+}
+
+/**
+ * Populates the edit form with existing task data from Firebase
+ * @param {HTMLElement} container - The dialog content container element
+ * @param {Object} element - The task object containing all task data
  * @returns {void}
  */
-function confirmEdit(deleteButton, editButton, handleEditClick) {
-    deleteButton.classList.remove("d-none");
-    deleteButton.innerHTML = "Delete";
+function populateEditForm(container, element) {
+    // Set title
+    const titleInput = container.querySelector('.input-title');
+    if (titleInput) {
+        titleInput.value = element.title || '';
+    }
 
-    editButton.classList.remove("confirm-edit-task-btn");
-    editButton.classList.add("d-card-footer-e");
-    editButton.innerHTML = "Edit";
+    // Set description
+    const descriptionInput = container.querySelector('.task-description');
+    if (descriptionInput) {
+        descriptionInput.value = element.text || '';
+    }
 
-    editButton.addEventListener("click", handleEditClick, {once: true});
+    // Set due date (convert from YYYY-MM-DD to dd/mm/yyyy)
+    const dueDateInput = container.querySelector('.due-date-input');
+    if (dueDateInput && element.dueDate) {
+        dueDateInput.value = formatDateForInput(element.dueDate);
+    }
 
-    // Hier kommt die Logik zum Speichern der Änderungen
+    // Set priority
+    setPriorityButton(container, element.priority);
+
+    // Preselect contacts (async, waits for contacts to load)
+    preselectContacts(element.member, container);
+
+    // Preselect category
+    preselectCategory(element.task, container);
+
+    // Populate subtasks
+    populateSubtasks(element.subtasks || [], element.subtasks_done || [], container);
+}
+
+/**
+ * Converts a date from YYYY-MM-DD format to dd/mm/yyyy format
+ * @param {string} dateString - Date in YYYY-MM-DD format
+ * @returns {string} Date in dd/mm/yyyy format
+ */
+function formatDateForInput(dateString) {
+    if (!dateString) return '';
+
+    const parts = dateString.split('-');
+    if (parts.length !== 3) return dateString;
+
+    const [year, month, day] = parts;
+    return `${day}/${month}/${year}`;
+}
+
+/**
+ * Sets the active priority button based on the task's priority
+ * @param {HTMLElement} container - The container element
+ * @param {string} priority - The priority level ('urgent', 'medium', 'low')
+ */
+function setPriorityButton(container, priority) {
+    if (!priority) return;
+
+    // Remove active class from all priority buttons
+    const allButtons = container.querySelectorAll('.priority-btn');
+    allButtons.forEach(btn => btn.classList.remove('active'));
+
+    // Add active class to the matching priority button
+    const priorityButton = container.querySelector(`.priority-btn.${priority}`);
+    if (priorityButton) {
+        priorityButton.classList.add('active');
+    }
+}
+
+/**
+ * Confirms the task edit and saves changes to Firebase.
+ * Validates the form, saves changes, and closes the dialog on success.
+ * @param {Object} element - The original task object being edited.
+ * @param {string} dueDate - The formatted due date string for display.
+ * @returns {Promise<void>}
+ */
+async function confirmEdit(element, dueDate) {
+    const dialogContentRef = document.querySelector('.dialog-content');
+    const taskId = dialogContentRef?.dataset?.taskId;
+
+    if (!taskId) {
+        console.error('Task ID not found');
+        return;
+    }
+
+    // Validate form
+    const validation = validateTaskForm(dialogContentRef);
+    if (!validation.isValid) {
+        showEditErrors(validation.errors, dialogContentRef);
+        // Re-attach listener for next attempt
+        const confirmEditBtn = dialogContentRef.querySelector('.confirm-edit-task-btn');
+        if (confirmEditBtn) {
+            confirmEditBtn.addEventListener("click", () => confirmEdit(element, dueDate), {once: true});
+        }
+        return;
+    }
+
+    try {
+        // Collect task data, preserving done status of unchanged subtasks
+        const taskData = collectEditTaskData(dialogContentRef, element);
+
+        // Remove category from update data - task should stay in its current column
+        delete taskData.category;
+
+        await updateTask(taskId, taskData);
+
+        closeDialog();
+    } catch (error) {
+        console.error('Failed to update task:', error);
+        // Re-attach listener for retry
+        const confirmEditBtn = dialogContentRef.querySelector('.confirm-edit-task-btn');
+        if (confirmEditBtn) {
+            confirmEditBtn.addEventListener("click", () => confirmEdit(element, dueDate), {once: true});
+        }
+    }
+}
+
+/**
+ * Shows validation errors in the edit form
+ * @param {Object} errors - Object containing field-specific error messages
+ * @param {HTMLElement} container - The container element to scope queries
+ */
+function showEditErrors(errors, container) {
+    clearAllFieldErrors(container);
+
+    if (errors.title) {
+        showFieldError('title', errors.title, container);
+    }
+    if (errors.dueDate) {
+        showFieldError('dueDate', errors.dueDate, container);
+    }
+    if (errors.category) {
+        showFieldError('category', errors.category, container);
+    }
 }
 
 /**
@@ -284,10 +458,12 @@ function createAddTask() {
     const refAddTask = document.querySelector('.add-task-form');
     refAddTask.innerHTML = "";
     refAddTask.innerHTML = getTemplateAddTask();
-    initializeDateInput();
-    initializePriorityButtons();
-    initializeDropdowns();
-    initializeSubtasks();
+
+    // Initialize form components with scoped container
+    initializeDateInput(refAddTask);
+    initializePriorityButtons(refAddTask);
+    initializeDropdowns(refAddTask);
+    initializeSubtasks(refAddTask);
 }
 
 /**
@@ -888,10 +1064,8 @@ function openDialog(index) {
     initSubtasks(element["id"]);
 
     const handleEditClick = () => {
-        const deleteButton = document.querySelector(".d-card-footer-d");
-        const editButton = document.querySelector(".d-card-footer-e");
         const dialogContentRef = document.querySelector(".dialog-content");
-        showEditConfirmation(dialogContentRef, deleteButton, editButton, element, dueDate, handleEditClick);
+        showEditConfirmation(dialogContentRef, element, dueDate);
     };
 
     deleteTaskButton(element["id"], handleEditClick);

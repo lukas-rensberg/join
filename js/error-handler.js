@@ -1,5 +1,5 @@
 /**
- * Error Handler Module - Handles authentication and form validation errors
+ * Error Handler Module - Handles authentication and form validation errors with scoped container support
  */
 
 import {createAuthErrorMessage} from "./template.js";
@@ -85,21 +85,22 @@ export function handleAuthError(error) {
  * Show field-specific error message below a form field
  * @param {string} fieldName - Name of the field (e.g., 'title', 'dueDate', 'category')
  * @param {string} message - Error message to display
+ * @param {HTMLElement} container - The container element to scope queries (default: document)
  * @return {void}
  */
-export function showFieldError(fieldName, message) {
+export function showFieldError(fieldName, message, container = document) {
     let formGroup;
     let inputElement;
 
     if (fieldName === 'title') {
-        formGroup = document.querySelector('.form-group-title');
+        formGroup = container.querySelector('.form-group-title');
         inputElement = formGroup?.querySelector('.input-title');
     } else if (fieldName === 'dueDate') {
-        const dueDateInput = document.getElementById('dueDate');
+        const dueDateInput = container.querySelector('.due-date-input');
         formGroup = dueDateInput?.closest('.form-group');
         inputElement = dueDateInput;
     } else if (fieldName === 'category') {
-        const categoryWrapper = document.getElementById('categoryDropdownWrapper');
+        const categoryWrapper = container.querySelector('.category-dropdown-wrapper');
         formGroup = categoryWrapper?.closest('.form-group');
         inputElement = categoryWrapper;
     }
@@ -142,21 +143,22 @@ export function showFieldError(fieldName, message) {
 /**
  * Clear error for a specific field
  * @param {string} fieldName - Name of the field
+ * @param {HTMLElement} container - The container element to scope queries (default: document)
  * @return {void}
  */
-export function clearFieldError(fieldName) {
+export function clearFieldError(fieldName, container = document) {
     let formGroup;
     let inputElement;
 
     if (fieldName === 'title') {
-        formGroup = document.querySelector('.form-group-title');
+        formGroup = container.querySelector('.form-group-title');
         inputElement = formGroup?.querySelector('.input-title');
     } else if (fieldName === 'dueDate') {
-        const dueDateInput = document.getElementById('dueDate');
+        const dueDateInput = container.querySelector('.due-date-input');
         formGroup = dueDateInput?.closest('.form-group');
         inputElement = dueDateInput;
     } else if (fieldName === 'category') {
-        const categoryWrapper = document.getElementById('categoryDropdownWrapper');
+        const categoryWrapper = container.querySelector('.category-dropdown-wrapper');
         formGroup = categoryWrapper?.closest('.form-group');
         inputElement = categoryWrapper;
     }
@@ -190,26 +192,27 @@ export function clearFieldError(fieldName) {
 
 /**
  * Clear all field errors
+ * @param {HTMLElement} container - The container element to scope queries (default: document)
  * @return {void}
  */
-export function clearAllFieldErrors() {
-    document.querySelectorAll('.field-error').forEach(error => {
+export function clearAllFieldErrors(container = document) {
+    container.querySelectorAll('.field-error').forEach(error => {
         error.remove();
     });
 
-    document.querySelectorAll('.form-group').forEach(group => {
+    container.querySelectorAll('.form-group').forEach(group => {
         group.classList.remove('has-error');
     });
 
-    document.querySelectorAll('.input-title, #dueDate').forEach(input => {
+    container.querySelectorAll('.input-title, .due-date-input').forEach(input => {
         input.style.borderColor = '';
     });
 
-    document.querySelectorAll('.input-with-icon').forEach(wrapper => {
+    container.querySelectorAll('.input-with-icon').forEach(wrapper => {
         wrapper.style.borderColor = '';
     });
 
-    document.querySelectorAll('.dropdown-header').forEach(header => {
+    container.querySelectorAll('.dropdown-header').forEach(header => {
         header.style.borderBottomColor = '';
     });
 }
