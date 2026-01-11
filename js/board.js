@@ -66,8 +66,6 @@ function swipeOutAddTaskAside() {
  * On larger screens (min-width: 812px), displays an aside panel with swipe animations.
  * On smaller screens, redirects to the add-task.html page.
  * Sets up event listeners for opening and closing the add task interface.
- * 
- * @function openAddTaskAside
  * @returns {void}
  */
 function openAddTaskAside() {
@@ -604,7 +602,7 @@ function initMembers(memberIds) {
  * Displays both pending and completed subtasks with checkboxes.
  * @param {string} taskId - The unique identifier of the task whose subtasks to render.
  */
-function iniSubtasks(taskId) {
+function initSubtasks(taskId) {
     let subtasksContainer = document.querySelector(".d-subtasks-check");
     subtasksContainer.innerHTML = "";
 
@@ -614,17 +612,14 @@ function iniSubtasks(taskId) {
     const pendingSubtasks = task.subtasks || [];
     const completedSubtasks = task.subtasks_done || [];
 
-    // Add pending subtasks
     pendingSubtasks.forEach((subtask, index) => {
         subtasksContainer.innerHTML += getTemplateSubtask(subtask, taskId, index, false);
     });
 
-    // Add completed subtasks
     completedSubtasks.forEach((subtask, index) => {
         subtasksContainer.innerHTML += getTemplateSubtask(subtask, taskId, index + pendingSubtasks.length, true);
     });
 
-    // Add event listeners after DOM is updated
     setTimeout(() => addSubtaskEventListeners(taskId), 0);
 }
 

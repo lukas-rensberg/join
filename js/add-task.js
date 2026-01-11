@@ -76,12 +76,13 @@ window.selectCategory = selectCategory;
  * @returns {void}
  */
 document.addEventListener('DOMContentLoaded', () => {
+    createAddTask();
+
     initializePriorityButtons();
     initializeDateInput();
     initializeDropdowns();
     initializeSubtasks();
     initializeFormButtons();
-    createAddTask();
 });
 
 
@@ -112,6 +113,8 @@ function attachButtonListeners() {
         clearButton.addEventListener('click', handleClearForm);
     }
 }
+
+
 
 
 /**
@@ -190,16 +193,15 @@ async function createAndRedirect() {
         showSuccessBanner('Task created successfully!');
         redirectToBoard();
     } catch (error) {
-        handleCreateTaskError(error);
+        handleCreateTaskError();
     }
 }
 
 /**
  * Handles errors during task creation
- * @param {Error} error - The error object
  * @returns {void}
  */
-function handleCreateTaskError(error) {
+function handleCreateTaskError() {
     showErrorBanner('Error creating task. Please try again.');
 }
 
@@ -234,5 +236,4 @@ function handleClearForm() {
 function createAddTask() {
     const container = document.querySelector(".add-task-form-container");
     container.innerHTML += getTemplateAddTask();
-
 }

@@ -37,7 +37,7 @@ export function clearSubtaskInput() {
 
 /**
  * Handles Enter key press in input field
- * @param {KeyboardEvent} event - The keyboard event
+ * @param {Event} event - The keyboard event
  */
 export function handleSubtaskEnter(event) {
     if (event.key === "Enter") {
@@ -210,6 +210,38 @@ export function initializeSubtasks() {
             cancelEdit(e.target);
         }
     });
+
+    // Initialize subtask input listeners
+    const subtaskInput = document.querySelector('.subtask-input');
+    if (subtaskInput) {
+        // Handle Enter key to add subtask
+        subtaskInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                addNewSubtask();
+            }
+        });
+
+        // Toggle icons based on input content
+        subtaskInput.addEventListener('input', () => {
+            toggleSubtaskIcons();
+        });
+    }
+
+    // Initialize subtask icon buttons
+    const iconCancel = document.querySelector('.icon-cancel');
+    if (iconCancel) {
+        iconCancel.addEventListener('click', () => {
+            clearSubtaskInput();
+        });
+    }
+
+    const iconConfirm = document.querySelector('.icon-confirm');
+    if (iconConfirm) {
+        iconConfirm.addEventListener('click', () => {
+            addNewSubtask();
+        });
+    }
 }
 
 /**

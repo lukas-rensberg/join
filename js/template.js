@@ -135,7 +135,7 @@ export function getTemplateTaskCard(element, subtasksDone, totalSubtasks, progre
  */
 export function getTemplateMember(memberName, memberInitials, avatarColor) {
   return `<div class="d-assigned-member-cards">
-                <div class="d-assigned-member-icon" style="background-color: ${avatarColor}">
+                <div class="d-assigned-member-icon" style="background-color: ${avatarColor};">
                   ${memberInitials}
                 </div>
                 <p>${memberName}</p>
@@ -349,14 +349,11 @@ export function getTemplateAddTask() {
                 <div class="form-group">
                     <label>Subtasks <span class="optional">(optional)</span></label>
                     <div class="input-with-icon subtask-input-wrapper">
-                        <input type="text" class="subtask-input" placeholder="Add a subtask"
-                            oninput="toggleSubtaskIcons()" />
+                        <input type="text" class="subtask-input" placeholder="Add a subtask" />
                         <div class="subtask-icons">
-                            <img src="./assets/icons/close.svg" alt="Cancel" class="icon-cancel"
-                                onclick="clearSubtaskInput()" />
+                            <img src="./assets/icons/close.svg" alt="Cancel" class="icon-cancel" />
                             <span class="icon-separator"></span>
-                            <img src="./assets/icons/check-blue.svg" alt="Confirm" class="icon-confirm"
-                                onclick="addNewSubtask()" />
+                            <img src="./assets/icons/check-blue.svg" alt="Confirm" class="icon-confirm" />
                         </div>
                     </div>
                     <ul class="subtask-list" id="subtaskList"></ul>
