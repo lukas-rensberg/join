@@ -6,6 +6,10 @@
     padding: 0 0.05rem;
 }
 
+.pl-2 {
+    padding-left: calc(0.25rem * 2);
+}
+
 .priority-btn {
     transition: all 200ms ease;
     display: inline-flex;
@@ -159,7 +163,6 @@
 }
 
 .dropdown-search-input {
-    padding: 12px;
     background: transparent;
     font-size: 1rem;
     color: var(--color-menu-text);
