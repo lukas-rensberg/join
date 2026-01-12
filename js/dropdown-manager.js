@@ -11,6 +11,9 @@ let contacts = [];
 let selectedContacts = [];
 let selectedCategory = null;
 let activeContainer = null;
+let contactsLoaded = false;
+let contactsLoadedPromise = null;
+const dropdownAbortControllers = new WeakMap();
 
 const categories = [
     { id: 'technical', name: 'Technical Task' },
@@ -18,18 +21,47 @@ const categories = [
 ];
 
 /**
- * Load contacts from database for dropdown
- * @param {HTMLElement} container - The container element to scope queries
+ * Load contacts from database for dropdown (with caching)
+ * Firebase listener is registered only once, subsequent calls use cached data
+ * @returns {Promise<void>} - Promise that resolves when contacts are loaded
  */
-async function loadContacts(container = document) {
-    const contactsRef = ref(database, 'contacts');
+function loadContacts() {
+    // If already loaded, return immediately
+    if (contactsLoaded && contacts.length > 0) {
+        return Promise.resolve();
+    }
 
-    onValue(contactsRef, (snapshot) => {
-        if (snapshot.exists()) {
-            contacts = Object.values(snapshot.val());
-            populateContactsDropdown(container);
-        }
+    // If loading is in progress, return existing promise
+    if (contactsLoadedPromise) {
+        return contactsLoadedPromise;
+    }
+
+    // Start loading contacts
+    contactsLoadedPromise = new Promise((resolve) => {
+        const contactsRef = ref(database, 'contacts');
+
+        onValue(contactsRef, (snapshot) => {
+            if (snapshot.exists()) {
+                contacts = Object.values(snapshot.val());
+                contactsLoaded = true;
+                // Populate dropdown in active container if available
+                if (activeContainer) {
+                    populateContactsDropdown(activeContainer);
+                }
+            }
+            resolve();
+        });
     });
+
+    return contactsLoadedPromise;
+}
+
+/**
+ * Ensure contacts are loaded (used by external modules)
+ * @returns {Promise<void>}
+ */
+export async function ensureContactsLoaded() {
+    return loadContacts();
 }
 
 /**
@@ -273,8 +305,11 @@ function closeDropdownOnClickOutside(event, container = document) {
 /**
  * Setup event delegation for dropdowns
  * @param {HTMLElement} container - The container element to scope events
+ * @param {AbortSignal} signal - AbortSignal for cleanup
  */
-function setupDropdownEventDelegation(container = document) {
+function setupDropdownEventDelegation(container = document, signal = null) {
+    const options = signal ? { signal } : {};
+
     // Contact dropdown header click
     container.addEventListener('click', (event) => {
         const contactHeader = event.target.closest('.contact-dropdown-header');
@@ -317,14 +352,14 @@ function setupDropdownEventDelegation(container = document) {
             }
             return;
         }
-    });
+    }, options);
 
     // Contact search input
     container.addEventListener('input', (event) => {
         if (event.target.closest('.contact-search-input')) {
             filterOptions('contact', container);
         }
-    });
+    }, options);
 }
 
 /**
@@ -333,18 +368,33 @@ function setupDropdownEventDelegation(container = document) {
  * @returns {void}
  */
 export function initializeDropdowns(container = document) {
-    activeContainer = container;
-    loadContacts(container);
-    populateCategoriesDropdown(container);
-    setupDropdownEventDelegation(container);
+    // Abort previous event listeners for THIS container only
+    const existingController = dropdownAbortControllers.get(container);
+    if (existingController) {
+        existingController.abort();
+    }
 
-    document.addEventListener('click', (event) => closeDropdownOnClickOutside(event, container));
+    const abortController = new AbortController();
+    dropdownAbortControllers.set(container, abortController);
+    const { signal } = abortController;
+
+    activeContainer = container;
+
+    // Load contacts (uses cache if already loaded)
+    loadContacts().then(() => {
+        populateContactsDropdown(container);
+    });
+
+    populateCategoriesDropdown(container);
+    setupDropdownEventDelegation(container, signal);
+
+    document.addEventListener('click', (event) => closeDropdownOnClickOutside(event, container), { signal });
 
     document.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') {
             closeAllDropdowns(null, container);
         }
-    });
+    }, { signal });
 }
 
 /**
@@ -380,6 +430,16 @@ export function clearSelectedCategory() {
 }
 
 /**
+ * Reset dropdown state completely (contacts and category)
+ * Use this when opening a new dialog/form to start fresh
+ * @returns {void}
+ */
+export function resetDropdownState() {
+    selectedContacts = [];
+    selectedCategory = null;
+}
+
+/**
  * Re-populate dropdowns for a new container (useful when switching contexts)
  * @param {HTMLElement} container - The new container element
  */
@@ -390,44 +450,26 @@ export function refreshDropdowns(container = document) {
 }
 
 /**
- * Waits for contacts array to be populated
- * @param {number} timeout - Maximum wait time in ms
- * @returns {Promise<void>}
- */
-function waitForContacts(timeout) {
-    return new Promise((resolve) => {
-        if (contacts.length > 0) {
-            resolve();
-            return;
-        }
-
-        const startTime = Date.now();
-        const interval = setInterval(() => {
-            if (contacts.length > 0) {
-                clearInterval(interval);
-                resolve();
-            } else if (Date.now() - startTime > timeout) {
-                clearInterval(interval);
-                resolve(); // Resolve anyway to not block the UI
-            }
-        }, 50);
-    });
-}
-
-/**
  * Waits for contacts to be loaded, then preselects the given member IDs
  * @param {string[]} memberIds - Array of contact IDs to preselect
  * @param {HTMLElement} container - The container element to scope queries
- * @param {number} timeout - Maximum wait time in ms (default: 3000)
  * @returns {Promise<void>}
  */
-export async function preselectContacts(memberIds, container = document, timeout = 3000) {
+export async function preselectContacts(memberIds, container = document) {
     if (!memberIds || memberIds.length === 0) return;
 
-    await waitForContacts(timeout);
+    // Ensure contacts are loaded (uses cache)
+    await loadContacts();
 
     // Clear any existing selections first
     selectedContacts = [];
+
+    // Clear UI selections in container
+    container.querySelectorAll('.contact-option').forEach(option => {
+        option.classList.remove('selected');
+        const checkbox = option.querySelector('input[type="checkbox"]');
+        if (checkbox) checkbox.checked = false;
+    });
 
     // Select each contact by ID
     memberIds.forEach(contactId => {

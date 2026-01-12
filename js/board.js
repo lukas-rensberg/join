@@ -21,7 +21,7 @@ import {
 import {handleCreateTaskFromBoard} from "./add-task.js";
 import {initializeDateInput} from "./date-input-manager.js";
 import {initializePriorityButtons} from "./priority-manager.js";
-import {initializeDropdowns, preselectContacts, preselectCategory} from "./dropdown-manager.js";
+import {initializeDropdowns, preselectContacts, preselectCategory, resetDropdownState} from "./dropdown-manager.js";
 import {initializeSubtasks, populateSubtasks, resetSubtaskInitialization} from "./subtask-manager.js";
 import {validateTaskForm} from "./form-validation.js";
 import {collectEditTaskData} from "./task-data-collector.js";
@@ -78,6 +78,7 @@ function showEditConfirmation(dialogContentRef, element, dueDate) {
 
     initializeDateInput(dialogContentRef);
     initializePriorityButtons(dialogContentRef);
+    resetDropdownState();
     initializeDropdowns(dialogContentRef);
     resetSubtaskInitialization(dialogContentRef);
     initializeSubtasks(dialogContentRef);
@@ -462,6 +463,7 @@ function createAddTask() {
     // Initialize form components with scoped container
     initializeDateInput(refAddTask);
     initializePriorityButtons(refAddTask);
+    resetDropdownState();
     initializeDropdowns(refAddTask);
     initializeSubtasks(refAddTask);
 }
