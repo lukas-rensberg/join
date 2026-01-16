@@ -291,10 +291,10 @@ main {
         font-weight: 400;
     }
 
-    h1 {
-        font-size: 3rem;
+    h1,
+    .marquee-text {
+        font-size: 4rem;
         font-weight: bold;
-
     }
 
     .h1-colorized {
@@ -380,46 +380,52 @@ main {
 
         .h1-wrapper {
             overflow: hidden;
-            max-width: 100vw;
+            flex: 1;
+            min-width: 0;
             margin-left: 1.25rem;
         }
 
-        h1 {
-            font-size: 4rem;
-            font-weight: bold;
+        .h1-colorized {
             white-space: nowrap;
-            animation:
-                marqueeDesktop 10s linear forwards,
-                ellipsisActivate 1ms linear 9.9s forwards;
         }
-    }
 
-    @keyframes marqueeDesktop {
-        0% {
-            transform: translateX(100%);
-        }
-        80% {
-            transform: translateX(-100%);
-        }
-        80.01% {
-            transform: translateX(0);
-        }
-        100% {
-            transform: translateX(0);
-        }
-    }
-
-    @keyframes ellipsisActivate {
-        from {
-            max-width: none;
+        .h1-colorized.marquee {
             overflow: visible;
         }
-        to {
-            max-width: 100%;
-            text-overflow: ellipsis;
+
+        .h1-colorized.fixed {
             overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            display: block;
+        }
+
+        .marquee-text {
+            display: inline-block;
+            white-space: nowrap;
+        }
+
+    }
+
+    @keyframes marqueeOnce {
+        from {
+            transform: translateX(100%);
+        }
+        to {
+            transform: translateX(-100%);
         }
     }
+
+
+
+
+    /*@keyframes ellipsisActivate {*/
+    /*    100% {*/
+    /*        max-width: 100%;*/
+    /*        text-overflow: ellipsis;*/
+    /*        overflow: hidden;*/
+    /*    }*/
+    /*}*/
 
     .greeting-guest {
         font-size: 3rem;
@@ -505,7 +511,7 @@ main {
 }
 
 @media (width >= 1110px) {
-    .dashboard-container {
-        margin-left: 380px;
-    }
+.dashboard-container {
+margin-left: 380px;
+}
 }

@@ -71,7 +71,7 @@ function updateGreeting() {
         if (user) {
             const greetingContainer = document.querySelector(".greeting-container");
             const greetingElement = document.querySelector(".greeting-container p");
-            const nameElement = document.querySelector(".greeting-container .h1-colorized");
+            const nameElement = document.querySelector(".greeting-container .h1-colorized .marquee-text");
 
             if (greetingElement) {
                 // For anonymous users, remove comma and make greeting stand alone
@@ -94,14 +94,44 @@ function updateGreeting() {
             if (nameElement) {
                 if (user.displayName) {
                     nameElement.textContent = user.displayName;
-                    nameElement.style.display = "block";
+                    nameElement.title = user.displayName;
+
+                    const h1 = nameElement.closest(".h1-colorized");
+                    const wrapper = document.querySelector(".h1-wrapper");
+
+                    requestAnimationFrame(() => {
+                        const textWidth = nameElement.scrollWidth;
+                        const containerWidth = wrapper ? wrapper.clientWidth : 0;
+
+                        if (mediaQuery && textWidth > containerWidth) {
+                            h1.classList.add("marquee");
+                            nameElement.style.animation = "marqueeOnce 5s linear forwards";
+
+                            nameElement.addEventListener(
+                                "animationend",
+                                () => {
+                                    nameElement.style.animation = "none";
+                                    nameElement.style.transform = "translateX(0)";
+
+                                    h1.classList.remove("marquee");
+                                    h1.classList.add("fixed");
+
+                                    nameElement.style.display = "unset";
+                                },
+                                {once: true}
+                            );
+                        } else {
+                            h1.classList.add("fixed");
+                            nameElement.style.display = "unset";
+                        }
+                    });
                 } else if (user.isAnonymous) {
-                    // Hide name element for guest users
                     nameElement.style.display = "none";
                 } else if (user.email) {
-                    // Fallback: Use email name part
                     const emailName = user.email.split("@")[0];
-                    nameElement.textContent = emailName.charAt(0).toUpperCase() + emailName.slice(1);
+                    const formattedName = emailName.charAt(0).toUpperCase() + emailName.slice(1);
+                    nameElement.textContent = formattedName;
+                    nameElement.title = formattedName;
                     nameElement.style.display = "block";
                 }
             }
