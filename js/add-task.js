@@ -37,12 +37,35 @@ import {
 let activeContainer = null;
 
 /**
+ * Speichert die Ziel-Kategorie aus URL-Parametern (für Mobile-Redirect).
+ * @type {string}
+ */
+let urlTargetCategory = 'to-do';
+
+/**
+ * Liest die Kategorie aus URL-Parametern aus.
+ * Wird verwendet, wenn von der Board-Seite auf Mobile weitergeleitet wurde.
+ * @returns {string} Die Kategorie aus dem URL-Parameter oder 'to-do' als Standard
+ */
+function getCategoryFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const category = urlParams.get('category');
+    const validCategories = ['to-do', 'in-progress', 'await-feedback', 'done'];
+    return validCategories.includes(category) ? category : 'to-do';
+}
+
+/**
  * Initialize all components when DOM is fully loaded
+ * Only runs on add-task.html page (not on board.html where it's handled separately)
  * @returns {void}
  */
 document.addEventListener('DOMContentLoaded', () => {
-    const container = document.querySelector('.add-task-form-container') || document;
-    initializeAddTaskForm(container);
+    // Nur auf add-task.html initialisieren, nicht auf board.html
+    const isAddTaskPage = document.querySelector('.add-task-form-container');
+    if (!isAddTaskPage) return;
+
+    urlTargetCategory = getCategoryFromUrl();
+    initializeAddTaskForm(isAddTaskPage);
 });
 
 /**
@@ -72,12 +95,13 @@ function initializeFormButtons(container = document) {
 
 /**
  * Attach event listeners to form buttons
+ * Searches in container first, then falls back to document for buttons outside container
  * @param {HTMLElement} container - The container element to scope queries
  * @returns {void}
  */
 function attachButtonListeners(container = document) {
-    const createButton = container.querySelector('.btn-create');
-    const clearButton = container.querySelector('.btn-clear');
+    const createButton = container.querySelector('.btn-create') || document.querySelector('.btn-create');
+    const clearButton = container.querySelector('.btn-clear') || document.querySelector('.btn-clear');
 
     if (createButton) {
         createButton.addEventListener('click', () => handleCreateTask(container));
@@ -161,10 +185,11 @@ export async function handleCreateTask(container = document) {
 /**
  * Handles task creation without redirect (for board aside dialog)
  * @param {HTMLElement} container - The container element to scope queries
+ * @param {string} [targetCategory='to-do'] - Die Ziel-Kategorie/Spalte für den neuen Task
  * @returns {Promise<boolean>}
  * Returns true if task was created successfully, false otherwise
  */
-export async function handleCreateTaskFromBoard(container = document) {
+export async function handleCreateTaskFromBoard(container = document, targetCategory = 'to-do') {
     const validation = validateTaskForm(container);
 
     if (!validation.isValid) {
@@ -173,7 +198,7 @@ export async function handleCreateTaskFromBoard(container = document) {
     }
 
     try {
-        const taskData = collectTaskData(container);
+        const taskData = collectTaskData(container, targetCategory);
         await createTask(taskData);
         return true;
     } catch (error) {
@@ -183,14 +208,15 @@ export async function handleCreateTaskFromBoard(container = document) {
 }
 
 /**
- * Creates task and redirects to board page
+ * Creates task and redirects to board page.
+ * Uses urlTargetCategory from URL parameters (for mobile redirect from board).
  * @param {HTMLElement} container - The container element to scope queries
  * @returns {Promise<boolean>}
  * Returns true if task was created successfully, false otherwise
  */
 async function createAndRedirect(container = document) {
     try {
-        const taskData = collectTaskData(container);
+        const taskData = collectTaskData(container, urlTargetCategory);
         await createTask(taskData);
         showSuccessBanner();
         redirectToBoard();

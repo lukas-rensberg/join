@@ -88,7 +88,7 @@ function populateContactsDropdown(container = document) {
  * @param {HTMLElement} container - The container element to scope queries
  */
 export function selectContact(contactId, container = document) {
-    const isSelected = selectedContacts.find(c => c.id === contactId);
+    const isSelected = selectedContacts.some(c => c.id === contactId);
     toggleContactSelection(contactId, isSelected, container);
     updateSelectedContactsDisplay(container);
 }
@@ -103,6 +103,7 @@ export function selectContact(contactId, container = document) {
 function toggleContactSelection(contactId, isSelected, container = document) {
     const { contact, contactOption, checkbox } = getContactElements(contactId, container);
     if (!contact || !contactOption || !checkbox) return;
+
 
     if (isSelected) {
         selectedContacts = selectedContacts.filter(c => c.id !== contactId);
@@ -350,7 +351,6 @@ function setupDropdownEventDelegation(container = document, signal = null) {
             if (categoryId) {
                 selectCategory(categoryId, container);
             }
-            return;
         }
     }, options);
 
@@ -388,9 +388,11 @@ export function initializeDropdowns(container = document) {
     populateCategoriesDropdown(container);
     setupDropdownEventDelegation(container, signal);
 
-    document.addEventListener('click', (event) => closeDropdownOnClickOutside(event, container), { signal });
+    const eventTarget = container === document ? document : container;
 
-    document.addEventListener('keydown', (event) => {
+    eventTarget.addEventListener('click', (event) => closeDropdownOnClickOutside(event, container), { signal });
+
+    eventTarget.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') {
             closeAllDropdowns(null, container);
         }

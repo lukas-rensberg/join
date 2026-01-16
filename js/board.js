@@ -39,6 +39,35 @@ let contacts = [];
 let activeDragOverSection = null;
 let dragOverThrottle = null;
 
+/**
+ * Speichert die Ziel-Kategorie für neue Tasks.
+ * Wird gesetzt, wenn ein spalten-spezifischer Plus-Button geklickt wird.
+ * @type {string}
+ */
+let targetCategory = 'to-do';
+
+/**
+ * Gibt die aktuell ausgewählte Ziel-Kategorie für neue Tasks zurück.
+ * @returns {string} Die Kategorie-ID ('to-do', 'in-progress', 'await-feedback')
+ */
+export function getTargetCategory() {
+    return targetCategory;
+}
+
+/**
+ * Setzt die Ziel-Kategorie für den nächsten zu erstellenden Task.
+ * @param {string} category - Die Kategorie-ID ('to-do', 'in-progress', 'await-feedback')
+ * @returns {void}
+ */
+function setTargetCategory(category) {
+    const validCategories = ['to-do', 'in-progress', 'await-feedback', 'done'];
+    if (validCategories.includes(category)) {
+        targetCategory = category;
+    } else {
+        targetCategory = 'to-do';
+    }
+}
+
 
 /**
  * Enables editing mode for a task in the dialog by setting up the edit button event listener.
@@ -380,13 +409,14 @@ function swipeOutAddTaskAside() {
 /**
  * Sets up the create button event listener for the add task aside panel.
  * Handles task creation, success animation, and closing of modals with appropriate timing.
+ * Uses the currently set targetCategory for the new task.
  * @returns {void}
  */
 function addTaskCreateButton() {
     const addedTaskBtn = document.querySelector(".btn-create-aside");
 
     addedTaskBtn.addEventListener("click", async () => {
-        const successAdded = await handleCreateTaskFromBoard();
+        const successAdded = await handleCreateTaskFromBoard(document, getTargetCategory());
 
         if (!successAdded) return;
 
@@ -417,28 +447,44 @@ function swipeInAddedTask() {
 /**
  * Opens the add task interface based on the device screen size.
  * On larger screens (min-width: 812px), displays an aside panel with swipe animations.
- * On smaller screens, redirects to the add-task.html page.
+ * On smaller screens, redirects to the add-task.html page with category parameter.
  * Sets up event listeners for opening and closing the add task interface.
+ * Reads data-category attribute from clicked icon to set target category.
  * @returns {void}
  */
 function openAddTaskAside() {
     const mediaQuery = window.matchMedia("(min-width: 812px)").matches;
-    const openButtons = document.querySelectorAll('.add-task-icon, .add-task-btn');
     const openIcons = document.querySelectorAll('.add-task-icon');
+    const addTaskBtn = document.querySelector('.add-task-btn');
 
     if (mediaQuery) {
-        createAddTask();
-        openButtons.forEach(button => {
-            button.addEventListener('click', swipeInAddTaskAside);
-
-        })
-    } else {
-        createAddTask()
+        // Plus-Icons mit spalten-spezifischer Kategorie
         openIcons.forEach(icon => {
             icon.addEventListener('click', () => {
-                window.location.href = 'add-task.html';
+                const category = icon.dataset.category || 'to-do';
+                setTargetCategory(category);
+                createAddTask();  // Erstelle/initialisiere bei jedem Öffnen neu
+                swipeInAddTaskAside();
             });
-        })
+        });
+
+        // Großer "Add Task" Button - Standard ist 'to-do'
+        if (addTaskBtn) {
+            addTaskBtn.addEventListener('click', () => {
+                setTargetCategory('to-do');
+                createAddTask();  // Erstelle/initialisiere bei jedem Öffnen neu
+                swipeInAddTaskAside();
+            });
+        }
+    } else {
+
+        // Mobile: Redirect with category as URL-Param
+        openIcons.forEach(icon => {
+            icon.addEventListener('click', () => {
+                const category = icon.dataset.category || 'to-do';
+                window.location.href = `add-task.html?category=${category}`;
+            });
+        });
     }
 
     const closeButton = document.querySelector('.close-add-task');
@@ -453,19 +499,23 @@ function openAddTaskAside() {
  * Creates and renders the add task dialog by clearing the description container
  * and inserting the add task template HTML.
  * Initializes all form components (date input, priority buttons, dropdowns, subtasks) after rendering.
+ * Uses the dialog element as container for proper event delegation in modals.
  * @returns {void}
  */
 function createAddTask() {
-    const refAddTask = document.querySelector('.add-task-form');
+    const dialogElement = document.querySelector('#aside-add-task');
+    const refAddTask = dialogElement?.querySelector('.add-task-form');
+    if (!refAddTask) return;
     refAddTask.innerHTML = "";
     refAddTask.innerHTML = getTemplateAddTask();
 
-    // Initialize form components with scoped container
-    initializeDateInput(refAddTask);
-    initializePriorityButtons(refAddTask);
+    // Initialize form components with dialog as container for better event handling in modals
+    initializeDateInput(dialogElement);
+    initializePriorityButtons(dialogElement);
     resetDropdownState();
-    initializeDropdowns(refAddTask);
-    initializeSubtasks(refAddTask);
+    initializeDropdowns(dialogElement);
+    resetSubtaskInitialization(dialogElement);
+    initializeSubtasks(dialogElement);
 }
 
 /**

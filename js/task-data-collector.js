@@ -10,16 +10,17 @@ import { getSubtasks } from "./subtask-manager.js";
 /**
  * Collects all task data from the form
  * @param {HTMLElement} container - The container element to scope queries (default: document)
+ * @param {string} [targetCategory='to-do'] - Die Ziel-Kategorie/Spalte für den neuen Task
  * @returns {Object} Task data object
  */
-export function collectTaskData(container = document) {
+export function collectTaskData(container = document, targetCategory = 'to-do') {
     return {
         title: getTaskTitle(container),
         text: getTaskDescription(container),
         dueDate: getFormattedDueDate(container),
         priority: getSelectedPriority(container),
         task: getSelectedCategory()?.name || '',
-        category: 'to-do',
+        category: targetCategory,
         member: getAssignedMemberIds(),
         subtasks: getSubtaskTexts(container)
     };
