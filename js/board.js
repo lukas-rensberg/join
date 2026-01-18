@@ -27,7 +27,6 @@ import {validateTaskForm} from "./form-validation.js";
 import {collectEditTaskData} from "./task-data-collector.js";
 import {showFieldError, clearAllFieldErrors} from "./error-handler.js";
 
-let currentDraggedElement;
 let dialogRef = document.getElementById("dialog-task");
 let addTaskRef = document.getElementById("aside-add-task");
 let addedTaskRef = document.getElementById("task-added");
@@ -35,9 +34,6 @@ let findTask = document.getElementById("search-task");
 
 let tasks = [];
 let contacts = [];
-
-let activeDragOverSection = null;
-let dragOverThrottle = null;
 
 /**
  * Speichert die Ziel-Kategorie für neue Tasks.
@@ -942,66 +938,146 @@ function updateHTML() {
     }, 100); // Increased debounce to 100ms
 }
 
+let dragState = {
+    isDragging: false,
+    taskId: null,
+    sourceSection: null,
+    currentSection: null
+};
+
 /**
- * Marks the task as being dragged and adds the dragging CSS class for visual feedback.
- * @param {string} id - DOM id of the dragged task element.
- * @returns {void}
+ * Resets the drag state to default values.
+ */
+function resetDragState() {
+    dragState = {
+        isDragging: false,
+        taskId: null,
+        sourceSection: null,
+        currentSection: null
+    };
+}
+
+/**
+ * Marks the task as being dragged and initializes drag state.
+ * @param {string} id - Task id of the dragged element.
  */
 function startDragging(id) {
-    currentDraggedElement = id;
-    document.getElementById(currentDraggedElement).classList.add("is-dragging");
+    const taskElement = document.querySelector(`[data-task-id="${id}"]`);
+    if (!taskElement) return;
+
+    const task = tasks.find(t => t.id === id);
+
+    dragState.isDragging = true;
+    dragState.taskId = id;
+    dragState.sourceSection = task ? task.category : null;
+    dragState.currentSection = null;
+
+    taskElement.classList.add("is-dragging");
 }
 
 /**
  * Allows dropping by preventing the default browser dragover behavior.
- * Required to enable drop functionality on the target element.
  * @param {DragEvent} event - Dragover event object.
- * @returns {void}
  */
 function allowDrop(event) {
     event.preventDefault();
 }
 
 /**
- * Handles dragover events for board columns with lightweight throttling (~60fps).
- * Provides visual feedback by highlighting the container and showing a placeholder.
+ * Handles dragover events for board columns.
+ * Only updates DOM when section actually changes.
  * @param {DragEvent} event - The dragover event object.
  * @param {string} section - The id of the column being dragged over.
- * @returns {void}
  */
 function handleDragOver(event, section) {
     event.preventDefault();
 
-    // Throttle the calls to prevent excessive DOM manipulation
-    if (dragOverThrottle) return;
+    if (!dragState.isDragging) return;
+    if (dragState.currentSection === section) return;
 
-    dragOverThrottle = setTimeout(() => {
-        dragOverThrottle = null;
-    }, 16); // ~60fps throttling
+    // Cleanup previous section
+    if (dragState.currentSection) {
+        removeDropHighlight(dragState.currentSection);
+    }
 
-    bgContainer(section);
-    showDashedBoxOnce(section);
+    // Set new section and add highlight
+    dragState.currentSection = section;
+    addDropHighlight(section);
 }
 
 /**
- * Moves the currently dragged task to a new category and persists the change to Firebase.
- * Removes dragging visual feedback and cleans up the drag state.
- * @param {string} category - Target category id (e.g. "to-do", "in-progress", "await-feedback", "done").
- * @returns {void}
+ * Adds visual highlight to a drop target section.
+ * @param {string} sectionId - The section to highlight.
+ */
+function addDropHighlight(sectionId) {
+    const container = document.getElementById(sectionId);
+    if (!container) return;
+
+    container.classList.add("task-card-container-dragover");
+
+    // Hide "no tasks" message and show placeholder
+    const noTasksElem = container.querySelector(".no-tasks");
+    if (noTasksElem) noTasksElem.style.display = "none";
+
+    // Add placeholder only if not exists
+    if (!container.querySelector(".empty-card")) {
+        container.insertAdjacentHTML("beforeend", `<div class="empty-card"></div>`);
+    }
+}
+
+/**
+ * Removes visual highlight from a drop target section.
+ * @param {string} sectionId - The section to remove highlight from.
+ */
+function removeDropHighlight(sectionId) {
+    const container = document.getElementById(sectionId);
+    if (!container) return;
+
+    container.classList.remove("task-card-container-dragover");
+
+    // Remove placeholder
+    const emptyCard = container.querySelector(".empty-card");
+    if (emptyCard) emptyCard.remove();
+
+    // Show "no tasks" message if needed
+    const noTasksElem = container.querySelector(".no-tasks");
+    if (noTasksElem) noTasksElem.style.display = "flex";
+}
+
+/**
+ * Handles the dragend event - cleans up all visual feedback.
+ */
+function handleDragEnd() {
+    // Remove dragging class from element
+    if (dragState.taskId) {
+        const taskElement = document.querySelector(`[data-task-id="${dragState.taskId}"]`);
+        if (taskElement) taskElement.classList.remove("is-dragging");
+    }
+
+    // Remove highlight from current section
+    if (dragState.currentSection) {
+        removeDropHighlight(dragState.currentSection);
+    }
+
+    resetDragState();
+}
+
+/**
+ * Moves the currently dragged task to a new category and persists the change.
+ * @param {string} category - Target category id.
  */
 async function moveTo(category) {
-    const taskToUpdate = tasks.find(task => task.id === currentDraggedElement);
-    const draggedElement = document.getElementById(currentDraggedElement);
+    if (!dragState.taskId) return;
+
+    const taskToUpdate = tasks.find(task => task.id === dragState.taskId);
 
     if (taskToUpdate) {
         taskToUpdate.category = category;
         await saveTask(taskToUpdate);
     }
 
-    if (draggedElement) {
-        draggedElement.classList.remove("is-dragging");
-    }
-    bgContainerRemove(category);
+    // Cleanup is handled by handleDragEnd which fires after drop
+    removeDropHighlight(category);
 }
 
 /**
@@ -1057,32 +1133,10 @@ function toggleSwapMenu(event, taskId, currentCategory) {
 function moveTaskTo(event, taskId, category) {
     event.stopPropagation();
 
-    currentDraggedElement = taskId;
+    dragState.taskId = taskId;
     moveTo(category);
 
     closeAllSwapMenus();
-}
-
-
-/**
- * Adds the dragover CSS class to the container to provide visual feedback during drag operations.
- * @param {string} id - Container element id.
- * @returns {void}
- */
-function bgContainer(id) {
-    document.getElementById(id).classList.add("task-card-container-dragover");
-}
-
-
-/**
- * Removes the dragover CSS class and hides the dashed placeholder for a container.
- * Cleans up visual feedback after drag operation completes.
- * @param {string} id - Container element id.
- * @returns {void}
- */
-function bgContainerRemove(id) {
-    hideDashedBox(id);
-    document.getElementById(id).classList.remove("task-card-container-dragover");
 }
 
 
@@ -1096,69 +1150,6 @@ function getNoTaskTemplate(section) {
 }
 
 
-/**
- * Shows a dashed placeholder card in a column once during dragover.
- * Prevents duplicate placeholders for the same section while dragging.
- * @param {string} section - Column id where the placeholder should appear.
- * @returns {void}
- */
-function showDashedBoxOnce(section) {
-    // Prevent repeated calls for the same section
-    if (activeDragOverSection === section) return;
-
-    const container = document.getElementById(section);
-    if (!container) return;
-
-    // Check if already has empty card to avoid duplicate additions
-    if (container.querySelector(".empty-card")) {
-        activeDragOverSection = section;
-        return;
-    }
-
-    const noTasksElem = container.querySelector(".no-tasks");
-    if (noTasksElem) {
-        noTasksElem.style.display = "none";
-    }
-
-    // Use insertAdjacentHTML instead of innerHTML += to avoid reflow
-    container.insertAdjacentHTML('beforeend', generateEmptyCard());
-    activeDragOverSection = section;
-}
-
-
-/**
- * Hides the dashed placeholder and restores the "no tasks" message.
- * Cleans up drag visual feedback after drag operation ends.
- * @param {string} section - Column id.
- * @returns {void}
- */
-function hideDashedBox(section) {
-    const container = document.getElementById(section);
-    if (!container) return;
-
-    const noTasksElem = container.querySelector(".no-tasks");
-    if (noTasksElem) {
-        noTasksElem.style.display = "flex";
-    }
-
-    const emptyCard = container.querySelector(".empty-card");
-    if (emptyCard) {
-        emptyCard.remove(); // Use remove() instead of parentNode.removeChild
-    }
-
-    // Reset the active section flag
-    if (activeDragOverSection === section) {
-        activeDragOverSection = null;
-    }
-}
-
-/**
- * Generates the HTML markup for the empty dashed card placeholder used during dragover.
- * @returns {string} HTML string for an empty card placeholder.
- */
-function generateEmptyCard() {
-    return `<div class="empty-card"></div>`;
-}
 
 /**
  * Opens the task dialog for a given task id, displaying task details with swipe-in animation.
@@ -1414,6 +1405,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeTasks();
     openAddTaskAside();
 
+    document.addEventListener('dragend', handleDragEnd);
+
     // Close swap menus when clicking outside
     document.addEventListener('click', (event) => {
         if (!event.target.closest('.card-swap-icon')) {
@@ -1432,10 +1425,7 @@ window.moveTo = moveTo;
 window.toggleSwapMenu = toggleSwapMenu;
 window.moveTaskTo = moveTaskTo;
 window.closeAllSwapMenus = closeAllSwapMenus;
-window.bgContainer = bgContainer;
-window.bgContainerRemove = bgContainerRemove;
-window.showDashedBoxOnce = showDashedBoxOnce;
-window.hideDashedBox = hideDashedBox;
+window.handleDragEnd = handleDragEnd;
 window.addContactToTask = addContactToTask;
 window.removeContactFromTask = removeContactFromTask;
 window.removeContactFromAllTasks = removeContactFromAllTasks;
