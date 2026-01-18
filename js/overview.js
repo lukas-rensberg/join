@@ -34,9 +34,9 @@ function getCachedDashboardData() {
 function getTimeBasedGreeting() {
     const hour = new Date().getHours();
 
-    if (hour >= 5 && hour < 12) {
+    if (hour >= 5 && hour < 13) {
         return "Good morning";
-    } else if (hour >= 12 && hour < 18) {
+    } else if (hour >= 13 && hour < 18) {
         return "Good afternoon";
     } else {
         return "Good evening";

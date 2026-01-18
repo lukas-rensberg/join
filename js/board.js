@@ -30,8 +30,8 @@ import {showFieldError, clearAllFieldErrors} from "./error-handler.js";
 let currentDraggedElement;
 let dialogRef = document.getElementById("dialog-task");
 let addTaskRef = document.getElementById("aside-add-task");
-let addedTaskRef = document.getElementById("task-added")
-let findTask = document.getElementById("search-task")
+let addedTaskRef = document.getElementById("task-added");
+let findTask = document.getElementById("search-task");
 
 let tasks = [];
 let contacts = [];
@@ -952,7 +952,6 @@ function startDragging(id) {
     document.getElementById(currentDraggedElement).classList.add("is-dragging");
 }
 
-
 /**
  * Allows dropping by preventing the default browser dragover behavior.
  * Required to enable drop functionality on the target element.
@@ -962,7 +961,6 @@ function startDragging(id) {
 function allowDrop(event) {
     event.preventDefault();
 }
-
 
 /**
  * Handles dragover events for board columns with lightweight throttling (~60fps).
@@ -1001,6 +999,67 @@ function moveTo(category) {
     document.getElementById(currentDraggedElement).classList.remove("is-dragging");
     bgContainerRemove(category);
     // Remove updateHTML() call as Firebase listener will handle the update
+}
+
+/**
+ * Closes all open swap dropdown menus.
+ * @returns {void}
+ */
+function closeAllSwapMenus() {
+    const allDropdowns = document.querySelectorAll('.card-swap-dropdown');
+    allDropdowns.forEach(dropdown => dropdown.classList.remove('open'));
+}
+
+/**
+ * Toggles the swap dropdown menu for a specific task card.
+ * Hides the current category option and shows all others.
+ * @param {Event} event - The click event object.
+ * @param {string} taskId - The task id.
+ * @param {string} currentCategory - The current category of the task.
+ * @returns {void}
+ */
+function toggleSwapMenu(event, taskId, currentCategory) {
+    event.stopPropagation();
+
+    const dropdown = document.getElementById(`swap-dropdown-${taskId}`);
+    if (!dropdown) return;
+
+    // Close all other dropdowns first
+    const allDropdowns = document.querySelectorAll('.card-swap-dropdown');
+    allDropdowns.forEach(openDropdown => {
+        if (openDropdown !== dropdown) openDropdown.classList.remove('open');
+    });
+
+    // Show/hide category options based on current category
+    const items = dropdown.querySelectorAll('.move-to-do, .move-to-review');
+    items.forEach(item => {
+        if (item.dataset.category === currentCategory) {
+            item.style.display = 'none';
+        } else {
+            item.style.display = 'flex';
+        }
+    });
+
+    // Toggle the dropdown
+    dropdown.classList.toggle('open');
+}
+
+/**
+ * Moves a task to a new category using the swap menu.
+ * @param {Event} event - The click event object.
+ * @param {string} taskId - The task id to move.
+ * @param {string} category - The target category.
+ * @returns {void}
+ */
+function moveTaskTo(event, taskId, category) {
+    event.stopPropagation();
+
+    // Set the current dragged element to use moveTo function
+    currentDraggedElement = taskId;
+    moveTo(category);
+
+    // Close the dropdown
+    closeAllSwapMenus();
 }
 
 
@@ -1178,17 +1237,14 @@ function initSubtasks(taskId) {
     const pendingSubtasks = task.subtasks || [];
     const completedSubtasks = task.subtasks_done || [];
 
-    // Add pending subtasks
     pendingSubtasks.forEach((subtask, index) => {
         subtasksContainer.innerHTML += getTemplateSubtask(subtask, taskId, index, false);
     });
 
-    // Add completed subtasks
     completedSubtasks.forEach((subtask, index) => {
         subtasksContainer.innerHTML += getTemplateSubtask(subtask, taskId, index + pendingSubtasks.length, true);
     });
 
-    // Add event listeners after DOM is updated
     setTimeout(() => addSubtaskEventListeners(taskId), 0);
 }
 
@@ -1353,6 +1409,13 @@ async function updateSubtaskStatus(taskId, subtask, isCompleted) {
 document.addEventListener('DOMContentLoaded', () => {
     initializeTasks();
     openAddTaskAside();
+
+    // Close swap menus when clicking outside
+    document.addEventListener('click', (event) => {
+        if (!event.target.closest('.card-swap-icon')) {
+            closeAllSwapMenus();
+        }
+    });
 });
 
 // Make functions globally accessible for inline event handlers
@@ -1362,6 +1425,9 @@ window.startDragging = startDragging;
 window.allowDrop = allowDrop;
 window.handleDragOver = handleDragOver;
 window.moveTo = moveTo;
+window.toggleSwapMenu = toggleSwapMenu;
+window.moveTaskTo = moveTaskTo;
+window.closeAllSwapMenus = closeAllSwapMenus;
 window.bgContainer = bgContainer;
 window.bgContainerRemove = bgContainerRemove;
 window.showDashedBoxOnce = showDashedBoxOnce;

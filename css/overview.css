@@ -113,7 +113,7 @@ main {
 .icon-and-count {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: .5rem;
 }
 
 .deadline-section {
@@ -416,9 +416,6 @@ main {
         }
     }
 
-
-
-
     /*@keyframes ellipsisActivate {*/
     /*    100% {*/
     /*        max-width: 100%;*/
@@ -426,7 +423,6 @@ main {
     /*        overflow: hidden;*/
     /*    }*/
     /*}*/
-
     .greeting-guest {
         font-size: 3rem;
         margin-bottom: 4rem;
@@ -511,7 +507,7 @@ main {
 }
 
 @media (width >= 1110px) {
-.dashboard-container {
-margin-left: 380px;
-}
+    .dashboard-container {
+        margin-left: 380px;
+    }
 }
