@@ -101,7 +101,7 @@ export function getTemplateDialog(element, dueDate) {
  */
 
 export function getTemplateTaskCard(element, subtasksDone, totalSubtasks, progressWidth) {
-  return `<div class="task-card" id="${element["id"]}" draggable="true" onclick="openDialog('${element["id"]}')" ondragstart="startDragging('${element["id"]}')">
+  return `<div class="task-card" data-task-id="${element["id"]}" draggable="true" onclick="openDialog('${element["id"]}')" ondragstart="startDragging('${element["id"]}')" ontouchmove="startDragging('${element["id"]}')">
                             <div class="card-headline">
                                 <div class="card-label card-bg-${element["task"].split(" ")[0].toLowerCase()}-${element["task"].split(" ")[1].toLowerCase()}">${element["task"]}</div>
                                 <div class="card-swap-icon"></div>

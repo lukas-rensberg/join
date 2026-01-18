@@ -952,18 +952,6 @@ function startDragging(id) {
     document.getElementById(currentDraggedElement).classList.add("is-dragging");
 }
 
-
-/**
- * Allows dropping by preventing the default browser dragover behavior.
- * Required to enable drop functionality on the target element.
- * @param {DragEvent} event - Dragover event object.
- * @returns {void}
- */
-function allowDrop(event) {
-    event.preventDefault();
-}
-
-
 /**
  * Handles dragover events for board columns with lightweight throttling (~60fps).
  * Provides visual feedback by highlighting the container and showing a placeholder.
