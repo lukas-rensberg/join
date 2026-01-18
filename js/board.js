@@ -30,8 +30,8 @@ import {showFieldError, clearAllFieldErrors} from "./error-handler.js";
 let currentDraggedElement;
 let dialogRef = document.getElementById("dialog-task");
 let addTaskRef = document.getElementById("aside-add-task");
-let addedTaskRef = document.getElementById("task-added")
-let findTask = document.getElementById("search-task")
+let addedTaskRef = document.getElementById("task-added");
+let findTask = document.getElementById("search-task");
 
 let tasks = [];
 let contacts = [];

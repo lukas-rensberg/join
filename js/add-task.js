@@ -202,7 +202,7 @@ export async function handleCreateTaskFromBoard(container = document, targetCate
         await createTask(taskData);
         return true;
     } catch (error) {
-        handleCreateTaskError(error);
+        handleCreateTaskError();
         return false;
     }
 }
@@ -222,7 +222,7 @@ async function createAndRedirect(container = document) {
         redirectToBoard();
         return true;
     } catch (error) {
-        handleCreateTaskError(error);
+        handleCreateTaskError();
         return false;
     }
 }
