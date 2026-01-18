@@ -2,27 +2,27 @@
 <html lang="de">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Join | Board</title>
-    <link rel="shortcut icon" href="./assets/icons/logo-blue.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="./style.css" />
-    <link rel="stylesheet" href="./css/font.css" />
-    <link rel="stylesheet" href="./css/shared.css" />
-    <link rel="stylesheet" href="./css/board.css" />
-    <link rel="stylesheet" href="./css/header-footer.css" />
-    <link rel="stylesheet" href="./css/task-dialog.css" />
+    <link rel="shortcut icon" href="./assets/icons/logo-blue.svg" type="image/svg+xml"/>
+    <link rel="stylesheet" href="./style.css"/>
+    <link rel="stylesheet" href="./css/font.css"/>
+    <link rel="stylesheet" href="./css/shared.css"/>
+    <link rel="stylesheet" href="./css/board.css"/>
+    <link rel="stylesheet" href="./css/header-footer.css"/>
+    <link rel="stylesheet" href="./css/task-dialog.css"/>
     <link rel="stylesheet" href="./css/aside.css">
 </head>
 
 <body class="body-board">
     <header>
-        <img src="./assets/icons/logo-white.svg" alt="Join Logo" />
+        <img src="./assets/icons/logo-white.svg" alt="Join Logo"/>
         <div class="header-right">
             <div class="help-container">Kanban Project Management Tool
                 <a href="help.html"><img src="./assets/icons/question_mark_.svg" alt="Question Mark Help"></a>
             </div>
-            <input type="checkbox" id="slideInSideMenu" />
+            <input type="checkbox" id="slideInSideMenu"/>
             <label for="slideInSideMenu">
                 <div class="avatar" id="toggleSideMenu"></div>
             </label>
@@ -42,19 +42,19 @@
         <aside class="aside-desktop">
             <div class="aside-navbar">
                 <a href="overview.html">
-                    <img src="./assets/menu_icons/summary.svg" alt="Summary Icon" />
+                    <img src="./assets/menu_icons/summary.svg" alt="Summary Icon"/>
                     Summary
                 </a>
                 <a href="add-task.html">
-                    <img src="./assets/menu_icons/add-task.svg" alt="Add Task Icon" />
+                    <img src="./assets/menu_icons/add-task.svg" alt="Add Task Icon"/>
                     Add Task
                 </a>
                 <a href="board.html" class="active-nav-link">
-                    <img src="./assets/menu_icons/board.svg" alt="Board Icon" />
+                    <img src="./assets/menu_icons/board.svg" alt="Board Icon"/>
                     Board
                 </a>
                 <a href="contacts.html">
-                    <img src="./assets/menu_icons/contacts.svg" alt="Contacts Icon" />
+                    <img src="./assets/menu_icons/contacts.svg" alt="Contacts Icon"/>
                     Contacts
                 </a>
             </div>
@@ -95,13 +95,13 @@
                     <div class="add-task-icon" data-category="to-do"></div>
                 </div>
                 <div class="task-card-container" id="to-do" ondrop="moveTo('to-do')"
-                    ondragleave="bgContainerRemove('to-do')" ondragover="handleDragOver(event, 'to-do')"></div>
+                     ondragleave="bgContainerRemove('to-do')" ondragover="handleDragOver(event, 'to-do')"></div>
                 <div class="task-title">
                     <div class="task-headline">In progress</div>
                     <div class="add-task-icon" data-category="in-progress"></div>
                 </div>
                 <div class="task-card-container" id="in-progress" ondrop="moveTo('in-progress')"
-                    ondragleave="bgContainerRemove('in-progress')" ondragover="handleDragOver(event, 'in-progress')">
+                     ondragleave="bgContainerRemove('in-progress')" ondragover="handleDragOver(event, 'in-progress')">
                 </div>
 
                 <div class="task-title">
@@ -109,14 +109,14 @@
                     <div class="add-task-icon" data-category="await-feedback"></div>
                 </div>
                 <div class="task-card-container" id="await-feedback" ondrop="moveTo('await-feedback')"
-                    ondragleave="bgContainerRemove('await-feedback')"
-                    ondragover="handleDragOver(event, 'await-feedback')"></div>
+                     ondragleave="bgContainerRemove('await-feedback')"
+                     ondragover="handleDragOver(event, 'await-feedback')"></div>
 
                 <div class="task-title">
                     <div class="task-headline">Done</div>
                 </div>
                 <div class="task-card-container" id="done" ondrop="moveTo('done')"
-                    ondragleave="bgContainerRemove('done')" ondragover="handleDragOver(event, 'done')"></div>
+                     ondragleave="bgContainerRemove('done')" ondragover="handleDragOver(event, 'done')"></div>
             </div>
         </section>
 
@@ -124,9 +124,7 @@
 
             <div class="close-add-task"></div>
             <h1>Add Task</h1>
-            <section class="add-task-form">
-
-            </section>
+            <section class="add-task-form"></section>
             <section class="btn-section-add-task">
                 <button class="btn-create-aside"></button>
             </section>

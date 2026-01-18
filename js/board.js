@@ -1239,17 +1239,14 @@ function initSubtasks(taskId) {
     const pendingSubtasks = task.subtasks || [];
     const completedSubtasks = task.subtasks_done || [];
 
-    // Add pending subtasks
     pendingSubtasks.forEach((subtask, index) => {
         subtasksContainer.innerHTML += getTemplateSubtask(subtask, taskId, index, false);
     });
 
-    // Add completed subtasks
     completedSubtasks.forEach((subtask, index) => {
         subtasksContainer.innerHTML += getTemplateSubtask(subtask, taskId, index + pendingSubtasks.length, true);
     });
 
-    // Add event listeners after DOM is updated
     setTimeout(() => addSubtaskEventListeners(taskId), 0);
 }
 

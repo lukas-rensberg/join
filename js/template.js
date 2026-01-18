@@ -151,7 +151,7 @@ export function getTemplateTaskCard(element, subtasksDone, totalSubtasks, progre
  */
 export function getTemplateMember(memberName, memberInitials, avatarColor) {
   return `<div class="d-assigned-member-cards">
-                <div class="d-assigned-member-icon" style="background-color: ${avatarColor}">
+                <div class="d-assigned-member-icon" style="background-color: ${avatarColor};">
                   ${memberInitials}
                 </div>
                 <p>${memberName}</p>
