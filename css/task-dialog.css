@@ -11,7 +11,7 @@ html:has(dialog[open]) {
     height: min(700px, calc(100vh - 1rem));
     position: fixed;
     z-index: 1100;
-    top: 50%;
+    top: 100%;
     left: 50%;
     opacity: 0;
     border-radius: var(--main-radius);
@@ -30,7 +30,7 @@ html:has(dialog[open]) {
 @keyframes dialogSwipeIn {
     100% {
         opacity: 1;
-        transform: translateX(-50%) translateY(-50%);
+        transform: translateX(-50%) translateY(-125%);
     }
 }
 
@@ -41,11 +41,11 @@ html:has(dialog[open]) {
 @keyframes dialogSwipeOut {
     0% {
         opacity: 1;
-        transform: translateX(-50%) translateY(-50%);
+        transform: translateX(-50%) translateY(-125%);
     }
     100% {
         opacity: 0;
-        transform: translateX(-50%) translateY(50%);
+        transform: translateX(-50%) translateY(100%);
     }
 }
 
@@ -410,7 +410,7 @@ strong {
 
 
         &::before {
-        color: var(--main-color)
+            color: var(--main-color)
         }
 
         &::after {
@@ -421,6 +421,37 @@ strong {
 
 
 @media (width < 500px) {
+    .dialog-task {
+        top: 50%;
+        left: 50%;
+    }
+
+    .dialog-swipe-in {
+        animation: dialogSwipeIn 300ms ease-in-out forwards
+    }
+
+    @keyframes dialogSwipeIn {
+        100% {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-50%);
+        }
+    }
+
+    .dialog-swipe-out {
+        animation: dialogSwipeOut 300ms ease-in-out forwards;
+    }
+
+    @keyframes dialogSwipeOut {
+        0% {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-50%);
+        }
+        100% {
+            opacity: 0;
+            transform: translateX(-50%) translateY(100%);
+        }
+    }
+
     .d-assigned-members {
         max-height: 9rem;
     }
@@ -489,10 +520,10 @@ strong {
     background: url(../assets/icons/close_blue.svg) center center no-repeat;
     cursor: pointer;
     transition: background 200ms ease;
-}
 
-.close-edit-dialog:hover {
-    background: url(../assets/icons/close_blue_hover.svg) center center no-repeat;
+    &:hover {
+        background: url(../assets/icons/close_blue_hover.svg) center center no-repeat;
+    }
 }
 
 .edit-task-form {
@@ -522,16 +553,6 @@ strong {
     width: 100%;
     min-height: 6.5rem;
     max-height: 12rem;
-    border: 0.0625rem solid var(--color-light-gray);
-    border-radius: 0 0.625rem 0.625rem 0.625rem;
-    padding: 0.5rem 1rem;
-    background: #ffffff;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-    outline: none;
-    font-size: 0.9rem;
-    resize: vertical;
-    overflow-y: auto;
-    transition: border-color 0.2s;
 }
 
 .dialog-content .edit-task-form .task-description::placeholder {

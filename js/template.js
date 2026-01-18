@@ -76,7 +76,7 @@ export function getTemplateDialog(element, dueDate) {
           </div>
           <div class="d-assigned-to">
             <p><strong>Assigned to:</strong></p>
-            <div class="d-assigned-members" id="d-assigned-members" onload="initMembers()">
+            <div class="d-assigned-members" id="d-assigned-members">
             </div>
           </div>
           <div class="d-subtasks">
@@ -104,7 +104,23 @@ export function getTemplateTaskCard(element, subtasksDone, totalSubtasks, progre
   return `<div class="task-card" data-task-id="${element["id"]}" draggable="true" onclick="openDialog('${element["id"]}')" ondragstart="startDragging('${element["id"]}')" ontouchmove="startDragging('${element["id"]}')">
                             <div class="card-headline">
                                 <div class="card-label card-bg-${element["task"].split(" ")[0].toLowerCase()}-${element["task"].split(" ")[1].toLowerCase()}">${element["task"]}</div>
-                                <div class="card-swap-icon"></div>
+                                <div class="card-swap-icon" onclick="toggleSwapMenu(event, '${element["id"]}', '${element["category"]}')">
+                                    <div class="card-swap-dropdown" id="swap-dropdown-${element["id"]}">
+                                        <h5>Move to</h5>
+                                        <div class="move-to-do" data-category="to-do" onclick="moveTaskTo(event, '${element["id"]}', 'to-do')">
+                                            <span>To-do</span>
+                                        </div>
+                                        <div class="move-to-do" data-category="in-progress" onclick="moveTaskTo(event, '${element["id"]}', 'in-progress')">
+                                            <span>In progress</span>
+                                        </div>
+                                        <div class="move-to-do" data-category="await-feedback" onclick="moveTaskTo(event, '${element["id"]}', 'await-feedback')">
+                                            <span>Await feedback</span>
+                                        </div>
+                                        <div class="move-to-do" data-category="done" onclick="moveTaskTo(event, '${element["id"]}', 'done')">
+                                            <span>Done</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="card-task-wrapper">
                               <div class="card-task-title">${element["title"]}</div>
@@ -135,7 +151,7 @@ export function getTemplateTaskCard(element, subtasksDone, totalSubtasks, progre
  */
 export function getTemplateMember(memberName, memberInitials, avatarColor) {
   return `<div class="d-assigned-member-cards">
-                <div class="d-assigned-member-icon" style="background-color: ${avatarColor}">
+                <div class="d-assigned-member-icon" style="background-color: ${avatarColor};">
                   ${memberInitials}
                 </div>
                 <p>${memberName}</p>
