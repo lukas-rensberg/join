@@ -30,7 +30,6 @@ header {
       font-size: 1.25rem;
       text-decoration: none;
       color: #ffffff;
-      align-items: center;
 
       img {
         display: flex;
@@ -45,9 +44,6 @@ header {
       }
     }
   }
-
-
-
 }
 
 .avatar {
@@ -127,6 +123,8 @@ nav {
       color: var(--main-color-secondary);
     }
   }
+
+
 }
 
 .active-footer-icon {

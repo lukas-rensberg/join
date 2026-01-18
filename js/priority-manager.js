@@ -1,14 +1,15 @@
 /**
  * Priority Management Functions
- * Handles priority button selection and icon updates
+ * Handles priority button selection and icon updates with scoped container support
  */
 
 /**
  * Handles priority button selection
  * @param {HTMLElement} clickedButton - The clicked priority button
+ * @param {HTMLElement} container - The container element to scope queries
  */
-export function selectPriority(clickedButton) {
-    const allPriorityButtons = document.querySelectorAll('.priority-btn');
+export function selectPriority(clickedButton, container = document) {
+    const allPriorityButtons = container.querySelectorAll('.priority-btn');
     allPriorityButtons.forEach(button => {
         button.classList.remove('active');
         updatePriorityIcon(button, false);
@@ -36,21 +37,25 @@ function updatePriorityIcon(button, isActive) {
 }
 
 /**
- * Initializes priority button event listeners
+ * Initializes priority button event listeners with event delegation
+ * @param {HTMLElement} container - The container element to scope queries (default: document)
  */
-export function initializePriorityButtons() {
-    const priorityButtons = document.querySelectorAll('.priority-btn');
-    priorityButtons.forEach(button => {
-        button.addEventListener('click', () => selectPriority(button));
+export function initializePriorityButtons(container = document) {
+    container.addEventListener('click', (event) => {
+        const priorityBtn = event.target.closest('.priority-btn');
+        if (priorityBtn) {
+            selectPriority(priorityBtn, container);
+        }
     });
 }
 
 /**
  * Gets the currently selected priority
+ * @param {HTMLElement} container - The container element to scope queries
  * @returns {string} The selected priority ('urgent', 'medium', or 'low')
  */
-export function getSelectedPriority() {
-    const activeButton = document.querySelector('.priority-btn.active');
+export function getSelectedPriority(container = document) {
+    const activeButton = container.querySelector('.priority-btn.active');
     if (!activeButton) return 'medium'; // Default to medium if nothing selected
 
     if (activeButton.classList.contains('urgent')) return 'urgent';

@@ -1,6 +1,6 @@
 /**
  * Task Data Collection Functions
- * Handles collecting and formatting task data from form
+ * Handles collecting and formatting task data from form with scoped container support
  */
 
 import { getSelectedPriority } from "./priority-manager.js";
@@ -9,43 +9,77 @@ import { getSubtasks } from "./subtask-manager.js";
 
 /**
  * Collects all task data from the form
+ * @param {HTMLElement} container - The container element to scope queries (default: document)
+ * @param {string} [targetCategory='to-do'] - Die Ziel-Kategorie/Spalte für den neuen Task
  * @returns {Object} Task data object
  */
-export function collectTaskData() {
+export function collectTaskData(container = document, targetCategory = 'to-do') {
     return {
-        title: getTaskTitle(),
-        text: getTaskDescription(),
-        dueDate: getFormattedDueDate(),
-        priority: getSelectedPriority(),
-        task: getSelectedCategory().name,
-        category: 'to-do',
+        title: getTaskTitle(container),
+        text: getTaskDescription(container),
+        dueDate: getFormattedDueDate(container),
+        priority: getSelectedPriority(container),
+        task: getSelectedCategory()?.name || '',
+        category: targetCategory,
         member: getAssignedMemberIds(),
-        subtasks: getSubtaskTexts()
+        subtasks: getSubtaskTexts(container)
+    };
+}
+
+/**
+ * Collects task data for editing, preserving done status of unchanged subtasks
+ * @param {HTMLElement} container - The container element to scope queries
+ * @param {Object} originalTask - The original task object with subtasks and subtasks_done
+ * @returns {Object} Task data object with properly categorized subtasks
+ */
+export function collectEditTaskData(container, originalTask) {
+    const newSubtaskTexts = getSubtaskTexts(container);
+    const originalDone = originalTask.subtasks_done || [];
+
+    // Subtasks that were done and still exist unchanged go to subtasks_done
+    const subtasksDone = newSubtaskTexts.filter(text => originalDone.includes(text));
+
+    // All other subtasks go to subtasks (pending)
+    const subtasks = newSubtaskTexts.filter(text => !originalDone.includes(text));
+
+    return {
+        title: getTaskTitle(container),
+        text: getTaskDescription(container),
+        dueDate: getFormattedDueDate(container),
+        priority: getSelectedPriority(container),
+        task: getSelectedCategory()?.name || '',
+        member: getAssignedMemberIds(),
+        subtasks: subtasks,
+        subtasks_done: subtasksDone
     };
 }
 
 /**
  * Gets the task title from form
+ * @param {HTMLElement} container - The container element to scope queries
  * @returns {string} Task title
  */
-export function getTaskTitle() {
-    return document.querySelector('.input-title')?.value?.trim() || '';
+export function getTaskTitle(container = document) {
+    return container.querySelector('.input-title')?.value?.trim() || '';
 }
 
 /**
  * Gets the task description from form
+ * @param {HTMLElement} container - The container element to scope queries
  * @returns {string} Task description
  */
-export function getTaskDescription() {
-    return document.querySelector('.task-description')?.value?.trim() || '';
+export function getTaskDescription(container = document) {
+    return container.querySelector('.task-description')?.value?.trim() || '';
 }
 
 /**
  * Gets and formats the due date to ISO format
+ * @param {HTMLElement} container - The container element to scope queries
  * @returns {string} ISO formatted date (YYYY-MM-DD)
  */
-export function getFormattedDueDate() {
-    const dueDate = document.getElementById('dueDate')?.value;
+export function getFormattedDueDate(container = document) {
+    const dueDate = container.querySelector('.due-date-input')?.value;
+    if (!dueDate) return '';
     const [day, month, year] = dueDate.split('/');
     return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
 }
@@ -61,10 +95,10 @@ export function getAssignedMemberIds() {
 
 /**
  * Gets subtask texts as array
+ * @param {HTMLElement} container - The container element to scope queries
  * @returns {string[]} Array of subtask texts
  */
-export function getSubtaskTexts() {
-    const subtasks = getSubtasks();
+export function getSubtaskTexts(container = document) {
+    const subtasks = getSubtasks(container);
     return subtasks.map(subtask => subtask.text);
 }
-

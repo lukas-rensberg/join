@@ -7,15 +7,15 @@ html:has(dialog[open]) {
     border: none;
     outline: none;
     width: 90%;
-    max-width: calc(25rem + (2*var(--padding-side)));
+    max-width: calc(25rem + (2 * var(--padding-side)));
     height: min(700px, calc(100vh - 1rem));
     position: fixed;
     z-index: 1100;
-    top: 50%;
+    top: 100%;
     left: 50%;
     opacity: 0;
     border-radius: var(--main-radius);
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.1);
 
     &::backdrop {
         background-color: rgba(255, 255, 255, 0.1);
@@ -30,12 +30,26 @@ html:has(dialog[open]) {
 @keyframes dialogSwipeIn {
     100% {
         opacity: 1;
-        transform: translateX(-50%) translateY(-50%);
+        transform: translateX(-50%) translateY(-125%);
+    }
+}
+
+.dialog-swipe-out {
+    animation: dialogSwipeOut 300ms ease-in-out forwards;
+}
+
+@keyframes dialogSwipeOut {
+    0% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(-125%);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(100%);
     }
 }
 
 .dialog-content {
-    background-color: white;
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -180,7 +194,6 @@ strong {
     outline: none;
     margin-top: .5rem;
     width: 100%;
-    border: none;
     overflow-y: auto;
     flex: 1;
     min-height: 0;
@@ -227,11 +240,11 @@ strong {
         opacity: 0.5;
         position: absolute;
 
-        &:hover+label::before {
+        &:hover + label::before {
             cursor: pointer;
         }
 
-        &:checked+label::before {
+        &:checked + label::before {
             content: url(../assets/icons/checked.svg);
         }
     }
@@ -267,13 +280,12 @@ strong {
         margin: 0 .5rem;
     }
 
+    &:active,
     &:hover {
         cursor: pointer;
-    }
 
-    &:active {
         &::before {
-            background-image: url('../assets/icons/delete_clicked.svg') center center no-repeat;
+            background: url('../assets/icons/delete_clicked.svg') center center no-repeat;
         }
 
         color: var(--main-color);
@@ -302,11 +314,10 @@ strong {
         margin-right: 0.5rem;
     }
 
+    &:active,
     &:hover {
         cursor: pointer;
-    }
 
-    &:active {
         &::before {
             background-image: url('../assets/icons/edit_clicked.svg');
         }
@@ -316,7 +327,131 @@ strong {
     }
 }
 
+.delete {
+    display: flex;
+    background-color: var(--main-color);
+    height: 2rem;
+    width: 3rem;
+    color: #ffffff;
+    font-weight: 700;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.625rem;
+    border: none;
+    transition: all 200ms ease;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.yes {
+    &:hover {
+        background-color: lightgreen;
+    }
+
+    &::before {
+        content: '';
+        background: url('../assets/icons/check.svg') center center no-repeat;
+        background-size: contain;
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.no {
+    margin-left: .5rem;
+
+    &:hover {
+        background-color: tomato;
+    }
+
+    &::before {
+        content: '';
+        background: url('../assets/icons/close_white.svg') center center no-repeat;
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.confirm-edit-task-btn {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    border-radius: var(--button-radius);
+    gap: .5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 200ms ease;
+    padding: .5rem .5rem;
+    border: none;
+    background-color: var(--main-color);
+
+    &::before {
+        content: 'Ok';
+        color: #ffffff;
+        font-weight: 400;
+        font-size: 1.25rem;
+    }
+
+    &::after {
+        content: '';
+        background: url('../assets/icons/check.svg') center center no-repeat;
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+
+    &:hover {
+        cursor: pointer;
+        background-color: var(--color-primary-button-hover);
+    }
+
+    &:active {
+        background-color: var(--color-primary-button-click);
+
+
+        &::before {
+            color: var(--main-color)
+        }
+
+        &::after {
+            background: url('../assets/icons/check_blue.svg') center center no-repeat;
+        }
+    }
+}
+
+
 @media (width < 500px) {
+    .dialog-task {
+        top: 50%;
+        left: 50%;
+    }
+
+    .dialog-swipe-in {
+        animation: dialogSwipeIn 300ms ease-in-out forwards
+    }
+
+    @keyframes dialogSwipeIn {
+        100% {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-50%);
+        }
+    }
+
+    .dialog-swipe-out {
+        animation: dialogSwipeOut 300ms ease-in-out forwards;
+    }
+
+    @keyframes dialogSwipeOut {
+        0% {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-50%);
+        }
+        100% {
+            opacity: 0;
+            transform: translateX(-50%) translateY(100%);
+        }
+    }
+
     .d-assigned-members {
         max-height: 9rem;
     }
@@ -348,10 +483,108 @@ strong {
     .card-swap-icon {
         visibility: visible;
     }
+
+    .dialog-swipe-out {
+        animation: dialogSwipeOut 300ms ease-in-out forwards;
+    }
+
+    @keyframes dialogSwipeOut {
+        0% {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-50%);
+        }
+        100% {
+            opacity: 0;
+            transform: translateX(50%) translateY(-50%);
+        }
+    }
 }
 
 @media (width > 500px) {
     dialog {
         transform: translateX(-50%) translateY(100%);
     }
+}
+
+/* Edit Task Dialog Styles */
+.edit-task-header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 1.25rem 1rem;
+}
+
+.close-edit-dialog {
+    height: 1.5rem;
+    width: 1.5rem;
+    background: url(../assets/icons/close_blue.svg) center center no-repeat;
+    cursor: pointer;
+    transition: background 200ms ease;
+
+    &:hover {
+        background: url(../assets/icons/close_blue_hover.svg) center center no-repeat;
+    }
+}
+
+.edit-task-form {
+    padding: 1rem 1.5rem;
+    max-height: calc(100% - 10rem);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.dialog-content .edit-task-form .input-title {
+    width: 100%;
+    border: none;
+    border-bottom: 0.0625rem solid var(--color-light-gray);
+    border-radius: 0;
+    padding: 0.5rem 1rem;
+    font-size: 1.25rem;
+    outline: none;
+}
+
+.dialog-content .edit-task-form .input-title:focus {
+    border-bottom-color: var(--main-color);
+}
+
+.dialog-content .edit-task-form .task-description {
+    width: 100%;
+    min-height: 6.5rem;
+    max-height: 12rem;
+}
+
+.dialog-content .edit-task-form .task-description::placeholder {
+    color: var(--color-light-gray);
+}
+
+.dialog-content .edit-task-form .task-description:focus {
+    border-color: var(--main-color);
+    cursor: text;
+}
+
+.dialog-content .edit-task-form .subtask-input-wrapper input {
+    width: 100%;
+    height: auto;
+    border: none;
+    border-bottom: 0.0625rem solid var(--color-light-gray);
+    border-radius: 0;
+    padding: 0.5rem 3.5rem 0.5rem 1rem;
+    color: #000;
+    outline: none;
+}
+
+.dialog-content .edit-task-form .subtask-input-wrapper input:focus {
+    border-bottom-color: var(--main-color);
+}
+
+.dialog-content .edit-task-form .subtask-input-wrapper input::placeholder {
+    color: var(--color-light-gray);
+}
+
+.dialog-content .d-card-footer {
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: flex-end;
 }

@@ -76,7 +76,7 @@ export function getTemplateDialog(element, dueDate) {
           </div>
           <div class="d-assigned-to">
             <p><strong>Assigned to:</strong></p>
-            <div class="d-assigned-members" id="d-assigned-members" onload="initMembers()">
+            <div class="d-assigned-members" id="d-assigned-members">
             </div>
           </div>
           <div class="d-subtasks">
@@ -101,15 +101,31 @@ export function getTemplateDialog(element, dueDate) {
  */
 
 export function getTemplateTaskCard(element, subtasksDone, totalSubtasks, progressWidth) {
-  return `<div class="task-card" id="${element["id"]}" draggable="true" onclick="openDialog('${element["id"]}')" ondragstart="startDragging('${element["id"]}')">
+  return `<div class="task-card" data-task-id="${element["id"]}" draggable="true" onclick="openDialog('${element["id"]}')" ondragstart="startDragging('${element["id"]}')" ontouchmove="startDragging('${element["id"]}')">
                             <div class="card-headline">
                                 <div class="card-label card-bg-${element["task"].split(" ")[0].toLowerCase()}-${element["task"].split(" ")[1].toLowerCase()}">${element["task"]}</div>
-                                <div class="card-swap-icon"></div>
+                                <div class="card-swap-icon" onclick="toggleSwapMenu(event, '${element["id"]}', '${element["category"]}')">
+                                    <div class="card-swap-dropdown" id="swap-dropdown-${element["id"]}">
+                                        <h5>Move to</h5>
+                                        <div class="move-to-do" data-category="to-do" onclick="moveTaskTo(event, '${element["id"]}', 'to-do')">
+                                            <span>To-do</span>
+                                        </div>
+                                        <div class="move-to-do" data-category="in-progress" onclick="moveTaskTo(event, '${element["id"]}', 'in-progress')">
+                                            <span>In progress</span>
+                                        </div>
+                                        <div class="move-to-do" data-category="await-feedback" onclick="moveTaskTo(event, '${element["id"]}', 'await-feedback')">
+                                            <span>Await feedback</span>
+                                        </div>
+                                        <div class="move-to-do" data-category="done" onclick="moveTaskTo(event, '${element["id"]}', 'done')">
+                                            <span>Done</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="card-task-wrapper">
                               <div class="card-task-title">${element["title"]}</div>
                               <div class="card-task-text">${element["text"]}</div>
-                              <div class="card-progress-container">
+                              <div class="card-progress-container" id="card-progress-container-${element["id"]}">
                                   <div class="card-progress-bar">
                                       <div class="card-sub-progress-bar" style="width: ${progressWidth}%;"></div>
                                   </div>
@@ -188,9 +204,9 @@ export function createSubtaskHTML(text) {
   return `
     <span class="subtask-text">${text}</span>
     <div class="subtask-actions">
-      <img src="./assets/icons/edit.svg" alt="Edit" class="subtask-edit" onclick="startEditingSubtask(this)" />
+      <img src="./assets/icons/edit.svg" alt="Edit" class="subtask-edit" />
       <span class="subtask-separator"></span>
-      <img src="./assets/icons/delete.svg" alt="Delete" class="subtask-delete" onclick="deleteSubtask(this)" />
+      <img src="./assets/icons/delete.svg" alt="Delete" class="subtask-delete" />
     </div>
   `;
 }
@@ -201,9 +217,9 @@ export function createSubtaskHTML(text) {
  */
 export function createEditActionsHTML() {
   return `
-    <img src="./assets/icons/delete.svg" alt="Cancel" class="cancel-edit" onclick="cancelEdit(this)" />
+    <img src="./assets/icons/delete.svg" alt="Cancel" class="cancel-edit" />
     <span class="subtask-separator"></span>
-    <img src="./assets/icons/check-blue.svg" alt="Save" class="save-edit" onclick="saveEdit(this)" />
+    <img src="./assets/icons/check-blue.svg" alt="Save" class="save-edit" />
   `;
 }
 
@@ -213,9 +229,9 @@ export function createEditActionsHTML() {
  */
 export function createNormalActionsHTML() {
   return `
-    <img src="./assets/icons/edit.svg" alt="Edit" class="subtask-edit" onclick="startEditingSubtask(this)" />
+    <img src="./assets/icons/edit.svg" alt="Edit" class="subtask-edit" />
     <span class="subtask-separator"></span>
-    <img src="./assets/icons/delete.svg" alt="Delete" class="subtask-delete" onclick="deleteSubtask(this)" />
+    <img src="./assets/icons/delete.svg" alt="Delete" class="subtask-delete" />
   `;
 }
 
@@ -283,15 +299,15 @@ export function getTemplateAddTask() {
                 </div>
 
                 <div class="form-group">
-                    <label id="desc">Description <span class="optional">(optional)</span></label>
-                    <textarea aria-labelledby="desc" class="task-description"
+                    <label class="desc-label">Description <span class="optional">(optional)</span></label>
+                    <textarea aria-label="Description" class="task-description"
                         placeholder="Enter a Description"></textarea>
                 </div>
 
                 <div class="form-group">
                     <label>Due date</label>
                     <div class="input-with-icon">
-                        <input aria-label="Enter Due Date" type="text" class="due-date" id="dueDate"
+                        <input aria-label="Enter Due Date" type="text" class="due-date due-date-input"
                             placeholder="dd/mm/yyyy" maxlength="10" />
                         <span class="icon">
                             <img src="./assets/icons/calendar.svg" alt="Calendar Symbol, not working" />
@@ -302,15 +318,15 @@ export function getTemplateAddTask() {
                 <div class="form-group">
                     <label>Priority</label>
                     <div class="priority-selection">
-                        <button class="priority-btn urgent">
+                        <button class="priority-btn urgent" type="button">
                             Urgent
                             <img src="./assets/priority_icons/prio_urgent_colored.svg" alt="Image with two arrows up" />
                         </button>
-                        <button class="priority-btn medium active">
+                        <button class="priority-btn medium active" type="button">
                             Medium
                             <img src="./assets/priority_icons/medium.svg" alt="Image with two stripes horizontal" />
                         </button>
-                        <button class="priority-btn low">
+                        <button class="priority-btn low" type="button">
                             Low
                             <img src="./assets/priority_icons/prio_low_colored.svg" alt="Image with two arrows down" />
                         </button>
@@ -319,15 +335,14 @@ export function getTemplateAddTask() {
 
                 <div class="form-group">
                     <label>Assigned to <span class="optional">(optional)</span></label>
-                    <div class="custom-dropdown" id="contactDropdownWrapper">
-                        <div class="dropdown-header" onclick="toggleDropdown('contact')">
-                            <input type="text" id="contactSearchInput" class="dropdown-search-input"
-                                placeholder="Select contacts to assign" oninput="filterOptions('contact')"
-                                onclick="event.stopPropagation(); toggleDropdown('contact', true);" />
+                    <div class="custom-dropdown contact-dropdown-wrapper">
+                        <div class="dropdown-header contact-dropdown-header">
+                            <input type="text" class="dropdown-search-input contact-search-input"
+                                placeholder="Select contacts to assign" />
                             <img src="./assets/menu_icons/arrow-drop-down.svg" class="dropdown-arrow"
                                 alt="Little Image indicating an dropdown" />
                         </div>
-                        <div class="dropdown-content" id="contactDropdownContent">
+                        <div class="dropdown-content contact-dropdown-content">
                         </div>
                     </div>
                     <div class="dropzone"></div>
@@ -335,13 +350,13 @@ export function getTemplateAddTask() {
 
                 <div class="form-group">
                     <label>Category</label>
-                    <div class="custom-dropdown" id="categoryDropdownWrapper">
-                        <div class="dropdown-header" onclick="toggleDropdown('category')">
-                            <span id="categoryDisplay" class="dropdown-display-text">Select task category</span>
+                    <div class="custom-dropdown category-dropdown-wrapper">
+                        <div class="dropdown-header category-dropdown-header">
+                            <span class="dropdown-display-text category-display">Select task category</span>
                             <img src="./assets/menu_icons/arrow-drop-down.svg" class="dropdown-arrow"
                                 alt="Little Image indicating an dropdown" />
                         </div>
-                        <div class="dropdown-content" id="categoryDropdownContent">
+                        <div class="dropdown-content category-dropdown-content">
                         </div>
                     </div>
                 </div>
@@ -356,7 +371,7 @@ export function getTemplateAddTask() {
                             <img src="./assets/icons/check-blue.svg" alt="Confirm" class="icon-confirm" />
                         </div>
                     </div>
-                    <ul class="subtask-list" id="subtaskList"></ul>
+                    <ul class="subtask-list"></ul>
                 </div>`;
 }
 

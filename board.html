@@ -30,7 +30,7 @@
                 <nav>
                     <a class="link-none" href="help.html">Help</a>
                     <a href="legal_notice.html">Legal Notice</a>
-                    <a href="legal_notice.html">Privacy Policy</a>
+                    <a href="privacy.html">Privacy Policy</a>
                     <a href="index.html">Log Out</a>
                 </nav>
             </div>
@@ -38,6 +38,7 @@
     </header>
 
     <main>
+
         <aside class="aside-desktop">
             <div class="aside-navbar">
                 <a href="overview.html">
@@ -59,27 +60,28 @@
             </div>
             <div class="aside-links">
                 <a href="legal_notice.html">Legal Notice</a>
-                <a href="legal_notice.html">Privacy Policy</a>
+                <a href="privacy.html">Privacy Policy</a>
             </div>
         </aside>
         <section class="src-container">
             <div class="input-container">
-                <input type="text" name="search-task" id="search-task" placeholder="Find Task"/>
+                <input onkeyup="filterTasksBySearch()" class="pl-2" type="text" name="search-task" id="search-task"
+                    placeholder="Find Task" />
                 <div class="inp-src-icon"></div>
             </div>
             <button class="add-task-btn">Add Task <img src="./assets/icons/plus_symbol.svg" alt="Plus Symbol"></button>
             <div class="task-title-desk-container">
                 <div class="task-title-desk">
                     <div class="task-headline">To do</div>
-                    <div class="add-task-icon"></div>
+                    <div class="add-task-icon" data-category="to-do"></div>
                 </div>
                 <div class="task-title-desk">
                     <div class="task-headline">In progress</div>
-                    <div class="add-task-icon"></div>
+                    <div class="add-task-icon" data-category="in-progress"></div>
                 </div>
                 <div class="task-title-desk">
                     <div class="task-headline">Await feedback</div>
-                    <div class="add-task-icon"></div>
+                    <div class="add-task-icon" data-category="await-feedback"></div>
                 </div>
                 <div class="task-title-desk">
                     <div class="task-headline">Done</div>
@@ -90,13 +92,13 @@
             <div class="tasks-container">
                 <div class="task-title">
                     <div class="task-headline">To do</div>
-                    <div class="add-task-icon"></div>
+                    <div class="add-task-icon" data-category="to-do"></div>
                 </div>
                 <div class="task-card-container" id="to-do" ondrop="moveTo('to-do')"
                      ondragleave="bgContainerRemove('to-do')" ondragover="handleDragOver(event, 'to-do')"></div>
                 <div class="task-title">
                     <div class="task-headline">In progress</div>
-                    <div class="add-task-icon"></div>
+                    <div class="add-task-icon" data-category="in-progress"></div>
                 </div>
                 <div class="task-card-container" id="in-progress" ondrop="moveTo('in-progress')"
                      ondragleave="bgContainerRemove('in-progress')" ondragover="handleDragOver(event, 'in-progress')">
@@ -104,7 +106,7 @@
 
                 <div class="task-title">
                     <div class="task-headline">Await feedback</div>
-                    <div class="add-task-icon"></div>
+                    <div class="add-task-icon" data-category="await-feedback"></div>
                 </div>
                 <div class="task-card-container" id="await-feedback" ondrop="moveTo('await-feedback')"
                      ondragleave="bgContainerRemove('await-feedback')"
@@ -118,99 +120,21 @@
             </div>
         </section>
 
-        <dialog class="aside-add-task" id="aside-add-task" closedby="closedRequest">
+        <dialog class="aside-add-task add-task-swipe-out" id="aside-add-task">
 
             <div class="close-add-task"></div>
             <h1>Add Task</h1>
-            <section class="add-task-form">
-                <div class="form-group form-group-title">
-                    <input aria-label="Task Title" type="text" class="input-title" placeholder="Enter a title"/>
-                </div>
-
-                <div class="form-group">
-                    <label id="desc">Description <span class="optional">(optional)</span></label>
-                    <textarea aria-labelledby="desc" class="task-description"
-                              placeholder="Enter a Description"></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>Due date</label>
-                    <div class="input-with-icon">
-                        <input aria-label="Enter Due Date" type="text" class="due-date" id="dueDate"
-                               placeholder="dd/mm/yyyy" maxlength="10"/>
-                        <span class="icon">
-                                <img src="./assets/icons/calendar.svg" alt="Calendar Symbol, not working"/>
-                            </span>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Priority</label>
-                    <div class="priority-selection">
-                        <button class="priority-btn urgent">
-                            Urgent
-                            <img src="./assets/priority_icons/prio_urgent_colored.svg" alt="Image with two arrows up"/>
-                        </button>
-                        <button class="priority-btn medium active">
-                            Medium
-                            <img src="./assets/priority_icons/medium.svg" alt="Image with two stripes horizontal"/>
-                        </button>
-                        <button class="priority-btn low">
-                            Low
-                            <img src="./assets/priority_icons/prio_low_colored.svg" alt="Image with two arrows down"/>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Assigned to <span class="optional">(optional)</span></label>
-                    <div class="custom-dropdown" id="contactDropdownWrapper">
-                        <div class="dropdown-header" onclick="toggleDropdown('contact')">
-                            <input type="text" id="contactSearchInput" class="dropdown-search-input"
-                                   placeholder="Select contacts to assign" oninput="filterOptions('contact')"
-                                   onclick="event.stopPropagation(); toggleDropdown('contact', true);"/>
-                            <img src="./assets/menu_icons/arrow-drop-down.svg" class="dropdown-arrow"
-                                 alt="Little Image indicating an dropdown"/>
-                        </div>
-                        <div class="dropdown-content" id="contactDropdownContent">
-                        </div>
-                    </div>
-                    <div class="dropzone"></div>
-                </div>
-
-                <div class="form-group">
-                    <label>Category</label>
-                    <div class="custom-dropdown" id="categoryDropdownWrapper">
-                        <div class="dropdown-header" onclick="toggleDropdown('category')">
-                            <span id="categoryDisplay" class="dropdown-display-text">Select task category</span>
-                            <img src="./assets/menu_icons/arrow-drop-down.svg" class="dropdown-arrow"
-                                 alt="Little Image indicating an dropdown"/>
-                        </div>
-                        <div class="dropdown-content" id="categoryDropdownContent">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Subtasks <span class="optional">(optional)</span></label>
-                    <div class="input-with-icon subtask-input-wrapper">
-                        <input type="text" class="subtask-input" placeholder="Add a subtask"/>
-                        <div class="subtask-icons">
-                            <img src="./assets/icons/close.svg" alt="Cancel" class="icon-cancel"/>
-                            <span class="icon-separator"></span>
-                            <img src="./assets/icons/check-blue.svg" alt="Confirm" class="icon-confirm"/>
-                        </div>
-                    </div>
-                    <ul class="subtask-list" id="subtaskList"></ul>
-                </div>
-            </section>
+            <section class="add-task-form"></section>
             <section class="btn-section-add-task">
-                <button class="btn-create"></button>
+                <button class="btn-create-aside"></button>
             </section>
         </dialog>
 
+        <dialog class="task-added" id="task-added">Task added to board</dialog>
         <dialog class="dialog-task" id="dialog-task"></dialog>
+
     </main>
+
     <footer>
         <a class="nav-item" href="overview.html">
             <span class="nav-summary">Summary</span>

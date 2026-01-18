@@ -30,7 +30,7 @@
                 <nav>
                     <a class="link-none" href="help.html">Help</a>
                     <a href="legal_notice.html">Legal Notice</a>
-                    <a href="legal_notice.html">Privacy Policy</a>
+                    <a href="privacy.html">Privacy Policy</a>
                     <a href="index.html">Log Out</a>
                 </nav>
             </div>
@@ -60,9 +60,88 @@
                 </div>
                 <div class="aside-links">
                     <a href="legal_notice.html">Legal Notice</a>
-                    <a href="legal_notice.html">Privacy Policy</a>
+                    <a href="privacy.html">Privacy Policy</a>
                 </div>
             </aside>
+            <div class="form-group form-group-title">
+                <input aria-label="Task Title" type="text" class="input-title" placeholder="Enter a title" />
+            </div>
+
+
+            <div class="form-group">
+                <label class="desc-label">Description <span class="optional">(optional)</span></label>
+                <textarea aria-label="Description" class="task-description" placeholder="Enter a Description"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Due date</label>
+                <div class="input-with-icon">
+                    <input aria-label="Enter Due Date" type="text" class="due-date due-date-input"
+                        placeholder="dd/mm/yyyy" maxlength="10" />
+                    <span class="icon">
+                        <img src="./assets/icons/calendar.svg" alt="Calendar Symbol, not working" />
+                    </span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Priority</label>
+                <div class="priority-selection">
+                    <button class="priority-btn urgent" type="button">
+                        Urgent
+                        <img src="./assets/priority_icons/prio_urgent_colored.svg" alt="Image with two arrows up" />
+                    </button>
+                    <button class="priority-btn medium active" type="button">
+                        Medium
+                        <img src="./assets/priority_icons/medium.svg" alt="Image with two stripes horizontal" />
+                    </button>
+                    <button class="priority-btn low" type="button">
+                        Low
+                        <img src="./assets/priority_icons/prio_low_colored.svg" alt="Image with two arrows down" />
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Assigned to <span class="optional">(optional)</span></label>
+                <div class="custom-dropdown contact-dropdown-wrapper">
+                    <div class="dropdown-header contact-dropdown-header">
+                        <input type="text" class="dropdown-search-input contact-search-input"
+                            placeholder="Select contacts to assign" />
+                        <img src="./assets/menu_icons/arrow-drop-down.svg" class="dropdown-arrow"
+                            alt="Little Image indicating an dropdown" />
+                    </div>
+                    <div class="dropdown-content contact-dropdown-content">
+                    </div>
+                </div>
+                <div class="dropzone"></div>
+            </div>
+
+            <div class="form-group">
+                <label>Category</label>
+                <div class="custom-dropdown category-dropdown-wrapper">
+                    <div class="dropdown-header category-dropdown-header">
+                        <span class="dropdown-display-text category-display">Select task category</span>
+                        <img src="./assets/menu_icons/arrow-drop-down.svg" class="dropdown-arrow"
+                            alt="Little Image indicating an dropdown" />
+                    </div>
+                    <div class="dropdown-content category-dropdown-content">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group mobile-last">
+                <label>Subtasks <span class="optional">(optional)</span></label>
+                <div class="input-with-icon subtask-input-wrapper">
+                    <input type="text" class="subtask-input" placeholder="Add a subtask" />
+                    <div class="subtask-icons">
+                        <img src="./assets/icons/close.svg" alt="Cancel" class="icon-cancel" />
+                        <span class="icon-separator"></span>
+                        <img src="./assets/icons/check-blue.svg" alt="Confirm" class="icon-confirm" />
+                    </div>
+                </div>
+                <ul class="subtask-list"></ul>
+            </div>
         </main>
     </div>
     <div class="button-group">
@@ -71,6 +150,7 @@
         <button class="btn-create">
         </button>
     </div>
+    <dialog class="task-added" id="taskAdded">Task added to board</dialog>
     <footer>
         <a class="nav-item" href="overview.html">
             <span class="nav-summary">Summary</span>

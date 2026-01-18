@@ -21,7 +21,7 @@
         height: auto;
         row-gap: 1rem;
 
-        a {
+        & a {
             display: flex;
             text-decoration: none;
             color: var(--color-menu-item);
@@ -51,7 +51,7 @@
         gap: 1rem;
 
 
-        a {
+        & a {
             display: flex;
             text-decoration: none;
             color: var(--color-menu-item);
@@ -75,7 +75,6 @@
 }
 
 
-
 .add-task-swipe-in {
     animation: addTaskSwipeIn 300ms ease-in-out forwards;
 }
@@ -93,6 +92,10 @@
 }
 
 @keyframes addTaskSwipeOut {
+    0% {
+        opacity: 1;
+        transform: translateX(-100%) translateY(-50%);
+    }
     100% {
         opacity: 0;
         transform: translateX(0) translateY(-50%);
@@ -103,7 +106,6 @@
     border-radius: var(--main-radius) 0 var(--main-radius) var(--main-radius);
     background-color: #ffffff;
     position: fixed;
-    z-index: 1000;
     left: 100%;
     top: 50%;
     opacity: 1;
@@ -113,13 +115,14 @@
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.16);
     border: none;
     outline: none;
+    overflow: visible;
 
     &::backdrop {
         background-color: rgba(255, 255, 255, 0.1);
         backdrop-filter: blur(1px);
     }
 
-    h1 {
+    & h1 {
         padding: 3rem 0 0 2.5rem;
         font-size: 3rem;
         font-weight: 700;
@@ -150,7 +153,6 @@
         flex-direction: column;
         justify-content: flex-start;
         overflow-y: auto;
-        margin-bottom: 1rem;
 
         .input-title {
             width: 100%;
@@ -169,23 +171,19 @@
             }
         }
 
-        .input-title::placeholder {
-            color: #d6d6d6;
-            font-weight: 400;
-            font-size: 1.5rem;
-        }
-
-        p {
+        & p {
             margin: 2rem 0 0 0;
             font-size: 1rem;
             color: var(--color-menu-item);
         }
 
-        textarea {
+        & textarea {
             cursor: pointer;
             margin-top: 1rem;
-            width: 100%;
+            min-width: 100%;
+            max-width: 100%;
             min-height: 6.5rem;
+            max-height: 19rem;
             border: 0.0625rem solid var(--color-light-gray);
             border-radius: 0 0.625rem 0.625rem 0.625rem;
             padding: 0.5rem 1rem;
@@ -203,38 +201,7 @@
             }
         }
 
-        .input-with-icon {
-            position: relative;
-            display: flex;
-            align-items: center;
-            width: 100%;
-            padding: 12px;
-            border-bottom: 0.0625rem solid var(--color-light-gray);
-        }
-
-        .category-option-indicator {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            margin-right: 12px;
-            flex-shrink: 0;
-        }
-
-        .category-option-name {
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: var(--color-menu-text);
-            flex-grow: 1;
-        }
-
         /* Subtask Input Wrapper */
-        .subtask-input-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-            padding: 0;
-            border-bottom: none;
-        }
 
         .subtask-input-wrapper input {
             width: 100%;
@@ -247,175 +214,9 @@
             outline: none;
         }
 
-        .subtask-input-wrapper input:focus {
-            border-bottom: 0.0625rem solid var(--main-color);
+        .subtask-icons img.icon-confirm {
+            width: 1.2rem;
         }
-
-        .subtask-input-wrapper input::placeholder {
-            color: var(--color-light-gray);
-        }
-
-        .subtask-input-wrapper .subtask-icons {
-            position: absolute;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            display: none;
-            gap: 0.75rem;
-            align-items: center;
-            padding-right: 0.75rem;
-            pointer-events: none;
-        }
-
-        .subtask-input-wrapper .subtask-icons.visible {
-            display: flex;
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .subtask-input-wrapper .subtask-icons img {
-            width: 1rem;
-            height: 1rem;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            cursor: pointer;
-            opacity: 0.7;
-            transition: opacity 150ms ease;
-            pointer-events: auto;
-        }
-
-        .subtask-input-wrapper .subtask-icons img:hover {
-            opacity: 1;
-        }
-
-        .subtask-input-wrapper .icon-separator {
-            width: 0.0625rem;
-            height: 1.5rem;
-            background-color: var(--color-light-gray);
-        }
-
-        .subtask-list {
-            padding: 0 0 0 15px;
-            margin: 10px 0 0 1rem;
-            color: black;
-        }
-
-        .subtask-list li::marker {
-            font-size: 0.6rem;
-        }
-
-        .subtask-item {
-            padding: 2px 0 4px 0;
-            transition: background-color 0.2s;
-            position: relative;
-            line-height: 1.4;
-            margin-bottom: 4px;
-            display: list-item;
-            list-style-position: outside;
-
-            &:hover {
-                cursor: pointer;
-                background-color: var(--color-menu-hover);
-            }
-
-            img {
-                width: 20px;
-                height: 20px;
-
-                &:hover {
-                    cursor: pointer;
-                }
-            }
-
-            .subtask-item .subtask-list li::marker:hover {
-                background-color: var(--color-menu-hover);
-            }
-
-            .subtask-text {
-                display: inline-block;
-                font-size: 0.9rem;
-                width: calc(100% - 60px);
-                line-height: 1.4;
-                vertical-align: baseline;
-                position: relative;
-                top: 2px;
-            }
-
-            .subtask-item-editing {
-                border-bottom: 1px solid red;
-                display: flex;
-                align-items: center;
-                padding: 0 !important;
-                list-style: none;
-                margin-left: calc(-15px - 1rem);
-            }
-
-            .subtask-item-editing .subtask-actions {
-                position: static;
-                transform: none;
-                padding-right: 12px;
-            }
-
-            .subtask-item-editing .subtask-actions img {
-                width: 20px;
-                height: 20px;
-
-                &:hover {
-                    cursor: pointer;
-                }
-            }
-
-            .subtask-edit-input {
-                flex-grow: 1;
-                border: none;
-                border-radius: 0;
-                font-size: 0.9rem;
-                outline: none;
-                background-color: transparent;
-                font-family: inherit;
-            }
-
-            .subtask-actions {
-                position: absolute;
-                right: 5px;
-                top: 50%;
-                transform: translateY(-50%);
-                display: inline-flex;
-                flex-direction: row;
-                align-items: center;
-                gap: 2px;
-                flex-shrink: 0;
-            }
-
-            .subtask-item .edit-subtask,
-            .subtask-item .delete-subtask {
-                width: 16px;
-                height: 16px;
-                cursor: pointer;
-                transition: opacity 0.2s;
-                flex-shrink: 0;
-                display: block;
-            }
-
-            .subtask-item .edit-subtask:hover,
-            .subtask-item .delete-subtask:hover {
-                opacity: 1;
-            }
-
-            .subtask-separator {
-                width: 1px;
-                height: 16px;
-                background-color: var(--color-light-gray);
-                margin: 0 2px;
-            }
-
-            .subtask-icons img.icon-confirm {
-                width: 1.2rem;
-            }
-        }
-
-        /* Error and Success Message Styles */
     }
 
     .btn-section-add-task {
@@ -432,7 +233,7 @@
         background-color: transparent;
     }
 
-    .btn-create {
+    .btn-create-aside {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -476,7 +277,7 @@
 }
 
 
-@media (width <812px) {
+@media (width < 812px) {
     .aside-desktop {
         display: none;
     }

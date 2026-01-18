@@ -1,14 +1,15 @@
 /**
  * Date Input Management Functions
- * Handles date input formatting and validation
+ * Handles date input formatting and validation with scoped container support
  */
 
 /**
  * Initializes the date input field
  * Adds automatic formatting for dd/mm/yyyy
+ * @param {HTMLElement} container - The container element to scope queries (default: document)
  */
-export function initializeDateInput() {
-    const dateInput = document.getElementById('dueDate');
+export function initializeDateInput(container = document) {
+    const dateInput = container.querySelector('.due-date-input');
     if (dateInput) {
         dateInput.addEventListener('input', formatDateInput);
         dateInput.addEventListener('keydown', handleDateKeydown);
@@ -72,4 +73,3 @@ export function isValidDate(dateString) {
         date.getDate() === day &&
         date >= new Date(new Date().setHours(0, 0, 0, 0));
 }
-

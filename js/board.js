@@ -6,7 +6,7 @@ import {
     migrateDefaultTasks,
     database
 } from './database.js';
-import { ref, onValue } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+import {ref, onValue} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
 import {
     getTemplateDialog,
@@ -18,9 +18,20 @@ import {
     getTemplateAddTask
 } from "./template.js";
 
+import {handleCreateTaskFromBoard} from "./add-task.js";
+import {initializeDateInput} from "./date-input-manager.js";
+import {initializePriorityButtons} from "./priority-manager.js";
+import {initializeDropdowns, preselectContacts, preselectCategory, resetDropdownState} from "./dropdown-manager.js";
+import {initializeSubtasks, populateSubtasks, resetSubtaskInitialization} from "./subtask-manager.js";
+import {validateTaskForm} from "./form-validation.js";
+import {collectEditTaskData} from "./task-data-collector.js";
+import {showFieldError, clearAllFieldErrors} from "./error-handler.js";
+
 let currentDraggedElement;
 let dialogRef = document.getElementById("dialog-task");
 let addTaskRef = document.getElementById("aside-add-task");
+let addedTaskRef = document.getElementById("task-added");
+let findTask = document.getElementById("search-task");
 
 let tasks = [];
 let contacts = [];
@@ -29,8 +40,338 @@ let activeDragOverSection = null;
 let dragOverThrottle = null;
 
 /**
+ * Speichert die Ziel-Kategorie für neue Tasks.
+ * Wird gesetzt, wenn ein spalten-spezifischer Plus-Button geklickt wird.
+ * @type {string}
+ */
+let targetCategory = 'to-do';
+
+/**
+ * Gibt die aktuell ausgewählte Ziel-Kategorie für neue Tasks zurück.
+ * @returns {string} Die Kategorie-ID ('to-do', 'in-progress', 'await-feedback')
+ */
+export function getTargetCategory() {
+    return targetCategory;
+}
+
+/**
+ * Setzt die Ziel-Kategorie für den nächsten zu erstellenden Task.
+ * @param {string} category - Die Kategorie-ID ('to-do', 'in-progress', 'await-feedback')
+ * @returns {void}
+ */
+function setTargetCategory(category) {
+    const validCategories = ['to-do', 'in-progress', 'await-feedback', 'done'];
+    if (validCategories.includes(category)) {
+        targetCategory = category;
+    } else {
+        targetCategory = 'to-do';
+    }
+}
+
+
+/**
+ * Enables editing mode for a task in the dialog by setting up the edit button event listener.
+ * @param {Object} element - The task object to be edited.
+ * @param {string} dueDate - The formatted due date string for display.
+ * @returns {void}
+ */
+function editTaskInDialog(element, dueDate) {
+    const dialogContentRef = document.querySelector(".dialog-content");
+    if (!dialogContentRef) return;
+
+    const handleEditClick = () => {
+        showEditConfirmation(dialogContentRef, element, dueDate);
+    };
+
+    const editButton = document.querySelector(".d-card-footer-e");
+    if (editButton) {
+        editButton.addEventListener("click", handleEditClick, {once: true});
+    }
+}
+
+/**
+ * Displays the edit confirmation interface by replacing dialog content with edit form.
+ * @param {HTMLElement} dialogContentRef - The dialog content container element.
+ * @param {Object} element - The task object being edited.
+ * @param {string} dueDate - The formatted due date string for display.
+ * @returns {void}
+ */
+function showEditConfirmation(dialogContentRef, element, dueDate) {
+    dialogContentRef.innerHTML = "";
+    dialogContentRef.style.padding = "0";
+    dialogContentRef.style.overflow = "visible";
+
+    dialogContentRef.innerHTML = getEditTaskTemplate();
+
+    dialogContentRef.dataset.taskId = element.id;
+
+    initializeDateInput(dialogContentRef);
+    initializePriorityButtons(dialogContentRef);
+    resetDropdownState();
+    initializeDropdowns(dialogContentRef);
+    resetSubtaskInitialization(dialogContentRef);
+    initializeSubtasks(dialogContentRef);
+    populateEditForm(dialogContentRef, element);
+
+    const closeEditBtn = dialogContentRef.querySelector('.close-edit-dialog');
+    if (closeEditBtn) {
+        closeEditBtn.addEventListener('click', () => {
+            cancelEditMode(element, dueDate);
+        });
+    }
+
+    const confirmEditBtn = dialogContentRef.querySelector('.confirm-edit-task-btn');
+    if (confirmEditBtn) {
+        confirmEditBtn.addEventListener("click", () => confirmEdit(element, dueDate), {once: true});
+    }
+}
+
+/**
+ * Returns the HTML template for the edit task form with proper wrapper and close button
+ * @returns {string} HTML string for the edit task form
+ */
+function getEditTaskTemplate() {
+    return `
+        <div class="edit-task-header">
+            <div class="close-edit-dialog"></div>
+        </div>
+        <div class="add-task-form edit-task-form">
+            ${getTemplateAddTask()}
+        </div>
+        <div class="d-card-footer">
+            <div class="confirm-edit-task-btn"></div>
+        </div>
+    `;
+}
+
+/**
+ * Cancels the edit mode and returns to the view mode
+ * @param {Object} element - The task object
+ * @param {string} dueDate - The formatted due date string
+ */
+function cancelEditMode(element, dueDate) {
+    dialogRef.innerHTML = getTemplateDialog(element, dueDate);
+
+    // Reset dialog content styles
+    const dialogContentRef = document.querySelector('.dialog-content');
+    if (dialogContentRef) {
+        dialogContentRef.style.padding = "1.25rem 1rem";
+        dialogContentRef.style.overflow = "";
+    }
+
+    // Re-initialize members and subtasks display
+    initMembers(element["member"]);
+    initSubtasks(element["id"]);
+
+    // Re-attach edit and delete button handlers
+    const handleEditClick = () => {
+        const newDialogContentRef = document.querySelector(".dialog-content");
+        showEditConfirmation(newDialogContentRef, element, dueDate);
+    };
+
+    deleteTaskButton(element["id"], handleEditClick);
+
+    const editButton = document.querySelector(".d-card-footer-e");
+    if (editButton) {
+        editButton.addEventListener("click", handleEditClick, {once: true});
+    }
+}
+
+/**
+ * Populates the edit form with existing task data from Firebase
+ * @param {HTMLElement} container - The dialog content container element
+ * @param {Object} element - The task object containing all task data
+ * @returns {void}
+ */
+function populateEditForm(container, element) {
+    // Set title
+    const titleInput = container.querySelector('.input-title');
+    if (titleInput) {
+        titleInput.value = element.title || '';
+    }
+
+    // Set description
+    const descriptionInput = container.querySelector('.task-description');
+    if (descriptionInput) {
+        descriptionInput.value = element.text || '';
+    }
+
+    // Set due date (convert from YYYY-MM-DD to dd/mm/yyyy)
+    const dueDateInput = container.querySelector('.due-date-input');
+    if (dueDateInput && element.dueDate) {
+        dueDateInput.value = formatDateForInput(element.dueDate);
+    }
+
+    // Set priority
+    setPriorityButton(container, element.priority);
+
+    // Preselect contacts (async, waits for contacts to load)
+    preselectContacts(element.member, container);
+
+    // Preselect category
+    preselectCategory(element.task, container);
+
+    // Populate subtasks
+    populateSubtasks(element.subtasks || [], element.subtasks_done || [], container);
+}
+
+/**
+ * Converts a date from YYYY-MM-DD format to dd/mm/yyyy format
+ * @param {string} dateString - Date in YYYY-MM-DD format
+ * @returns {string} Date in dd/mm/yyyy format
+ */
+function formatDateForInput(dateString) {
+    if (!dateString) return '';
+
+    const parts = dateString.split('-');
+    if (parts.length !== 3) return dateString;
+
+    const [year, month, day] = parts;
+    return `${day}/${month}/${year}`;
+}
+
+/**
+ * Sets the active priority button based on the task's priority
+ * @param {HTMLElement} container - The container element
+ * @param {string} priority - The priority level ('urgent', 'medium', 'low')
+ */
+function setPriorityButton(container, priority) {
+    if (!priority) return;
+
+    // Remove active class from all priority buttons
+    const allButtons = container.querySelectorAll('.priority-btn');
+    allButtons.forEach(btn => btn.classList.remove('active'));
+
+    // Add active class to the matching priority button
+    const priorityButton = container.querySelector(`.priority-btn.${priority}`);
+    if (priorityButton) {
+        priorityButton.classList.add('active');
+    }
+}
+
+/**
+ * Confirms the task edit and saves changes to Firebase.
+ * Validates the form, saves changes, and closes the dialog on success.
+ * @param {Object} element - The original task object being edited.
+ * @param {string} dueDate - The formatted due date string for display.
+ * @returns {Promise<void>}
+ */
+async function confirmEdit(element, dueDate) {
+    const dialogContentRef = document.querySelector('.dialog-content');
+    const taskId = dialogContentRef?.dataset?.taskId;
+
+    if (!taskId) {
+        console.error('Task ID not found');
+        return;
+    }
+
+    // Validate form
+    const validation = validateTaskForm(dialogContentRef);
+    if (!validation.isValid) {
+        showEditErrors(validation.errors, dialogContentRef);
+        // Re-attach listener for next attempt
+        const confirmEditBtn = dialogContentRef.querySelector('.confirm-edit-task-btn');
+        if (confirmEditBtn) {
+            confirmEditBtn.addEventListener("click", () => confirmEdit(element, dueDate), {once: true});
+        }
+        return;
+    }
+
+    try {
+        // Collect task data, preserving done status of unchanged subtasks
+        const taskData = collectEditTaskData(dialogContentRef, element);
+
+        // Remove category from update data - task should stay in its current column
+        delete taskData.category;
+
+        await updateTask(taskId, taskData);
+
+        closeDialog();
+    } catch (error) {
+        console.error('Failed to update task:', error);
+        // Re-attach listener for retry
+        const confirmEditBtn = dialogContentRef.querySelector('.confirm-edit-task-btn');
+        if (confirmEditBtn) {
+            confirmEditBtn.addEventListener("click", () => confirmEdit(element, dueDate), {once: true});
+        }
+    }
+}
+
+/**
+ * Shows validation errors in the edit form
+ * @param {Object} errors - Object containing field-specific error messages
+ * @param {HTMLElement} container - The container element to scope queries
+ */
+function showEditErrors(errors, container) {
+    clearAllFieldErrors(container);
+
+    if (errors.title) {
+        showFieldError('title', errors.title, container);
+    }
+    if (errors.dueDate) {
+        showFieldError('dueDate', errors.dueDate, container);
+    }
+    if (errors.category) {
+        showFieldError('category', errors.category, container);
+    }
+}
+
+/**
+ * Filters tasks by search input from the search field.
+ * Searches for matches in task titles (case-insensitive).
+ * Updates the board display with filtered results or resets to show all tasks if search is empty.
+ * @returns {void}
+ */
+function filterTasksBySearch() {
+    const searchInput = findTask.value.toLowerCase();
+    const filteredTasks = tasks.filter(task =>
+        task.title.toLowerCase().includes(searchInput) || task.text.toLowerCase().includes(searchInput)
+    );
+    if (!searchInput) {
+        updateHTML();
+        return;
+    }
+
+    renderFilteredTasks(filteredTasks);
+}
+
+/**
+ * Renders filtered tasks organized by category on the board.
+ * Displays filtered tasks in their respective columns with progress bars and member avatars.
+ * Shows empty state message if no tasks match the filter for a category.
+ * @param {Array<Object>} filteredTasks - Array of task objects to render.
+ * @returns {void}
+ */
+function renderFilteredTasks(filteredTasks) {
+    const categories = ['to-do', 'in-progress', 'await-feedback', 'done'];
+
+    categories.forEach(category => {
+        const categoryTasks = filteredTasks.filter(task => task.category === category);
+        const containerRef = document.getElementById(category);
+        containerRef.innerHTML = "";
+
+        if (categoryTasks.length === 0) {
+            containerRef.innerHTML = getNoTaskTemplate(category);
+            return;
+        }
+
+        categoryTasks.forEach(task => {
+            const subtasks = task.subtasks || [];
+            const subtasksDone = task.subtasks_done || [];
+            const totalSubtasks = subtasks.length + subtasksDone.length;
+            const progressWidth = totalSubtasks > 0 ? (subtasksDone.length / totalSubtasks) * 100 : 0;
+            containerRef.innerHTML += getTemplateTaskCard(task, subtasksDone, totalSubtasks, progressWidth);
+            initMarkedUsers(task);
+            hideEmptySubtasks(task);
+        });
+    });
+}
+
+
+/**
  * Loads contacts from Firebase database and stores them in the contacts array.
- * Sets up a real-time listener that updates contacts when changes occur.
+ * Sets up a real-time listener that updates contacts when changes occur in the database.
+ * @returns {void}
  */
 export function loadContacts() {
     const contactsRef = ref(database, 'contacts');
@@ -43,7 +384,8 @@ export function loadContacts() {
 
 /**
  * Opens the add task aside panel with a swipe-in animation.
- * Removes any swipe-out class and adds the swipe-in class before showing the modal.
+ * Removes any swipe-out class and adds the swipe-in class before showing the modal dialog.
+ * @returns {void}
  */
 function swipeInAddTaskAside() {
     addTaskRef.classList.remove("add-task-swipe-out");
@@ -53,38 +395,96 @@ function swipeInAddTaskAside() {
 
 /**
  * Closes the add task aside panel with a swipe-out animation.
- * Removes the swipe-in class and adds the swipe-out class before closing the modal.
+ * Removes the swipe-in class and adds the swipe-out class, then closes the modal after 300ms delay.
+ * @returns {void}
  */
 function swipeOutAddTaskAside() {
     addTaskRef.classList.remove("add-task-swipe-in");
     addTaskRef.classList.add("add-task-swipe-out");
-    addTaskRef.close();
+    setTimeout(() => {
+        addTaskRef.close();
+    }, 300);
+}
+
+/**
+ * Sets up the create button event listener for the add task aside panel.
+ * Handles task creation, success animation, and closing of modals with appropriate timing.
+ * Uses the currently set targetCategory for the new task.
+ * @returns {void}
+ */
+function addTaskCreateButton() {
+    const addedTaskBtn = document.querySelector(".btn-create-aside");
+
+    addedTaskBtn.addEventListener("click", async () => {
+        const successAdded = await handleCreateTaskFromBoard(document, getTargetCategory());
+
+        if (!successAdded) return;
+
+        swipeInAddedTask();
+        setTimeout(() => {
+            addTaskRef.classList.remove("add-task-swipe-in");
+            addTaskRef.classList.add("add-task-swipe-out");
+            addedTaskRef.classList.remove("move-animation-board");
+            setTimeout(() => {
+                addedTaskRef.close();
+                addTaskRef.close();
+            }, 200);
+        }, 1000);
+    });
+}
+
+/**
+ * Shows the task added confirmation dialog with a slide-in animation.
+ * Opens the modal and applies the animation class to display the success message.
+ * @returns {void}
+ */
+function swipeInAddedTask() {
+    addedTaskRef.showModal();
+    addedTaskRef.classList.add("move-animation-board");
+
 }
 
 /**
  * Opens the add task interface based on the device screen size.
  * On larger screens (min-width: 812px), displays an aside panel with swipe animations.
- * On smaller screens, redirects to the add-task.html page.
+ * On smaller screens, redirects to the add-task.html page with category parameter.
  * Sets up event listeners for opening and closing the add task interface.
+ * Reads data-category attribute from clicked icon to set target category.
  * @returns {void}
  */
 function openAddTaskAside() {
     const mediaQuery = window.matchMedia("(min-width: 812px)").matches;
-    const openButtons = document.querySelectorAll('.add-task-icon, .add-task-btn');
     const openIcons = document.querySelectorAll('.add-task-icon');
+    const addTaskBtn = document.querySelector('.add-task-btn');
 
     if (mediaQuery) {
-        createAddTask();
-        openButtons.forEach(button => {
-            button.addEventListener('click', swipeInAddTaskAside);
-        })
-    } else {
-        createAddTask()
+        // Plus-Icons mit spalten-spezifischer Kategorie
         openIcons.forEach(icon => {
             icon.addEventListener('click', () => {
-                window.location.href = 'add-task.html';
+                const category = icon.dataset.category || 'to-do';
+                setTargetCategory(category);
+                createAddTask();  // Erstelle/initialisiere bei jedem Öffnen neu
+                swipeInAddTaskAside();
             });
-        })
+        });
+
+        // Großer "Add Task" Button - Standard ist 'to-do'
+        if (addTaskBtn) {
+            addTaskBtn.addEventListener('click', () => {
+                setTargetCategory('to-do');
+                createAddTask();  // Erstelle/initialisiere bei jedem Öffnen neu
+                swipeInAddTaskAside();
+            });
+        }
+    } else {
+
+        // Mobile: Redirect with category as URL-Param
+        openIcons.forEach(icon => {
+            icon.addEventListener('click', () => {
+                const category = icon.dataset.category || 'to-do';
+                window.location.href = `add-task.html?category=${category}`;
+            });
+        });
     }
 
     const closeButton = document.querySelector('.close-add-task');
@@ -92,18 +492,30 @@ function openAddTaskAside() {
         closeButton.addEventListener('click', swipeOutAddTaskAside);
 
     }
+    addTaskCreateButton()
 }
 
 /**
  * Creates and renders the add task dialog by clearing the description container
  * and inserting the add task template HTML.
- * @function createAddTask
+ * Initializes all form components (date input, priority buttons, dropdowns, subtasks) after rendering.
+ * Uses the dialog element as container for proper event delegation in modals.
  * @returns {void}
  */
 function createAddTask() {
-    const refAddTask = document.querySelector('.add-task-form');
+    const dialogElement = document.querySelector('#aside-add-task');
+    const refAddTask = dialogElement?.querySelector('.add-task-form');
+    if (!refAddTask) return;
     refAddTask.innerHTML = "";
     refAddTask.innerHTML = getTemplateAddTask();
+
+    // Initialize form components with dialog as container for better event handling in modals
+    initializeDateInput(dialogElement);
+    initializePriorityButtons(dialogElement);
+    resetDropdownState();
+    initializeDropdowns(dialogElement);
+    resetSubtaskInitialization(dialogElement);
+    initializeSubtasks(dialogElement);
 }
 
 /**
@@ -116,9 +528,10 @@ export function getContactById(contactId) {
 }
 
 /**
- * Format date string for display
- * @param {string} dateString - Date in YYYY-MM-DD format
- * @returns {string} Formatted date string
+ * Formats a date string for display in DD/MM/YYYY format.
+ * Returns "No due date" if the date string is empty or undefined.
+ * @param {string} dateString - Date in YYYY-MM-DD format.
+ * @returns {string} Formatted date string in DD/MM/YYYY format or "No due date".
  */
 export function formatDate(dateString) {
     if (!dateString) return "No due date";
@@ -136,9 +549,10 @@ export function formatDate(dateString) {
 }
 
 /**
- * Get random contacts for task assignment
- * @param {number} count - Number of random contacts to return
- * @returns {Array} Array of contact IDs
+ * Gets random contacts for task assignment, excluding authenticated users.
+ * Returns 1-4 randomly selected contact IDs from available contacts.
+ * @param {number} [count=3] - Maximum number of random contacts to return.
+ * @returns {Array<string>} Array of contact IDs.
  */
 export function getRandomContactIds(count = 3) {
     if (!contacts || contacts.length === 0) return [];
@@ -152,8 +566,9 @@ export function getRandomContactIds(count = 3) {
 }
 
 /**
- * Create default tasks with random member assignments
- * @returns {Array} Array of default tasks with random members
+ * Creates default tasks with random member assignments for initial setup.
+ * Each task is assigned 1-4 random contacts from the available contacts list.
+ * @returns {Array<Object>} Array of default task objects with random members.
  */
 export function createDefaultTasksWithMembers() {
     return [
@@ -161,7 +576,7 @@ export function createDefaultTasksWithMembers() {
             id: "to-do-1",
             task: "User Story",
             title: "Kochwelt Page & Recipe Recommender",
-            text: "Build start page with recipe recommandation...",
+            text: "Build start page with recipe recommendation...",
             subtasks: ["Beta Test", "Double Check", "Design Mockup", "Gather Content"],
             subtasks_done: ["Start Layout", "Implement Recipe Recommendation"],
             member: getRandomContactIds(),
@@ -226,7 +641,7 @@ const defaultTasks = [
         id: "to-do-1",
         task: "User Story",
         title: "Kochwelt Page & Recipe Recommender",
-        text: "Build start page with recipe recommandation...",
+        text: "Build start page with recipe recommendation...",
         subtasks: ["Beta Test", "Double Check", "Design Mockup", "Gather Content"],
         subtasks_done: ["Start Layout", "Implement Recipe Recommendation"],
         member: [],
@@ -280,7 +695,9 @@ const defaultTasks = [
 ];
 
 /**
- * Initialize tasks by loading from Firebase
+ * Initializes tasks by loading contacts and tasks from Firebase.
+ * Sets up real-time listeners for task updates and handles migration of default tasks.
+ * @returns {void}
  */
 function initializeTasks() {
     try {
@@ -302,7 +719,9 @@ function initializeTasks() {
 }
 
 /**
- * Migrate default tasks with random member assignments
+ * Migrates default tasks with random member assignments to Firebase.
+ * Falls back to default tasks without members if random assignment fails.
+ * @returns {Promise<void>}
  */
 async function migrateDefaultTasksWithMembers() {
     try {
@@ -314,7 +733,10 @@ async function migrateDefaultTasksWithMembers() {
 }
 
 /**
- * Save task to Firebase when created or updated
+ * Saves a task to Firebase when created or updated.
+ * Handles both new tasks (with temporary IDs) and existing tasks.
+ * @param {Object} task - The task object to save.
+ * @returns {Promise<void>}
  */
 async function saveTask(task) {
     try {
@@ -336,7 +758,9 @@ async function saveTask(task) {
 }
 
 /**
- * Delete task from Firebase
+ * Deletes a task from Firebase database.
+ * @param {string} taskId - The unique identifier of the task to delete.
+ * @returns {Promise<void>}
  */
 export async function removeTask(taskId) {
     try {
@@ -347,9 +771,99 @@ export async function removeTask(taskId) {
 }
 
 /**
- * Render marked user avatars for a task card up to three members,
- * and show a "+N" indicator when more members exist.
+ * Initializes the delete button functionality in the task dialog.
+ * Sets up confirmation UI and event listeners for task deletion.
+ * @param {string} taskId - The unique identifier of the task to delete.
+ * @param {Function} handleEditClick - The click handler for the edit button.
+ * @returns {void}
+ */
+function deleteTaskButton(taskId, handleEditClick) {
+    const deleteButton = document.querySelector(".d-card-footer-d");
+    const editButton = document.querySelector(".d-card-footer-e");
+
+    if (!deleteButton || !editButton) return;
+
+    const handleDeleteClick = () => showDeleteConfirmation(deleteButton, editButton, taskId, handleDeleteClick, handleEditClick);
+
+    deleteButton.addEventListener("click", handleDeleteClick, {once: true});
+}
+
+/**
+ * Shows the confirmation UI for task deletion by displaying checkmark and cancel buttons.
+ * Transforms delete and edit buttons into confirmation controls and sets up event handlers.
+ * @param {HTMLElement} deleteButton - The delete button element to transform.
+ * @param {HTMLElement} editButton - The edit button element to transform.
+ * @param {string} taskId - The unique identifier of the task to delete.
+ * @param {Function} handleDeleteClick - The click handler for initiating delete.
+ * @param {Function} handleEditClick - The click handler for the edit button.
+ * @returns {void}
+ */
+function showDeleteConfirmation(deleteButton, editButton, taskId, handleDeleteClick, handleEditClick) {
+    deleteButton.innerHTML = "";
+    editButton.innerHTML = "";
+
+    deleteButton.classList.remove("d-card-footer-d");
+    deleteButton.classList.add("delete", "yes");
+
+    editButton.classList.remove("d-card-footer-e");
+    editButton.classList.add("delete", "no");
+
+    editButton.removeEventListener("click", handleEditClick);
+
+    let handleCancelClick;
+    let handleConfirmClick;
+
+    handleCancelClick = () => resetDeleteButtons(deleteButton, editButton, handleDeleteClick, handleConfirmClick, handleEditClick);
+    handleConfirmClick = () => confirmDeleteTask(taskId, editButton, handleCancelClick);
+
+    editButton.addEventListener("click", handleCancelClick, {once: true});
+    deleteButton.addEventListener("click", handleConfirmClick, {once: true});
+}
+
+/**
+ * Confirms and executes the task deletion by removing the task from Firebase and closing the dialog.
+ * Removes cancel event listener before proceeding with deletion.
+ * @param {string} taskId - The unique identifier of the task to delete.
+ * @param {HTMLElement} editButton - The edit button element.
+ * @param {Function} handleCancelClick - The click handler for canceling delete.
+ * @returns {Promise<void>}
+ */
+async function confirmDeleteTask(taskId, editButton, handleCancelClick) {
+    editButton.removeEventListener("click", handleCancelClick);
+    await removeTask(taskId);
+    closeDialog();
+}
+
+/**
+ * Resets the delete/edit buttons to their original state after canceling deletion.
+ * Removes confirmation click handlers and restores original button appearance and event listeners.
+ * @param {HTMLElement} deleteButton - The delete button element.
+ * @param {HTMLElement} editButton - The edit button element.
+ * @param {Function} handleDeleteClick - The click handler for initiating delete.
+ * @param {Function} handleConfirmClick - The click handler for confirming delete.
+ * @param {Function} handleEditClick - The click handler for the edit button.
+ * @returns {void}
+ */
+function resetDeleteButtons(deleteButton, editButton, handleDeleteClick, handleConfirmClick, handleEditClick) {
+    deleteButton.removeEventListener("click", handleConfirmClick);
+
+    deleteButton.classList.remove("delete", "yes");
+    deleteButton.classList.add("d-card-footer-d");
+    deleteButton.innerHTML = "Delete";
+
+    editButton.classList.remove("delete", "no");
+    editButton.classList.add("d-card-footer-e");
+    editButton.innerHTML = "Edit";
+
+    deleteButton.addEventListener("click", handleDeleteClick, {once: true});
+    editButton.addEventListener("click", handleEditClick, {once: true});
+}
+
+/**
+ * Renders marked user avatars for a task card up to three members,
+ * and shows a "+N" indicator when more members exist.
  * @param {Object} element - Task object containing `id` and `member` array.
+ * @returns {void}
  */
 function initMarkedUsers(element) {
     let markedUserContainer = document.getElementById(`marked-user-container-${element["id"]}`);
@@ -372,9 +886,11 @@ function initMarkedUsers(element) {
 }
 
 /**
- * Renders tasks for a specific category
- * @param {string} category Task category
- * @param {string} displayName Display name for empty state
+ * Renders tasks for a specific category by filtering tasks and displaying them in the category container.
+ * Shows empty state message if no tasks exist in the category.
+ * @param {string} category - Task category identifier (e.g., "todo", "in-progress", "done").
+ * @param {string} displayName - Display name for the empty state message.
+ * @returns {void}
  */
 function renderTasksByCategory(category, displayName) {
     const filteredTasks = tasks.filter((t) => t["category"] === category);
@@ -393,13 +909,28 @@ function renderTasksByCategory(category, displayName) {
         const progressWidth = totalSubtasks > 0 ? (subtasksDone.length / totalSubtasks) * 100 : 0;
         containerRef.innerHTML += getTemplateTaskCard(task, subtasksDone, totalSubtasks, progressWidth);
         initMarkedUsers(task);
+        hideEmptySubtasks(task)
     });
 }
 
 let updateTimeout;
 
 /**
- * Updates all task columns in the board with debouncing to prevent flickering
+ * Hides the progress container for tasks that have no subtasks.
+ * @param {Object} task - The task object to check for subtasks.
+ * @returns {void}
+ */
+function hideEmptySubtasks(task) {
+    const progressContainer = document.getElementById(`card-progress-container-${task.id}`);
+    if (task.subtasks === undefined && task.subtasks_done === undefined) {
+        progressContainer.classList.add("d-none");
+    }
+}
+
+/**
+ * Updates all task columns in the board with debouncing to prevent flickering.
+ * Clears previous update timeout and renders tasks for all categories after 50ms delay.
+ * @returns {void}
  */
 function updateHTML() {
     clearTimeout(updateTimeout);
@@ -412,29 +943,21 @@ function updateHTML() {
 }
 
 /**
- * Mark the task as being dragged and add dragging CSS class.
+ * Marks the task as being dragged and adds the dragging CSS class for visual feedback.
  * @param {string} id - DOM id of the dragged task element.
+ * @returns {void}
  */
 function startDragging(id) {
     currentDraggedElement = id;
     document.getElementById(currentDraggedElement).classList.add("is-dragging");
 }
 
-
 /**
- * Allow dropping by preventing default browser behavior.
- * @param {Event} event - Dragover event.
- */
-function allowDrop(event) {
-    event.preventDefault();
-}
-
-
-/**
- * Handle dragover events for board columns, with lightweight throttling
- * and visual feedback (highlight container and show placeholder).
- * @param {Event} event - The dragover event.
+ * Handles dragover events for board columns with lightweight throttling (~60fps).
+ * Provides visual feedback by highlighting the container and showing a placeholder.
+ * @param {DragEvent} event - The dragover event object.
  * @param {string} section - The id of the column being dragged over.
+ * @returns {void}
  */
 function handleDragOver(event, section) {
     event.preventDefault();
@@ -451,8 +974,10 @@ function handleDragOver(event, section) {
 }
 
 /**
- * Move the currently dragged task to a new category and persist the change.
- * @param {string} category - Target category id (e.g. "to-do", "in-progress").
+ * Moves the currently dragged task to a new category and persists the change to Firebase.
+ * Removes dragging visual feedback and cleans up the drag state.
+ * @param {string} category - Target category id (e.g. "to-do", "in-progress", "await-feedback", "done").
+ * @returns {void}
  */
 function moveTo(category) {
     const taskToUpdate = tasks.find(task => task.id === currentDraggedElement);
@@ -466,10 +991,72 @@ function moveTo(category) {
     // Remove updateHTML() call as Firebase listener will handle the update
 }
 
+/**
+ * Closes all open swap dropdown menus.
+ * @returns {void}
+ */
+function closeAllSwapMenus() {
+    const allDropdowns = document.querySelectorAll('.card-swap-dropdown');
+    allDropdowns.forEach(dropdown => dropdown.classList.remove('open'));
+}
 
 /**
- * Add dragover CSS class to the container with the given id.
+ * Toggles the swap dropdown menu for a specific task card.
+ * Hides the current category option and shows all others.
+ * @param {Event} event - The click event object.
+ * @param {string} taskId - The task id.
+ * @param {string} currentCategory - The current category of the task.
+ * @returns {void}
+ */
+function toggleSwapMenu(event, taskId, currentCategory) {
+    event.stopPropagation();
+
+    const dropdown = document.getElementById(`swap-dropdown-${taskId}`);
+    if (!dropdown) return;
+
+    // Close all other dropdowns first
+    const allDropdowns = document.querySelectorAll('.card-swap-dropdown');
+    allDropdowns.forEach(openDropdown => {
+        if (openDropdown !== dropdown) openDropdown.classList.remove('open');
+    });
+
+    // Show/hide category options based on current category
+    const items = dropdown.querySelectorAll('.move-to-do, .move-to-review');
+    items.forEach(item => {
+        if (item.dataset.category === currentCategory) {
+            item.style.display = 'none';
+        } else {
+            item.style.display = 'flex';
+        }
+    });
+
+    // Toggle the dropdown
+    dropdown.classList.toggle('open');
+}
+
+/**
+ * Moves a task to a new category using the swap menu.
+ * @param {Event} event - The click event object.
+ * @param {string} taskId - The task id to move.
+ * @param {string} category - The target category.
+ * @returns {void}
+ */
+function moveTaskTo(event, taskId, category) {
+    event.stopPropagation();
+
+    // Set the current dragged element to use moveTo function
+    currentDraggedElement = taskId;
+    moveTo(category);
+
+    // Close the dropdown
+    closeAllSwapMenus();
+}
+
+
+/**
+ * Adds the dragover CSS class to the container to provide visual feedback during drag operations.
  * @param {string} id - Container element id.
+ * @returns {void}
  */
 function bgContainer(id) {
     document.getElementById(id).classList.add("task-card-container-dragover");
@@ -477,8 +1064,10 @@ function bgContainer(id) {
 
 
 /**
- * Remove dragover CSS class and hide the dashed placeholder for a container.
+ * Removes the dragover CSS class and hides the dashed placeholder for a container.
+ * Cleans up visual feedback after drag operation completes.
  * @param {string} id - Container element id.
+ * @returns {void}
  */
 function bgContainerRemove(id) {
     hideDashedBox(id);
@@ -487,9 +1076,9 @@ function bgContainerRemove(id) {
 
 
 /**
- * Returns HTML shown when a column has no tasks.
- * @param {string} section - Display name for empty state.
- * @returns {string} HTML string for the empty state.
+ * Returns the HTML template shown when a column has no tasks.
+ * @param {string} section - Display name for the empty state message.
+ * @returns {string} HTML string for the empty state display.
  */
 function getNoTaskTemplate(section) {
     return `<div class="no-tasks">No tasks ${section}</div>`;
@@ -497,9 +1086,10 @@ function getNoTaskTemplate(section) {
 
 
 /**
- * Show a dashed placeholder card in a column once during dragover.
+ * Shows a dashed placeholder card in a column once during dragover.
  * Prevents duplicate placeholders for the same section while dragging.
- * @param {string} section - Column id where placeholder should appear.
+ * @param {string} section - Column id where the placeholder should appear.
+ * @returns {void}
  */
 function showDashedBoxOnce(section) {
     // Prevent repeated calls for the same section
@@ -526,8 +1116,10 @@ function showDashedBoxOnce(section) {
 
 
 /**
- * Hide the dashed placeholder and restore the "no tasks" message.
+ * Hides the dashed placeholder and restores the "no tasks" message.
+ * Cleans up drag visual feedback after drag operation ends.
  * @param {string} section - Column id.
+ * @returns {void}
  */
 function hideDashedBox(section) {
     const container = document.getElementById(section);
@@ -550,39 +1142,62 @@ function hideDashedBox(section) {
 }
 
 /**
- * Generate markup for the empty dashed card used during dragover.
- * @returns {string} HTML string for an empty card.
+ * Generates the HTML markup for the empty dashed card placeholder used during dragover.
+ * @returns {string} HTML string for an empty card placeholder.
  */
 function generateEmptyCard() {
     return `<div class="empty-card"></div>`;
 }
 
 /**
- * Open the task dialog for a given task id.
+ * Opens the task dialog for a given task id, displaying task details with swipe-in animation.
+ * Initializes members and subtasks display within the dialog.
  * @param {string} index - The task id to open in the dialog.
+ * @returns {void}
  */
 function openDialog(index) {
-    let element = tasks.filter((t) => t["id"] === `${index}`)[0];
+    let element = tasks.filter((task) => task["id"] === `${index}`)[0];
+    dialogRef.classList.remove("dialog-swipe-out");
     dialogRef.classList.add("dialog-swipe-in");
     const dueDate = element["dueDate"] ? formatDate(element["dueDate"]) : "No due date set";
     dialogRef.innerHTML = getTemplateDialog(element, dueDate);
     initMembers(element["member"]);
-    iniSubtasks(element["id"]);
+    initSubtasks(element["id"]);
+
+    const handleEditClick = () => {
+        const dialogContentRef = document.querySelector(".dialog-content");
+        showEditConfirmation(dialogContentRef, element, dueDate);
+    };
+
+    deleteTaskButton(element["id"], handleEditClick);
+
+    const editButton = document.querySelector(".d-card-footer-e");
+    if (editButton) {
+        editButton.addEventListener("click", handleEditClick, {once: true});
+    }
 
     dialogRef.showModal();
 }
 
 /**
- * Close the currently open task dialog.
+ * Closes the currently open task dialog with a swipe-out animation.
+ * Removes the dialog after a 300ms delay to allow animation to complete.
+ * @returns {void}
  */
 function closeDialog() {
     dialogRef.classList.remove("dialog-swipe-in");
-    dialogRef.close();
+    dialogRef.classList.add("dialog-swipe-out");
+    setTimeout(() => {
+        dialogRef.close();
+    }, 300);
+
 }
 
 /**
- * Populate the dialog's assigned members section from an array of contact ids.
+ * Populates the dialog's assigned members section from an array of contact ids.
+ * Renders member cards with name, initials, and avatar color for each assigned member.
  * @param {Array<string>} memberIds - Array of contact ids assigned to the task.
+ * @returns {void}
  */
 function initMembers(memberIds) {
     let membersContainer = document.getElementById("d-assigned-members");
@@ -624,7 +1239,10 @@ function initSubtasks(taskId) {
 }
 
 /**
- * Add event listeners to subtask checkboxes
+ * Adds event listeners to subtask checkboxes in the task dialog.
+ * Listens for checkbox changes and updates subtask completion status.
+ * @param {string} taskId - The unique identifier of the task whose subtasks need listeners.
+ * @returns {void}
  */
 function addSubtaskEventListeners(taskId) {
     const checkboxes = document.querySelectorAll(`input[data-task-id="${taskId}"]`);
@@ -638,7 +1256,19 @@ function addSubtaskEventListeners(taskId) {
 }
 
 /**
- * Create a new task and save it to Firebase
+ * Creates a new task and saves it to Firebase.
+ * Adds the task to the local array for immediate UI feedback before syncing with Firebase.
+ * @param {Object} taskData - The task data object containing task properties.
+ * @param {string} [taskData.task] - The task type (e.g., "User Story", "Technical Task").
+ * @param {string} [taskData.title] - The task title.
+ * @param {string} [taskData.text] - The task description.
+ * @param {Array<string>} [taskData.subtasks] - Array of pending subtask names.
+ * @param {Array<string>} [taskData.subtasks_done] - Array of completed subtask names.
+ * @param {Array<string>} [taskData.member] - Array of assigned contact IDs.
+ * @param {string} [taskData.priority] - Task priority ("low", "medium", "urgent").
+ * @param {string} [taskData.category] - Task category/column ("to-do", "in-progress", etc.).
+ * @param {string} [taskData.dueDate] - Due date in YYYY-MM-DD format.
+ * @returns {Promise<void>}
  */
 export async function createNewTask(taskData) {
     try {
@@ -671,7 +1301,11 @@ export async function createNewTask(taskData) {
 }
 
 /**
- * Add contact to task
+ * Adds a contact to a task's member list.
+ * Prevents duplicate assignments and saves the update to Firebase.
+ * @param {string} taskId - The unique identifier of the task.
+ * @param {string} contactId - The unique identifier of the contact to add.
+ * @returns {Promise<void>}
  */
 async function addContactToTask(taskId, contactId) {
     const task = tasks.find(t => t.id === taskId);
@@ -685,7 +1319,11 @@ async function addContactToTask(taskId, contactId) {
 }
 
 /**
- * Remove contact from task
+ * Removes a contact from a task's member list.
+ * Saves the update to Firebase after removal.
+ * @param {string} taskId - The unique identifier of the task.
+ * @param {string} contactId - The unique identifier of the contact to remove.
+ * @returns {Promise<void>}
  */
 async function removeContactFromTask(taskId, contactId) {
     const task = tasks.find(t => t.id === taskId);
@@ -700,7 +1338,10 @@ async function removeContactFromTask(taskId, contactId) {
 }
 
 /**
- * Remove contact from all tasks (called when contact is deleted)
+ * Removes a contact from all tasks where they are assigned.
+ * Called when a contact is deleted from the system.
+ * @param {string} contactId - The unique identifier of the contact to remove.
+ * @returns {Promise<void>}
  */
 async function removeContactFromAllTasks(contactId) {
     const tasksWithContact = tasks.filter(t => t.member && t.member.includes(contactId));
@@ -717,7 +1358,12 @@ async function removeContactFromAllTasks(contactId) {
 }
 
 /**
- * Update subtask completion status
+ * Updates the completion status of a subtask.
+ * Moves subtasks between pending and completed arrays and saves to Firebase.
+ * @param {string} taskId - The unique identifier of the task.
+ * @param {string} subtask - The name of the subtask to update.
+ * @param {boolean} isCompleted - Whether the subtask should be marked as completed.
+ * @returns {Promise<void>}
  */
 async function updateSubtaskStatus(taskId, subtask, isCompleted) {
     const task = tasks.find(t => t.id === taskId);
@@ -753,6 +1399,13 @@ async function updateSubtaskStatus(taskId, subtask, isCompleted) {
 document.addEventListener('DOMContentLoaded', () => {
     initializeTasks();
     openAddTaskAside();
+
+    // Close swap menus when clicking outside
+    document.addEventListener('click', (event) => {
+        if (!event.target.closest('.card-swap-icon')) {
+            closeAllSwapMenus();
+        }
+    });
 });
 
 // Make functions globally accessible for inline event handlers
@@ -762,6 +1415,9 @@ window.startDragging = startDragging;
 window.allowDrop = allowDrop;
 window.handleDragOver = handleDragOver;
 window.moveTo = moveTo;
+window.toggleSwapMenu = toggleSwapMenu;
+window.moveTaskTo = moveTaskTo;
+window.closeAllSwapMenus = closeAllSwapMenus;
 window.bgContainer = bgContainer;
 window.bgContainerRemove = bgContainerRemove;
 window.showDashedBoxOnce = showDashedBoxOnce;
@@ -775,3 +1431,6 @@ window.formatDate = formatDate;
 window.createNewTask = createNewTask;
 window.openAddTaskAside = openAddTaskAside;
 window.addEventListener('resize', openAddTaskAside);
+window.deleteTaskButton = deleteTaskButton;
+window.filterTasksBySearch = filterTasksBySearch;
+window.editTaskInDialog = editTaskInDialog;
