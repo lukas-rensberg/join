@@ -6,13 +6,13 @@ import {
     initializePriorityButtons
 } from "./priority-manager.js";
 
-import { initializeDateInput } from "./date-input-manager.js";
+import {initializeDateInput} from "./date-input-manager.js";
 
 import {
     initializeDropdowns
 } from "./dropdown-manager.js";
 
-import { createTask } from "./database.js";
+import {createTask} from "./database.js";
 
 import {
     showFieldError,
@@ -22,9 +22,9 @@ import {
     showErrorBanner
 } from "./error-handler.js";
 
-import { validateTaskForm } from "./form-validation.js";
+import {validateTaskForm} from "./form-validation.js";
 
-import { collectTaskData } from "./task-data-collector.js";
+import {collectTaskData} from "./task-data-collector.js";
 
 import {
     clearFormInputs,
@@ -37,15 +37,15 @@ import {
 let activeContainer = null;
 
 /**
- * Speichert die Ziel-Kategorie aus URL-Parametern (für Mobile-Redirect).
+ * Stores the target category from URL parameters (for mobile redirect).
  * @type {string}
  */
 let urlTargetCategory = 'to-do';
 
 /**
- * Liest die Kategorie aus URL-Parametern aus.
- * Wird verwendet, wenn von der Board-Seite auf Mobile weitergeleitet wurde.
- * @returns {string} Die Kategorie aus dem URL-Parameter oder 'to-do' als Standard
+ * Reads the category from URL parameters.
+ * Used when redirected from the board page on mobile.
+ * @returns {string} The category from the URL parameter or 'to-do' as default
  */
 function getCategoryFromUrl() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -60,7 +60,7 @@ function getCategoryFromUrl() {
  * @returns {void}
  */
 document.addEventListener('DOMContentLoaded', () => {
-    // Nur auf add-task.html initialisieren, nicht auf board.html
+    // Only initialize on add-task.html, not on board.html
     const isAddTaskPage = document.querySelector('.add-task-form-container');
     if (!isAddTaskPage) return;
 
@@ -202,7 +202,7 @@ export async function handleCreateTaskFromBoard(container = document, targetCate
         await createTask(taskData);
         return true;
     } catch (error) {
-        handleCreateTaskError(error);
+        handleCreateTaskError();
         return false;
     }
 }
@@ -222,7 +222,7 @@ async function createAndRedirect(container = document) {
         redirectToBoard();
         return true;
     } catch (error) {
-        handleCreateTaskError(error);
+        handleCreateTaskError();
         return false;
     }
 }
