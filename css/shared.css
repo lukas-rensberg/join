@@ -222,6 +222,7 @@
     padding: 8px 12px;
     cursor: pointer;
     transition: background-color 0.2s ease;
+    overflow: hidden;
 
     &:hover {
         background-color: var(--color-menu-active);
@@ -234,6 +235,8 @@
     .contact-option-name,
     .contact-option-email {
         color: #ffffff;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     &:hover {
@@ -258,6 +261,7 @@
 .contact-option-info {
     flex-grow: 1;
     min-width: 0;
+    overflow: hidden;
 }
 
 .contact-option-name {
@@ -265,11 +269,15 @@
     font-weight: 500;
     color: var(--color-menu-text);
     margin-bottom: 2px;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .contact-option-email {
     font-size: 0.8rem;
     color: #666;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .contact-option-checkbox {
