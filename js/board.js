@@ -989,13 +989,18 @@ function handleDragOver(event, section) {
  * @param {string} category - Target category id (e.g. "to-do", "in-progress", "await-feedback", "done").
  * @returns {void}
  */
-function moveTo(category) {
+async function moveTo(category) {
     const taskToUpdate = tasks.find(task => task.id === currentDraggedElement);
+    const draggedElement = document.getElementById(currentDraggedElement);
+
     if (taskToUpdate) {
         taskToUpdate.category = category;
-        saveTask(taskToUpdate);
+        await saveTask(taskToUpdate);
     }
-    document.getElementById(currentDraggedElement).classList.remove("is-dragging");
+
+    if (draggedElement) {
+        draggedElement.classList.remove("is-dragging");
+    }
     bgContainerRemove(category);
 }
 
@@ -1408,6 +1413,13 @@ async function updateSubtaskStatus(taskId, subtask, isCompleted) {
 document.addEventListener('DOMContentLoaded', () => {
     initializeTasks();
     openAddTaskAside();
+
+    // Close swap menus when clicking outside
+    document.addEventListener('click', (event) => {
+        if (!event.target.closest('.card-swap-icon')) {
+            closeAllSwapMenus();
+        }
+    });
 });
 
 // Make functions globally accessible for inline event handlers
@@ -1419,6 +1431,7 @@ window.handleDragOver = handleDragOver;
 window.moveTo = moveTo;
 window.toggleSwapMenu = toggleSwapMenu;
 window.moveTaskTo = moveTaskTo;
+window.closeAllSwapMenus = closeAllSwapMenus;
 window.bgContainer = bgContainer;
 window.bgContainerRemove = bgContainerRemove;
 window.showDashedBoxOnce = showDashedBoxOnce;
