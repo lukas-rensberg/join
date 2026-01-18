@@ -5,100 +5,275 @@ import {
   ref,
   set,
   get,
+  push,
+  update,
+  remove,
+  onValue,
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+import { showInlineError } from "./error-handler.js";
+import { Credentials } from "./credentials.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyA_jMGVxtdphe5xhWwkHQFh7T7a5wQLA0Y",
-  authDomain: "join-826aa.firebaseapp.com",
-  databaseURL:
-    "https://join-826aa-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "join-826aa",
-  storageBucket: "join-826aa.firebasestorage.app",
-  messagingSenderId: "78529793935",
-  appId: "1:78529793935:web:447cc3226ea44f8d2bc5fa",
-};
+const firebaseConfig = getFirebaseConfig();
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const database = getDatabase(app);
 
-// Avatar colors for contacts
-const AVATAR_COLORS = ["#ff7a00", "#ff5eb3", "#4589ff", "#ffc701", "#1fd7c1", "#9327ff", "#00bee8", "#ff4646"];
-
 /**
- * Get random avatar color from predefined palette
+ * Retrieves Firebase configuration from Credentials
+ * @returns {{apiKey: string, authDomain: string, databaseURL: string, projectId: string, storageBucket: string, messagingSenderId: string, appId: string}}
  */
-function getRandomColor() {
-  return AVATAR_COLORS[Math.floor(Math.random() * AVATAR_COLORS.length)];
+function getFirebaseConfig() {
+    const cred = new Credentials();
+    return {
+        apiKey: cred.firebaseApiKey,
+        authDomain: cred.firebaseAuthDomain,
+        databaseURL: cred.firebaseDatabaseURL,
+        projectId: cred.firebaseProjectId,
+        storageBucket: cred.firebaseStorageBucket,
+        messagingSenderId: cred.firebaseMessagingSenderId,
+        appId: cred.firebaseAppId,
+    };
 }
 
 /**
- * Generate initials from name
+ * Creates a new contact in the RTDB
+ * @param {String} uid The user ID of the new contact
+ * @param {String} username The name of the new contact
+ * @param {String} email The email address of the new contact
+ * @param {String} phone The phone number of the new contact
+ * @param {String} avatarColor The avatar color of the new contact
+ * @param {String} initials The initials of the new contact
+ * @param {Boolean} [isAuthUser=false] Whether the contact is the authenticated user
+ * @return {Promise<void>} A promise that resolves when the contact is created
  */
-function getInitials(name) {
-  const nameParts = name.trim().split(" ");
-  const initials = nameParts
-    .map((part) => part.charAt(0).toUpperCase())
-    .join("")
-    .substring(0, 2);
-  return initials || "U";
-}
-
-/**
- * Generate random phone number
- */
-function generatePhoneNumber() {
-  const random = Math.floor(Math.random() * 1000000000);
-  return `+49 ${String(random).padStart(9, '0').match(/.{1,3}/g).join(' ')}`;
-}
-
-/**
- * Ensure authenticated user exists as contact in RTDB
- */
-export async function ensureUserAsContact(user) {
-  if (!user || user.isAnonymous) return;
-
-  try {
-    const contactRef = ref(database, `contacts/${user.uid}`);
-    const snapshot = await get(contactRef);
-
-    if (!snapshot.exists()) {
-      // User doesn't exist as contact, create one
-      await set(contactRef, {
-        id: user.uid,
-        name: user.displayName || user.email.split("@")[0],
-        email: user.email,
-        phone: generatePhoneNumber(),
-        avatarColor: getRandomColor(),
-        initials: getInitials(user.displayName || user.email.split("@")[0]),
-        isAuthUser: true,
-      });
-      console.log("User added to contacts:", user.email);
-    }
-  } catch (error) {
-    console.error("Error ensuring user as contact:", error);
-  }
-}
-
-/**
- * Create contact in RTDB for a user
- */
-export async function createContactForUser(uid, username, email) {
+export async function createContact(uid, username, email, phone, avatarColor, initials, isAuthUser = false) {
   try {
     await set(ref(database, `contacts/${uid}`), {
       id: uid,
       name: username,
       email: email,
-      phone: generatePhoneNumber(),
-      avatarColor: getRandomColor(),
-      initials: getInitials(username),
-      isAuthUser: true,
+      phone: phone,
+      avatarColor: avatarColor,
+      initials: initials,
+      isAuthUser: isAuthUser,
     });
-    console.log("Contact created in RTDB for new user");
   } catch (error) {
-    console.error("Error creating contact in RTDB:", error);
+    showInlineError("Failed to create contact. Please try again.");
   }
 }
 
+/**
+ * Ensures the authenticated user exists as a contact in the RTDB.
+ * @param {Object} user The authenticated user object from Firebase Auth.
+ * @param {Function} generatePhoneNumber Function to generate a phone number for the contact.
+ * @param {Function} getRandomColor Function to generate a random avatar color for the contact.
+ * @param {Function} getInitials Function to generate initials from the user's name.
+ * @returns {Promise<void>} A promise that resolves when the contact is ensured.
+*/
+export async function ensureUserAsContact(user, generatePhoneNumber, getRandomColor, getInitials) {
+  if (!user || user.isAnonymous) return;
+
+  const contactRef = ref(database, `contacts/${user.uid}`);
+  const snapshot = await get(contactRef);
+
+  if (!snapshot.exists()) {
+    await createContact(
+      user.uid,
+      user.displayName || user.email.split("@")[0],
+      user.email,
+      generatePhoneNumber(),
+      getRandomColor(),
+      getInitials(user.displayName || user.email.split("@")[0]),
+      true
+    );
+  }
+}
+
+/**
+ * Updates an existing contact in the RTDB
+ * @param {String} uid The user ID of the updated contact
+ * @param {String} name The new name of the updated contact
+ * @param {String} email The new email address of the updated contact
+ * @param {String} phone The new phone number of the updated contact
+ * @param {String} initials The new initials of the updated contact based on the new name
+ * @return {Promise<void>} A promise that resolves when the contact is updated
+ */
+export async function updateContact(uid, name, email, phone, initials) {
+  try {
+    await update(ref(database, `contacts/${uid}`), {
+      name: name,
+      email: email,
+      phone: phone,
+      initials: initials,
+    });
+  } catch (error) {
+    console.error("Error updating contact:", error);
+    showInlineError("Failed to update contact. Please try again.");
+  }
+}
+
+/**
+ * Updates an existing task in the RTDB
+ * @param {String} taskId The ID of the task to update
+ * @param {Object} updates The task fields to update
+ * @return {Promise<void>} A promise that resolves when the task is updated
+ */
+export async function updateTask(taskId, updates) {
+  try {
+    const updateData = {
+      ...updates,
+      updatedAt: Date.now()
+    };
+    await update(ref(database, `tasks/${taskId}`), updateData);
+  } catch (error) {
+    showInlineError("Failed to update task. Please try again.");
+    throw error;
+  }
+}
+
+/**
+ * Deletes a task from the RTDB
+ * @param {String} taskId The ID of the task to delete
+ * @return {Promise<void>} A promise that resolves when the task is deleted
+ */
+export async function deleteTask(taskId) {
+  try {
+    await remove(ref(database, `tasks/${taskId}`));
+  } catch (error) {
+    showInlineError("Failed to delete task. Please try again.");
+    throw error;
+  }
+}
+
+/**
+ * Loads all tasks from the RTDB
+ * @param {Function} callback Function to call when tasks are loaded or updated
+ * @return {Function} Unsubscribe function to stop listening for changes
+ */
+export function loadTasks(callback) {
+  const tasksRef = ref(database, 'tasks');
+  return onValue(tasksRef, (snapshot) => {
+    let tasks = [];
+    if (snapshot.exists()) {
+      const tasksData = snapshot.val();
+      tasks = Object.values(tasksData);
+    }
+    callback(tasks);
+  });
+}
+
+/**
+ * Gets a single task from the RTDB
+ * @param {String} taskId The ID of the task to get
+ * @return {Promise<Object|null>} A promise that resolves with the task data or null if not found
+ */
+export async function getTask(taskId) {
+  try {
+    const snapshot = await get(ref(database, `tasks/${taskId}`));
+    return snapshot.exists() ? snapshot.val() : null;
+  } catch (error) {
+    return null;
+  }
+}
+
+/**
+ * Migrates default tasks to RTDB if no tasks exist
+ * @param {Array} defaultTasks Array of default task objects to migrate
+ * @return {Promise<void>} A promise that resolves when migration is complete
+ */
+export async function migrateDefaultTasks(defaultTasks) {
+  try {
+    const tasksRef = ref(database, 'tasks');
+    const snapshot = await get(tasksRef);
+    
+    if (!snapshot.exists()) {
+      for (const task of defaultTasks) {
+        await createTask(task);
+      }
+    } else {
+      // Check if existing tasks need member or due date updates
+      const existingTasks = snapshot.val();
+
+      for (const [taskId, task] of Object.entries(existingTasks)) {
+        const updates = {};
+        let needsUpdate = false;
+        
+        // Check for missing members
+        if (!task.member || task.member.length === 0) {
+          const defaultTask = defaultTasks.find(dt => dt.id === task.id);
+          if (defaultTask && defaultTask.member && defaultTask.member.length > 0) {
+            updates.member = defaultTask.member;
+            needsUpdate = true;
+          }
+        }
+        
+        // Check for missing due dates
+        if (!task.dueDate) {
+          const defaultTask = defaultTasks.find(dt => dt.id === task.id);
+          if (defaultTask && defaultTask.dueDate) {
+            updates.dueDate = defaultTask.dueDate;
+            needsUpdate = true;
+          }
+        }
+        
+        if (needsUpdate) {
+          await updateTask(taskId, updates);
+        }
+      }
+    }
+  } catch (error) {
+    // Silent error handling
+  }
+}
+
+/**
+ * Create a new task in RTDB
+ * @param {Object} taskData - Task data object
+ * @returns {Promise<string>} - The ID of the created task
+ */
+export async function createTask(taskData) {
+  try {
+    const user = auth.currentUser;
+    if (!user) {
+      throw new Error("User must be authenticated to create tasks");
+    }
+
+    const tasksRef = ref(database, 'tasks');
+    const newTaskRef = push(tasksRef);
+
+    const now = Date.now();
+
+    const task = getTaskObject(newTaskRef, taskData, now);
+
+    await set(newTaskRef, task);
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * Construct task object for RTDB
+ * @param newTaskRef
+ * @param taskData
+ * @param now
+ * @returns {{id: *, title: *, text, dueDate: string|*, priority: *, task: *|Promise<void>, category, member, subtasks, subtasks_done: *[], createdAt: *, updatedAt: *}}
+ */
+function getTaskObject(newTaskRef,taskData, now) {
+    return {
+        id: newTaskRef.key,
+        title: taskData.title,
+        text: taskData.text || "",
+        dueDate: taskData.dueDate,
+        priority: taskData.priority,
+        task: taskData.task,
+        category: taskData.category || "to-do",
+        member: taskData.member || [],
+        subtasks: taskData.subtasks || [],
+        subtasks_done: [],
+        createdAt: now,
+        updatedAt: now
+    };
+}
 export { auth, database };
 

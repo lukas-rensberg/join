@@ -6,14 +6,38 @@ import {
   signOut,
   onAuthStateChanged,
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-import { auth, database, ensureUserAsContact, createContactForUser } from "./database.js";
+import { auth, ensureUserAsContact, createContact } from "./database.js";
 import { initLoginPage, initLogout } from "./login.js";
 import { initSignupPage, showSuccessMessage } from "./signup.js";
-import { handleAuthError } from "./error-handler.js";
+import { handleAuthError, showInlineError } from "./error-handler.js";
+import { getRandomColor } from "../utils/contact.js";
 
-const PROTECTED_PAGES = ["overview.html", "contacts.html", "help.html", "legal_notice.html", "kanban.html"];
+const PROTECTED_PAGES = ["overview.html", "contacts.html", "help.html", "legal_notice.html", "kanban.html", "board.html"];
 const LOGIN_PAGE = "index.html";
 const OVERVIEW_PAGE = "overview.html";
+
+/**
+ * Generate initials from a name string.
+ * @param {string} name - The name to generate initials from.
+ * @returns {string} The initials (up to 2 characters), or "U" if not available.
+ */
+export function getInitials(name) {
+  const nameParts = name.trim().split(" ");
+  const initials = nameParts
+    .map((part) => part.charAt(0).toUpperCase())
+    .join("")
+    .substring(0, 2);
+  return initials || "U";
+}
+
+/**
+ * Generate random phone number
+ * @returns {string} A phone number string in the format "+49 XXX XXX XXX"
+ */
+export function generatePhoneNumber() {
+  const random = Math.floor(Math.random() * 1000000000);
+  return `+49 ${String(random).padStart(9, '0').match(/.{1,3}/g).join(' ')}`;
+}
 
 /**
  * Check if current page is a protected page (requires authentication)
@@ -36,17 +60,12 @@ function isLoginPage() {
  */
 onAuthStateChanged(auth, async (user) => {
   if (user) {
-    console.log("User authenticated:", user.email || "Guest User");
-    
-    // Ensure user exists as contact
-    await ensureUserAsContact(user);
+    await ensureUserAsContact(user, generatePhoneNumber, getRandomColor, getInitials);
     
     if (isLoginPage() && !window.location.pathname.includes("signup.html")) {
       window.location.href = `./${OVERVIEW_PAGE}`;
     }
   } else {
-    console.log("User not authenticated");
-    
     if (isProtectedPage()) {
       window.location.href = `./${LOGIN_PAGE}`;
     }
@@ -56,35 +75,39 @@ onAuthStateChanged(auth, async (user) => {
 /**
  * Login user with email and password (login page)
  */
-async function loginUser(email, password) {
-  const userCredential = await signInWithEmailAndPassword(auth, email, password);
-  console.log("User logged in:", userCredential.user);
+export async function loginUser(email, password) {
+  await signInWithEmailAndPassword(auth, email, password);
   window.location.href = `./${OVERVIEW_PAGE}`;
 }
 
 /**
  * Guest login using anonymous authentication (login page)
  */
-async function guestLogin() {
-  const userCredential = await signInAnonymously(auth);
-  console.log("Guest logged in:", userCredential.user);
+export async function guestLogin() {
+  await signInAnonymously(auth);
   window.location.href = `./${OVERVIEW_PAGE}`;
 }
 
 /**
  * Create new user account (signup page)
  */
-async function signupUser(email, password, username) {
+export async function signupUser(email, password, username) {
   const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
   await updateProfile(userCredential.user, {
     displayName: username,
   });
 
-  console.log("User created:", userCredential.user);
-
   // Create contact in RTDB for the new user
-  await createContactForUser(userCredential.user.uid, username, email);
+  await createContact(
+    userCredential.user.uid,
+    username,
+    email,
+    generatePhoneNumber(),
+    getRandomColor(),
+    getInitials(username),
+    true
+  );
 
   showSuccessMessage();
 
@@ -96,21 +119,19 @@ async function signupUser(email, password, username) {
 /**
  * Handle user logout (protected pages)
  */
-async function handleLogout() {
+export async function handleLogout() {
   try {
     await signOut(auth);
-    console.log("User logged out successfully");
     window.location.href = `./${LOGIN_PAGE}`;
   } catch (error) {
-    console.error("Logout error:", error);
-    alert("An error occurred during logout. Please try again.");
+    showInlineError("An error occurred during logout. Please try again.");
   }
 }
 
 /**
  * Initialize appropriate functionality based on current page (all pages)
  */
-function initAuth() {
+export function initAuth() {
   const currentPage = window.location.pathname.split("/").pop();
 
   if (currentPage === LOGIN_PAGE || currentPage === "") {
@@ -123,19 +144,3 @@ function initAuth() {
 }
 
 document.addEventListener("DOMContentLoaded", initAuth);
-
-window.addEventListener("load", () => {
-  if (window.location.pathname.includes(LOGIN_PAGE) || window.location.pathname.endsWith("/")) {
-    const wrapper = document.querySelector(".logo-wrapper");
-    if (wrapper) {
-      setTimeout(() => {
-        wrapper.style.position = "absolute";
-      }, 700);
-    }
-  }
-});
-
-/**
- * Re-export auth and database for use in other modules
- */
-export { auth, database };

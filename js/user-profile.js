@@ -1,10 +1,10 @@
-import { auth } from "./auth.js";
+import { auth } from "./database.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 
 /**
  * Update avatar initials based on logged-in user
  */
-function updateAvatarInitials() {
+export function updateAvatarInitials() {
   onAuthStateChanged(auth, (user) => {
     if (user) {
       const avatarElement = document.querySelector(".avatar");

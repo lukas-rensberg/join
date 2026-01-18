@@ -1,6 +1,4 @@
-/**
- * Signup Module - Handles signup page functionality
- */
+import { validateEmailFormat } from "../utils/contact.js";
 
 /**
  * Clear error messages and red borders from form inputs
@@ -10,12 +8,52 @@ function clearFormErrors() {
   if (existingError) {
     existingError.remove();
   }
+  
+  // Clear field-specific error messages
+  const fieldErrors = document.querySelectorAll(".error-message");
+  fieldErrors.forEach(error => error.remove());
+  
   const form = document.querySelector("form");
   if (form) {
     const formInputs = form.querySelectorAll('input[type="email"], input[type="password"], input[type="text"]');
     formInputs.forEach(inp => {
       inp.style.borderBottom = "";
     });
+    
+    // Clear checkbox border color
+    const checkbox = document.getElementById("confirm-check");
+    if (checkbox) {
+      checkbox.style.borderColor = "";
+    }
+  }
+}
+
+/**
+ * Show form validation error for a specific field
+ * @param {string} fieldId The ID of the input field
+ * @param {string} message The error message to display
+ */
+function showFormError(fieldId, message) {
+  const field = document.getElementById(fieldId);
+  if (field) {
+    field.style.borderBottom = "1px solid #ff4646";
+    
+    // Check for existing error message and remove it
+    const existingError = field.parentElement.querySelector(".error-message");
+    if (existingError) {
+      existingError.remove();
+    }
+    
+    const errorMsg = document.createElement("span");
+    errorMsg.className = "error-message";
+    errorMsg.textContent = message;
+    errorMsg.style.cssText = `
+      color: #ff4646;
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+      display: block;
+    `;
+    field.parentElement.appendChild(errorMsg);
   }
 }
 
@@ -61,26 +99,63 @@ function togglePasswordVisibility(toggleElement) {
   }
 }
 
+
 /**
  * Validate signup form inputs (signup page)
  */
-function validateSignupForm(password, confirmPassword, acceptedPolicy) {
-  const errorMessage = document.querySelector(".pw-not-matching");
-
-  if (password !== confirmPassword) {
-    if (errorMessage) errorMessage.style.display = "block";
+function validateSignupForm(username, email, password, confirmPassword, acceptedPolicy) {
+  clearFormErrors();
+  
+  if (!username.trim()) {
+    showFormError("username", "Name is required");
     return false;
-  } else {
-    if (errorMessage) errorMessage.style.display = "none";
+  }
+  
+  if (!email.trim()) {
+    showFormError("email", "Email is required");
+    return false;
+  }
+  
+  if (!validateEmailFormat(email)) {
+    showFormError("email", "Invalid email format");
+    return false;
+  }
+
+  if (!password) {
+    showFormError("signup-password", "Password is required");
+    return false;
   }
 
   if (password.length < 6) {
-    alert("Password must be at least 6 characters long.");
+    showFormError("signup-password", "Password must be at least 6 characters");
+    return false;
+  }
+
+  if (password !== confirmPassword) {
+    showFormError("confirm-password", "Passwords do not match");
     return false;
   }
 
   if (!acceptedPolicy) {
-    alert("Please accept the Privacy Policy to continue.");
+    const checkbox = document.getElementById("confirm-check");
+    
+    // Check for existing error message and remove it
+    const existingError = checkbox.parentElement.querySelector(".error-message");
+    if (existingError) {
+      existingError.remove();
+    }
+    
+    checkbox.style.borderColor = "#ff4646";
+    const errorMsg = document.createElement("span");
+    errorMsg.className = "error-message";
+    errorMsg.textContent = "Please accept the Privacy Policy";
+    errorMsg.style.cssText = `
+      color: #ff4646;
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+      display: block;
+    `;
+    checkbox.parentElement.appendChild(errorMsg);
     return false;
   }
 
@@ -106,7 +181,7 @@ export function showSuccessMessage() {
 export function initSignupPage(signupUserCallback, handleAuthErrorCallback) {
   const signupForm = document.querySelector("form");
   if (signupForm && document.querySelector('input[name="username"]')) {
-    // Clear error messages and red borders when user types
+    // Clear error messages when user types
     const inputs = signupForm.querySelectorAll('input[type="text"], input[type="email"], input[type="password"]');
     inputs.forEach(input => {
       input.addEventListener("input", clearFormErrors);
@@ -134,13 +209,13 @@ export function initSignupPage(signupUserCallback, handleAuthErrorCallback) {
     signupForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      const username = document.querySelector('input[name="username"]').value;
-      const email = document.querySelector('input[name="email"]').value;
+      const username = document.querySelector('input[name="username"]').value.trim();
+      const email = document.querySelector('input[name="email"]').value.trim();
       const password = document.querySelector('input[name="password"]').value;
       const confirmPassword = document.querySelector('input[name="confirm-password"]').value;
       const acceptedPolicy = document.getElementById("confirm-check").checked;
 
-      if (!validateSignupForm(password, confirmPassword, acceptedPolicy)) {
+      if (!validateSignupForm(username, email, password, confirmPassword, acceptedPolicy)) {
         return;
       }
 

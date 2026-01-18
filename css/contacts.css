@@ -18,7 +18,7 @@
 
 .contacts-container {
     padding: 1rem;
-    max-width: 100%;
+    width: 100%;
 }
 
 .contact-section {
@@ -85,7 +85,7 @@
     text-decoration: none;
 }
 
-.fab {
+.fab-mobile {
     position: fixed;
     bottom: 6.25rem;
     right: 1.25rem;
@@ -103,13 +103,13 @@
     transition: all 0.2s ease;
 }
 
-.fab:hover {
+.fab-mobile:hover {
     background-color: #005dff;
     transform: translateY(-0.125rem);
     box-shadow: 0 0.375rem 1rem rgba(69, 137, 255, 0.4);
 }
 
-.fab img {
+.fab-mobile img {
     width: 1.5rem;
     height: 1.5rem;
 }
@@ -131,6 +131,7 @@
 .fab-menu.active {
     display: block;
     transform: translateX(0);
+    pointer-events: auto;
 }
 
 .fab-menu nav {
@@ -483,4 +484,18 @@
     width: 7rem;
     height: 7rem;
     font-size: 2.5rem;
+}
+
+.error-message {
+    display: block;
+    color: #ff4646;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+    margin-left: 0.75rem;
+}
+
+.form-group input[type="text"].error,
+.form-group input[type="email"].error,
+.form-group input[type="tel"].error {
+    border-bottom-color: #ff4646;
 }
