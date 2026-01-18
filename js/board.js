@@ -993,12 +993,10 @@ function moveTo(category) {
     const taskToUpdate = tasks.find(task => task.id === currentDraggedElement);
     if (taskToUpdate) {
         taskToUpdate.category = category;
-        // Save the updated task to Firebase
         saveTask(taskToUpdate);
     }
     document.getElementById(currentDraggedElement).classList.remove("is-dragging");
     bgContainerRemove(category);
-    // Remove updateHTML() call as Firebase listener will handle the update
 }
 
 /**
@@ -1054,11 +1052,9 @@ function toggleSwapMenu(event, taskId, currentCategory) {
 function moveTaskTo(event, taskId, category) {
     event.stopPropagation();
 
-    // Set the current dragged element to use moveTo function
     currentDraggedElement = taskId;
     moveTo(category);
 
-    // Close the dropdown
     closeAllSwapMenus();
 }
 
@@ -1421,6 +1417,8 @@ window.startDragging = startDragging;
 window.allowDrop = allowDrop;
 window.handleDragOver = handleDragOver;
 window.moveTo = moveTo;
+window.toggleSwapMenu = toggleSwapMenu;
+window.moveTaskTo = moveTaskTo;
 window.bgContainer = bgContainer;
 window.bgContainerRemove = bgContainerRemove;
 window.showDashedBoxOnce = showDashedBoxOnce;
