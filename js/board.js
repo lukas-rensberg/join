@@ -1237,14 +1237,17 @@ function initSubtasks(taskId) {
     const pendingSubtasks = task.subtasks || [];
     const completedSubtasks = task.subtasks_done || [];
 
+    // Add pending subtasks
     pendingSubtasks.forEach((subtask, index) => {
         subtasksContainer.innerHTML += getTemplateSubtask(subtask, taskId, index, false);
     });
 
+    // Add completed subtasks
     completedSubtasks.forEach((subtask, index) => {
         subtasksContainer.innerHTML += getTemplateSubtask(subtask, taskId, index + pendingSubtasks.length, true);
     });
 
+    // Add event listeners after DOM is updated
     setTimeout(() => addSubtaskEventListeners(taskId), 0);
 }
 
@@ -1409,13 +1412,6 @@ async function updateSubtaskStatus(taskId, subtask, isCompleted) {
 document.addEventListener('DOMContentLoaded', () => {
     initializeTasks();
     openAddTaskAside();
-
-    // Close swap menus when clicking outside
-    document.addEventListener('click', (event) => {
-        if (!event.target.closest('.card-swap-icon')) {
-            closeAllSwapMenus();
-        }
-    });
 });
 
 // Make functions globally accessible for inline event handlers
@@ -1425,9 +1421,6 @@ window.startDragging = startDragging;
 window.allowDrop = allowDrop;
 window.handleDragOver = handleDragOver;
 window.moveTo = moveTo;
-window.toggleSwapMenu = toggleSwapMenu;
-window.moveTaskTo = moveTaskTo;
-window.closeAllSwapMenus = closeAllSwapMenus;
 window.bgContainer = bgContainer;
 window.bgContainerRemove = bgContainerRemove;
 window.showDashedBoxOnce = showDashedBoxOnce;

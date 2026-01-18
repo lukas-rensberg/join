@@ -1,5 +1,5 @@
 <p align="center">
-    <img alt="Join Logo" src="https://raw.githubusercontent.com/lukas-rensberg/join/1fa470ce4afc89a08856ae19645c9f6e68b29608/assets/icons/logo-blue.svg" align="center" width="20%">
+    <img src="https://raw.githubusercontent.com/lukas-rensberg/join/1fa470ce4afc89a08856ae19645c9f6e68b29608/assets/icons/logo-blue.svg" align="center" width="20%">
 </p>
 <p align="center">
 	<code>A Kanban Project Management Tool</code>
@@ -83,9 +83,7 @@ Run join using the following methods:
 **For "Production": Upload the files to an `Web server`** &nbsp; [Link to the recommended Apache2 Web Server](https://httpd.apache.org/download.cgi#apache24)
 
 ---
-
 ##  Project Roadmap 
-
 ### Q4 2025 + Q1 (Jan.) 2026
 
 - [X] **`Add the board`**: <strike>Add the entire board with drag & drop</strike>
@@ -97,9 +95,9 @@ Run join using the following methods:
 
 ##  Our team
 
-<p>
+<p align="left">
    <a href="https://github.com/lukas-rensberg/join/graphs/contributors">
-      <img alt="Profile Picture collection of contributors" src="https://contrib.rocks/image?repo=lukas-rensberg/join">
+      <img src="https://contrib.rocks/image?repo=lukas-rensberg/join">
    </a>
 </p>
 
