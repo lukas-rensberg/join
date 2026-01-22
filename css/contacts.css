@@ -11,14 +11,12 @@
 .contacts-main {
     flex: 1;
     background-color: #ffffff;
-    padding: 0;
-    margin: 0;
     overflow-y: auto;
 }
 
 .contacts-container {
     padding: 1rem;
-    width: 100%;
+    width: min(456px, 100%);
 }
 
 .contact-section {
@@ -45,10 +43,12 @@
     padding: 0.9375rem 0;
     cursor: pointer;
     transition: background-color 0.2s ease;
-}
+    border-radius: 0.625rem;
 
-.contact-item:hover {
-    background-color: #f8f9fa;
+    &:hover,
+    &:active {
+        background-color: var(--color-menu-active);
+    }
 }
 
 .contact-avatar {
@@ -98,60 +98,128 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
     z-index: 1000;
     transition: all 0.2s ease;
-}
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
 
-.fab-mobile:hover {
-    background-color: #005dff;
-    transform: translateY(-0.125rem);
-    box-shadow: 0 0.375rem 1rem rgba(69, 137, 255, 0.4);
-}
+    img {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
 
-.fab-mobile img {
-    width: 1.5rem;
-    height: 1.5rem;
+    &:hover,
+    &:active {
+        background-color: #005dff;
+    }
 }
 
 .fab-menu {
     position: fixed;
     bottom: 6.25rem;
-    right: 1.25rem;
+    right: -25%;
     background-color: #ffffff;
     border-radius: 1.25rem 1.25rem 0 1.25rem;
     box-shadow: 0.25rem 0.275rem 0.5rem rgba(0, 0, 0, 0.2);
     padding: 0.5rem;
-    transform: translateX(200%);
-    transition: transform 0.3s ease-in-out;
     z-index: 1001;
-    display: none;
+    animation: fadeOut 300ms forwards;
 }
 
 .fab-menu.active {
-    display: block;
-    transform: translateX(0);
-    pointer-events: auto;
+    animation: fadeIn 300ms forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        right: -25%;
+    }
+    to {
+        pointer-events: auto;
+        right: 1.25rem;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        right: 1.25rem;
+    }
+    to {
+        right: -25%;
+    }
 }
 
 .fab-menu nav {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
-}
+    width: 7.25rem;
+    height: 6.25rem;
 
-.fab-menu nav a {
-    text-decoration: none;
-    font-size: 1rem;
-    color: var(--main-color);
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    transition: background-color 0.2s ease;
-    white-space: nowrap;
-}
+    div {
+        display: flex;
+        align-items: center;
+        width: 6rem;
+        height: 2.25rem;
+        border-radius: 0.625rem;
+    }
 
-.fab-menu nav a:hover {
-    background-color: #f0f0f0;
+    .edit-contact {
+        display: flex;
+
+        &::before {
+            content: '';
+            width: 24px;
+            height: 24px;
+            background: url(../assets/icons/edit.svg) center center no-repeat;
+            background-size: contain;
+            transform: scale(1);
+            margin-right: 0.5rem;
+            margin-left: 0.5rem;
+        }
+
+        &::after {
+            content: 'Edit';
+        }
+
+        &:active,
+        &:hover {
+            cursor: pointer;
+            font-weight: 700;
+            background-color: var(--color-menu-hover);
+
+            &::before {
+                background-image: url('../assets/icons/edit_clicked.svg');
+            }
+        }
+    }
+
+    .delete-contact {
+        display: flex;
+
+        &::before {
+            content: '';
+            width: 24px;
+            height: 24px;
+            background: url('../assets/icons/delete.svg') center center no-repeat;
+            transform: scale(1);
+            margin-right: 0.5rem;
+            margin-left: 0.5rem;
+        }
+
+        &::after {
+            content: 'Delete';
+        }
+
+        &:active,
+        &:hover {
+            cursor: pointer;
+            font-weight: 700;
+            background-color: var(--color-menu-hover);
+
+            &::before {
+                background: url('../assets/icons/delete_clicked.svg') center center no-repeat;
+            }
+        }
+    }
 }
 
 .contact-detail-view {
@@ -193,18 +261,20 @@
     justify-content: center;
     align-items: center;
     display: flex;
-    transition: background-color 0.2s ease;
-}
+    transition: all 0.2s ease;
 
-.back-button:hover {
-    background-color: #f0f0f0;
-}
+    img {
+        width: 2rem;
+        height: 2rem;
+    }
 
-.back-button img {
-    width: 2rem;
-    height: 2rem;
-}
+    &:hover,
+    &:active {
+        transform: scale(1.05);
+    }
 
+
+}
 
 .contact-detail-content {
     flex: 1;
@@ -298,10 +368,8 @@
     border-radius: 1.25rem;
     padding: 0;
     margin: 1rem;
-    max-width: 90%;
-    width: 100%;
+    width: min(396px, 100%);
     height: 35rem;
-    max-width: 28rem;
     max-height: 90vh;
     overflow: hidden;
     box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.3);
@@ -340,6 +408,11 @@
     padding: 0.5rem;
     border-radius: 50%;
     transition: background-color 0.2s ease;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .modal-close:hover {
@@ -354,7 +427,7 @@
 
 .modal-avatar {
     position: absolute;
-    top: 4rem;
+    top: anchor(50%);
     left: 50%;
     transform: translateX(-50%);
     width: 5rem;
@@ -416,43 +489,47 @@
     margin-top: 2rem;
     padding-top: 1.5rem;
     justify-content: center;
-}
 
-.btn-delete,
-.btn-save {
-    padding: 0.5rem;
-    border: 0.0625rem solid #d1d1d1;
-    border-radius: 0.5rem;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
+    button {
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: .25rem;
+        width: auto;
+    }
 }
 
 .btn-delete {
-    background-color: #ffffff;
-    color: #000000;
-}
+    border: 0.0625rem solid #2a3647;
+    background-color: transparent;
+    color: #2a3647;
+    width: 6.5rem !important;
 
-.btn-delete:hover {
-    background-color: #f8f9fa;
-    border-color: #b0b0b0;
+    &:hover, &:active {
+        border-color: var(--main-color);
+        color: var(--main-color);
+        box-shadow: 0 .25rem .5rem rgb(0, 0, 0, 0.2);
+    }
 }
 
 .btn-save {
-    background-color: #4589ff;
+    background-color: var(--main-color);
     color: #ffffff;
-    border-color: #4589ff;
+    border-color: var(--main-color);
+
+    &:hover, &:active {
+
+    }
 }
 
 .btn-save:hover {
     background-color: #005dff;
     border-color: #005dff;
-    transform: translateY(-0.0625rem);
+    box-shadow: 0 .25rem .5rem rgb(0, 0, 0, 0.2);
 }
 
 .save-icon {
@@ -472,7 +549,7 @@
 }
 
 .contact-form {
-    padding: 0rem 1rem 2rem;
+    padding: 0 1rem 2rem;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -498,4 +575,76 @@
 .form-group input[type="email"].error,
 .form-group input[type="tel"].error {
     border-bottom-color: #ff4646;
+}
+
+
+@media (width >= 812px) {
+    .fab-mobile {
+        display: none;
+    }
+
+    .body-contacts {
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    .contacts-main {
+        display: flex;
+        flex: 1;
+        overflow: hidden;
+    }
+
+    .contacts-section {
+        display: flex;
+        flex-direction: column;
+        margin-left: 250px;
+        width: 465px;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .add-contact-btn-desk {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #ffffff;
+        height: 6.5rem;
+        width: 465px;
+        flex-shrink: 0;
+
+
+        button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--main-color);
+            border-radius: .625rem;
+            padding: 0.75rem 5rem;
+            box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
+
+            &::before {
+                content: 'Add new contact';
+                color: #ffffff;
+                font-size: 1.25rem;
+            }
+
+            &::after {
+                margin-left: 1rem;
+                content: '';
+                background: url('../assets/icons/person_add.svg') center center no-repeat;
+                height: 2rem;
+                width: 2rem;
+            }
+
+            &:hover {
+                background-color: #005dff;
+            }
+        }
+    }
+
+    .contacts-container {
+        flex: 1;
+        overflow-y: auto;
+        min-height: 0;
+    }
 }
