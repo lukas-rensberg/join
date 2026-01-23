@@ -102,6 +102,7 @@ function createContactsPerLetter(letter, groupedContacts) {
   groupedContacts[letter].forEach((contact) => {
     const contactItem = document.createElement("div");
     contactItem.className = "contact-item";
+    contactItem.setAttribute("data-contact-id", contact.id);
     contactItem.onclick = () => showContactDetail(contact.id);
     contactItem.innerHTML = generateContactItemTemplate(contact);
     section.appendChild(contactItem);
@@ -158,6 +159,17 @@ function closeFabMenu() {
 }
 
 /**
+ * Setup an event listener to open the Add-Contact modal when clicking on the add-contact button (desktop-only)
+ *
+ */
+function setupAddContactBtnEventListener() {
+  document.getElementById("addContactBtn").addEventListener("click", (e) => {
+    e.preventDefault();
+    openContactModal(false);
+  })
+}
+
+/**
  * Setup click outside listener for FAB (floating action button) menu
  */
 function setupClickOutsideListener() {
@@ -184,13 +196,18 @@ function showContactDetail(contactId) {
   currentContactId = contactId;
 
   populateContactDetailView(contact);
-
-  document.querySelector(".contacts-container").style.display = "none";
-  document.getElementById("contactDetailView").classList.add("active");
+  populateContactDetailViewDesktop(contact);
+  if (window.innerWidth >= 812) {
+    document.getElementById("contactDetailViewDesktop").classList.toggle("active");
+    document.querySelectorAll(`[data-contact-id="${contactId}"]`)[0].classList.toggle("active");
+  } else {
+    document.querySelector(".contacts-container").style.display = "none";
+    document.getElementById("contactDetailView").classList.add("active");
+  }
 }
 
 /** 
- * Populates the contact detail view with contact data
+ * Populates the contact detail view with contact data (mobile only)
  * @param {Object} contact - Contact object
  */
 function populateContactDetailView(contact) {
@@ -205,6 +222,20 @@ function populateContactDetailView(contact) {
   const fabIcon = document.getElementById("fabIcon");
   fabIcon.src = "./assets/icons/more-vertical.svg";
   fabIcon.alt = "Menu";
+}
+
+/**
+ * Populates the desktop contact detail view with contact data
+ * @param {Object} contact - Contact object
+ */
+function populateContactDetailViewDesktop(contact) {
+  document.getElementById("detailNameDesktop").textContent = contact.name;
+  document.getElementById("detailEmailDesktop").textContent = contact.email;
+  document.getElementById("detailPhoneDesktop").textContent = contact.phone;
+
+  const avatar = document.getElementById("detailAvatarDesktop");
+  avatar.textContent = contact.initials;
+  avatar.style.backgroundColor = contact.avatarColor;
 }
 
 /**
@@ -268,6 +299,7 @@ function findContactById(contactId) {
 function setupEditContactModal(contact) {
   document.getElementById("modalTitle").textContent = "Edit contact";
   document.getElementById("saveButtonText").textContent = "Save";
+  document.getElementById("cancelButton").style.display = "none";
   document.getElementById("deleteButton").style.display = "block";
   populateModalWithContactData(contact);
   closeFabMenu();
@@ -397,7 +429,6 @@ async function saveContact(event) {
 
   if (isEditMode) {
     await updateContact(currentContactId, name, email, phone, getInitialsFromName(name));
-
   } else {
     const newContactId = generateContactId();
     currentContactId = newContactId;
@@ -434,6 +465,17 @@ function setupClickListeners() {
       deleteContact();
     });
   }
+
+  // Desktop Edit/Delete buttons
+  const editContactDesktop = document.getElementById("editContactDesktop");
+  if (editContactDesktop) {
+    editContactDesktop.addEventListener("click", editContact);
+  }
+  const deleteContactDesktop = document.getElementById("deleteContactDesktop");
+  if (deleteContactDesktop) {
+    deleteContactDesktop.addEventListener("click", deleteContact);
+  }
+
   const backButton = document.getElementById("backButton");
   if (backButton) {
     backButton.addEventListener("click", hideContactDetail);
@@ -446,6 +488,10 @@ function setupClickListeners() {
   if (modalCloseBtn) {
     modalCloseBtn.addEventListener("click", closeContactModal);
   }
+  const cancelButton = document.getElementById("cancelButton");
+  if (cancelButton) {
+    cancelButton.addEventListener("click", closeContactModal);
+  }
   const deleteButton = document.getElementById("deleteButton");
   if (deleteButton) {
     deleteButton.addEventListener("click", deleteContactFromModal);
@@ -455,6 +501,7 @@ function setupClickListeners() {
 function init() {
   loadContactsFromRTDB();
   setupClickOutsideListener();
+  setupAddContactBtnEventListener();
   setupClickListeners();
 
   const contactForm = document.getElementById("contactForm");

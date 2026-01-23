@@ -8,6 +8,7 @@
     <title>Join | Contacts</title>
     <link rel="stylesheet" href="./style.css"/>
     <link rel="stylesheet" href="./css/font.css"/>
+    <link rel="stylesheet" href="./css/shared.css"/>
     <link rel="stylesheet" href="./css/header-footer.css"/>
     <link rel="stylesheet" href="./css/contacts.css"/>
     <link rel="stylesheet" href="./css/aside.css">
@@ -61,20 +62,52 @@
     </aside>
 
     <section class="contacts-section">
-        <div class="add-contact-btn-desk">
+        <div class="add-contact-btn-desk" id="addContactBtn">
             <button></button>
         </div>
         <div class="contacts-container">
 
-            <!-- Contacts will be dynamically rendered here -->
         </div>
     </section>
-    <div style="height: 19.875rem; width: 29.5rem; border: 1px solid aquamarine; margin: 4.5rem 3.875rem;"></div>
+
+
+
+    <div class="contact-detail-view-desktop hide-mobile" id="contactDetailViewDesktop">
+        <div class="contact-detail-header-desktop">
+            <div class="contact-detail-avatar" id="detailAvatarDesktop"></div>
+            <div class="contact-name-actions">
+                <div class="contact-detail-name" id="detailNameDesktop"></div>
+                <div class="detail-actions">
+                    <div class="action-item" id="editContactDesktop">
+                        <img src="./assets/icons/edit.svg" alt="Edit"/>
+                        <span>Edit</span>
+                    </div>
+                    <div class="action-item" id="deleteContactDesktop">
+                        <img src="./assets/icons/delete.svg" alt="Delete"/>
+                        <span>Delete</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="contact-detail-content-desktop">
+            <h2 class="contact-info-title">Contact Information</h2>
+
+            <div class="contact-info-section">
+                <div class="info-label">Email</div>
+                <div class="info-value email-value" id="detailEmailDesktop"></div>
+            </div>
+
+            <div class="contact-info-section">
+                <div class="info-label">Phone</div>
+                <div class="info-value" id="detailPhoneDesktop"></div>
+            </div>
+        </div>
+    </div>
 
 </main>
 
-<!-- Contact Detail View -->
-<div class="contact-detail-view" id="contactDetailView">
+<div class="contact-detail-view hide-desktop" id="contactDetailView">
     <div class="contact-detail-header">
         <h1>Contact Information</h1>
         <div class="detail-header-actions">
@@ -102,12 +135,10 @@
     </div>
 </div>
 
-<!-- Floating Action Button -->
-<button class="fab-mobile" id="fabButton">
+<button class="fab-mobile hide-desktop" id="fabButton">
     <img src="./assets/icons/person_add.svg" alt="Add Contact" id="fabIcon"/>
 </button>
 
-<!-- FAB Menu Dropdown -->
 <div class="fab-menu" id="fabMenu">
     <nav>
         <div class="edit-contact" id="editContactLink"></div>
@@ -115,19 +146,20 @@
     </nav>
 </div>
 
-<!-- Contact Modal (Edit/Create) -->
 <div class="contact-modal" id="contactModal">
     <div class="modal-backdrop" id="modalBackdrop"></div>
     <div class="modal-content">
         <div class="modal-header">
-            <h2 id="modalTitle">Edit contact</h2>
-            <p class="modal-subtitle">Tasks are better with a team!</p>
             <button class="modal-close" id="modalCloseBtn">
                 <img src="./assets/icons/close_white.svg" alt="Close"/>
             </button>
+            <img src="./assets/icons/logo-white.svg" alt="Join Logo" class="modal-logo"/>
+            <h2 id="modalTitle">Add contact</h2>
+            <p class="modal-subtitle">Tasks are better with a team!</p>
         </div>
-        <div class="modal-avatar" id="modalAvatar"></div>
-        <form class="contact-form" id="contactForm">
+        <div class="modal-body">
+            <div class="modal-avatar" id="modalAvatar"></div>
+            <form class="contact-form" id="contactForm">
             <div class="form-group">
                 <input type="text" id="contactName" name="name" placeholder="Name"/>
                 <img src="./assets/icons/person.svg" alt="Person" class="input-icon"/>
@@ -141,15 +173,20 @@
                 <img src="./assets/icons/phone.svg" alt="Phone" class="input-icon"/>
             </div>
             <div class="form-actions">
+                <button type="button" class="btn-cancel" id="cancelButton">
+                    Cancel
+                    <img src="./assets/icons/close.svg" alt="Cancel" class="cancel-icon"/>
+                </button>
                 <button type="button" class="btn-delete" id="deleteButton" style="display: none">
                     Delete
                 </button>
                 <button type="submit" class="btn-save">
-                    <span id="saveButtonText">Save</span>
+                    <span id="saveButtonText">Create contact</span>
                     <img src="./assets/icons/check.svg" alt="Save" class="save-icon"/>
                 </button>
             </div>
         </form>
+        </div>
     </div>
 </div>
 

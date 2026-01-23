@@ -647,6 +647,24 @@
     }
 }
 
+@keyframes modalSwipeIn {
+    100% {
+        opacity: 1;
+        transform: translateX(-100%) translateY(-50%);
+    }
+}
+
+@keyframes modalSwipeOut {
+    0% {
+        opacity: 1;
+        transform: translateX(-100%) translateY(-50%);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(0) translateY(-50%);
+    }
+}
+
 @media (width < 600px) {
     .priority-btn {
         font-size: 16px;

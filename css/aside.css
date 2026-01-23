@@ -76,30 +76,11 @@
 
 
 .add-task-swipe-in {
-    animation: addTaskSwipeIn 300ms ease-in-out forwards;
-}
-
-@keyframes addTaskSwipeIn {
-    100% {
-        opacity: 1;
-        transform: translateX(-100%) translateY(-50%);
-
-    }
+    animation: modalSwipeIn 300ms ease-in-out forwards;
 }
 
 .add-task-swipe-out {
-    animation: addTaskSwipeOut 300ms ease-in-out forwards;
-}
-
-@keyframes addTaskSwipeOut {
-    0% {
-        opacity: 1;
-        transform: translateX(-100%) translateY(-50%);
-    }
-    100% {
-        opacity: 0;
-        transform: translateX(0) translateY(-50%);
-    }
+    animation: modalSwipeOut 300ms ease-in-out forwards;
 }
 
 .aside-add-task {
