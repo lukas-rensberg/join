@@ -9,7 +9,7 @@
 }
 
 .contacts-main {
-    flex: 1 1 0%;
+    flex: 1 1 0;
     background-color: rgb(255, 255, 255);
     overflow-y: auto;
 }
@@ -26,24 +26,25 @@
 .section-header {
     font-weight: 400;
     color: rgb(0, 0, 0);
-    margin: 0px 0px 1.0625rem 2.25rem;
-    padding: 0px;
+    margin: 0 0 1.0625rem 2.25rem;
+    padding: 0;
 }
 
 .section-separator {
     width: 100%;
     height: 0.0625rem;
     background-color: rgb(209, 209, 209);
-    margin: 0px 0px 1.25rem;
+    margin: 0 0 1.25rem;
 }
 
 .contact-item {
     display: flex;
     align-items: center;
-    padding: 0.9375rem 0px;
+    padding: 0.9375rem 0;
     cursor: pointer;
     transition: background-color 0.2s;
     border-radius: 0.625rem;
+
     &:hover, &:active {
         background-color: var(--color-menu-active);
     }
@@ -59,15 +60,16 @@
     color: rgb(255, 255, 255);
     font-weight: 300;
     font-size: 0.9375rem;
-    margin: 0px 0px 0px 0.9375rem;
+    margin: 0 0 0 0.9375rem;
     flex-shrink: 0;
 }
 
 .contact-info {
-    flex: 1 1 0%;
+    flex: 1 1 0;
     display: flex;
     flex-direction: column;
     margin-left: 0.9375rem;
+    overflow: hidden;
 }
 
 .contact-name {
@@ -75,12 +77,16 @@
     font-weight: 500;
     color: rgb(0, 0, 0);
     margin-bottom: 0.25rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .contact-email {
     font-size: 0.875rem;
     color: rgb(69, 137, 255);
     text-decoration: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .fab-mobile {
@@ -98,7 +104,8 @@
     cursor: pointer;
     z-index: 1000;
     transition: 0.2s;
-    box-shadow: rgba(0, 0, 0, 0.2) 0px 0.25rem 0.5rem;
+    box-shadow: rgba(0, 0, 0, 0.2) 0 0.25rem 0.5rem;
+
     & img {
         width: 1.5rem;
         height: 1.5rem;
@@ -112,9 +119,9 @@
 .fab-menu {
     position: fixed;
     bottom: 6.25rem;
-    right: -25%;
+    right: -10%;
     background-color: rgb(255, 255, 255);
-    border-radius: 1.25rem 1.25rem 0px;
+    border-radius: 1.25rem 1.25rem 0;
     box-shadow: rgba(0, 0, 0, 0.2) 0.25rem 0.275rem 0.5rem;
     padding: 0.5rem;
     z-index: 1001;
@@ -127,7 +134,7 @@
 
 @keyframes fadeIn {
     0% {
-        right: -25%;
+        right: -100%;
     }
 
     100% {
@@ -142,7 +149,7 @@
     }
 
     100% {
-        right: -25%;
+        right: -100%;
     }
 }
 
@@ -151,6 +158,7 @@
     flex-direction: column;
     width: 7.25rem;
     height: 6.25rem;
+
     & div {
         display: flex;
         align-items: center;
@@ -161,6 +169,7 @@
 
     & .edit-contact {
         display: flex;
+
         &::before {
             content: "";
             width: 24px;
@@ -179,6 +188,7 @@
             cursor: pointer;
             font-weight: 700;
             background-color: var(--color-menu-hover);
+
             &::before {
                 background-image: url("../assets/icons/edit_clicked.svg");
             }
@@ -187,6 +197,7 @@
 
     & .delete-contact {
         display: flex;
+
         &::before {
             content: "";
             width: 24px;
@@ -205,6 +216,7 @@
             cursor: pointer;
             font-weight: 700;
             background-color: var(--color-menu-hover);
+
             &::before {
                 background: url("../assets/icons/delete_clicked.svg") center center no-repeat;
             }
@@ -228,14 +240,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 3rem 1rem 0px;
+    padding: 3rem 1rem 0;
 }
 
 .contact-detail-header h1 {
     font-weight: bold;
     font-size: 1.125rem;
     color: rgb(0, 0, 0);
-    margin: 0px;
+    margin: 0;
 }
 
 .detail-header-actions {
@@ -252,10 +264,19 @@
     align-items: center;
     display: flex;
     transition: 0.2s;
-    & img {
+
+    &::before {
         width: 2rem;
         height: 2rem;
+        content: "";
+        background: url("../assets/icons/arrow-left-line.svg") center center no-repeat;
     }
+
+    /*& img {*/
+    /*    width: 2rem;*/
+    /*    height: 2rem;*/
+    /*    transform: scale(2y);*/
+    /*}*/
 
     &:hover, &:active {
         transform: scale(1.05);
@@ -263,10 +284,10 @@
 }
 
 .contact-detail-content {
-    flex: 1 1 0%;
+    flex: 1 1 0;
     padding: 1rem;
     display: flex;
-    overflow-y: auto;
+    /*overflow-y: auto;*/
     flex-direction: column;
 }
 
@@ -276,7 +297,7 @@
     align-items: center;
     gap: 1rem;
     margin-bottom: 2rem;
-    flex: 1 1 0%;
+    flex: 1 1 0;
 }
 
 .contact-detail-avatar {
@@ -288,7 +309,7 @@
     justify-content: center;
     color: rgb(255, 255, 255);
     font-weight: 300;
-    flex: 1 1 0%;
+    flex: 1 1 0;
     max-width: 4.5rem;
     font-size: 1.75rem;
 }
@@ -297,8 +318,8 @@
     font-size: 1.75rem;
     color: rgb(0, 0, 0);
     text-align: left;
-    margin-bottom: 0px;
-    flex: 1 1 0%;
+    margin-bottom: 0;
+    flex: 1 1 0;
 }
 
 .contact-info-section {
@@ -322,64 +343,138 @@
     text-decoration: none;
 }
 
-.contact-modal {
-    position: fixed;
-    top: 0px;
-    left: 0px;
-    width: 100%;
-    height: 100%;
-    z-index: 2000;
-    display: none;
-}
-
-.contact-modal.active {
+.contact-modal,
+.edit-contact-modal {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    border: none;
+    outline: none;
+    width: 90%;
+    max-width: calc(25rem + (2 * var(--padding-side)));
+    height: min(700px, calc(100vh - 1rem));
+    position: fixed;
+    z-index: 1100;
+    top: 50%;
+    left: 50%;
+    transform: translate(100%, -50%);
+    opacity: 0;
+    border-radius: var(--main-radius);
+    box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.1);
+
+    &::backdrop {
+        background-color: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(1px);
+    }
 }
 
-.modal-backdrop {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.75);
+.dialog-swipe-in {
+    animation: dialogSwipeIn 300ms ease-in-out forwards;
 }
+
+@keyframes dialogSwipeIn {
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.dialog-swipe-out {
+    animation: dialogSwipeOut 300ms ease-in-out forwards;
+}
+
+@keyframes dialogSwipeOut {
+    from {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+    to {
+        opacity: 0;
+        transform: translate(100%, -50%);
+    }
+}
+
+.close-dialog {
+    position: absolute;
+    top: 1.25rem;
+    right: 1rem;
+    height: 1.5rem;
+    width: 1.5rem;
+    background: url(../assets/icons/close_white.svg) center center no-repeat;
+    transition: background 200ms ease;
+    border-radius: 100rem;
+
+    &:hover {
+        cursor: pointer;
+        background-color: var(--color-variant-over);
+
+    }
+}
+
+/*.contact-modal {*/
+/*    position: fixed;*/
+/*    top: 0;*/
+/*    left: 0;*/
+/*    width: 100%;*/
+/*    height: 100%;*/
+/*    z-index: 2000;*/
+/*    display: none;*/
+/*}*/
+
+/*.contact-modal.active {*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    justify-content: center;*/
+/*}*/
+
+/*.modal-backdrop {*/
+/*    position: absolute;*/
+/*    top: 0px;*/
+/*    left: 0px;*/
+/*    width: 100%;*/
+/*    height: 100%;*/
+/*    background-color: rgba(255, 255, 255, 0.75);*/
+/*}*/
 
 .modal-content {
-    position: relative;
+    /*position: relative;*/
     background-color: rgb(255, 255, 255);
-    border-radius: 1.25rem;
-    padding: 0px;
-    margin: 1rem;
-    width: min(396px, 100%);
-    height: 35rem;
-    max-height: 90vh;
-    overflow: hidden;
-    box-shadow: rgba(0, 0, 0, 0.3) 0px 0.5rem 2rem;
+    border-radius: var(--main-radius);
+    /*padding: 0px;*/
+    /*margin: 1rem;*/
+    /*width: min(396px, 100%);*/
+    /*height: 35rem;*/
+    /*max-height: 90vh;*/
+    /*overflow: hidden;*/
+    /*box-shadow: rgba(0, 0, 0, 0.3) 0px 0.5rem 2rem;*/
+    /*max-width: calc(100% - 2rem);*/
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 }
 
 .modal-header {
-    position: relative;
+    /*position: relative;*/
     background-color: var(--color-variant10);
     justify-content: center;
-    height: 13rem;
+    align-items: center;
+    height: 15rem;
     display: flex;
-    border-radius: 1.25rem 1.25rem 0px 0px;
+    border-radius: var(--main-radius) var(--main-radius) 0 0;
     flex-direction: column;
-}
+    padding: 0 2rem;
+    /*width: 100%;*/
 
-.modal-header h2 {
-    font-size: 2.25rem;
-    font-weight: 600;
-    color: rgb(255, 255, 255);
+
+    h2 {
+        font-size: 2.25rem;
+        font-weight: 600;
+        color: rgb(255, 255, 255);
+    }
 }
 
 .modal-subtitle {
     font-size: 1rem;
     color: rgb(255, 255, 255);
-    margin: 0px;
+    margin: 0;
     opacity: 0.9;
 }
 
@@ -390,33 +485,33 @@
     display: none;
 }
 
-.modal-header .modal-close {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.5rem;
-    border-radius: 50%;
-    transition: background-color 0.2s;
-    width: 2rem;
-    height: 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 20;
-}
+/*.modal-header .modal-close {*/
+/*    position: absolute;*/
+/*    top: 1rem;*/
+/*    right: 1rem;*/
+/*    background: none;*/
+/*    border: none;*/
+/*    cursor: pointer;*/
+/*    padding: 0.5rem;*/
+/*    border-radius: 50%;*/
+/*    transition: background-color 0.2s;*/
+/*    width: 2rem;*/
+/*    height: 2rem;*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    justify-content: center;*/
+/*    !*z-index: 20;*!*/
+/*}*/
 
-.modal-header .modal-close:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-}
+/*.modal-header .modal-close:hover {*/
+/*    background-color: rgba(255, 255, 255, 0.2);*/
+/*}*/
 
-.modal-header .modal-close img {
-    width: 1rem;
-    height: 1rem;
-    filter: brightness(0) invert(1);
-}
+/*.modal-header .modal-close img {*/
+/*    width: 1rem;*/
+/*    height: 1rem;*/
+/*    filter: brightness(0) invert(1);*/
+/*}*/
 
 .modal-avatar {
     width: 7rem;
@@ -434,19 +529,37 @@
     flex-shrink: 0;
 }
 
+.avatar-default {
+    background-color: var(--color-light-gray);
+
+
+    &::before {
+        width: 2rem;
+        height: 2rem;
+        content: "";
+        background: url("../assets/icons/person.svg") center center no-repeat;
+        transform: scale(2);
+        filter: brightness(0) invert(1);
+    }
+}
+
 .modal-body {
     display: flex;
     flex-direction: column;
+    border-radius: 0 0 var(--main-radius) var(--main-radius);
     flex: 1;
-    position: relative;
-    align-items: center;
-    padding: 0 2rem 2rem;
+    /*position: relative;*/
+    /*align-items: center;*/
+    /*padding: 0 0 2rem 0;*/
 }
 
-
 .contact-form {
-    padding: 3rem 1.5rem 1.5rem;
-    background-color: rgb(255, 255, 255);
+    padding: 3rem 1.5rem 3rem;
+    /*padding: 0px 1rem 2rem;*/
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 }
 
 .form-group {
@@ -489,6 +602,7 @@
     margin-top: 2rem;
     padding-top: 1.5rem;
     justify-content: center;
+
     & button {
         padding: 0.5rem;
         border-radius: 0.5rem;
@@ -507,10 +621,11 @@
     background-color: transparent;
     color: rgb(42, 54, 71);
     width: 6.5rem !important;
+
     &:hover, &:active {
         border-color: var(--main-color);
         color: var(--main-color);
-        box-shadow: rgba(0, 0, 0, 0.2) 0px 0.25rem 0.5rem;
+        box-shadow: rgba(0, 0, 0, 0.2) 0 0.25rem 0.5rem;
     }
 }
 
@@ -518,10 +633,11 @@
     border: 0.0625rem solid rgb(42, 54, 71);
     background-color: transparent;
     color: rgb(42, 54, 71);
+
     &:hover, &:active {
         border-color: var(--main-color);
         color: var(--main-color);
-        box-shadow: rgba(0, 0, 0, 0.2) 0px 0.25rem 0.5rem;
+        box-shadow: rgba(0, 0, 0, 0.2) 0 0.25rem 0.5rem;
     }
 
     & .cancel-icon {
@@ -538,6 +654,7 @@
     background-color: var(--main-color);
     color: rgb(255, 255, 255);
     border-color: var(--main-color);
+
     &:hover, &:active {
     }
 }
@@ -545,33 +662,13 @@
 .btn-save:hover {
     background-color: rgb(0, 93, 255);
     border-color: rgb(0, 93, 255);
-    box-shadow: rgba(0, 0, 0, 0.2) 0px 0.25rem 0.5rem;
+    box-shadow: rgba(0, 0, 0, 0.2) 0 0.25rem 0.5rem;
 }
 
 .save-icon {
     width: 1.5rem;
     height: 1.5rem;
 }
-
-.modal-content {
-    margin: 1rem;
-    max-width: calc(100% - 2rem);
-    display: flex;
-    flex-direction: column;
-}
-
-.modal-header {
-    padding: 2rem;
-}
-
-.contact-form {
-    padding: 0px 1rem 2rem;
-    flex: 1 1 0%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-}
-
 
 .error-message {
     display: block;
@@ -605,7 +702,7 @@
 
     .contacts-main {
         display: flex;
-        flex: 1 1 0%;
+        flex: 1 1 0;
         overflow: hidden;
     }
 
@@ -626,6 +723,7 @@
         height: 6.5rem;
         width: 465px;
         flex-shrink: 0;
+
         & button {
             display: flex;
             align-items: center;
@@ -633,7 +731,8 @@
             background-color: var(--main-color);
             border-radius: 0.625rem;
             padding: 0.75rem 5rem;
-            box-shadow: rgba(0, 0, 0, 0.2) 0px 0.25rem 0.5rem;
+            box-shadow: rgba(0, 0, 0, 0.2) 0 0.25rem 0.5rem;
+
             &::before {
                 content: "Add new contact";
                 color: rgb(255, 255, 255);
@@ -651,13 +750,25 @@
             &:hover {
                 background-color: rgb(0, 93, 255);
             }
+
+            &:active {
+                background-color: #ffffff;
+
+                &::before {
+                    color: var(--main-color);
+                }
+
+                &::after {
+                    filter: brightness(0) saturate(100%) invert(35%) sepia(98%) saturate(1447%) hue-rotate(201deg) brightness(102%) contrast(101%);
+                }
+            }
         }
     }
 
     .contacts-container {
-        flex: 1 1 0%;
+        flex: 1 1 0;
         overflow-y: auto;
-        min-height: 0px;
+        min-height: 0;
     }
 
     .hide-desktop {
@@ -671,7 +782,7 @@
     .contact-detail-view-desktop {
         display: flex;
         flex-direction: column;
-        flex: 1 1 0%;
+        flex: 1 1 0;
         padding: 4.5rem 3.875rem;
         transform: translateX(100%);
         opacity: 0;
@@ -679,7 +790,7 @@
     }
 
     .contact-detail-view-desktop.active {
-        transform: translateX(0px);
+        transform: translateX(0);
         opacity: 1;
     }
 
@@ -697,7 +808,7 @@
         height: 7.5rem;
         font-size: 2.875rem;
         border: 0.1rem solid rgb(255, 255, 255);
-        box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 0px 0.1875rem;
+        box-shadow: rgba(0, 0, 0, 0.1) 0 0 0 0.1875rem;
     }
 
     .contact-name-actions {
@@ -718,7 +829,7 @@
         font-size: 3rem;
         font-weight: 500;
         color: rgb(0, 0, 0);
-        margin: 0px;
+        margin: 0;
     }
 
     .detail-actions {
@@ -762,42 +873,116 @@
         font-size: 1.25rem;
         font-weight: 700;
         color: rgb(0, 0, 0);
-        margin: 0px 0px 1.5rem;
+        margin: 0 0 1.5rem;
     }
 
-    .contact-modal.active {
-        justify-content: flex-end;
-    }
+    .contact-modal {
+        border-radius: var(--main-radius) 0 var(--main-radius) var(--main-radius);
+        background-color: #ffffff;
+        position: fixed;
+        left: 100%;
+        top: 50%;
+        opacity: 1;
+        transform: translateX(0%) translateY(-50%);
+        height: min(1024px, 100vh);
+        max-width: 512px;
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.16);
+        border: none;
+        outline: none;
 
-    .modal-content {
-        border-radius: 1.25rem 0 0 1.25rem;
-        margin: 0;
-        width: min(450px, 100%);
-        height: 100%;
-        max-height: 100%;
-        max-width: 100%;
-        flex-direction: column;
-        animation: slideInFromRight 0.3s ease-out;
-    }
-
-    @keyframes slideInFromRight {
-        from {
-            transform: translateX(100%);
-        }
-        to {
-            transform: translateX(0);
+        &::backdrop {
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(1px);
         }
     }
 
-    .modal-header {
+    .dialog-swipe-in {
+        animation: modalSwipeIn 300ms ease-in-out forwards;
+    }
+
+    .dialog-swipe-out {
+        animation: modalSwipeOut 300ms ease-in-out forwards;
+    }
+
+    .edit-contact-modal {
+        border-radius: 0 var(--main-radius) var(--main-radius) var(--main-radius);
+        background-color: #ffffff;
+        position: fixed;
+        left: 0;
+        top: 50%;
+        opacity: 1;
+        transform: translateX(-100%) translateY(-50%);
+        height: min(1024px, 100vh);
+        width: 512px;
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.16);
+        border: none;
+        outline: none;
+
+        &::backdrop {
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(1px);
+        }
+    }
+
+    .edit-dialog-swipe-in {
+        animation: modalEditSwipeIn 300ms ease-in-out forwards;
+    }
+
+    .edit-dialog-swipe-out {
+        animation: modalEditSwipeOut 300ms ease-in-out forwards;
+    }
+
+    .contact-form {
         width: 100%;
-        height: auto;
-        min-height: 12rem;
-        border-radius: 1.25rem 0 0 0;
-        flex-shrink: 0;
-        padding: 2rem;
-        align-items: center;
-        justify-content: center;
+        bottom: 0;
+        position: absolute;
+    }
+
+
+    /*.contact-modal.active {*/
+    /*    justify-content: flex-end;*/
+    /*}*/
+    .modal-content {
+        /*border-radius: 1.25rem 0 0 1.25rem;*/
+        /*margin: 0;*/
+        /*width: min(450px, 100%);*/
+        /*height: 100%;*/
+        /*max-height: 100%;*/
+        /*max-width: 100%;*/
+        /*flex-direction: column;*/
+        /*animation: slideInFromRight 0.3s ease-out;*/
+    }
+
+    /*@keyframes slideInFromRight {*/
+    /*    from {*/
+    /*        transform: translateX(100%);*/
+    /*    }*/
+    /*    to {*/
+    /*        transform: translateX(0);*/
+    /*    }*/
+    /*}*/
+    .edit-modal-header {
+        border-radius: 0 var(--main-radius) 0 0;
+        /*width: 100%;*/
+        /*height: auto;*/
+        /*min-height: 12rem;*/
+        /*border-radius: 1.25rem 0 0 0;*/
+        /*flex-shrink: 0;*/
+        /*padding: 2rem;*/
+        /*align-items: center;*/
+        /*justify-content: center;*/
+    }
+
+    .add-modal-header {
+        border-radius: var(--main-radius) 0 0 0;
+        /*width: 100%;*/
+        /*height: auto;*/
+        /*min-height: 12rem;*/
+        /*border-radius: 1.25rem 0 0 0;*/
+        /*flex-shrink: 0;*/
+        /*padding: 2rem;*/
+        /*align-items: center;*/
+        /*justify-content: center;*/
     }
 
     .modal-logo {
@@ -810,38 +995,38 @@
         flex: 1;
         align-items: center;
         justify-content: flex-start;
-        padding: 2rem;
+        padding: 2rem 1rem;
     }
 
     .modal-avatar {
-        width: 7.5rem;
-        height: 7.5rem;
-        max-width: 7.5rem;
+        width: 8.5rem;
+        height: 8.5rem;
+        /*max-width: 7.5rem;*/
         font-size: 2.875rem;
         margin: 0 0 2rem 0;
         flex-shrink: 0;
     }
-
-    @media (max-height: 700px) {
-        .modal-body {
-            padding: 0 2rem 2rem;
-        }
-
-        .modal-avatar {
-            margin: -3.75rem 0 1.5rem 0;
-        }
-    }
-
-    .contact-form {
-        padding: 0;
-        flex: none;
-        width: 100%;
-        max-width: 20rem;
-        justify-content: center;
-        max-height: none;
-    }
-
-    .form-actions {
-        margin-top: 2.5rem;
-    }
 }
+
+/*@media (max-height: 700px) {*/
+/*    .modal-body {*/
+/*        padding: 0 2rem 2rem;*/
+/*    }*/
+
+/*    .modal-avatar {*/
+/*        margin: -3.75rem 0 1.5rem 0;*/
+/*    }*/
+/*}*/
+
+/*.contact-form {*/
+/*    padding: 0;*/
+/*    flex: none;*/
+/*    width: 100%;*/
+/*    max-width: 20rem;*/
+/*    justify-content: center;*/
+/*    max-height: none;*/
+/*}*/
+
+/*.form-actions {*/
+/*    margin-top: 2.5rem;*/
+/*}*/

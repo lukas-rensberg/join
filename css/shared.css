@@ -395,11 +395,14 @@
     width: 100%;
     height: auto;
     border: none;
-    border-bottom: 0.0625rem solid var(--color-light-gray);
+    /*border-bottom: 0.0625rem solid var(--color-light-gray);*/
     border-radius: 0;
-    padding: 0.5rem 5rem 0.5rem 1rem;
-    color: black;
+    /*padding: 0.5rem 5rem 0.5rem 1rem;*/
     outline: none;
+
+    &::placeholder {
+        color: var(--color-menu-text) !important;
+    }
 }
 
 .subtask-input-wrapper input:focus {
@@ -654,6 +657,13 @@
     }
 }
 
+@keyframes modalEditSwipeIn {
+    100% {
+        opacity: 1;
+        transform: translateX(0%) translateY(-50%);
+    }
+}
+
 @keyframes modalSwipeOut {
     0% {
         opacity: 1;
@@ -662,6 +672,17 @@
     100% {
         opacity: 0;
         transform: translateX(0) translateY(-50%);
+    }
+}
+
+@keyframes modalEditSwipeOut {
+    0% {
+        opacity: 1;
+        transform: translateX(0%) translateY(-50%);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(-100%) translateY(-50%);
     }
 }
 

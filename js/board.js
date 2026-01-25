@@ -35,6 +35,32 @@ let findTask = document.getElementById("search-task");
 let tasks = [];
 let contacts = [];
 
+/** MediaQueryList for desktop breakpoint (min-width: 812px) */
+const desktopMediaQuery = window.matchMedia("(min-width: 812px)");
+
+/**
+ * Checks if the current viewport is desktop size
+ * @returns {boolean} True if viewport width >= 812px
+ */
+function isDesktop() {
+    return desktopMediaQuery.matches;
+}
+
+/**
+ * Handles media query changes for the board.
+ * If switching to mobile while add-task dialog is open, closes dialog and redirects to add-task.html.
+ * @param {MediaQueryListEvent} event - The media query change event
+ */
+function handleBoardMediaQueryChange(event) {
+    if (!event.matches && addTaskRef && addTaskRef.open) {
+        // Switching to mobile while add-task dialog is open
+        swipeOutAddTaskAside();
+        setTimeout(() => {
+            window.location.href = `add-task.html?category=${targetCategory}`;
+        }, 300);
+    }
+}
+
 /**
  * Speichert die Ziel-Kategorie für neue Tasks.
  * Wird gesetzt, wenn ein spalten-spezifischer Plus-Button geklickt wird.
@@ -449,44 +475,38 @@ function swipeInAddedTask() {
  * @returns {void}
  */
 function openAddTaskAside() {
-    const mediaQuery = window.matchMedia("(min-width: 812px)").matches;
     const openIcons = document.querySelectorAll('.add-task-icon');
     const addTaskBtn = document.querySelector('.add-task-btn');
 
-    if (mediaQuery) {
-        // Plus-Icons mit spalten-spezifischer Kategorie
-        openIcons.forEach(icon => {
-            icon.addEventListener('click', () => {
-                const category = icon.dataset.category || 'to-do';
-                setTargetCategory(category);
-                createAddTask();  // Erstelle/initialisiere bei jedem Öffnen neu
+    // Plus-Icons mit spalten-spezifischer Kategorie - dynamisch per isDesktop()
+    openIcons.forEach(icon => {
+        icon.addEventListener('click', () => {
+            const category = icon.dataset.category || 'to-do';
+            setTargetCategory(category);
+            
+            if (isDesktop()) {
+                createAddTask();
                 swipeInAddTaskAside();
-            });
-        });
-
-        // Großer "Add Task" Button - Standard ist 'to-do'
-        if (addTaskBtn) {
-            addTaskBtn.addEventListener('click', () => {
-                setTargetCategory('to-do');
-                createAddTask();  // Erstelle/initialisiere bei jedem Öffnen neu
-                swipeInAddTaskAside();
-            });
-        }
-    } else {
-
-        // Mobile: Redirect with category as URL-Param
-        openIcons.forEach(icon => {
-            icon.addEventListener('click', () => {
-                const category = icon.dataset.category || 'to-do';
+            } else {
                 window.location.href = `add-task.html?category=${category}`;
-            });
+            }
+        });
+    });
+
+    // Großer "Add Task" Button - Standard ist 'to-do'
+    if (addTaskBtn) {
+        addTaskBtn.addEventListener('click', () => {
+            setTargetCategory('to-do');
+            if (isDesktop()) {
+                createAddTask();
+                swipeInAddTaskAside();
+            }
         });
     }
 
     const closeButton = document.querySelector('.close-add-task');
     if (closeButton) {
         closeButton.addEventListener('click', swipeOutAddTaskAside);
-
     }
     addTaskCreateButton()
 }
@@ -1405,6 +1425,9 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeTasks();
     openAddTaskAside();
 
+    // Register media query change listener for live UI updates
+    desktopMediaQuery.addEventListener('change', handleBoardMediaQueryChange);
+
     document.addEventListener('dragend', handleDragEnd);
 
     // Close swap menus when clicking outside
@@ -1434,7 +1457,6 @@ window.getRandomContactIds = getRandomContactIds;
 window.formatDate = formatDate;
 window.createNewTask = createNewTask;
 window.openAddTaskAside = openAddTaskAside;
-window.addEventListener('resize', openAddTaskAside);
 window.deleteTaskButton = deleteTaskButton;
 window.filterTasksBySearch = filterTasksBySearch;
 window.editTaskInDialog = editTaskInDialog;
