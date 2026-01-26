@@ -112,7 +112,7 @@
     transition: border-color 0.2s;
 
     &:focus {
-        border-bottom: 0.0625rem solid var(--main-color);
+        border-bottom: 0.0625rem solid var(--main-color) !important;
     }
 
     &::placeholder {

@@ -983,7 +983,7 @@ function resetDragState() {
  */
 function startDragging(id) {
     const taskElement = document.querySelector(`[data-task-id="${id}"]`);
-    if (!taskElement) return;
+    if (!taskElement || !isDesktop()) return;
 
     const task = tasks.find(t => t.id === id);
 
