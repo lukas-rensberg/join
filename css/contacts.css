@@ -348,7 +348,7 @@
     display: flex;
     border: none;
     outline: none;
-    width: 100%;
+    width: 90%;
     max-width: calc(25rem + (2 * var(--padding-side)));
     height: min(700px, calc(100vh - 1rem));
     position: fixed;
