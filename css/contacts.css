@@ -348,11 +348,10 @@
     display: flex;
     border: none;
     outline: none;
-    width: 90%;
+    width: 100%;
     max-width: calc(25rem + (2 * var(--padding-side)));
     height: min(700px, calc(100vh - 1rem));
     position: fixed;
-    z-index: 1100;
     top: 50%;
     left: 50%;
     transform: translate(100%, -50%);
@@ -913,7 +912,7 @@
         opacity: 1;
         transform: translateX(-100%) translateY(-50%);
         height: min(1024px, 100vh);
-        width: 512px;
+        max-width: 512px;
         box-shadow: 0 0 4px rgba(0, 0, 0, 0.16);
         border: none;
         outline: none;

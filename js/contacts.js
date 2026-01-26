@@ -24,7 +24,6 @@ function isDesktop() {
 }
 
 
-
 /**
  * Generates a unique ID for contacts
  * @returns {string} Unique contact ID
@@ -51,6 +50,7 @@ export function getInitialsFromName(name) {
 
 /**
  * Load contacts from RTDB and call the render function
+ * @returns void
  */
 export async function loadContactsFromRTDB() {
     const contactsRef = ref(database, 'contacts');
@@ -130,9 +130,7 @@ function createContactsPerLetter(letter, groupedContacts) {
 function createContactSection(letter) {
     const section = document.createElement("div");
     section.className = "contact-section";
-
     section.innerHTML = generateSectionTemplate(letter);
-
     return section;
 }
 
@@ -204,17 +202,38 @@ function setupClickOutsideListener() {
 function showContactDetail(contactId) {
     const contact = contacts.find((c) => c.id === contactId);
     if (!contact) return;
+
+    const detailViewDesktop = document.getElementById("contactDetailViewDesktop");
+    const isSameContact = currentContactId === contactId;
     currentContactId = contactId;
 
+    if (isDesktop()) {
+        if (detailViewDesktop.classList.contains("active") && !isSameContact) {
+            detailViewDesktop.classList.remove("active");
+
+            setTimeout(() => {
+                updateContactDetailViews(contact, contactId);
+                detailViewDesktop.classList.add("active");
+            }, 300);
+        } else {
+            updateContactDetailViews(contact, contactId);
+            detailViewDesktop.classList.add("active");
+        }
+    }
+}
+
+/**
+ * Updates both mobile and desktop contact detail views
+ * @param {Object} contact - Contact object
+ * @param {string} contactId - Contact's unique ID
+ */
+function updateContactDetailViews(contact, contactId) {
     populateContactDetailView(contact);
     populateContactDetailViewDesktop(contact);
-    if (isDesktop()) {
-        document.getElementById("contactDetailViewDesktop").classList.toggle("active");
-        document.querySelectorAll(`[data-contact-id="${contactId}"]`)[0].classList.toggle("active");
-    } else {
-        document.querySelector(".contacts-container").style.display = "none";
-        document.getElementById("contactDetailView").classList.add("active");
-    }
+
+    document.querySelectorAll(".contact-item").forEach(item => item.classList.remove("active"));
+    const activeItem = document.querySelector(`[data-contact-id="${contactId}"]`);
+    if (activeItem) activeItem.classList.add("active");
 }
 
 /**
@@ -279,31 +298,20 @@ function editContact() {
  */
 function handleMediaQueryChange(event) {
     const contactModal = document.getElementById("contactModal");
-    const modalHeader = document.querySelector("div.modal-header");
+    const modalHeader = document.querySelector(".modal-header");
     const cancelButton = document.getElementById("cancelButton");
 
     if (isEditMode) {
         if (event.matches) {
-            // Switch to Desktop Edit Mode
-            contactModal.classList.remove("contact-modal", "dialog-swipe-in");
-            contactModal.classList.add("edit-contact-modal", "edit-dialog-swipe-in");
-            modalHeader.classList.remove("add-modal-header");
-            modalHeader.classList.add("edit-modal-header");
+            contactModal.classList.remove("contact-modal", "dialog-swipe-in", "add-modal-header");
+            contactModal.classList.add("edit-contact-modal", "edit-dialog-swipe-in", "edit-modal-header");
         } else {
-            // Switch to Mobile Edit Mode
-            contactModal.classList.remove("edit-contact-modal", "edit-dialog-swipe-in");
-            contactModal.classList.add("contact-modal", "dialog-swipe-in");
-            modalHeader.classList.remove("edit-modal-header");
-            modalHeader.classList.add("add-modal-header");
+            contactModal.classList.remove("edit-contact-modal", "edit-dialog-swipe-in", "edit-modal-header");
+            modalHeader.classList.add("contact-modal", "dialog-swipe-in", "add-modal-header");
         }
-    } else {
-        // Add Mode: Toggle cancel button visibility
-        if (event.matches) {
-            cancelButton.style.display = "block";
-        } else {
-            cancelButton.style.display = "none";
-        }
+        return;
     }
+    event.matches ? cancelButton.style.display = "block" : cancelButton.style.display = "none";
 }
 
 /**
@@ -322,8 +330,8 @@ function openContactModal(editMode) {
         if (isDesktop()) {
             document.getElementById("contactModal").classList.add("edit-contact-modal");
             document.getElementById("contactModal").classList.add("edit-dialog-swipe-in");
-            document.querySelector("div.modal-header").classList.remove("add-modal-header")
-            document.querySelector("div.modal-header").classList.add("edit-modal-header")
+            document.querySelector(".modal-header").classList.remove("add-modal-header")
+            document.querySelector(".modal-header").classList.add("edit-modal-header")
         } else {
             document.getElementById("contactModal").classList.add("contact-modal");
             document.getElementById("contactModal").classList.add("dialog-swipe-in");
@@ -333,11 +341,10 @@ function openContactModal(editMode) {
         setupAddContactModal();
         document.getElementById("contactModal").classList.add("contact-modal");
         document.getElementById("contactModal").classList.add("dialog-swipe-in");
-        document.querySelector("div.modal-header").classList.remove("edit-modal-header");
-        document.querySelector("div.modal-header").classList.add("add-modal-header")
+        document.querySelector(".modal-header").classList.remove("edit-modal-header");
+        document.querySelector(".modal-header").classList.add("add-modal-header")
     }
     document.getElementById("contactModal").showModal();
-    // document.getElementById("contactModal").classList.add("active");
 }
 
 /**
@@ -420,14 +427,6 @@ function generateModalAvatar(contact) {
             modalAvatar.removeChild(modalAvatar.firstChild);
         }
         modalAvatar.classList.add("avatar-default");
-
-        // modalAvatar.style.backgroundColor = "#D1D1D1";
-
-        // const modalIcon = document.createElement("img");
-        // modalIcon.src = "./assets/icons/person.svg";
-        // modalIcon.alt = "No avatar";
-        // modalIcon.style.transform = "scale(2)";
-        // modalAvatar.appendChild(modalIcon);
         return;
     }
 
@@ -437,12 +436,12 @@ function generateModalAvatar(contact) {
 
 /**
  * Deletes a contact according to the currentContactId
+ * @returns void
  */
 export async function deleteContact() {
     try {
         await remove(ref(database, `contacts/${currentContactId}`));
 
-        // Remove contact from all assigned tasks
         if (typeof window.removeContactFromAllTasks === 'function') {
             await window.removeContactFromAllTasks(currentContactId);
         }
@@ -458,16 +457,30 @@ export async function deleteContact() {
  * Closes the contact modal
  */
 function closeContactModal() {
+    const contactModal = document.getElementById("contactModal");
+    const modalAvatar = document.getElementById("modalAvatar")
 
-    document.getElementById("contactModal").classList.remove("dialog-swipe-in");
-    document.getElementById("contactModal").classList.add("dialog-swipe-out");
+    contactModal.classList.contains("edit-contact-modal") ?
+        superToggle(contactModal, "edit-dialog-swipe-in", "edit-dialog-swipe-out") :
+        superToggle(contactModal, "dialog-swipe-in", "dialog-swipe-out")
 
     setTimeout(() => {
-        document.getElementById("contactModal").close();
-        document.getElementById("contactModal").removeAttribute("class");
-        document.getElementById("modalAvatar").classList.remove("avatar-default");
-        document.getElementById("modalAvatar").removeAttribute("style");
+        contactModal.close();
+        contactModal.removeAttribute("class");
+        modalAvatar.classList.remove("avatar-default");
+        modalAvatar.removeAttribute("style");
     }, 300);
+}
+
+/**
+ * Utility "function" for multi-toggling of two classes
+ * @param {HTMLElement} element - The element to toggle
+ * @param {String} class0 - First class for toggling
+ * @param {String} class1 - Second class for toggling
+ */
+const superToggle = function(element, class0, class1) {
+    element.classList.remove(class0);
+    element.classList.add(class1);
 }
 
 /**
