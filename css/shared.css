@@ -395,9 +395,7 @@
     width: 100%;
     height: auto;
     border: none;
-    /*border-bottom: 0.0625rem solid var(--color-light-gray);*/
     border-radius: 0;
-    /*padding: 0.5rem 5rem 0.5rem 1rem;*/
     outline: none;
 
     &::placeholder {
@@ -405,7 +403,7 @@
     }
 }
 
-.subtask-input-wrapper input:focus {
+.subtask-input-wrapper:has(input:focus) {
     border-bottom: 0.0625rem solid var(--main-color);
 }
 
