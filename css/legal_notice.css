@@ -29,43 +29,6 @@
     margin-bottom: 1.5rem;
 }
 
-.heading-with-back {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1.5rem;
-}
-
-.heading-with-back h1 {
-    margin-bottom: 0;
-}
-
-.back-arrow {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 50%;
-    background-color: transparent;
-    transition: all 0.2s ease;
-    cursor: pointer;
-    flex-shrink: 0;
-}
-
-.back-arrow:hover {
-    background-color: var(--main-color);
-    opacity: 1;
-}
-
-.back-arrow:hover img {
-    filter: brightness(0) invert(1);
-}
-
-.back-arrow img {
-    width: 2.5rem;
-    height: 2.5rem;
-}
 
 .content-section h2,
 .content-section h2 strong {

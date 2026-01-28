@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="./css/font.css">
     <link rel="stylesheet" href="./css/help.css">
     <link rel="stylesheet" href="./css/header-footer.css">
+    <link rel="stylesheet" href="./css/shared.css">
     <link rel="stylesheet" href="./css/aside.css">
 </head>
 
@@ -18,9 +19,11 @@
     <main>
         <aside class="aside-desktop"></aside>
         <section class="content-section">
-            <div class="headline">
+            <div class="heading-with-back">
                 <h1>Help</h1>
-                <a class="back-arrow-signup" href="overview.html"></a>
+                <a href="#" class="back-arrow" onclick="window.history.back(); return false;">
+                    <img src="./assets/icons/arrow-left-line.svg" alt="Back"/>
+                </a>
             </div>
         <div>
             <p>Welcome to the help page for <span>Join</span>, your guide to using our kanban project management tool.
@@ -36,7 +39,7 @@
                     principles of kanban to help users manage their tasks and projects in an intuitive, visual
                     interface.
                     <br><br>It is important to note that <span>Join</span> is designed as an educational exercise and is
-                    not intended forextensive business usage. While we strive to ensure the best possible user
+                    not intended for extensive business usage. While we strive to ensure the best possible user
                     experience, we cannot
                     guarantee consistent availability, reliability, accuracy, or other aspects of quality regarding
                     <span>Join</span>.
@@ -100,8 +103,7 @@
                             requires consistent updates from you and your team to ensure the board reflects the current
                             state
                             of your project.<br><br>Have more questions about <span>Join</span>? Feel free to contact us
-                            at [Your
-                            Contact Email]. We're here to help you!
+                            at <a href="mailto:sinan-kartal3558@yahoo.com&subject=Join Webpage - Help Site">sinan-kartal3558@yahoo.com</a>. We're here to help you!
                         </p>
                     </div>
                 </section>
