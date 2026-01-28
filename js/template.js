@@ -375,3 +375,29 @@ export function getTemplateAddTask() {
                 </div>`;
 }
 
+
+export function generateLoggedOutHeaderHTML() {
+  return `<span class="header-title">Kanban Project Management Tool</span>`
+}
+
+export function generateLoggedInHeaderHTML(userInitials) {
+  return `
+    <div class="help-container">
+      Kanban Project Management Tool
+      <a href="help.html"><img src="./assets/icons/question_mark_.svg" alt="Help"></a>
+    </div>
+    <input type="checkbox" id="slideInSideMenu"/>
+    <label for="slideInSideMenu">
+      <div class="avatar" id="toggleSideMenu">${userInitials}</div>
+    </label>
+    <div class="side-menu" id="cardLegalLinks">
+      <nav>
+        <a class="link-none" href="help.html">Help</a>
+        <a href="legal_notice.html">Legal Notice</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="#" id="logoutLink">Log Out</a>
+      </nav>
+    </div>
+  `;
+}
+

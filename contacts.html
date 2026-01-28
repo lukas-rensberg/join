@@ -15,51 +15,9 @@
 </head>
 
 <body class="body-contacts">
-<header>
-    <img src="./assets/icons/logo-white.svg" alt="Join Logo"/>
-    <div class="header-right">
-        <div class="help-container">Kanban Project Management Tool
-            <a href="help.html"><img src="./assets/icons/question_mark_.svg" alt="Question Mark Help"></a>
-        </div>
-        <input type="checkbox" id="slideInSideMenu"/>
-        <label for="slideInSideMenu">
-            <div class="avatar" id="toggleSideMenu"></div>
-        </label>
-        <div class="side-menu" id="cardLegalLinks">
-            <nav>
-                <a class="link-none" href="help.html">Help</a>
-                <a href="legal_notice.html">Legal Notice</a>
-                <a href="privacy.html">Privacy Policy</a>
-                <a href="index.html">Log Out</a>
-            </nav>
-        </div>
-    </div>
-</header>
+<header></header>
 <main class="contacts-main">
-    <aside class="aside-desktop">
-        <div class="aside-navbar">
-            <a href="overview.html">
-                <img src="./assets/menu_icons/summary.svg" alt="Summary Icon"/>
-                Summary
-            </a>
-            <a href="add-task.html">
-                <img src="./assets/menu_icons/add-task.svg" alt="Add Task Icon"/>
-                Add Task
-            </a>
-            <a href="board.html">
-                <img src="./assets/menu_icons/board.svg" alt="Board Icon"/>
-                Board
-            </a>
-            <a href="contacts.html" class="active-nav-link">
-                <img src="./assets/menu_icons/contacts.svg" alt="Contacts Icon"/>
-                Contacts
-            </a>
-        </div>
-        <div class="aside-links">
-            <a href="legal_notice.html">Legal Notice</a>
-            <a href="privacy.html">Privacy Policy</a>
-        </div>
-    </aside>
+    <aside class="aside-desktop"></aside>
 
     <section class="contacts-section">
         <div class="add-contact-btn-desk">
@@ -112,7 +70,6 @@
         <h1>Contact Information</h1>
         <div class="detail-header-actions">
             <button class="back-button" id="backButton">
-<!--                <img src="./assets/icons/arrow-left-line.svg" alt="Back"/>-->
             </button>
         </div>
     </div>
@@ -148,13 +105,8 @@
 
 <dialog id="contactModal">
     <div class="close-dialog" id="modalCloseBtn"></div>
-<!--    <div class="modal-backdrop" id="modalBackdrop"></div>-->
     <div class="modal-content">
         <div class="modal-header">
-
-<!--            <button class="modal-close" id="modalCloseBtn">-->
-<!--                <img src="./assets/icons/close_white.svg" alt="Close"/>-->
-<!--            </button>-->
             <img src="./assets/icons/logo-white.svg" alt="Join Logo" class="modal-logo"/>
             <h2 id="modalTitle">Add contact</h2>
             <p class="modal-subtitle">Tasks are better with a team!</p>
@@ -192,24 +144,11 @@
     </div>
 </dialog>
 
-<footer>
-    <a class="nav-item" href="overview.html">
-        <span class="nav-summary">Summary</span>
-    </a>
-    <a class="nav-item" href="add-task.html">
-        <span class="nav-add-task">Add Task</span>
-    </a>
-    <a class="nav-item" href="board.html">
-        <span class="nav-board">Board</span>
-    </a>
-    <a class="nav-item" href="contacts.html">
-        <span class="nav-contacts active-footer-icon active-icon-contacts">Contacts</span>
-    </a>
-</footer>
+<footer></footer>
 <script src="./script.js"></script>
+<script type="module" src="./js/layout.js"></script>
 <script type="module" src="./js/template.js"></script>
 <script type="module" src="./js/auth.js"></script>
-<script type="module" src="./js/user-profile.js"></script>
 <script type="module" src="./js/contacts.js"></script>
 </body>
 

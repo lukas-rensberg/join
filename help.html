@@ -5,39 +5,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Join | Help</title>
-    <link rel="shortcut icon" href="../assets/icons/logo-blue.svg" type="image/svg+xml">
+    <link rel="shortcut icon" href="./assets/icons/logo-blue.svg" type="image/svg+xml">
     <link rel="stylesheet" href="./style.css">
     <link rel="stylesheet" href="./css/font.css">
     <link rel="stylesheet" href="./css/help.css">
     <link rel="stylesheet" href="./css/header-footer.css">
+    <link rel="stylesheet" href="./css/aside.css">
 </head>
 
 <body class="body-help">
-    <header>
-        <img src="./assets/icons/logo-white.svg" alt="Join Logo" />
-        <div class="header-right">
-            <div class="help-container">Kanban Project Management Tool
-                <a href="help.html"><img src="./assets/icons/question_mark_.svg" alt="Question Mark Help"></a>
-            </div>
-            <input type="checkbox" id="slideInSideMenu" />
-            <label for="slideInSideMenu">
-                <div class="avatar" id="toggleSideMenu"></div>
-            </label>
-            <div class="side-menu" id="cardLegalLinks">
-                <nav>
-                    <a class="link-none" href="help.html">Help</a>
-                    <a href="legal_notice.html">Legal Notice</a>
-                    <a href="privacy.html">Privacy Policy</a>
-                    <a href="index.html">Log Out</a>
-                </nav>
-            </div>
-        </div>
-    </header>
+    <header></header>
     <main>
-        <div class="headline">
-            <h1>Help</h1>
-            <a class="back-arrow-signup" href="overview.html"></a>
-        </div>
+        <aside class="aside-desktop"></aside>
+        <section class="content-section">
+            <div class="headline">
+                <h1>Help</h1>
+                <a class="back-arrow-signup" href="overview.html"></a>
+            </div>
         <div>
             <p>Welcome to the help page for <span>Join</span>, your guide to using our kanban project management tool.
                 Here, we'll provide an overview of what <span>Join</span> is, how it can benefit you, and how to use it.
@@ -124,23 +108,10 @@
             </section>
             <h2>Enjoy using Join!</h2>
         </div>
+        </section>
     </main>
-    <footer>
-        <a class="nav-item" href="overview.html">
-            <span class="nav-summary">Summary</span>
-        </a>
-        <a class="nav-item" href="add-task.html">
-            <span class="nav-add-task">Add Task</span>
-        </a>
-        <a class="nav-item" href="board.html">
-            <span class="nav-board">Board</span>
-        </a>
-        <a class="nav-item" href="contacts.html">
-            <span class="nav-contacts">Contacts</span>
-        </a>
-    </footer>
-    <script type="module" src="./js/auth.js"></script>
-    <script type="module" src="./js/user-profile.js"></script>
+    <footer></footer>
+    <script type="module" src="./js/layout.js"></script>
     <script src="./script.js"></script>
 </body>
 
