@@ -4,7 +4,8 @@ import {
   signOut
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 import {
-  generateLoggedInHeaderHTML,
+  generateLoggedInAsideHTML,
+  generateLoggedInHeaderHTML, generateLoggedOutAsideHTML,
   generateLoggedOutHeaderHTML
 } from "./template.js";
 
@@ -51,16 +52,7 @@ function getUserInitials(user) {
  */
 function generateHeaderHTML(user) {
   const userInitials = getUserInitials(user);
-  const authElements = user ?
-      generateLoggedInHeaderHTML(userInitials) :
-      generateLoggedOutHeaderHTML();
-
-  return `
-    <img src="./assets/icons/logo-white.svg" alt="Join Logo"/>
-    <div class="header-right">
-      ${authElements}
-    </div>
-  `;
+  return user ? generateLoggedInHeaderHTML(userInitials) : generateLoggedOutHeaderHTML();
 }
 
 /**
@@ -69,23 +61,21 @@ function generateHeaderHTML(user) {
  * @param {boolean} isLoggedIn - Whether the user is logged in
  * @returns {string} Aside HTML string
  */
-function generateAsideHTML(activePage, isLoggedIn) {
+function generateAsideNavbar(activePage, isLoggedIn) {
+  const navItemsBottom = [
+    { href: "legal_notice.html", label: "Legal Notice" },
+    { href: "privacy.html", label: "Privacy Policy" },
+  ];
+
+  const navLinksBottom = navItemsBottom.map(item => {
+    const isActive = activePage === item.href ? 'class="active-nav-link"' : "";
+    return `<a href="${item.href}" ${isActive}>${item.label}</a>`;
+  }).join("");
+
   if (!isLoggedIn) {
-    return `
-      <div class="aside-navbar">
-        <a href="index.html" class="login-link">
-          <img src="./assets/menu_icons/login.svg" alt="Login Icon"/>
-          Log in
-        </a>
-      </div>
-      <div class="aside-links">
-        <a href="legal_notice.html">Legal Notice</a>
-        <a href="privacy.html">Privacy Policy</a>
-      </div>
-    `;
+    generateLoggedOutAsideHTML(navLinksBottom)
   }
 
-  // Logged in: Show full navigation
   const navItems = [
     { href: "overview.html", icon: "summary.svg", label: "Summary" },
     { href: "add-task.html", icon: "add-task.svg", label: "Add Task" },
@@ -103,15 +93,7 @@ function generateAsideHTML(activePage, isLoggedIn) {
     `;
   }).join("");
 
-  return `
-    <div class="aside-navbar">
-      ${navLinks}
-    </div>
-    <div class="aside-links">
-      <a href="legal_notice.html">Legal Notice</a>
-      <a href="privacy.html">Privacy Policy</a>
-    </div>
-  `;
+  return generateLoggedInAsideHTML(navLinks, navLinksBottom);
 }
 
 /**
@@ -157,7 +139,7 @@ function renderHeader(user) {
 function renderAside(isLoggedIn) {
   const aside = document.querySelector("aside.aside-desktop");
   if (aside) {
-    aside.innerHTML = generateAsideHTML(getCurrentPage(), isLoggedIn);
+    aside.innerHTML = generateAsideNavbar(getCurrentPage(), isLoggedIn);
   }
 }
 
