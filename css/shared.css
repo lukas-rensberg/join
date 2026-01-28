@@ -112,7 +112,7 @@
     transition: border-color 0.2s;
 
     &:focus {
-        border-bottom: 0.0625rem solid var(--main-color);
+        border-bottom: 0.0625rem solid var(--main-color) !important;
     }
 
     &::placeholder {
@@ -395,14 +395,15 @@
     width: 100%;
     height: auto;
     border: none;
-    border-bottom: 0.0625rem solid var(--color-light-gray);
     border-radius: 0;
-    padding: 0.5rem 5rem 0.5rem 1rem;
-    color: black;
     outline: none;
+
+    &::placeholder {
+        color: var(--color-menu-text) !important;
+    }
 }
 
-.subtask-input-wrapper input:focus {
+.subtask-input-wrapper:has(input:focus) {
     border-bottom: 0.0625rem solid var(--main-color);
 }
 
@@ -647,6 +648,42 @@
     }
 }
 
+@keyframes modalSwipeIn {
+    100% {
+        opacity: 1;
+        transform: translateX(-100%) translateY(-50%);
+    }
+}
+
+@keyframes modalEditSwipeIn {
+    100% {
+        opacity: 1;
+        transform: translateX(0%) translateY(-50%);
+    }
+}
+
+@keyframes modalSwipeOut {
+    0% {
+        opacity: 1;
+        transform: translateX(-100%) translateY(-50%);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(0) translateY(-50%);
+    }
+}
+
+@keyframes modalEditSwipeOut {
+    0% {
+        opacity: 1;
+        transform: translateX(0%) translateY(-50%);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(-100%) translateY(-50%);
+    }
+}
+
 @media (width < 600px) {
     .priority-btn {
         font-size: 16px;
@@ -665,4 +702,44 @@
     .priority-selection {
         gap: 1rem;
     }
+}
+
+/* Heading with back arrow */
+.heading-with-back {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.heading-with-back h1 {
+    margin-bottom: 0 !important;
+}
+
+.back-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid var(--main-color);
+    border-radius: 50%;
+    background-color: transparent;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.back-arrow:hover {
+    background-color: var(--main-color);
+    opacity: 1;
+}
+
+.back-arrow:hover img {
+    filter: brightness(0) invert(1);
+}
+
+.back-arrow img {
+    width: 1.25rem;
+    height: 1.25rem;
 }

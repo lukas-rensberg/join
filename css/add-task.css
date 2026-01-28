@@ -86,31 +86,6 @@
     font-weight: 400;
 }
 
-.form-group-title .input-title {
-    width: 100%;
-    height: auto;
-    border: none;
-    border-bottom: 0.0625rem solid var(--color-light-gray);
-    border-radius: 0;
-    padding: 0.5rem 1rem 0.5rem 1rem;
-    font-size: 1.5rem;
-    font-weight: 500;
-    color: var(--color-text, #333);
-    outline: none;
-    background-color: #ffffff;
-    transition: border-color 0.2s;
-}
-
-.form-group-title .input-title:focus {
-    border-bottom: 0.0625rem solid var(--main-color);
-}
-
-.form-group-title .input-title::placeholder {
-    color: #d6d6d6;
-    font-weight: 400;
-    font-size: 1.5rem;
-}
-
 .task-description {
     cursor: pointer;
     margin-top: 1rem;
@@ -145,6 +120,10 @@
     width: 100%;
     padding: 12px;
     border-bottom: 0.0625rem solid var(--color-light-gray);
+
+    &:focus-within {
+        border-bottom-color: var(--main-color);
+    }
 }
 
 /* Error and Success Message Styles */

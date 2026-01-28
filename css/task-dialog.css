@@ -1,6 +1,6 @@
-html:has(dialog[open]) {
-    overflow: hidden;
-}
+/*html:has(dialog[open]) {*/
+/*    overflow: hidden;*/
+/*}*/
 
 .dialog-task {
     display: flex;
