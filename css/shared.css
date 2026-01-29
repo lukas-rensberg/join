@@ -569,7 +569,8 @@
     margin: 0 2px;
 }
 
-.task-added {
+.task-added,
+.contact-added {
     width: 18.5rem;
     height: 4.75rem;
     display: flex;
@@ -588,27 +589,35 @@
     border: none;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.16);
     overflow: hidden;
-    opacity: 0;
-
-    &::after {
-        content: "";
-        display: inline-block;
-        width: 1.375rem;
-        height: 1.625rem;
-        background-image: url("../assets/menu_icons/board.svg");
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-        filter: brightness(0) invert(1);
-    }
+    opacity: 1;
 
     &::backdrop {
         background-color: transparent;
     }
 }
 
+.task-added::after {
+    content: "";
+    display: inline-block;
+    width: 1.375rem;
+    height: 1.625rem;
+    background-image: url("../assets/menu_icons/board.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    filter: brightness(0) invert(1);
+}
+
 .move-animation-add-task {
     animation: move-to-middle 100ms ease forwards;
+}
+
+.forward-animation-contact {
+    animation: move-to-middle 300ms ease forwards;
+}
+
+.backward-animation-contact {
+    animation: move-to-back-from-middle 300ms ease forwards;
 }
 
 @keyframes move-to-middle {
@@ -619,6 +628,18 @@
     100% {
         top: 50vh;
         opacity: 1;
+    }
+}
+
+@keyframes move-to-back-from-middle {
+    0% {
+        top: 50vh;
+        opacity: 1;
+    }
+
+    100% {
+        top: 120vh;
+        opacity: 0;
     }
 }
 

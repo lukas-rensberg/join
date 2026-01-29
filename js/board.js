@@ -15,7 +15,8 @@ import {
     getTemplateSubtask,
     getTemplateMarkedUser,
     getTemplateRemainingMembers,
-    getTemplateAddTask
+    getTemplateAddTask,
+    getEditTaskTemplate
 } from "./template.js";
 
 import {handleCreateTaskFromBoard} from "./add-task.js";
@@ -29,7 +30,7 @@ import {showFieldError, clearAllFieldErrors} from "./error-handler.js";
 
 let dialogRef = document.getElementById("dialog-task");
 let addTaskRef = document.getElementById("aside-add-task");
-let addedTaskRef = document.getElementById("task-added");
+let addedTaskRef = document.getElementById("taskAdded");
 let findTask = document.getElementById("search-task");
 
 let tasks = [];
@@ -146,24 +147,6 @@ function showEditConfirmation(dialogContentRef, element, dueDate) {
     if (confirmEditBtn) {
         confirmEditBtn.addEventListener("click", () => confirmEdit(element, dueDate), {once: true});
     }
-}
-
-/**
- * Returns the HTML template for the edit task form with proper wrapper and close button
- * @returns {string} HTML string for the edit task form
- */
-function getEditTaskTemplate() {
-    return `
-        <div class="edit-task-header">
-            <div class="close-edit-dialog"></div>
-        </div>
-        <div class="add-task-form edit-task-form">
-            ${getTemplateAddTask()}
-        </div>
-        <div class="d-card-footer">
-            <div class="confirm-edit-task-btn"></div>
-        </div>
-    `;
 }
 
 /**

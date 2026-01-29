@@ -445,3 +445,21 @@ export function generateLoggedInAsideHTML(navLinks, navLinksBottom) {
     `;
 }
 
+/**
+ * Returns the HTML template for the edit task form with proper wrapper and close button
+ * @returns {string} HTML string for the edit task form
+ */
+export function getEditTaskTemplate() {
+  return `
+        <div class="edit-task-header">
+            <div class="close-edit-dialog"></div>
+        </div>
+        <div class="add-task-form edit-task-form">
+            ${getTemplateAddTask()}
+        </div>
+        <div class="d-card-footer">
+            <div class="confirm-edit-task-btn"></div>
+        </div>
+    `;
+}
+

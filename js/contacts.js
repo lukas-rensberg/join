@@ -5,7 +5,7 @@
 
 import {updateContact, database, createContact} from "./database.js";
 import {getRandomColor} from "../utils/contact.js";
-import {ref, remove, onValue} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+import {ref, remove, onValue, set} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 import {generateSectionTemplate, generateContactItemTemplate} from "./template.js";
 import {validateContactForm} from "./contact-form-validation.js";
 import {showInlineError} from "./error-handler.js";
@@ -478,7 +478,7 @@ function closeContactModal() {
  * @param {String} class0 - First class for toggling
  * @param {String} class1 - Second class for toggling
  */
-const superToggle = function(element, class0, class1) {
+const superToggle = function (element, class0, class1) {
     element.classList.remove(class0);
     element.classList.add(class1);
 }
@@ -508,6 +508,7 @@ function getFormData() {
  * @return {void}
  */
 async function saveContact(event) {
+    const addedContactRef = document.getElementById("contactAdded");
     event.preventDefault();
 
     const formData = getFormData();
@@ -524,6 +525,14 @@ async function saveContact(event) {
         const newContactId = generateContactId();
         currentContactId = newContactId;
         await createContact(newContactId, name, email, phone, getRandomColor(), getInitialsFromName(name), false);
+        addedContactRef.classList.add("forward-animation-contact");
+        setTimeout(() => {
+            addedContactRef.classList.remove("forward-animation-contact");
+            addedContactRef.classList.add("backward-animation-contact");
+            setTimeout(() => {
+                addedContactRef.classList.remove("backward-animation-contact");
+            }, 500);
+        }, 1000);
     }
 
     if (document.getElementById("contactDetailView").classList.contains("active")) {
