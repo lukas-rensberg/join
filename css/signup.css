@@ -98,16 +98,16 @@ h2::after {
   position: relative;
 }
 
-span {
+p {
+  font-size: 0.88rem;
+  text-align: center;
+}
+
+.icon {
   width: 1.5rem;
   height: 1.5rem;
   position: absolute;
   right: 0.75rem;
-}
-
-p {
-  font-size: 0.88rem;
-  text-align: center;
 }
 
 .user-name {
@@ -340,8 +340,9 @@ footer {
 .error-message {
   color: #ff4646;
   font-size: 0.75rem;
-  margin-top: 0.25rem;
+  margin-top: 3.25rem;
   display: block;
+  position: absolute;
 }
 
 .input-field input:focus,

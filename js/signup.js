@@ -47,12 +47,6 @@ function showFormError(fieldId, message) {
     const errorMsg = document.createElement("span");
     errorMsg.className = "error-message";
     errorMsg.textContent = message;
-    errorMsg.style.cssText = `
-      color: #ff4646;
-      font-size: 0.75rem;
-      margin-top: 0.25rem;
-      display: block;
-    `;
     field.parentElement.appendChild(errorMsg);
   }
 }
@@ -149,12 +143,6 @@ function validateSignupForm(username, email, password, confirmPassword, accepted
     const errorMsg = document.createElement("span");
     errorMsg.className = "error-message";
     errorMsg.textContent = "Please accept the Privacy Policy";
-    errorMsg.style.cssText = `
-      color: #ff4646;
-      font-size: 0.75rem;
-      margin-top: 0.25rem;
-      display: block;
-    `;
     checkbox.parentElement.appendChild(errorMsg);
     return false;
   }

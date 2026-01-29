@@ -98,7 +98,6 @@ main {
     flex-direction: column;
     justify-content: center;
     text-align: left;
-    padding-right: 12px;
     height: 100%;
     margin: 4px 0;
 }
