@@ -239,8 +239,13 @@ button[type="submit"] {
   font-size: 1rem;
   cursor: pointer;
 
-  &:hover {
+  &:hover:not(:disabled) {
     background-color: var(--color-primary-button-hover);
+  }
+
+  &:disabled {
+    background-color: #b3b3b3;
+    cursor: not-allowed;
   }
 }
 

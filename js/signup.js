@@ -93,6 +93,30 @@ function togglePasswordVisibility(toggleElement) {
   }
 }
 
+/**
+ * Check if all required signup fields are filled
+ * @returns {boolean} True if all required fields are filled
+ */
+function areAllFieldsFilled() {
+  const username = document.getElementById("username")?.value.trim();
+  const email = document.getElementById("email")?.value.trim();
+  const password = document.getElementById("signup-password")?.value;
+  const confirmPassword = document.getElementById("confirm-password")?.value;
+  const acceptedPolicy = document.getElementById("confirm-check")?.checked;
+
+  return !!(username && email && password && confirmPassword && acceptedPolicy);
+}
+
+/**
+ * Update the submit button state based on form completeness
+ */
+function updateSubmitButtonState() {
+  const submitButton = document.querySelector('form button[type="submit"]');
+  if (submitButton) {
+    submitButton.disabled = !areAllFieldsFilled();
+  }
+}
+
 
 /**
  * Validate signup form inputs (signup page)
@@ -169,11 +193,20 @@ export function showSuccessMessage() {
 export function initSignupPage(signupUserCallback, handleAuthErrorCallback) {
   const signupForm = document.querySelector("form");
   if (signupForm && document.querySelector('input[name="username"]')) {
-    // Clear error messages when user types
+    updateSubmitButtonState();
+
     const inputs = signupForm.querySelectorAll('input[type="text"], input[type="email"], input[type="password"]');
     inputs.forEach(input => {
-      input.addEventListener("input", clearFormErrors);
+      input.addEventListener("input", () => {
+        clearFormErrors();
+        updateSubmitButtonState();
+      });
     });
+
+    const checkbox = document.getElementById("confirm-check");
+    if (checkbox) {
+      checkbox.addEventListener("change", updateSubmitButtonState);
+    }
 
     // Setup password visibility toggle for all password fields
     const passwordToggles = document.querySelectorAll(".password-icon-toggle");
