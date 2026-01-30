@@ -460,6 +460,7 @@ export async function deleteContact() {
 function closeContactModal() {
     const contactModal = document.getElementById("contactModal");
     const modalAvatar = document.getElementById("modalAvatar")
+    const modalHeader = document.querySelector(".modal-header");
 
     contactModal.classList.contains("edit-contact-modal") ?
         superToggle(contactModal, "edit-dialog-swipe-in", "edit-dialog-swipe-out") :
@@ -470,6 +471,8 @@ function closeContactModal() {
         contactModal.removeAttribute("class");
         modalAvatar.classList.remove("avatar-default");
         modalAvatar.removeAttribute("style");
+        modalHeader.classList.remove("edit-modal-header");
+        modalHeader.classList.remove("add-modal-header");
     }, 300);
 }
 
