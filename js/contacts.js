@@ -5,7 +5,7 @@
 
 import {updateContact, database, createContact} from "./database.js";
 import {getRandomColor} from "../utils/contact.js";
-import {ref, remove, onValue, set} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+import {ref, remove, onValue} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 import {generateSectionTemplate, generateContactItemTemplate} from "./template.js";
 import {validateContactForm} from "./contact-form-validation.js";
 import {showInlineError} from "./error-handler.js";
@@ -304,10 +304,11 @@ function handleMediaQueryChange(event) {
     if (isEditMode) {
         if (event.matches) {
             contactModal.classList.remove("contact-modal", "dialog-swipe-in", "add-modal-header");
-            contactModal.classList.add("edit-contact-modal", "edit-dialog-swipe-in", "edit-modal-header");
+            contactModal.classList.add("edit-contact-modal", "edit-dialog-swipe-in");
         } else {
             contactModal.classList.remove("edit-contact-modal", "edit-dialog-swipe-in", "edit-modal-header");
-            modalHeader.classList.add("contact-modal", "dialog-swipe-in", "add-modal-header");
+            contactModal.classList.add("contact-modal", "dialog-swipe-in");
+            modalHeader.classList.add("edit-modal-header");
         }
         return;
     }
