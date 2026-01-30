@@ -19,14 +19,16 @@ main {
     z-index: 15;
     display: grid;
     grid-auto-columns: 8.5rem;
-    grid-auto-rows: 6.5rem;
-    gap: 1rem;
+    grid-auto-rows: 7rem;
+    column-gap: 1rem;
+    row-gap: 1rem;
     align-items: center;
     justify-content: center;
-    padding: 2rem var(--padding-side) 0;
+    padding: 1.75rem var(--padding-side) 0;
     opacity: 0;
     transform: translateY(100%);
     animation: slideBottomToTop 600ms 1300ms ease-in forwards;
+    /*grid-template-rows: 1fr;*/
     grid-template-areas:
     "card-urgent-deadline card-urgent-deadline"
     "card-todo card-todo"
@@ -45,7 +47,7 @@ main {
     background-color: #ffffff;
     border-radius: var(--main-radius);
     border: none;
-    height: 6.5rem;
+    /*height: 6.5rem;*/
 
     &:hover {
         cursor: pointer;
@@ -58,14 +60,14 @@ main {
 }
 
 .card-urgent-deadline {
-    height: 6.5rem;
+    height: 120%;
     border-radius: var(--main-radius);
     grid-area: card-urgent-deadline;
     background: var(--main-color);
     color: #ffffff;
     display: flex;
     align-items: center;
-    padding: 12px 20px;
+    padding: 0.625rem;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.16);
 
     &:hover,
@@ -98,8 +100,8 @@ main {
     flex-direction: column;
     justify-content: center;
     text-align: left;
-    height: 100%;
-    margin: 4px 0;
+    /*height: 100%;*/
+    padding-right: .5rem;
 }
 
 .separator {
@@ -112,6 +114,7 @@ main {
 .icon-and-count {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: .5rem;
 }
 
@@ -119,7 +122,7 @@ main {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding-left: 12px;
+    padding-left: .5rem;
     justify-content: center;
 }
 
@@ -135,7 +138,7 @@ main {
     padding: 12px 20px;
     display: flex;
     align-items: center;
-    height: 90px;
+    height: 90%;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.16);
 
     &:hover,
@@ -231,7 +234,6 @@ main {
     img {
         border-radius: 999px;
         width: 100%;
-        height: 100px;
 
     }
 }
@@ -249,7 +251,7 @@ main {
 }
 
 .title {
-    font-size: 0.8rem;
+    font-size: 1rem;
     font-weight: 400;
     color: var(--main-color);
     text-align: center;
@@ -292,12 +294,12 @@ main {
 
     h1,
     .marquee-text {
-        font-size: 4rem;
         font-weight: bold;
+        font-size: 2rem;
     }
 
     .h1-colorized {
-        color: var(--color-light-blue);
+        color: var(--main-color);
     }
 }
 
@@ -326,10 +328,6 @@ main {
     margin-bottom: 0;
 }
 
-.greeting-guest-large {
-    font-weight: bold;
-    font-size: 4rem !important;
-}
 
 .m-left {
     margin-left: 1rem;
@@ -346,26 +344,24 @@ main {
 
     .dashboard-container {
         margin-left: 300px;
-        grid-auto-rows: 10.5rem;
-        grid-auto-columns: 10.5rem;
+        grid-auto-rows: 9.5rem;
+        grid-auto-columns: 9.5rem;
         justify-content: flex-start;
         transform: translateY(0%);
         opacity: 1;
         animation: none;
-        column-gap: 2rem;
-        row-gap: 2rem;
+        column-gap: 1.5rem;
+        row-gap: 1.5rem;
         grid-template-areas:
-      "greeting greeting greeting greeting"
-      "card-urgent-deadline card-urgent-deadline card-urgent-deadline card-board"
-      "card-todo card-progress card-feedback card-done";
+                "greeting greeting"
+                "card-urgent-deadline card-urgent-deadline"
+                "card-todo card-todo"
+                "card-progress card-feedback"
+                "card-board card-done"
     }
 
-
     .greeting-container {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
+        position: unset;
         width: 100%;
         height: auto;
         animation: none;
@@ -373,7 +369,7 @@ main {
         visibility: visible;
 
         p {
-            font-size: 3rem;
+            font-size: 2.25rem;
             font-weight: 400;
         }
 
@@ -402,6 +398,8 @@ main {
         .marquee-text {
             display: inline-block;
             white-space: nowrap;
+            font-size: 2.5rem;
+            font-weight: bold;
         }
 
     }
@@ -415,13 +413,6 @@ main {
         }
     }
 
-    /*@keyframes ellipsisActivate {*/
-    /*    100% {*/
-    /*        max-width: 100%;*/
-    /*        text-overflow: ellipsis;*/
-    /*        overflow: hidden;*/
-    /*    }*/
-    /*}*/
     .greeting-guest {
         font-size: 3rem;
         margin-bottom: 4rem;
@@ -429,14 +420,14 @@ main {
 
     .card-urgent-deadline {
         justify-content: center;
-        height: 10.5rem;
+        height: 9.5rem;
 
         .number {
-            font-size: 2.5rem;
+            font-size: 2rem;
         }
 
         .urgent-section {
-            padding-right: 1.5rem;
+            padding-right: .2rem;
 
             .title {
                 margin-top: .5rem;
@@ -444,11 +435,11 @@ main {
         }
 
         .deadline-section {
-            padding-left: 1.5rem;
+            padding-left: .2rem;
 
             .date {
-                font-size: 1.75rem;
-                margin-bottom: .75rem;
+                font-size: 1.25rem;
+                margin-bottom: .5rem;
             }
 
             .title-date {
@@ -477,26 +468,90 @@ main {
     }
 
     .card-todo {
-        height: 6.5rem;
         padding: 24px var(--padding-side);
         display: flex;
-        flex-direction: column;
+        /*flex-direction: column;*/
         align-items: center;
         row-gap: .5rem;
         border-radius: var(--main-radius);
         box-shadow: 0 0 4px rgba(0, 0, 0, 0.16);
 
         .title {
-            font-size: 1.25rem;
+            font-size: 1.125rem;
+        }
+    }
+
+    .card {
+        height: 100%;
+
+        .number {
+            font-size: 2.5rem;
+        }
+    }
+
+    .title {
+        font-size: 1.125rem;
+    }
+}
+
+@media (width >= 900px) {
+
+    .greeting-container {
+        display: flex;
+        flex-direction: row;
+
+        p {
+            font-size: 3rem;
+        }
+
+        h1,
+        .marquee-text {
+            font-size: 4rem;
+            font-weight: bold;
+        }
+    }
+
+    .greeting-guest-large {
+        font-weight: bold;
+        font-size: 4rem !important;
+    }
+
+    .dashboard-container {
+        grid-auto-rows: 10.5rem;
+        grid-auto-columns: 10.5rem;
+        grid-template-areas:
+                "greeting greeting greeting"
+                "card-urgent-deadline card-urgent-deadline card-urgent-deadline"
+                "card-todo card-todo card-progress "
+                "card-feedback card-board card-done"
+    }
+
+    .card-urgent-deadline {
+        height: 10.5rem;
+
+        .number {
+            font-size: 2.5rem;
+        }
+
+        .urgent-section {
+            padding-right: 1.5rem;
+        }
+
+        .deadline-section {
+            padding-left: 1.5rem;
+
+            .date {
+                font-size: 1.75rem;
+                margin-bottom: .75rem;
+            }
         }
     }
 
     .card {
         height: 10.5rem;
-        width: 10.5rem;
 
-        .number {
-            font-size: 2.5rem;
+        .title {
+            font-size: 1.25rem;
         }
     }
 
@@ -505,8 +560,21 @@ main {
     }
 }
 
-@media (width >= 1110px) {
+@media (width >= 1200px) {
+    .card-todo {
+        flex-direction: column;
+
+        .title {
+            margin-left: unset;
+            font-size: 1.125rem;
+        }
+    }
+
     .dashboard-container {
         margin-left: 380px;
+        grid-template-areas:
+      "greeting greeting greeting greeting"
+      "card-urgent-deadline card-urgent-deadline card-urgent-deadline card-board"
+      "card-todo card-progress card-feedback card-done";
     }
 }

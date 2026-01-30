@@ -763,3 +763,111 @@
     width: 2.5rem;
     height: 2.5rem;
 }
+
+.btn-clear,
+.btn-cancel,
+.btn-delete {
+    background-color: #ffffff;
+    color: #647188;
+    border: 1px solid #647188;
+    min-width: fit-content;
+    height: 100%;
+
+    &:hover {
+        border: 1px solid var(--main-color);
+        color: var(--main-color);
+
+    }
+}
+
+.btn-clear,
+.btn-cancel {
+    &:hover {
+        border: 1px solid var(--main-color);
+        color: var(--main-color);
+
+        &::after {
+            background: url('../assets/menu_icons/iconoir_cancel_hover.svg') center center no-repeat;
+        }
+    }
+
+    &:active {
+        border: 1px solid var(--color-primary-button-hover);
+        color: var(--color-primary-button-hover);
+
+        &::after {
+            background: url('../assets/menu_icons/iconoir_cancel_click.svg') center center no-repeat;
+        }
+    }
+
+    &::after {
+        content: '';
+        background: url('../assets/menu_icons/iconoir_cancel.svg') center center no-repeat;
+        width: 20px;
+        height: 20px;
+        transform: scale(1);
+    }
+}
+
+
+.btn-clear::before {
+    content: 'Clear';
+}
+
+.btn-cancel::before {
+    content: 'Cancel';
+}
+
+.btn-delete::before {
+    content: 'Delete';
+}
+
+.button-group button,
+.form-actions button {
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--button-radius);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 1.25rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+}
+
+.btn-create,
+.btn-save {
+    background-color: var(--main-color);
+    color: #ffffff;
+    border: none;
+
+    &:hover {
+        background-color: var(--color-primary-button-hover);
+    }
+
+    &:active {
+        background-color: var(--color-primary-button-click);
+        color: var(--main-color);
+
+        &::after {
+            background: url('../assets/icons/check_blue.svg') center center no-repeat;
+        }
+    }
+
+    &::after {
+        content: '';
+        background: url('../assets/menu_icons/check.svg') center center no-repeat;
+        width: 20px;
+        height: 20px;
+        transform: scale(1);
+    }
+}
+
+.btn-create::before {
+    content: 'Create Task';
+}
+
+/*.btn-save::before {*/
+/*    content: 'Create Contact';*/
+/*}*/

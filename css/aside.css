@@ -64,7 +64,7 @@
             transition: all 200ms ease;
 
             &:hover {
-                color: var(--color-light-blue);
+                color: var(--color-primary-button-hover);
                 cursor: pointer;
             }
         }

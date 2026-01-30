@@ -367,7 +367,7 @@ function setupEditContactModal(contact) {
     document.getElementById("modalTitle").textContent = "Edit contact";
     document.getElementById("saveButtonText").textContent = "Save";
     document.getElementById("cancelButton").style.display = "none";
-    document.getElementById("deleteButton").style.display = "block";
+    document.getElementById("deleteButton").style.display = "flex";
     populateModalWithContactData(contact);
     closeFabMenu();
 }
@@ -384,7 +384,7 @@ function setupAddContactModal() {
     if (!isDesktop()) {
         document.getElementById("cancelButton").style.display = "none";
     } else {
-        document.getElementById("cancelButton").style.display = "block";
+        document.getElementById("cancelButton").style.display = "flex";
     }
 
     clearModalFormFields();

@@ -129,28 +129,6 @@ nav {
             color: var(--main-color-secondary);
         }
     }
-
-
-}
-
-.active-footer-icon {
-    color: var(--main-color);
-}
-
-.nav-contacts.active-icon-contacts::before {
-    background-image: url(../assets/menu_icons/contacts_hover.svg);
-}
-
-.nav-board.active-icon-board::before {
-    background-image: url(../assets/menu_icons/board_hover.svg);
-}
-
-.nav-add-task.active-icon-add-task::before {
-    background-image: url(../assets/menu_icons/add-task_hover.svg);
-}
-
-.nav-summary.active-icon-summary::before {
-    background-image: url(../assets/menu_icons/summary_hover.svg);
 }
 
 footer {
