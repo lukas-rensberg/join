@@ -227,10 +227,13 @@
 }
 
 .contact-detail-view {
-    position: fixed;
+    position: absolute;
+    /*position: fixed;*/
     top: 60px;
     display: none;
     flex-direction: column;
+    height: 100%;
+    background-color: #ffffff;
 }
 
 .contact-detail-view.active {
@@ -292,7 +295,7 @@
     align-items: center;
     gap: 1rem;
     margin-bottom: 2rem;
-    flex: 1 1 0;
+    /*flex: 1 1 0;*/
 }
 
 .contact-detail-avatar {

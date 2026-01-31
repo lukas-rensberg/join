@@ -203,23 +203,47 @@ function showContactDetail(contactId) {
     const contact = contacts.find((c) => c.id === contactId);
     if (!contact) return;
 
-    const detailViewDesktop = document.getElementById("contactDetailViewDesktop");
-    const isSameContact = currentContactId === contactId;
     currentContactId = contactId;
 
     if (isDesktop()) {
-        if (detailViewDesktop.classList.contains("active") && !isSameContact) {
-            detailViewDesktop.classList.remove("active");
-
-            setTimeout(() => {
-                updateContactDetailViews(contact, contactId);
-                detailViewDesktop.classList.add("active");
-            }, 300);
-        } else {
-            updateContactDetailViews(contact, contactId);
-            detailViewDesktop.classList.add("active");
-        }
+        showContactDetailDesktop(contact, contactId);
+    } else {
+        showContactDetailMobile(contact, contactId);
     }
+}
+
+/**
+ * Shows the contact detail view on desktop
+ * @param {Object} contact - The contact object to display
+ * @param {string} contactId - Contact's unique ID
+ * @returns {void}
+ */
+function showContactDetailDesktop(contact, contactId) {
+    const detailViewDesktop = document.getElementById("contactDetailViewDesktop");
+    const detailViewMobile = document.getElementById("contactDetailView");
+
+    detailViewMobile.classList.remove("active");
+    updateContactDetailViews(contact, contactId);
+    detailViewDesktop.classList.add("active");
+}
+
+/**
+ * Shows the contact detail view on mobile devices
+ * @param {Object} contact - The contact object to display
+ * @param {string} contactId - Contact's unique ID
+ * @returns {void}
+ */
+function showContactDetailMobile(contact, contactId) {
+    const detailViewDesktop = document.getElementById("contactDetailViewDesktop");
+    const detailViewMobile = document.getElementById("contactDetailView");
+
+    detailViewDesktop.classList.remove("active");
+    updateContactDetailViews(contact, contactId);
+    detailViewMobile.classList.add("active");
+
+    const fabIcon = document.getElementById("fabIcon");
+    fabIcon.src = "./assets/icons/more-vertical.svg";
+    fabIcon.alt = "Menu";
 }
 
 /**
@@ -346,6 +370,7 @@ function openContactModal(editMode) {
         document.querySelector(".modal-header").classList.add("add-modal-header")
     }
     document.getElementById("contactModal").showModal();
+
 }
 
 /**
@@ -474,6 +499,8 @@ function closeContactModal() {
         modalHeader.classList.remove("edit-modal-header");
         modalHeader.classList.remove("add-modal-header");
     }, 300);
+
+    isEditMode = false;
 }
 
 /**
@@ -602,14 +629,32 @@ function setupClickListeners() {
     }
 }
 
+/**
+ * Initializes the contacts module by loading contacts from the database,
+ * setting up click outside listeners, add contact button event listener,
+ * and various click listeners. Also registers a media query change listener
+ * for responsive UI updates that handles modal closing and contact detail view updates.
+ * Finally, sets up the contact form submit handler.
+ * @returns {void}
+ */
 function init() {
+    const contactModal = document.getElementById("contactModal");
     loadContactsFromRTDB();
     setupClickOutsideListener();
     setupAddContactBtnEventListener();
     setupClickListeners();
 
     // Register media query change listener for live UI updates
-    desktopMediaQuery.addEventListener("change", handleMediaQueryChange);
+    desktopMediaQuery.addEventListener("change", (event) => {
+        handleMediaQueryChange(event);
+
+        if (currentContactId && contactModal.open) {
+            closeContactModal()
+        }
+        showContactDetail(currentContactId);
+
+    });
+
 
     const contactForm = document.getElementById("contactForm");
     if (contactForm) {
