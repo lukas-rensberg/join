@@ -16,7 +16,7 @@
 
 .contacts-container {
     padding: 1rem;
-    width: min(456px, 100%);
+    width: min(465px, 100%);
 }
 
 .contact-section {
@@ -608,6 +608,7 @@
         width: 465px;
         height: 100%;
         overflow: hidden;
+        box-shadow: 4px 0 6px 0 rgba(0, 0, 0, 0.08);
     }
 
     .add-contact-btn-desk {

@@ -256,76 +256,76 @@ strong {
     justify-content: flex-end;
 }
 
-.d-card-footer-d {
-    display: flex;
-    align-items: center;
-    height: 24px;
+/*.d-card-footer-d {*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    height: 24px;*/
 
-    &::before {
-        content: '';
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 24px;
-        height: 24px;
-        background: url('../assets/icons/delete.svg') center center no-repeat;
-        transform: scale(1);
-        margin-right: 0.5rem;
-    }
+/*    &::before {*/
+/*        content: '';*/
+/*        display: flex;*/
+/*        align-items: center;*/
+/*        justify-content: center;*/
+/*        width: 24px;*/
+/*        height: 24px;*/
+/*        background: url('../assets/icons/delete.svg') center center no-repeat;*/
+/*        transform: scale(1);*/
+/*        margin-right: 0.5rem;*/
+/*    }*/
 
-    &::after {
-        content: '';
-        height: 24px;
-        border: 1px solid var(--color-border-gray);
-        margin: 0 .5rem;
-    }
+/*    &::after {*/
+/*        content: '';*/
+/*        height: 24px;*/
+/*        border: 1px solid var(--color-border-gray);*/
+/*        margin: 0 .5rem;*/
+/*    }*/
 
-    &:active,
-    &:hover {
-        cursor: pointer;
+/*    &:active,*/
+/*    &:hover {*/
+/*        cursor: pointer;*/
 
-        &::before {
-            background: url('../assets/icons/delete_clicked.svg') center center no-repeat;
-        }
+/*        &::before {*/
+/*            background: url('../assets/icons/delete_clicked.svg') center center no-repeat;*/
+/*        }*/
 
-        color: var(--main-color);
-        font-weight: 700;
-    }
-}
+/*        color: var(--main-color);*/
+/*        font-weight: 700;*/
+/*    }*/
+/*}*/
 
-.d-card-footer-e {
-    display: flex;
-    align-items: center;
-    height: 24px;
-    width: 60px;
+/*.d-card-footer-e {*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    height: 24px;*/
+/*    width: 60px;*/
 
-    &::before {
-        content: '';
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 24px;
-        height: 24px;
-        background-image: url(../assets/icons/edit.svg);
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-        transform: scale(1);
-        margin-right: 0.5rem;
-    }
+/*    &::before {*/
+/*        content: '';*/
+/*        display: flex;*/
+/*        align-items: center;*/
+/*        justify-content: center;*/
+/*        width: 24px;*/
+/*        height: 24px;*/
+/*        background-image: url(../assets/icons/edit.svg);*/
+/*        background-size: contain;*/
+/*        background-repeat: no-repeat;*/
+/*        background-position: center;*/
+/*        transform: scale(1);*/
+/*        margin-right: 0.5rem;*/
+/*    }*/
 
-    &:active,
-    &:hover {
-        cursor: pointer;
+/*    &:active,*/
+/*    &:hover {*/
+/*        cursor: pointer;*/
 
-        &::before {
-            background-image: url('../assets/icons/edit_clicked.svg');
-        }
+/*        &::before {*/
+/*            background-image: url('../assets/icons/edit_clicked.svg');*/
+/*        }*/
 
-        color: var(--main-color);
-        font-weight: 700;
-    }
-}
+/*        color: var(--main-color);*/
+/*        font-weight: 700;*/
+/*    }*/
+/*}*/
 
 .delete {
     display: flex;

@@ -80,7 +80,7 @@ export function getTemplateDialog(element, dueDate) {
         </section>
         <div class="d-card-footer">
           <div class="d-card-footer-d">Delete</div>
-          <div class="d-card-footer-e">Edit</div>
+          <div class="d-card-footer-e"></div>
         </div>
       </div>`;
 }
