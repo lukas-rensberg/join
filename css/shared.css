@@ -823,7 +823,8 @@
 }
 
 .button-group button,
-.form-actions button {
+.form-actions button,
+.d-card-footer button {
     padding: 0.5rem 0.75rem;
     border-radius: var(--button-radius);
     cursor: pointer;
@@ -837,7 +838,8 @@
 }
 
 .btn-create,
-.btn-save {
+.btn-save,
+.confirm-edit-task-btn {
     background-color: var(--main-color);
     color: #ffffff;
     border: none;
@@ -866,6 +868,10 @@
 
 .btn-create::before {
     content: 'Create Task';
+}
+
+.confirm-edit-task-btn::before {
+    content: 'Ok';
 }
 
 /*.btn-save::before {*/

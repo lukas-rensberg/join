@@ -452,7 +452,7 @@ export function getEditTaskTemplate() {
             ${getTemplateAddTask()}
         </div>
         <div class="d-card-footer">
-            <div class="confirm-edit-task-btn"></div>
+            <button class="confirm-edit-task-btn"></button>
         </div>
     `;
 }
