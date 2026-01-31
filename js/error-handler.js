@@ -23,9 +23,9 @@ export function showErrorMessage(message) {
             input.style.borderBottom = "0.06rem solid #ff0000";
         });
 
-        const firstButton = form.querySelector(".btn-primary");
-        if (firstButton) {
-            form.insertBefore(errorDiv, firstButton);
+        const buttonContainer = form.querySelector(".button-container");
+        if (buttonContainer) {
+            form.insertBefore(errorDiv, buttonContainer);
         } else {
             form.appendChild(errorDiv);
         }

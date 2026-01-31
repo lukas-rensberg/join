@@ -28,12 +28,8 @@ function showValidationError(fieldName, errorMessage) {
     input.style.borderBottom = "2px solid #ff4646";
     
     const errorSpan = document.createElement("span");
-    errorSpan.className = "auth-error-message";
+    errorSpan.className = "error-message";
     errorSpan.textContent = errorMessage;
-    errorSpan.style.color = "#ff4646";
-    errorSpan.style.fontSize = "0.875rem";
-    errorSpan.style.marginTop = "0.25rem";
-    errorSpan.style.display = "block";
     
     input.parentElement.appendChild(errorSpan);
   }

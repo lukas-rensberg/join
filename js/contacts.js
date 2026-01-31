@@ -1,27 +1,37 @@
 /**
- * @fileoverview Handles contact management including adding, editing, deleting, and displaying contacts. 
+ * @fileoverview Handles contact management including adding, editing, deleting, and displaying contacts.
  * @author Lukas Rensberg
-*/
+ */
 
-import { updateContact, database, createContact } from "./database.js";
-import { getRandomColor } from "../utils/contact.js";
-import { ref, remove, onValue } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
-import { generateSectionTemplate, generateContactItemTemplate } from "./template.js";
-import { validateContactForm } from "./contact-form-validation.js";
-import { showInlineError } from "./error-handler.js";
+import {updateContact, database, createContact} from "./database.js";
+import {getRandomColor} from "../utils/contact.js";
+import {ref, remove, onValue} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+import {generateSectionTemplate, generateContactItemTemplate} from "./template.js";
+import {validateContactForm} from "./contact-form-validation.js";
+import {showInlineError} from "./error-handler.js";
 
 let contacts = [];
 let currentContactId = null;
 let isEditMode = false;
+const desktopMediaQuery = window.matchMedia("(min-width: 812px)");
+
+/**
+ * Checks if the current viewport is desktop size
+ * @returns {boolean} True if viewport width >= 812px
+ */
+function isDesktop() {
+    return desktopMediaQuery.matches;
+}
+
 
 /**
  * Generates a unique ID for contacts
  * @returns {string} Unique contact ID
  */
 export function generateContactId() {
-  return (
-    "contact_" + Date.now() + "_" + Math.random().toString(36).substring(2, 9)
-  );
+    return (
+        "contact_" + Date.now() + "_" + Math.random().toString(36).substring(2, 9)
+    );
 }
 
 /**
@@ -30,43 +40,44 @@ export function generateContactId() {
  * @returns {string} The initials (up to 2 characters)
  */
 export function getInitialsFromName(name) {
-  const nameParts = name.trim().split(" ");
-  const initials = nameParts
-    .map((part) => part.charAt(0).toUpperCase())
-    .join("")
-    .substring(0, 2);
-  return initials || "U";
+    const nameParts = name.trim().split(" ");
+    const initials = nameParts
+        .map((part) => part.charAt(0).toUpperCase())
+        .join("")
+        .substring(0, 2);
+    return initials || "U";
 }
 
 /**
  * Load contacts from RTDB and call the render function
+ * @returns void
  */
 export async function loadContactsFromRTDB() {
-  const contactsRef = ref(database, 'contacts');
+    const contactsRef = ref(database, 'contacts');
 
-  onValue(contactsRef, (snapshot) => {
-    if (snapshot.exists()) {
-      contacts = Object.values(snapshot.val());
-      renderContactsList(contacts);
-    }
-  });
+    onValue(contactsRef, (snapshot) => {
+        if (snapshot.exists()) {
+            contacts = Object.values(snapshot.val());
+            renderContactsList(contacts);
+        }
+    });
 }
 
-/** 
+/**
  * Groups contacts by the first letter of their name
  * @param {Array} contactsArray Array of contact objects
  * @returns {Object} Grouped contacts
  */
 function groupContactsByFirstLetter(contactsArray) {
-  const groupedContacts = {};
-  contactsArray.forEach((contact) => {
-    const firstLetter = contact.name.charAt(0).toUpperCase();
-    if (!groupedContacts[firstLetter]) {
-      groupedContacts[firstLetter] = [];
-    }
-    groupedContacts[firstLetter].push(contact);
-  });
-  return groupedContacts;
+    const groupedContacts = {};
+    contactsArray.forEach((contact) => {
+        const firstLetter = contact.name.charAt(0).toUpperCase();
+        if (!groupedContacts[firstLetter]) {
+            groupedContacts[firstLetter] = [];
+        }
+        groupedContacts[firstLetter].push(contact);
+    });
+    return groupedContacts;
 }
 
 /**
@@ -75,75 +86,74 @@ function groupContactsByFirstLetter(contactsArray) {
  * @returns {void}
  */
 function renderContactsList(contactsArray) {
-  const container = document.querySelector(".contacts-container");
-  container.innerHTML = "";
+    const container = document.querySelector(".contacts-container");
+    container.innerHTML = "";
 
-  const groupedContacts = groupContactsByFirstLetter(contactsArray);
+    const groupedContacts = groupContactsByFirstLetter(contactsArray);
 
-  const sortedLetters = Object.keys(groupedContacts).sort();
+    const sortedLetters = Object.keys(groupedContacts).sort();
 
-  sortedLetters.forEach((letter) => {
-    const section = createContactsPerLetter(letter, groupedContacts);
-    container.appendChild(section);
-  });
+    sortedLetters.forEach((letter) => {
+        const section = createContactsPerLetter(letter, groupedContacts);
+        container.appendChild(section);
+    });
 }
 
 
-/** 
+/**
  * Creates contact section for a specific letter
  * @param {string} letter The wanted letter of the contacts in this section
  * @param {Object} groupedContacts Contacts grouped by first letter
  * @returns {HTMLElement} Section element with contacts starting with the given letter
  */
 function createContactsPerLetter(letter, groupedContacts) {
-  const section = createContactSection(letter);
+    const section = createContactSection(letter);
 
-  groupedContacts[letter].sort((a, b) => a.name.localeCompare(b.name));
-  groupedContacts[letter].forEach((contact) => {
-    const contactItem = document.createElement("div");
-    contactItem.className = "contact-item";
-    contactItem.onclick = () => showContactDetail(contact.id);
-    contactItem.innerHTML = generateContactItemTemplate(contact);
-    section.appendChild(contactItem);
-  });
+    groupedContacts[letter].sort((a, b) => a.name.localeCompare(b.name));
+    groupedContacts[letter].forEach((contact) => {
+        const contactItem = document.createElement("div");
+        contactItem.className = "contact-item";
+        contactItem.setAttribute("data-contact-id", contact.id);
+        contactItem.onclick = () => showContactDetail(contact.id);
+        contactItem.innerHTML = generateContactItemTemplate(contact);
+        section.appendChild(contactItem);
+    });
 
-  return section;
+    return section;
 }
 
-/** 
+/**
  * Creates a contact section element
  * @param {string} letter The letter for the section header
  * @returns {HTMLElement} Section element
  */
 function createContactSection(letter) {
-  const section = document.createElement("div");
-  section.className = "contact-section";
-
-  section.innerHTML = generateSectionTemplate(letter);
-
-  return section;
+    const section = document.createElement("div");
+    section.className = "contact-section";
+    section.innerHTML = generateSectionTemplate(letter);
+    return section;
 }
 
 /**
  * Handles FAB (floating action button) click - shows either the add or edit menu depending on view
  */
 function handleFabClick() {
-  const detailView = document.getElementById("contactDetailView");
-  if (detailView.classList.contains("active")) {
-    toggleFabMenu();
-  } else {
-    openContactModal(false);
-  }
+    const detailView = document.getElementById("contactDetailView");
+    if (detailView.classList.contains("active")) {
+        toggleFabMenu();
+    } else {
+        openContactModal(false);
+    }
 }
 
 /**
  * Toggles the FAB (floating action button) menu visibility
  */
 function toggleFabMenu() {
-  const fabMenu = document.getElementById("fabMenu");
-  if (fabMenu) {
-    fabMenu.classList.toggle("active");
-  }
+    const fabMenu = document.getElementById("fabMenu");
+    if (fabMenu) {
+        fabMenu.classList.toggle("active");
+    }
 }
 
 /**
@@ -151,26 +161,37 @@ function toggleFabMenu() {
  * @author Lukas Rensberg
  */
 function closeFabMenu() {
-  const fabMenu = document.getElementById("fabMenu");
-  if (fabMenu) {
-    fabMenu.classList.remove("active");
-  }
+    const fabMenu = document.getElementById("fabMenu");
+    if (fabMenu) {
+        fabMenu.classList.remove("active");
+    }
+}
+
+/**
+ * Set up an event listener to open the Add-Contact modal when clicking on the add-contact button (desktop-only)
+ *
+ */
+function setupAddContactBtnEventListener() {
+    document.getElementById("addContactBtn").addEventListener("click", (e) => {
+        e.preventDefault();
+        openContactModal(false);
+    })
 }
 
 /**
  * Setup click outside listener for FAB (floating action button) menu
  */
 function setupClickOutsideListener() {
-  document.addEventListener("click", function (event) {
-    const fabButton = document.getElementById("fabButton");
-    const fabMenu = document.getElementById("fabMenu");
+    document.addEventListener("click", function (event) {
+        const fabButton = document.getElementById("fabButton");
+        const fabMenu = document.getElementById("fabMenu");
 
-    if (
-      fabButton && fabMenu && !fabButton.contains(event.target) && !fabMenu.contains(event.target)
-    ) {
-      closeFabMenu();
-    }
-  });
+        if (
+            fabButton && fabMenu && !fabButton.contains(event.target) && !fabMenu.contains(event.target)
+        ) {
+            closeFabMenu();
+        }
+    });
 }
 
 /**
@@ -179,32 +200,96 @@ function setupClickOutsideListener() {
  * @returns {void}
  */
 function showContactDetail(contactId) {
-  const contact = contacts.find((c) => c.id === contactId);
-  if (!contact) return;
-  currentContactId = contactId;
+    const contact = contacts.find((c) => c.id === contactId);
+    if (!contact) return;
 
-  populateContactDetailView(contact);
+    currentContactId = contactId;
 
-  document.querySelector(".contacts-container").style.display = "none";
-  document.getElementById("contactDetailView").classList.add("active");
+    if (isDesktop()) {
+        showContactDetailDesktop(contact, contactId);
+    } else {
+        showContactDetailMobile(contact, contactId);
+    }
 }
 
-/** 
- * Populates the contact detail view with contact data
+/**
+ * Shows the contact detail view on desktop
+ * @param {Object} contact - The contact object to display
+ * @param {string} contactId - Contact's unique ID
+ * @returns {void}
+ */
+function showContactDetailDesktop(contact, contactId) {
+    const detailViewDesktop = document.getElementById("contactDetailViewDesktop");
+    const detailViewMobile = document.getElementById("contactDetailView");
+
+    detailViewMobile.classList.remove("active");
+    updateContactDetailViews(contact, contactId);
+    detailViewDesktop.classList.add("active");
+}
+
+/**
+ * Shows the contact detail view on mobile devices
+ * @param {Object} contact - The contact object to display
+ * @param {string} contactId - Contact's unique ID
+ * @returns {void}
+ */
+function showContactDetailMobile(contact, contactId) {
+    const detailViewDesktop = document.getElementById("contactDetailViewDesktop");
+    const detailViewMobile = document.getElementById("contactDetailView");
+
+    detailViewDesktop.classList.remove("active");
+    updateContactDetailViews(contact, contactId);
+    detailViewMobile.classList.add("active");
+
+    const fabIcon = document.getElementById("fabIcon");
+    fabIcon.src = "./assets/icons/more-vertical.svg";
+    fabIcon.alt = "Menu";
+}
+
+/**
+ * Updates both mobile and desktop contact detail views
+ * @param {Object} contact - Contact object
+ * @param {string} contactId - Contact's unique ID
+ */
+function updateContactDetailViews(contact, contactId) {
+    populateContactDetailView(contact);
+    populateContactDetailViewDesktop(contact);
+
+    document.querySelectorAll(".contact-item").forEach(item => item.classList.remove("active"));
+    const activeItem = document.querySelector(`[data-contact-id="${contactId}"]`);
+    if (activeItem) activeItem.classList.add("active");
+}
+
+/**
+ * Populates the contact detail view with contact data (mobile only)
  * @param {Object} contact - Contact object
  */
 function populateContactDetailView(contact) {
-  document.getElementById("detailName").textContent = contact.name;
-  document.getElementById("detailEmail").textContent = contact.email;
-  document.getElementById("detailPhone").textContent = contact.phone;
+    document.getElementById("detailName").textContent = contact.name;
+    document.getElementById("detailEmail").textContent = contact.email;
+    document.getElementById("detailPhone").textContent = contact.phone;
 
-  const avatar = document.getElementById("detailAvatar");
-  avatar.textContent = contact.initials;
-  avatar.style.backgroundColor = contact.avatarColor;
+    const avatar = document.getElementById("detailAvatar");
+    avatar.textContent = contact.initials;
+    avatar.style.backgroundColor = contact.avatarColor;
 
-  const fabIcon = document.getElementById("fabIcon");
-  fabIcon.src = "./assets/icons/more-vertical.svg";
-  fabIcon.alt = "Menu";
+    const fabIcon = document.getElementById("fabIcon");
+    fabIcon.src = "./assets/icons/more-vertical.svg";
+    fabIcon.alt = "Menu";
+}
+
+/**
+ * Populates the desktop contact detail view with contact data
+ * @param {Object} contact - Contact object
+ */
+function populateContactDetailViewDesktop(contact) {
+    document.getElementById("detailNameDesktop").textContent = contact.name;
+    document.getElementById("detailEmailDesktop").textContent = contact.email;
+    document.getElementById("detailPhoneDesktop").textContent = contact.phone;
+
+    const avatar = document.getElementById("detailAvatarDesktop");
+    avatar.textContent = contact.initials;
+    avatar.style.backgroundColor = contact.avatarColor;
 }
 
 /**
@@ -212,14 +297,14 @@ function populateContactDetailView(contact) {
  * @author Lukas Rensberg
  */
 function hideContactDetail() {
-  document.getElementById("contactDetailView").classList.remove("active");
-  document.querySelector(".contacts-container").style.display = "block";
+    document.getElementById("contactDetailView").classList.remove("active");
+    document.querySelector(".contacts-container").style.display = "block";
 
-  const fabIcon = document.getElementById("fabIcon");
-  fabIcon.src = "./assets/icons/person_add.svg";
-  fabIcon.alt = "Add Contact";
+    const fabIcon = document.getElementById("fabIcon");
+    fabIcon.src = "./assets/icons/person_add.svg";
+    fabIcon.alt = "Add Contact";
 
-  document.getElementById("fabMenu").classList.remove("active");
+    document.getElementById("fabMenu").classList.remove("active");
 }
 
 /**
@@ -227,8 +312,31 @@ function hideContactDetail() {
  * @author Lukas Rensberg
  */
 function editContact() {
-  if (!currentContactId) return;
-  openContactModal(true);
+    if (!currentContactId) return;
+    openContactModal(true);
+}
+
+/**
+ * Handles media query changes and updates the modal UI live
+ * @param {MediaQueryListEvent} event - The media query change event
+ */
+function handleMediaQueryChange(event) {
+    const contactModal = document.getElementById("contactModal");
+    const modalHeader = document.querySelector(".modal-header");
+    const cancelButton = document.getElementById("cancelButton");
+
+    if (isEditMode) {
+        if (event.matches) {
+            contactModal.classList.remove("contact-modal", "dialog-swipe-in", "add-modal-header");
+            contactModal.classList.add("edit-contact-modal", "edit-dialog-swipe-in");
+        } else {
+            contactModal.classList.remove("edit-contact-modal", "edit-dialog-swipe-in", "edit-modal-header");
+            contactModal.classList.add("contact-modal", "dialog-swipe-in");
+            modalHeader.classList.add("edit-modal-header");
+        }
+        return;
+    }
+    event.matches ? cancelButton.style.display = "block" : cancelButton.style.display = "none";
 }
 
 /**
@@ -236,28 +344,43 @@ function editContact() {
  * @param {boolean} editMode - Whether to open in edit mode (true) or create mode (false)
  */
 function openContactModal(editMode) {
-  isEditMode = editMode;
+    isEditMode = editMode;
 
-  if (isEditMode) {
-    const contact = findContactById(currentContactId);
-    if (!contact) return;
+    if (isEditMode) {
+        const contact = findContactById(currentContactId);
+        if (!contact) return;
 
-    setupEditContactModal(contact);
-  } else {
-    setupAddContactModal();
-  }
+        setupEditContactModal(contact);
 
-  document.getElementById("contactModal").classList.add("active");
+        if (isDesktop()) {
+            document.getElementById("contactModal").classList.add("edit-contact-modal");
+            document.getElementById("contactModal").classList.add("edit-dialog-swipe-in");
+            document.querySelector(".modal-header").classList.remove("add-modal-header")
+            document.querySelector(".modal-header").classList.add("edit-modal-header")
+        } else {
+            document.getElementById("contactModal").classList.add("contact-modal");
+            document.getElementById("contactModal").classList.add("dialog-swipe-in");
+        }
+
+    } else {
+        setupAddContactModal();
+        document.getElementById("contactModal").classList.add("contact-modal");
+        document.getElementById("contactModal").classList.add("dialog-swipe-in");
+        document.querySelector(".modal-header").classList.remove("edit-modal-header");
+        document.querySelector(".modal-header").classList.add("add-modal-header")
+    }
+    document.getElementById("contactModal").showModal();
+
 }
 
 /**
  * Finds a contact by its ID
  * @param {string} contactId - Contact's unique ID
  * @returns {Object|null} Contact object or null if not found
-*/
+ */
 function findContactById(contactId) {
-  if (!contactId) return null;
-  return contacts.find((c) => c.id === contactId);
+    if (!contactId) return null;
+    return contacts.find((c) => c.id === contactId);
 }
 
 /**
@@ -266,11 +389,12 @@ function findContactById(contactId) {
  * @returns {void}
  */
 function setupEditContactModal(contact) {
-  document.getElementById("modalTitle").textContent = "Edit contact";
-  document.getElementById("saveButtonText").textContent = "Save";
-  document.getElementById("deleteButton").style.display = "block";
-  populateModalWithContactData(contact);
-  closeFabMenu();
+    document.getElementById("modalTitle").textContent = "Edit contact";
+    document.getElementById("saveButtonText").textContent = "Save";
+    document.getElementById("cancelButton").style.display = "none";
+    document.getElementById("deleteButton").style.display = "flex";
+    populateModalWithContactData(contact);
+    closeFabMenu();
 }
 
 /**
@@ -278,11 +402,18 @@ function setupEditContactModal(contact) {
  * @returns {void}
  */
 function setupAddContactModal() {
-  document.getElementById("modalTitle").textContent = "Add contact";
-  document.getElementById("saveButtonText").textContent = "Create contact";
-  document.getElementById("deleteButton").style.display = "none";
-  clearModalFormFields();
-  generateModalAvatar();
+    document.getElementById("modalTitle").textContent = "Add contact";
+    document.getElementById("saveButtonText").textContent = "Create contact";
+    document.getElementById("deleteButton").style.display = "none";
+
+    if (!isDesktop()) {
+        document.getElementById("cancelButton").style.display = "none";
+    } else {
+        document.getElementById("cancelButton").style.display = "flex";
+    }
+
+    clearModalFormFields();
+    generateModalAvatar();
 }
 
 /**
@@ -291,11 +422,11 @@ function setupAddContactModal() {
  * @return {void}
  */
 function populateModalWithContactData(contact) {
-  document.getElementById("contactName").value = contact.name;
-  document.getElementById("contactEmail").value = contact.email;
-  document.getElementById("contactPhone").value = contact.phone;
+    document.getElementById("contactName").value = contact.name;
+    document.getElementById("contactEmail").value = contact.email;
+    document.getElementById("contactPhone").value = contact.phone;
 
-  generateModalAvatar(contact);
+    generateModalAvatar(contact);
 }
 
 /**
@@ -303,69 +434,92 @@ function populateModalWithContactData(contact) {
  * @return {void}
  */
 function clearModalFormFields() {
-  document.getElementById("contactName").value = "";
-  document.getElementById("contactEmail").value = "";
-  document.getElementById("contactPhone").value = "";
+    document.getElementById("contactName").value = "";
+    document.getElementById("contactEmail").value = "";
+    document.getElementById("contactPhone").value = "";
 }
 
-/** 
+/**
  * Generates the modal avatar based on contact data or default state
  * @param {Object} [contact] The contact object
  * @return {void}
  */
 function generateModalAvatar(contact) {
-  const modalAvatar = document.getElementById("modalAvatar");
+    const modalAvatar = document.getElementById("modalAvatar");
 
-  if (!contact) {
-    modalAvatar.textContent = '';
-    while (modalAvatar.firstChild) {
-      modalAvatar.removeChild(modalAvatar.firstChild);
+    if (!contact) {
+        modalAvatar.textContent = '';
+        while (modalAvatar.firstChild) {
+            modalAvatar.removeChild(modalAvatar.firstChild);
+        }
+        modalAvatar.classList.add("avatar-default");
+        return;
     }
-    modalAvatar.style.backgroundColor = "#D1D1D1";
 
-    const modalIcon = document.createElement("img");
-    modalIcon.src = "./assets/icons/person.svg";
-    modalIcon.alt = "No avatar";
-    modalAvatar.appendChild(modalIcon);
-    return;
-  }
-
-  modalAvatar.textContent = contact.initials;
-  modalAvatar.style.backgroundColor = contact.avatarColor;
+    modalAvatar.textContent = contact.initials;
+    modalAvatar.style.backgroundColor = contact.avatarColor;
 }
 
 /**
  * Deletes a contact according to the currentContactId
+ * @returns void
  */
 export async function deleteContact() {
-  try {
-    await remove(ref(database, `contacts/${currentContactId}`));
-    
-    // Remove contact from all assigned tasks
-    if (typeof window.removeContactFromAllTasks === 'function') {
-      await window.removeContactFromAllTasks(currentContactId);
+    try {
+        await remove(ref(database, `contacts/${currentContactId}`));
+
+        if (typeof window.removeContactFromAllTasks === 'function') {
+            await window.removeContactFromAllTasks(currentContactId);
+        }
+
+        hideContactDetail();
+        closeFabMenu();
+    } catch (error) {
+        showInlineError("Failed to delete contact. Please try again.");
     }
-    
-    hideContactDetail();
-    closeFabMenu();
-  } catch (error) {
-    showInlineError("Failed to delete contact. Please try again.");
-  }
 }
 
 /**
  * Closes the contact modal
  */
 function closeContactModal() {
-  document.getElementById("contactModal").classList.remove("active");
+    const contactModal = document.getElementById("contactModal");
+    const modalAvatar = document.getElementById("modalAvatar")
+    const modalHeader = document.querySelector(".modal-header");
+
+    contactModal.classList.contains("edit-contact-modal") ?
+        superToggle(contactModal, "edit-dialog-swipe-in", "edit-dialog-swipe-out") :
+        superToggle(contactModal, "dialog-swipe-in", "dialog-swipe-out")
+
+    setTimeout(() => {
+        contactModal.close();
+        contactModal.removeAttribute("class");
+        modalAvatar.classList.remove("avatar-default");
+        modalAvatar.removeAttribute("style");
+        modalHeader.classList.remove("edit-modal-header");
+        modalHeader.classList.remove("add-modal-header");
+    }, 300);
+
+    isEditMode = false;
+}
+
+/**
+ * Utility "function" for multi-toggling of two classes
+ * @param {HTMLElement} element - The element to toggle
+ * @param {String} class0 - First class for toggling
+ * @param {String} class1 - Second class for toggling
+ */
+const superToggle = function (element, class0, class1) {
+    element.classList.remove(class0);
+    element.classList.add(class1);
 }
 
 /**
  * Deletes a contact and closes it
  */
 function deleteContactFromModal() {
-  closeContactModal();
-  deleteContact();
+    closeContactModal();
+    deleteContact();
 }
 
 /**
@@ -373,10 +527,10 @@ function deleteContactFromModal() {
  * @return {Object} Object containing name, email, and phone
  */
 function getFormData() {
-  const name = document.getElementById("contactName").value.trim();
-  const email = document.getElementById("contactEmail").value.trim();
-  const phone = document.getElementById("contactPhone").value.trim();
-  return { name, email, phone };
+    const name = document.getElementById("contactName").value.trim();
+    const email = document.getElementById("contactEmail").value.trim();
+    const phone = document.getElementById("contactPhone").value.trim();
+    return {name, email, phone};
 }
 
 /**
@@ -385,30 +539,38 @@ function getFormData() {
  * @return {void}
  */
 async function saveContact(event) {
-  event.preventDefault();
+    const addedContactRef = document.getElementById("contactAdded");
+    event.preventDefault();
 
-  const formData = getFormData();
+    const formData = getFormData();
 
-  if (!validateContactForm(formData)) {
-    return;
-  }
+    if (!validateContactForm(formData)) {
+        return;
+    }
 
-  const { name, email, phone } = formData;
+    const {name, email, phone} = formData;
 
-  if (isEditMode) {
-    await updateContact(currentContactId, name, email, phone, getInitialsFromName(name));
+    if (isEditMode) {
+        await updateContact(currentContactId, name, email, phone, getInitialsFromName(name));
+    } else {
+        const newContactId = generateContactId();
+        currentContactId = newContactId;
+        await createContact(newContactId, name, email, phone, getRandomColor(), getInitialsFromName(name), false);
+        addedContactRef.classList.add("forward-animation-contact");
+        setTimeout(() => {
+            addedContactRef.classList.remove("forward-animation-contact");
+            addedContactRef.classList.add("backward-animation-contact");
+            setTimeout(() => {
+                addedContactRef.classList.remove("backward-animation-contact");
+            }, 500);
+        }, 1000);
+    }
 
-  } else {
-    const newContactId = generateContactId();
-    currentContactId = newContactId;
-    await createContact(newContactId, name, email, phone, getRandomColor(), getInitialsFromName(name), false);
-  }
+    if (document.getElementById("contactDetailView").classList.contains("active")) {
+        showContactDetail(currentContactId);
+    }
 
-  if (document.getElementById("contactDetailView").classList.contains("active")) {
-    showContactDetail(currentContactId);
-  }
-
-  closeContactModal();
+    closeContactModal();
 }
 
 /**
@@ -416,51 +578,88 @@ async function saveContact(event) {
  * @returns {void}
  */
 function setupClickListeners() {
-  const fabButton = document.getElementById("fabButton");
-  if (fabButton) {
-    fabButton.addEventListener("click", handleFabClick);
-  }
-  const editContactLink = document.getElementById("editContactLink");
-  if (editContactLink) {
-    editContactLink.addEventListener("click", (e) => {
-      e.preventDefault();
-      editContact();
-    });
-  }
-  const deleteContactLink = document.getElementById("deleteContactLink");
-  if (deleteContactLink) {
-    deleteContactLink.addEventListener("click", (e) => {
-      e.preventDefault();
-      deleteContact();
-    });
-  }
-  const backButton = document.getElementById("backButton");
-  if (backButton) {
-    backButton.addEventListener("click", hideContactDetail);
-  }
-  const modalBackdrop = document.getElementById("modalBackdrop");
-  if (modalBackdrop) {
-    modalBackdrop.addEventListener("click", closeContactModal);
-  }
-  const modalCloseBtn = document.getElementById("modalCloseBtn");
-  if (modalCloseBtn) {
-    modalCloseBtn.addEventListener("click", closeContactModal);
-  }
-  const deleteButton = document.getElementById("deleteButton");
-  if (deleteButton) {
-    deleteButton.addEventListener("click", deleteContactFromModal);
-  }
+    const fabButton = document.getElementById("fabButton");
+    if (fabButton) {
+        fabButton.addEventListener("click", handleFabClick);
+    }
+    const editContactLink = document.getElementById("editContactLink");
+    if (editContactLink) {
+        editContactLink.addEventListener("click", (e) => {
+            e.preventDefault();
+            editContact();
+        });
+    }
+    const deleteContactLink = document.getElementById("deleteContactLink");
+    if (deleteContactLink) {
+        deleteContactLink.addEventListener("click", (e) => {
+            e.preventDefault();
+            deleteContact();
+        });
+    }
+
+    // Desktop Edit/Delete buttons
+    const editContactDesktop = document.getElementById("editContactDesktop");
+    if (editContactDesktop) {
+        editContactDesktop.addEventListener("click", editContact);
+    }
+    const deleteContactDesktop = document.getElementById("deleteContactDesktop");
+    if (deleteContactDesktop) {
+        deleteContactDesktop.addEventListener("click", deleteContact);
+    }
+
+    const backButton = document.getElementById("backButton");
+    if (backButton) {
+        backButton.addEventListener("click", hideContactDetail);
+    }
+    const modalBackdrop = document.getElementById("modalBackdrop");
+    if (modalBackdrop) {
+        modalBackdrop.addEventListener("click", closeContactModal);
+    }
+    const modalCloseBtn = document.getElementById("modalCloseBtn");
+    if (modalCloseBtn) {
+        modalCloseBtn.addEventListener("click", closeContactModal);
+    }
+    const cancelButton = document.getElementById("cancelButton");
+    if (cancelButton) {
+        cancelButton.addEventListener("click", closeContactModal);
+    }
+    const deleteButton = document.getElementById("deleteButton");
+    if (deleteButton) {
+        deleteButton.addEventListener("click", deleteContactFromModal);
+    }
 }
 
+/**
+ * Initializes the contacts module by loading contacts from the database,
+ * setting up click outside listeners, add contact button event listener,
+ * and various click listeners. Also registers a media query change listener
+ * for responsive UI updates that handles modal closing and contact detail view updates.
+ * Finally, sets up the contact form submit handler.
+ * @returns {void}
+ */
 function init() {
-  loadContactsFromRTDB();
-  setupClickOutsideListener();
-  setupClickListeners();
+    const contactModal = document.getElementById("contactModal");
+    loadContactsFromRTDB();
+    setupClickOutsideListener();
+    setupAddContactBtnEventListener();
+    setupClickListeners();
 
-  const contactForm = document.getElementById("contactForm");
-  if (contactForm) {
-    contactForm.addEventListener("submit", saveContact);
-  }
+    // Register media query change listener for live UI updates
+    desktopMediaQuery.addEventListener("change", (event) => {
+        handleMediaQueryChange(event);
+
+        if (currentContactId && contactModal.open) {
+            closeContactModal()
+        }
+        showContactDetail(currentContactId);
+
+    });
+
+
+    const contactForm = document.getElementById("contactForm");
+    if (contactForm) {
+        contactForm.addEventListener("submit", saveContact);
+    }
 }
 
 document.addEventListener("DOMContentLoaded", init);

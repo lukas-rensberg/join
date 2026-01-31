@@ -71,7 +71,10 @@ function updateGreeting() {
         if (user) {
             const greetingContainer = document.querySelector(".greeting-container");
             const greetingElement = document.querySelector(".greeting-container p");
-            const nameElement = document.querySelector(".greeting-container .h1-colorized .marquee-text");
+            const createSpan = document.createElement("span");
+            const headlineElement = document.createElement("h1");
+            const headlineSpan = document.createElement("span");
+
 
             if (greetingElement) {
                 // For anonymous users, remove comma and make greeting stand alone
@@ -88,10 +91,18 @@ function updateGreeting() {
                     greetingElement.textContent = getTimeBasedGreeting() + ",";
                     greetingElement.classList.remove("greeting-guest");
                     greetingElement.classList.remove("greeting-guest-large");
+                    greetingContainer.append(createSpan);
+                    createSpan.classList.add("h1-wrapper");
+                    createSpan.append(headlineElement);
+                    headlineElement.classList.add("h1-colorized");
+                    headlineElement.append(headlineSpan);
+                    headlineSpan.classList.add("marquee-text");
                 }
             }
+            const nameElement = document.querySelector(".greeting-container .h1-colorized .marquee-text");
 
             if (nameElement) {
+                console.log(nameElement);
                 if (user.displayName) {
                     nameElement.textContent = user.displayName;
                     nameElement.title = user.displayName;

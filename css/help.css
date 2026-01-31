@@ -13,11 +13,19 @@ html {
     max-width: 1920px;
 }
 
-main {
-    text-align: justify;
-    width: 80%;
-    margin: 50px 0;
+.body-help main {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
     flex: 1;
+}
+
+.body-help .content-section {
+    text-align: justify;
+    flex: 1;
+    margin: 50px 0;
+    padding: 0 2rem 0 17rem;
+    line-height: 1.6;
 }
 
 .headline {
@@ -78,6 +86,7 @@ h3 {
     color: var(--color-primary-button-hover) !important;
 }
 
-span {
+span, a {
+    text-decoration: none;
     color: var(--main-color);
 }

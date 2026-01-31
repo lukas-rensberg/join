@@ -47,12 +47,6 @@ function showFormError(fieldId, message) {
     const errorMsg = document.createElement("span");
     errorMsg.className = "error-message";
     errorMsg.textContent = message;
-    errorMsg.style.cssText = `
-      color: #ff4646;
-      font-size: 0.75rem;
-      margin-top: 0.25rem;
-      display: block;
-    `;
     field.parentElement.appendChild(errorMsg);
   }
 }
@@ -96,6 +90,30 @@ function togglePasswordVisibility(toggleElement) {
       passwordInput.type = "password";
       img.src = "./assets/icons/visibility_off.svg";
     }
+  }
+}
+
+/**
+ * Check if all required signup fields are filled
+ * @returns {boolean} True if all required fields are filled
+ */
+function areAllFieldsFilled() {
+  const username = document.getElementById("username")?.value.trim();
+  const email = document.getElementById("email")?.value.trim();
+  const password = document.getElementById("signup-password")?.value;
+  const confirmPassword = document.getElementById("confirm-password")?.value;
+  const acceptedPolicy = document.getElementById("confirm-check")?.checked;
+
+  return !!(username && email && password && confirmPassword && acceptedPolicy);
+}
+
+/**
+ * Update the submit button state based on form completeness
+ */
+function updateSubmitButtonState() {
+  const submitButton = document.querySelector('form button[type="submit"]');
+  if (submitButton) {
+    submitButton.disabled = !areAllFieldsFilled();
   }
 }
 
@@ -149,12 +167,6 @@ function validateSignupForm(username, email, password, confirmPassword, accepted
     const errorMsg = document.createElement("span");
     errorMsg.className = "error-message";
     errorMsg.textContent = "Please accept the Privacy Policy";
-    errorMsg.style.cssText = `
-      color: #ff4646;
-      font-size: 0.75rem;
-      margin-top: 0.25rem;
-      display: block;
-    `;
     checkbox.parentElement.appendChild(errorMsg);
     return false;
   }
@@ -181,11 +193,20 @@ export function showSuccessMessage() {
 export function initSignupPage(signupUserCallback, handleAuthErrorCallback) {
   const signupForm = document.querySelector("form");
   if (signupForm && document.querySelector('input[name="username"]')) {
-    // Clear error messages when user types
+    updateSubmitButtonState();
+
     const inputs = signupForm.querySelectorAll('input[type="text"], input[type="email"], input[type="password"]');
     inputs.forEach(input => {
-      input.addEventListener("input", clearFormErrors);
+      input.addEventListener("input", () => {
+        clearFormErrors();
+        updateSubmitButtonState();
+      });
     });
+
+    const checkbox = document.getElementById("confirm-check");
+    if (checkbox) {
+      checkbox.addEventListener("change", updateSubmitButtonState);
+    }
 
     // Setup password visibility toggle for all password fields
     const passwordToggles = document.querySelectorAll(".password-icon-toggle");

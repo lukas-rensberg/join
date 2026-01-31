@@ -7,12 +7,6 @@ export function createAuthErrorMessage(message) {
   const errorDiv = document.createElement("div");
   errorDiv.className = "auth-error-message";
   errorDiv.textContent = message;
-  errorDiv.style.cssText = `
-    color: #ff0000;
-    font-size: 0.7rem;
-    margin-top: 0.5rem;
-    width: 90%;
-  `;
   return errorDiv;
 }
 
@@ -373,5 +367,93 @@ export function getTemplateAddTask() {
                     </div>
                     <ul class="subtask-list"></ul>
                 </div>`;
+}
+
+
+export function generateLoggedOutHeaderHTML() {
+  return `    
+    <img src="./assets/icons/logo-white.svg" alt="Join Logo"/>
+    <div class="header-right">
+        <span class="header-title">Kanban Project Management Tool</span>
+    </div>
+  `;
+}
+
+export function generateLoggedInHeaderHTML(userInitials) {
+  return `
+    <img src="./assets/icons/logo-white.svg" alt="Join Logo"/>
+    <div class="header-right">
+      <div class="help-container">
+        Kanban Project Management Tool
+        <a href="help.html"><img src="./assets/icons/question_mark_.svg" alt="Help"></a>
+      </div>
+      <input type="checkbox" id="slideInSideMenu"/>
+      <label for="slideInSideMenu">
+        <div class="avatar" id="toggleSideMenu">${userInitials}</div>
+      </label>
+      <div class="side-menu" id="cardLegalLinks">
+        <nav>
+          <a class="link-none" href="help.html">Help</a>
+          <a href="legal_notice.html">Legal Notice</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="#" id="logoutLink">Log Out</a>
+        </nav>
+      </div>
+    </div>
+  `;
+}
+
+/**
+ * Generates HTML for the aside navigation when the user is NOT logged in
+ * @param {string} navLinksBottom
+ * @returns {string}
+ */
+export function generateLoggedOutAsideHTML(navLinksBottom) {
+  return `
+      <div class="aside-navbar">
+        <a href="index.html" class="login-link">
+          <img src="./assets/menu_icons/login.svg" alt="Login Icon"/>
+          Log in
+        </a>
+      </div>
+      <div class="aside-links">
+        ${navLinksBottom}
+      </div>
+    `;
+}
+
+/**
+ * Generates HTML for the aside navigation when the user is logged in
+ * @param {string} navLinks
+ * @param {string} navLinksBottom
+ * @returns {string}
+ */
+export function generateLoggedInAsideHTML(navLinks, navLinksBottom) {
+  return `
+      <div class="aside-navbar">
+        ${navLinks}
+      </div>
+      <div class="aside-links">
+        ${navLinksBottom}
+      </div>
+    `;
+}
+
+/**
+ * Returns the HTML template for the edit task form with proper wrapper and close button
+ * @returns {string} HTML string for the edit task form
+ */
+export function getEditTaskTemplate() {
+  return `
+        <div class="edit-task-header">
+            <div class="close-edit-dialog"></div>
+        </div>
+        <div class="add-task-form edit-task-form">
+            ${getTemplateAddTask()}
+        </div>
+        <div class="d-card-footer">
+            <button class="confirm-edit-task-btn"></button>
+        </div>
+    `;
 }
 

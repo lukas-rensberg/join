@@ -1,52 +1,51 @@
 :root {
-  --main-color: #4589ff;
-  --main-color-secondary: #1a4796;
-  --main-radius: 30px;
-  --button-radius: 8px;
-  --border-rad-20: 20px;
-  --padding-side: 1rem;
-  --color-default: #6e52ff;
-  --color-variant1: #ff7a00;
-  --color-variant2: #ff5eb3;
-  --color-variant3: #9327ff;
-  --color-variant4: #00bee8;
-  --color-variant5: #1fd7c1;
-  --color-variant6: #ff745e;
-  --color-variant7: #ffa35e;
-  --color-variant8: #fc71ff;
-  --color-variant9: #ffc701;
-  --color-variant10: #0038ff;
-  --color-variant11: #c3ff2b;
-  --color-variant12: #ffe62b;
-  --color-variant13: #ff4646;
-  --color-variant14: #ffbb2b;
-  --color-variant15: #2bff9e;
-  --color-variant-over: #2b9eff;
-  --color-primary-button-hover: #005dff;
-  --color-primary-button-click: #ffffff;
-  --color-menu-active: #d2e3ff;
-  --color-menu-item: #42526E;
-  --color-menu-hover: #e3eeff;
-  --color-priority-urgent: #ff3d00;
-  --color-priority-medium: #ffa800;
-  --color-priority-low: #7ae229;
-  --color-light-gray: #d1d1d1;
-  --color-menu-text: #42526E;
-  --color-light-blue: #005DFF;
-  --color-border-gray: #A8A8A8;
-  --color-no-tasks-bg: #E7E7E7;
-  --color-no-tasks-border: #A8A8A8;
-  --color-card-progress-bar-bg: #F4F4F4;
-  --color-active-button: #091931;
-
+    --main-color: #4589ff;
+    --main-color-secondary: #1a4796;
+    --main-radius: 30px;
+    --button-radius: 8px;
+    --border-rad-20: 20px;
+    --padding-side: 1rem;
+    --color-default: #6e52ff;
+    --color-variant1: #ff7a00;
+    --color-variant2: #ff5eb3;
+    --color-variant3: #9327ff;
+    --color-variant4: #00bee8;
+    --color-variant5: #1fd7c1;
+    --color-variant6: #ff745e;
+    --color-variant7: #ffa35e;
+    --color-variant8: #fc71ff;
+    --color-variant9: #ffc701;
+    --color-variant10: #0038ff;
+    --color-variant11: #c3ff2b;
+    --color-variant12: #ffe62b;
+    --color-variant13: #ff4646;
+    --color-variant14: #ffbb2b;
+    --color-variant15: #2bff9e;
+    --color-variant-over: #2b9eff;
+    --color-primary-button-hover: #005dff;
+    --color-primary-button-click: #ffffff;
+    --color-menu-active: #d2e3ff;
+    --color-menu-item: #42526E;
+    --color-menu-hover: #e3eeff;
+    --color-priority-urgent: #ff3d00;
+    --color-priority-medium: #ffa800;
+    --color-priority-low: #7ae229;
+    --color-light-gray: #d1d1d1;
+    --color-menu-text: #42526E;
+    --color-light-blue: #005DFF;
+    --color-border-gray: #A8A8A8;
+    --color-no-tasks-bg: #E7E7E7;
+    --color-no-tasks-border: #A8A8A8;
+    --color-card-progress-bar-bg: #F4F4F4;
+    --color-active-button: #091931;
 }
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  font-size: 16px;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
 }
 
 button,
@@ -56,8 +55,8 @@ input[type="submit"],
 .btn-primary,
 .btn-secondary,
 .btn-signup {
-  cursor: pointer;
-  border: none;
+    cursor: pointer;
+    border: none;
 }
 
 input[type="text"],
@@ -66,17 +65,21 @@ input[type="password"],
 input[type="tel"],
 textarea,
 select {
-  border: none;
-  flex:1;
-  outline: none;
+    border: none;
+    flex: 1;
+    outline: none;
 }
 
 html {
-  scroll-behavior: smooth;
-  overflow-x: hidden;
-  scroll-padding-top: 0;
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    scroll-padding-top: 0;
 }
 
 html:focus-within {
-  scroll-behavior: auto;
+    scroll-behavior: auto;
+}
+
+html:has(dialog[open]) {
+    overflow: hidden;
 }
