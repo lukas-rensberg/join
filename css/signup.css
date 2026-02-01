@@ -1,358 +1,347 @@
 .body-signup {
-  background-color: var(--main-color);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-  width: 100vw;
-  max-width: 1920px;
+    background-color: var(--main-color);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    width: 100vw;
+    max-width: 1920px;
 }
 
 main {
-  display: flex;
-  align-items: center;
-  height: 100%;
-  width: 100%;
-  margin-top: 4.5rem;
-  max-width: calc(25rem + (2 * var(--padding-side)));
-  padding: 0 var(--padding-side);
-  flex: 1;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    margin-top: 4.5rem;
+    max-width: calc(25rem + (2 * var(--padding-side)));
+    padding: 0 var(--padding-side);
+    flex: 1;
 }
 
 .logo-container-signup {
-  width: 6.31rem;
-  height: 7.63rem;
-  display: flex;
-  position: absolute;
-  top: 2%;
-  left: 2%;
-  background: url("../assets/icons/logo-white.svg") center center no-repeat;
-  transform: scale(0.5);
+    width: 6.31rem;
+    height: 7.63rem;
+    display: flex;
+    position: absolute;
+    top: 2%;
+    left: 2%;
+    background: url("../assets/icons/logo-white.svg") center center no-repeat;
+    transform: scale(0.5);
 }
 
 form {
-  margin-top: 4.5rem;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  width: 100%;
-  background-color: white;
-  border-radius: var(--main-radius);
-  position: relative;
-  box-shadow: 0 0 0.75rem 0.25rem rgba(0, 0, 0, 0.08);
+    margin-top: 4.5rem;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    background-color: white;
+    border-radius: var(--main-radius);
+    position: relative;
+    box-shadow: 0 0 0.75rem 0.25rem rgba(0, 0, 0, 0.08);
 }
 
 h2 {
-  width: 100%;
-  margin-top: 1.25rem;
-  text-align: center;
-  font-size: 2.5rem;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    width: 100%;
+    margin-top: 1.25rem;
+    text-align: center;
+    font-size: 2.5rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 h2::after {
-  content: "";
-  position: absolute;
-  bottom: -0.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 5.63rem;
-  height: 0.19rem;
-  background: var(--main-color);
-  border-radius: 0.12rem;
+    content: "";
+    position: absolute;
+    bottom: -0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 5.63rem;
+    height: 0.19rem;
+    background: var(--main-color);
+    border-radius: 0.12rem;
 }
 
 .back-arrow-signup {
-  width: 1.5rem;
-  height: 1.5rem;
-  border-radius: 50%;
-  position: absolute;
-  left: 1.75rem;
-  background: url("../assets/icons/arrow-left-line.svg") center center no-repeat;
-  transform: scale(1);
-  cursor: pointer;
-
-  &:hover {
-    cursor: pointer;
-  }
-
-  &:active {
-    transform: scale(0.9);
+    width: 1.5rem;
+    height: 1.5rem;
     border-radius: 50%;
-    background-color: #e3eeff;
-  }
+    position: absolute;
+    left: 1.75rem;
+    background: url("../assets/icons/arrow-left-line.svg") center center no-repeat;
+    transform: scale(1);
+    cursor: pointer;
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    &:active {
+        transform: scale(0.9);
+        border-radius: 50%;
+        background-color: #e3eeff;
+    }
 }
 
 .input-field {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 90%;
-  height: 2.5rem;
-  margin-top: 1.25rem;
-  border: none;
-  position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 90%;
+    height: 2.5rem;
+    margin-top: 1.25rem;
+    border: none;
+    position: relative;
 }
 
 p {
-  font-size: 0.88rem;
-  text-align: center;
+    font-size: 0.88rem;
+    text-align: center;
 }
 
 .icon {
-  width: 1.5rem;
-  height: 1.5rem;
-  position: absolute;
-  right: 0.75rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    position: absolute;
+    right: 0.75rem;
 }
 
 .user-name {
-  background: url("../assets/icons/person.svg") center center no-repeat;
-  transform: scale(1);
+    background: url("../assets/icons/person.svg") center center no-repeat;
+    transform: scale(1);
 }
 
 .user-email {
-  background: url("../assets/icons/mail.svg") center center no-repeat;
-  transform: scale(1);
+    background: url("../assets/icons/mail.svg") center center no-repeat;
+    transform: scale(1);
 }
 
 .user-password {
-  background: url("../assets/icons/lock.svg") center center no-repeat;
-  transform: scale(0.8);
+    background: url("../assets/icons/lock.svg") center center no-repeat;
+    transform: scale(0.8);
 }
 
 .password-icon-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: opacity 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s ease;
 }
 
 .password-icon-toggle.clickable {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .password-icon-toggle.clickable:hover {
-  opacity: 0.7;
+    opacity: 0.7;
 }
 
 .password-icon-toggle img {
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
 }
 
 input[type="text"],
 input[type="email"],
 input[type="password"] {
-  width: 100%;
-  height: 100%;
-  border: none;
-  border-bottom: 0.06rem solid var(--color-light-gray);
-  padding: 0 0.75rem;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-bottom: 0.06rem solid var(--color-light-gray);
+    padding: 0 0.75rem;
 
-  &:focus {
-    outline: none;
-    border-bottom: 0.06rem solid var(--main-color);
-  }
+    &:focus {
+        outline: none;
+        border-bottom: 0.06rem solid var(--main-color);
+    }
 
-  &::placeholder {
-    color: var(--color-light-gray);
-  }
+    &::placeholder {
+        color: var(--color-light-gray);
+    }
 }
 
 .pw-not-matching {
-  margin-top: 0.25rem;
-  width: 90%;
-  height: 0.75rem;
-  font-size: 0.63rem;
-  color: red;
-  visibility: hidden;
+    margin-top: 0.25rem;
+    width: 90%;
+    height: 0.75rem;
+    font-size: 0.63rem;
+    color: red;
+    visibility: hidden;
 }
 
 .checkbox-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 1.25rem;
-  gap: 0.5rem;
-  font-size: 0.75rem;
-  color: #42526e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1.25rem;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    color: #42526e;
 
-  a {
-    color: var(--main-color);
-    text-decoration: none;
-    font-size: 0.88rem;
-  }
+    a {
+        color: var(--main-color);
+        text-decoration: none;
+        font-size: 0.88rem;
+    }
 }
 
 .checkbox {
 
-  label {
-    font-size: 0.88rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-
-    &::before {
-      content: url(../assets/icons/unchecked.svg);
-      transform: scale(0.8);
-      width: 1rem;
-      height: 1rem;
-      margin-right: 1rem;
-
-      &:hover {
+    label {
+        font-size: 0.88rem;
         cursor: pointer;
-      }
+        display: flex;
+        align-items: center;
 
+        &::before {
+            content: url(../assets/icons/unchecked.svg);
+            transform: scale(0.8);
+            width: 1rem;
+            height: 1rem;
+            margin-right: 1rem;
+
+            &:hover {
+                cursor: pointer;
+            }
+
+        }
     }
-  }
 
-  input[type="checkbox"] {
-    margin-right: 1rem;
-    cursor: pointer;
-    opacity: 0;
-    position: absolute;
+    input[type="checkbox"] {
+        margin-right: 1rem;
+        cursor: pointer;
+        opacity: 0;
+        position: absolute;
 
-    &:hover+label::before {
-      cursor: pointer;
+        &:hover + label::before {
+            cursor: pointer;
+        }
+
+        &:checked + label::before {
+            content: url(../assets/icons/checked.svg);
+        }
     }
-
-    &:checked+label::before {
-      content: url(../assets/icons/checked.svg);
-    }
-  }
 }
 
 button[type="submit"] {
-  margin: 2rem 0;
-  width: 8.13rem;
-  height: 2.5rem;
-  border: none;
-  border-radius: var(--button-radius);
-  background-color: var(--main-color);
-  color: #ffffff;
-  font-size: 1rem;
-  cursor: pointer;
+    margin: 2rem 0;
+    width: 8.13rem;
+    height: 2.5rem;
+    border: none;
+    border-radius: var(--button-radius);
+    background-color: var(--main-color);
+    color: #ffffff;
+    font-size: 1rem;
+    cursor: pointer;
 
-  &:hover:not(:disabled) {
-    background-color: var(--color-primary-button-hover);
-  }
+    &:hover:not(:disabled) {
+        background-color: var(--color-primary-button-hover);
+    }
 
-  &:disabled {
-    background-color: #b3b3b3;
-    cursor: not-allowed;
-  }
+    &:disabled {
+        background-color: #b3b3b3;
+        cursor: not-allowed;
+    }
 }
 
 footer {
-  width: 100%;
-  height: 3.75rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1.25rem;
-  color: white;
-  margin-top: 2.5rem;
+    a {
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 0.88rem;
+        margin-bottom: 2rem;
 
-  a {
-    color: #ffffff;
-    text-decoration: none;
-    font-size: 0.88rem;
-    margin-bottom: 2rem;
-
-    &:hover {
-      cursor: pointer;
+        &:hover {
+            cursor: pointer;
+        }
     }
-  }
 }
 
 .signed-up-container {
-  position: absolute;
-  z-index: 10;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  visibility: hidden;
+    position: absolute;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    visibility: hidden;
 }
 
 .signed-up-text {
-  position: absolute;
-  z-index: 10;
-  border-radius: var(--button-radius);
-  padding: 1.5rem 1rem;
-  width: 15rem;
-  height: 2.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--main-color);
-  top: 50%;
-  left: 50%;
-  color: whitesmoke !important;
-  opacity: 0;
-  transform: translate(-50%, 60%);
-  animation: slideIn 500ms ease forwards;
+    position: absolute;
+    z-index: 10;
+    border-radius: var(--button-radius);
+    padding: 1.5rem 1rem;
+    width: 15rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--main-color);
+    top: 50%;
+    left: 50%;
+    color: whitesmoke !important;
+    opacity: 0;
+    transform: translate(-50%, 60%);
+    animation: slideIn 500ms ease forwards;
 }
 
 @keyframes slideIn {
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%);
-  }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
 }
 
 @media (min-width: 480px) {
-  .logo-container-signup {
-    transform: scale(0.6);
-  }
+    .logo-container-signup {
+        transform: scale(0.6);
+    }
 }
 
 @media (min-width: 768px) {
-  .legal-link {
-    font-size: 1rem;
-  }
+    .legal-link {
+        font-size: 1rem;
+    }
 }
 
 @media (min-width: 1000px) {
-  .logo-container-signup {
-    transform: scale(0.75);
-    top: 5%;
-    left: 5%;
-  }
+    .logo-container-signup {
+        transform: scale(0.75);
+        top: 5%;
+        left: 5%;
+    }
 }
 
 @media (min-width: 1400px) {
-  .logo-container-signup {
-    top: 7%;
-    left: 6%;
-    transform: scale(1);
-  }
+    .logo-container-signup {
+        top: 7%;
+        left: 6%;
+        transform: scale(1);
+    }
 
-  form {
-    scale: 1.25;
-  }
+    form {
+        scale: 1.25;
+    }
 
-  footer a {
-    font-size: 1.25rem;
-  }
+    footer a {
+        font-size: 1.25rem;
+    }
 }
 
 .error-message {
-  color: #ff4646;
-  font-size: 0.75rem;
-  margin-top: 3.25rem;
-  display: block;
-  position: absolute;
+    color: #ff4646;
+    font-size: 0.75rem;
+    margin-top: 3.25rem;
+    display: block;
+    position: absolute;
 }
 
 .input-field input:focus,
 .input-field input:invalid {
-  outline: none;
+    outline: none;
 }
-
-@media (min-width: 3000px) {}

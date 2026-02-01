@@ -140,6 +140,7 @@ footer {
     padding: 0 1.5rem;
     background-color: #ffffff;
     position: sticky;
+    gap: unset;
     bottom: 0;
     left: 0;
     z-index: 1000;
@@ -156,14 +157,14 @@ footer {
     }
 
     .nav-item:has(.nav-login) {
-        margin-right: auto;
+        /*margin-right: auto;*/
     }
 
     .legal-link {
         font-size: 0.875rem;
         color: var(--color-menu-item);
         text-decoration: none;
-        margin-left: 1.5rem;
+        /*margin-left: 1.5rem;*/
 
         &.active {
             color: var(--main-color);
