@@ -15,7 +15,7 @@
 }
 
 .contacts-container {
-    padding: 1rem;
+    padding: var(--padding-side);
     width: min(465px, 100%);
 }
 
@@ -262,13 +262,12 @@
 }
 
 .back-button {
-    background: none;
-    border: none;
-    cursor: pointer;
+    background-color: unset;
+    border-radius: 99rem;
+    display: flex;
     justify-content: center;
     align-items: center;
-    display: flex;
-    transition: 0.2s;
+    transition: all 0.2s ease;
 
     &::before {
         width: 2rem;
@@ -277,7 +276,12 @@
         background: url("../assets/icons/arrow-left-line.svg") center center no-repeat;
     }
 
-    &:hover, &:active {
+    &:hover {
+        cursor: pointer;
+    }
+
+    &:active {
+        background-color: var(--color-menu-active);
         transform: scale(1.05);
     }
 }
@@ -863,3 +867,13 @@
         flex-shrink: 0;
     }
 }
+
+@media (width >= 812px) and (width <= 1450px) {
+    .contact-detail-view.active {
+        display: flex;
+        margin-left: 16rem;
+        width: 50vw;
+    }
+}
+
+

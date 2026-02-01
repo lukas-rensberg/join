@@ -3,27 +3,32 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-height: 100vh;
-    width: 100vw;
+    height: 100vh;
+    width: 100%;
     max-width: 120rem;
+    overflow: hidden;
 }
 
 .page-container {
-  width: 100%;
-  max-width: 500px;
-  padding-top: 60px;
-  min-height: 100vh;
+    width: 100%;
+    max-width: 500px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
 .add-task-form-container {
-  display: flex;
-  flex-direction: column;
-  padding: 0 var(--padding-side);
-  width: 100%;
-  overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 0 var(--padding-side);
+    width: 100%;
+    flex: 1;
+    overflow-y: auto;
 }
 
 .task-description {
+    cursor: pointer;
     margin-top: 1rem;
     width: 100%;
     min-height: 6.5rem;
@@ -41,7 +46,7 @@
     flex-direction: column;
     gap: 1rem;
 
-    &p {
+    & p {
         margin: 2rem 0 0 0;
         font-size: 1rem;
         font-weight: 700;
@@ -86,33 +91,6 @@
     font-weight: 400;
 }
 
-.task-description {
-    cursor: pointer;
-    margin-top: 1rem;
-    width: 100%;
-    min-height: 6.5rem;
-    border: 0.0625rem solid var(--color-light-gray);
-    border-radius: 0 0.625rem 0.625rem 0.625rem;
-    padding: 0.5rem 1rem;
-    background: #ffffff;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-    outline: none;
-    font-size: 0.9rem;
-    resize: vertical;
-    overflow-y: auto;
-    transition: border-color 0.2s;
-
-
-    &::placeholder {
-        color: var(--color-light-gray);
-    }
-
-    &:focus {
-        border-color: var(--main-color);
-        cursor: text;
-    }
-}
-
 .input-with-icon {
     position: relative;
     display: flex;
@@ -127,14 +105,8 @@
 }
 
 /* Error and Success Message Styles */
-.success-banner {
-    position: fixed;
-    top: 60px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: calc(100% - 40px);
-    max-width: 460px;
-    background-color: #4caf50;
+.success-banner,
+.error-banner {
     color: white;
     padding: 12px 20px;
     border-radius: 8px;
@@ -149,6 +121,16 @@
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s ease;
+}
+
+.success-banner {
+    position: fixed;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 40px);
+    max-width: 460px;
+    background-color: #4caf50;
 }
 
 .success-banner.visible {
@@ -176,20 +158,6 @@
     width: calc(100% - 40px);
     max-width: 460px;
     background-color: #ff3d00;
-    color: white;
-    padding: 12px 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    z-index: 2000;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
 }
 
 .error-banner.visible {
@@ -237,7 +205,7 @@
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    background-image: url(../assets/menu_icons/arrow-drop-down.svg);
+    background-image: url('../assets/menu_icons/arrow-drop-down.svg');
     background-repeat: no-repeat;
     background-position: right 1rem center;
     background-size: 0.5rem;
@@ -260,45 +228,14 @@
 .button-group {
     display: flex;
     justify-content: center;
-    gap: 15px;
-    padding: 15px var(--padding-side);
-    background-color: transparent;
-    position: fixed;
-
-    bottom: 60px;
-    z-index: 1100;
+    gap: 1rem;
+    padding: var(--padding-side);
+    background-color: white;
+    position: sticky;
+    bottom: 0;
+    width: 100%;
+    margin-top: auto;
 }
-
-/*.btn-create {*/
-/*    background-color: var(--main-color);*/
-/*    color: #ffffff;*/
-/*    border: none;*/
-
-/*    &:hover {*/
-/*        background-color: var(--color-primary-button-hover);*/
-/*    }*/
-
-/*    &:active {*/
-/*        background-color: var(--color-primary-button-click);*/
-/*        color: var(--main-color);*/
-
-/*        &::after {*/
-/*            background: url('../assets/icons/check_blue.svg') center center no-repeat;*/
-/*        }*/
-/*    }*/
-
-/*    &::before {*/
-/*        content: 'Create Task';*/
-/*    }*/
-
-/*    &::after {*/
-/*        content: '';*/
-/*        background: url('../assets/menu_icons/check.svg') center center no-repeat;*/
-/*        width: 20px;*/
-/*        height: 20px;*/
-/*        transform: scale(1);*/
-/*    }*/
-/*}*/
 
 .select-wrapper select option {
     background-color: #fff;
@@ -344,22 +281,6 @@
     width: 1.2rem;
 }
 
-@media (width < 812px) {
-    .button-group {
-        width: 100%;
-        background-color: white;
-
-        & button {
-            padding: 0.5rem 0.5rem;
-            font-size: 1rem;
-        }
-    }
-
-    div.mobile-last {
-        margin-bottom: 6rem;
-    }
-}
-
 @media (width >= 812px) {
     .body-add-task {
         align-items: unset;
@@ -370,8 +291,33 @@
     }
 
     .button-group {
-        right: 4rem;
+        max-width: 500px;
+        background-color: white;
+        padding: var(--padding-side) var(--padding-side) 2rem;
+    }
+}
+
+@media (width < 1100px) {
+    .button-group {
+        & button {
+            padding: 0.5rem 0.5rem;
+            font-size: 1rem;
+        }
+    }
+}
+
+@media (width >= 1100px) {
+    .body-add-task {
+        align-items: unset;
+    }
+
+    .button-group {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        padding: 2rem 4rem;
         justify-content: flex-end;
         background-color: transparent;
+        width: auto;
     }
 }

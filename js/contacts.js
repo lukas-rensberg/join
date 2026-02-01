@@ -13,11 +13,11 @@ import {showInlineError} from "./error-handler.js";
 let contacts = [];
 let currentContactId = null;
 let isEditMode = false;
-const desktopMediaQuery = window.matchMedia("(min-width: 812px)");
+const desktopMediaQuery = window.matchMedia("(min-width: 1450px)");
 
 /**
  * Checks if the current viewport is desktop size
- * @returns {boolean} True if viewport width >= 812px
+ * @returns {boolean} True if viewport width >= 1450px
  */
 function isDesktop() {
     return desktopMediaQuery.matches;
