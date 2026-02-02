@@ -872,7 +872,11 @@
     .contact-detail-view.active {
         display: flex;
         margin-left: 16rem;
-        width: 50vw;
+        width: calc(100vw - 250px);
+    }
+
+    .contact-detail-view-desktop{
+        display: none;
     }
 }
 
