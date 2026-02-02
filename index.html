@@ -1,78 +1,78 @@
 <!DOCTYPE html>
 <html lang="de">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Join | Login</title>
     <link
-      rel="shortcut icon"
-      href="./assets/icons/logo-blue.svg"
-      type="image/svg+xml"
+            rel="shortcut icon"
+            href="./assets/icons/logo-blue.svg"
+            type="image/svg+xml"
     />
-    <link rel="stylesheet" href="./css/font.css" />
-    <link rel="stylesheet" href="./style.css" />
-    <link rel="stylesheet" href="./css/login.css" />
-    <link rel="stylesheet" href="./css/shared.css" />
-  </head>
+    <link rel="stylesheet" href="./css/font.css"/>
+    <link rel="stylesheet" href="./style.css"/>
+    <link rel="stylesheet" href="./css/login.css"/>
+    <link rel="stylesheet" href="./css/shared.css"/>
+</head>
 
-  <body class="body-login">
-    <div class="logo-wrapper">
-      <div class="logo-container"></div>
+<body class="body-login">
+<div class="logo-wrapper">
+    <div class="logo-container"></div>
+</div>
+
+<!-- Login Form Container -->
+<div class="login-container">
+    <div class="login-card">
+        <form>
+            <h2 class="login-title">Log in</h2>
+            <div class="input-group">
+                <input
+                        type="email"
+                        placeholder="Email"
+                        class="input-field"
+                        id="email"
+                        name="email"
+                        autocomplete="email"
+                /><span class="user-email"></span>
+            </div>
+
+            <div class="input-group">
+                <input
+                        type="password"
+                        placeholder="Password"
+                        class="input-field"
+                        autocomplete="current-password"
+                        id="password"
+                        name="password"
+                />
+                <span class="password-icon-toggle" data-target="password">
+              <img src="./assets/icons/lock.svg" alt="Password"/>
+            </span>
+            </div>
+
+            <div class="button-container">
+                <button type="submit" class="btn-primary">Log in</button>
+                <button type="button" class="btn-secondary">Guest log in</button>
+            </div>
+        </form>
     </div>
 
-    <!-- Login Form Container -->
-    <div class="login-container">
-      <div class="login-card">
-        <form>
-          <h2 class="login-title">Log in</h2>
-          <div class="input-group">
-            <input
-              type="email"
-              placeholder="Email"
-              class="input-field"
-              id="email"
-              name="email"
-              autocomplete="email"
-            /><span class="user-email"></span>
-          </div>
-
-          <div class="input-group">
-            <input
-              type="password"
-              placeholder="Password"
-              class="input-field"
-              autocomplete="current-password"
-              id="password"
-              name="password"
-            />
-            <span class="password-icon-toggle" data-target="password">
-              <img src="./assets/icons/lock.svg" alt="Password" />
-            </span>
-          </div>
-
-          <div class="button-container">
-            <button type="submit" class="btn-primary">Log in</button>
-            <button type="button" class="btn-secondary">Guest log in</button>
-          </div>
-        </form>
-      </div>
-
-      <div class="signup-section">
+    <div class="signup-section">
         <p>Not a Join user?</p>
         <button
-          class="btn-signup"
-          onclick="window.location.href='./signup.html'"
+                class="btn-signup"
+                onclick="window.location.href='./signup.html'"
         >
-          Sign up
+            Sign up
         </button>
-      </div>
     </div>
-    <footer class="legal-links">
-      <a href="./privacy.html" class="legal-link">Privacy Policy</a>
-      <a href="./legal_notice.html" class="legal-link">Legal Notice</a>
-    </footer>
+</div>
+<footer class="legal-links">
+    <a href="./privacy.html" class="legal-link">Privacy Policy</a>
+    <a href="./legal_notice.html" class="legal-link">Legal Notice</a>
+</footer>
 
-    <script src="script.js"></script>
-    <script type="module" src="./js/auth.js"></script>
-  </body>
+<script src="script.js"></script>
+<script type="module" src="./js/auth.js"></script>
+</body>
 </html>

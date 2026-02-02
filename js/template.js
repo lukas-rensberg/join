@@ -137,6 +137,15 @@ export function getTemplateTaskCard(element, subtasksDone, totalSubtasks, progre
 }
 
 /**
+ * Returns the HTML template shown when a column has no tasks.
+ * @param {string} section - Display name for the empty state message.
+ * @returns {string} HTML string for the empty state display.
+ */
+export function getNoTaskTemplate(section) {
+    return `<div class="no-tasks">No tasks ${section}</div>`;
+}
+
+/**
  * Returns HTML for a member card used inside the task dialog's assigned members.
  * @param {string} memberName - Full name of the member.
  * @param {string} memberInitials - Initials to display in the avatar.

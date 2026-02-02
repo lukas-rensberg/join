@@ -291,13 +291,12 @@ export function filterOptions(type, container = document) {
  */
 function closeDropdownOnClickOutside(event, container = document) {
     const types = ['contact', 'category'];
-
     types.forEach(type => {
         const { wrapper, dropdownContent, dropdownHeader } = getDropdownElements(type, container);
 
         if (!wrapper || !dropdownContent || !dropdownHeader) return;
 
-        if (!wrapper.contains(event.target) && type === 'contact') {
+        if (!wrapper.contains(event.target) && type) {
             clearDropdown(type, container);
         }
     });

@@ -16,7 +16,8 @@ import {
     getTemplateMarkedUser,
     getTemplateRemainingMembers,
     getTemplateAddTask,
-    getEditTaskTemplate
+    getEditTaskTemplate,
+    getNoTaskTemplate
 } from "./template.js";
 
 import {handleCreateTaskFromBoard} from "./add-task.js";
@@ -466,7 +467,7 @@ function openAddTaskAside() {
         icon.addEventListener('click', () => {
             const category = icon.dataset.category || 'to-do';
             setTargetCategory(category);
-            
+
             if (isDesktop()) {
                 createAddTask();
                 swipeInAddTaskAside();
@@ -1142,18 +1143,6 @@ function moveTaskTo(event, taskId, category) {
     closeAllSwapMenus();
 }
 
-
-/**
- * Returns the HTML template shown when a column has no tasks.
- * @param {string} section - Display name for the empty state message.
- * @returns {string} HTML string for the empty state display.
- */
-function getNoTaskTemplate(section) {
-    return `<div class="no-tasks">No tasks ${section}</div>`;
-}
-
-
-
 /**
  * Opens the task dialog for a given task id, displaying task details with swipe-in animation.
  * Initializes members and subtasks display within the dialog.
@@ -1162,8 +1151,18 @@ function getNoTaskTemplate(section) {
  */
 function openDialog(index) {
     let element = tasks.filter((task) => task["id"] === `${index}`)[0];
+
+    // if (!isDesktop()) {
+    //     dialogRef.classList.add("dialog-task")
+    //     dialogRef.classList.add("dialog-swipe-in-mobile");
+    // } else {
+    //     dialogRef.classList.add("dialog-task")
+    //     dialogRef.classList.add("dialog-swipe-in");
+    // }
+
     dialogRef.classList.remove("dialog-swipe-out");
     dialogRef.classList.add("dialog-swipe-in");
+
     const dueDate = element["dueDate"] ? formatDate(element["dueDate"]) : "No due date set";
     dialogRef.innerHTML = getTemplateDialog(element, dueDate);
     initMembers(element["member"]);
@@ -1194,6 +1193,7 @@ function closeDialog() {
     dialogRef.classList.add("dialog-swipe-out");
     setTimeout(() => {
         dialogRef.close();
+        // dialogRef.removeAttribute("class")
     }, 300);
 
 }
