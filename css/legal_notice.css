@@ -1,4 +1,4 @@
-.body-leagal-notice {
+.body-legal-notice {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -8,7 +8,7 @@
     max-width: 1920px;
 }
 
-.body-leagal-notice main {
+.body-legal-notice main {
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -76,7 +76,7 @@
 }
 
 @media (width <= 812px) {
-    .body-leagal-notice main {
+    .body-legal-notice main {
         flex-direction: column;
     }
 

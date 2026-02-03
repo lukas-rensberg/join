@@ -228,7 +228,8 @@ input[type="text"] {
     padding: 7rem;
     border-radius: 1.5rem;
     border: 0.0625rem dashed var(--color-no-tasks-border);
-    box-shadow: 0 0 0.25rem 0 rgba(0, 0, 0, 0.16);
+    /*box-shadow: 0 0 0.25rem 0 rgba(0, 0, 0, 0.16);*/
+    box-shadow: inset 0 10px 20px 2px rgba(0, 0, 0, 0.5);
 }
 
 .card-headline {
@@ -241,12 +242,11 @@ input[type="text"] {
 .card-swap-icon {
     visibility: hidden;
     position: relative;
-    background: url("../assets/icons/swap_horiz.svg") center center no-repeat;
     width: 1.5rem;
     height: 1.625rem;
     border-radius: 0.375rem;
     box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.15);
-    background-color: var(--color-card-progress-bar-bg);
+    background: var(--color-card-progress-bar-bg) url("../assets/icons/swap_horiz.svg") no-repeat center center;
 
     &:hover {
         cursor: pointer;

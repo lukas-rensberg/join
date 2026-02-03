@@ -1,5 +1,6 @@
 /*footer in signup.html and index.html*/
-footer {
+.body-signup footer,
+.body-login footer{
     width: 100%;
     height: 3.75rem;
     display: flex;

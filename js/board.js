@@ -61,26 +61,36 @@ function handleBoardMediaQueryChange(event) {
             window.location.href = `add-task.html?category=${targetCategory}`;
         }, 300);
     }
+
+    if (dialogRef.open) {
+        if (event.matches) {
+            dialogRef.classList.remove("dialog-swipe-in-mobile");
+            dialogRef.classList.add("dialog-swipe-in-desktop");
+        } else {
+            dialogRef.classList.remove("dialog-swipe-in-desktop");
+            dialogRef.classList.add("dialog-swipe-in-mobile");
+        }
+    }
 }
 
 /**
- * Speichert die Ziel-Kategorie für neue Tasks.
- * Wird gesetzt, wenn ein spalten-spezifischer Plus-Button geklickt wird.
+ * Stores the target category for new tasks.
+ * Gets set when a column-specific plus button is clicked.
  * @type {string}
  */
 let targetCategory = 'to-do';
 
 /**
- * Gibt die aktuell ausgewählte Ziel-Kategorie für neue Tasks zurück.
- * @returns {string} Die Kategorie-ID ('to-do', 'in-progress', 'await-feedback')
+ * Returns the currently selected target category for new tasks.
+ * @returns {string} The category ID ('to-do', 'in-progress', 'await-feedback')
  */
 export function getTargetCategory() {
     return targetCategory;
 }
 
 /**
- * Setzt die Ziel-Kategorie für den nächsten zu erstellenden Task.
- * @param {string} category - Die Kategorie-ID ('to-do', 'in-progress', 'await-feedback')
+ * Sets the target category for the next task to be created.
+ * @param {string} category - The category ID ('to-do', 'in-progress', 'await-feedback')
  * @returns {void}
  */
 function setTargetCategory(category) {
@@ -462,7 +472,7 @@ function openAddTaskAside() {
     const openIcons = document.querySelectorAll('.add-task-icon');
     const addTaskBtn = document.querySelector('.add-task-btn');
 
-    // Plus-Icons mit spalten-spezifischer Kategorie - dynamisch per isDesktop()
+    // Plus icons with column-specific category - dynamically via isDesktop()
     openIcons.forEach(icon => {
         icon.addEventListener('click', () => {
             const category = icon.dataset.category || 'to-do';
@@ -477,7 +487,7 @@ function openAddTaskAside() {
         });
     });
 
-    // Großer "Add Task" Button - Standard ist 'to-do'
+    // Large "Add Task" button - default is 'to-do'
     if (addTaskBtn) {
         addTaskBtn.addEventListener('click', () => {
             setTargetCategory('to-do');
@@ -1152,16 +1162,16 @@ function moveTaskTo(event, taskId, category) {
 function openDialog(index) {
     let element = tasks.filter((task) => task["id"] === `${index}`)[0];
 
-    // if (!isDesktop()) {
-    //     dialogRef.classList.add("dialog-task")
-    //     dialogRef.classList.add("dialog-swipe-in-mobile");
-    // } else {
-    //     dialogRef.classList.add("dialog-task")
-    //     dialogRef.classList.add("dialog-swipe-in");
-    // }
+    if (isDesktop()) {
+        dialogRef.classList.add("dialog-task")
+        dialogRef.classList.add("dialog-swipe-in-desktop");
+    } else {
+        dialogRef.classList.add("dialog-task")
+        dialogRef.classList.add("dialog-swipe-in-mobile");
+    }
 
-    dialogRef.classList.remove("dialog-swipe-out");
-    dialogRef.classList.add("dialog-swipe-in");
+    // dialogRef.classList.remove("dialog-swipe-out");
+    // dialogRef.classList.add("dialog-swipe-in");
 
     const dueDate = element["dueDate"] ? formatDate(element["dueDate"]) : "No due date set";
     dialogRef.innerHTML = getTemplateDialog(element, dueDate);
@@ -1189,11 +1199,19 @@ function openDialog(index) {
  * @returns {void}
  */
 function closeDialog() {
-    dialogRef.classList.remove("dialog-swipe-in");
-    dialogRef.classList.add("dialog-swipe-out");
+    if (isDesktop()) {
+        dialogRef.classList.remove("dialog-swipe-in-desktop");
+        dialogRef.classList.add("dialog-swipe-out-desktop");
+    } else {
+        dialogRef.classList.remove("dialog-swipe-in-mobile");
+        dialogRef.classList.add("dialog-swipe-out-mobile");
+    }
+
     setTimeout(() => {
+        setTimeout(() => {
+            dialogRef.removeAttribute("class")
+        }, 600);
         dialogRef.close();
-        // dialogRef.removeAttribute("class")
     }, 300);
 
 }

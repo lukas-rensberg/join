@@ -2,6 +2,7 @@
 /*    overflow: hidden;*/
 /*}*/
 
+/* Mobile Default (< 812px): Von rechts in die Mitte */
 .dialog-task {
     display: flex;
     border: none;
@@ -11,9 +12,10 @@
     height: min(700px, calc(100vh - 1rem));
     position: fixed;
     z-index: 1100;
-    top: 100%;
-    left: 50%;
+    top: 50%;
+    left: 100%;
     opacity: 0;
+    transform: translateY(-50%);
     border-radius: var(--main-radius);
     box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.1);
 
@@ -23,29 +25,33 @@
     }
 }
 
-.dialog-swipe-in {
-    animation: dialogSwipeIn 300ms ease-in-out forwards
+/* Mobile (< 812px): Animation von rechts */
+.dialog-swipe-in-mobile {
+    animation: dialogSwipeInMobile 300ms ease-in-out forwards
 }
 
-@keyframes dialogSwipeIn {
+@keyframes dialogSwipeInMobile {
     100% {
         opacity: 1;
-        transform: translateX(-50%) translateY(-125%);
+        transform: translate(-50%, -50%);
+        left: 50%;
     }
 }
 
-.dialog-swipe-out {
-    animation: dialogSwipeOut 300ms ease-in-out forwards;
+.dialog-swipe-out-mobile {
+    animation: dialogSwipeOutMobile 300ms ease-in-out forwards;
 }
 
-@keyframes dialogSwipeOut {
+@keyframes dialogSwipeOutMobile {
     0% {
         opacity: 1;
-        transform: translateX(-50%) translateY(-125%);
+        transform: translateX(-50%) translateY(-50%);
+        left: 50%;
     }
     100% {
         opacity: 0;
-        transform: translateX(-50%) translateY(100%);
+        transform: translateY(-50%);
+        left: 100%;
     }
 }
 
@@ -303,49 +309,13 @@ strong {
     }
 }
 
-@media (width < 500px) {
-    .dialog-task {
-        top: 50%;
-        left: 100%;
-        transform: translateY(-50%);
-    }
-
-    .dialog-swipe-in {
-        animation: dialogSwipeIn 300ms ease-in-out forwards
-    }
-
-    @keyframes dialogSwipeIn {
-        100% {
-            opacity: 1;
-            transform: translate(-50%, -50%);
-            left: 50%;
-        }
-    }
-
-    .dialog-swipe-out {
-        animation: dialogSwipeOut 300ms ease-in-out forwards;
-    }
-
-    @keyframes dialogSwipeOut {
-        0% {
-            opacity: 1;
-            transform: translateX(-50%) translateY(-50%);
-            left: 50%;
-        }
-        100% {
-            opacity: 0;
-            transform: translateY(-50%);
-            left: 100%;
-        }
-    }
-
+/* Mobile (< 812px): Zusätzliche Styles */
+@media (width < 812px) {
     .d-assigned-members {
         max-height: 9rem;
     }
 
     dialog {
-        transform: translateX(50%) translateY(-50%);
-
         section {
             overflow: auto;
         }
@@ -370,24 +340,42 @@ strong {
     .card-swap-icon {
         visibility: visible;
     }
+}
 
-    .dialog-swipe-out {
-        animation: dialogSwipeOut 300ms ease-in-out forwards;
+/* Desktop (>= 812px): Von unten in die Mitte */
+@media (width >= 812px) {
+    .dialog-task {
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
     }
 
-    @keyframes dialogSwipeOut {
+    .dialog-swipe-in-desktop {
+        animation: dialogSwipeInDesktop 300ms ease-in-out forwards;
+    }
+
+    @keyframes dialogSwipeInDesktop {
+        100% {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-125%);
+        }
+    }
+
+    .dialog-swipe-out-desktop {
+        animation: dialogSwipeOutDesktop 300ms ease-in-out forwards;
+    }
+
+    @keyframes dialogSwipeOutDesktop {
         0% {
             opacity: 1;
-            transform: translateX(-50%) translateY(-50%);
+            transform: translateX(-50%) translateY(-125%);
         }
         100% {
             opacity: 0;
-            transform: translateX(50%) translateY(-50%);
+            transform: translateX(-50%) translateY(100%);
         }
     }
-}
 
-@media (width > 500px) {
     dialog {
         transform: translateX(-50%) translateY(100%);
     }
