@@ -3,6 +3,40 @@ import {onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.4.0/fire
 
 const DASHBOARD_CACHE_KEY = 'dashboardData';
 
+/** MediaQueryList for desktop breakpoint (min-width: 812px) */
+const desktopMediaQuery = window.matchMedia("(min-width: 812px)");
+
+/**
+* Checks if the current viewport is desktop size
+* @returns {boolean} True if viewport width >= 812px
+*/
+function isDesktop() {
+    return desktopMediaQuery.matches;
+}
+
+/**
+ * Handles the mobile dashboard animation sequence
+ * 
+ * Adds animation classes to greeting and dashboard containers on mobile devices.
+ * After 3 seconds, removes the animation classes and updates the dashboard position.
+ * Only triggers if the greeting container has the "loaded" class and viewport is mobile size.
+ */
+function mobileDashboardAnimation (){
+    const greetingContainer = document.querySelector(".greeting-container");
+    const dashboardContainer = document.querySelector(".dashboard-container");
+
+    if (greetingContainer.classList.contains("loaded") && !isDesktop()) {
+        greetingContainer.classList.add("greeting-animation-mobile");
+        dashboardContainer.classList.add("dashboard-animation-mobile");
+    }
+    setTimeout(() => {
+        dashboardContainer.classList.add("dashboard-position");
+        dashboardContainer.classList.remove("dashboard-animation-mobile");
+        greetingContainer.classList.remove("greeting-animation-mobile", "loaded");
+    }, 3000);
+
+}
+
 /**
  * Saves dashboard data to localStorage for faster initial load
  * @param {Object} data - Dashboard data to cache
@@ -52,21 +86,21 @@ function getTimeBasedGreeting() {
  * This function is called on page load and during window resize events to ensure proper positioning.
  */
 function moveGreetingContainer() {
-    const mediaQuery = window.matchMedia("(min-width: 812px)").matches;
     const greetingContainer = document.querySelector(".greeting-container");
     const dashboardContainer = document.querySelector(".dashboard-container");
     // if (!greetingContainer || !dashboardContainer) return;
 
-    if (mediaQuery) {
+    if (isDesktop()) {
         dashboardContainer.insertBefore(greetingContainer, dashboardContainer.firstChild);
     }
+
+
 }
 
 /**
  * Update greeting and username on the overview page
  */
 function updateGreeting() {
-    const mediaQuery = window.matchMedia("(min-width: 812px)").matches;
     onAuthStateChanged(auth, (user) => {
         if (user) {
             const greetingContainer = document.querySelector(".greeting-container");
@@ -81,7 +115,7 @@ function updateGreeting() {
                 if (user.isAnonymous) {
                     greetingElement.textContent = getTimeBasedGreeting();
                     greetingElement.classList.add("greeting-guest");
-                    if (mediaQuery) {
+                    if (isDesktop()) {
                         greetingElement.classList.add("greeting-guest-large");
                     } else {
                         greetingElement.classList.remove("greeting-guest-large");
@@ -102,7 +136,6 @@ function updateGreeting() {
             const nameElement = document.querySelector(".greeting-container .h1-colorized .marquee-text");
 
             if (nameElement) {
-                console.log(nameElement);
                 if (user.displayName) {
                     nameElement.textContent = user.displayName;
                     nameElement.title = user.displayName;
@@ -114,7 +147,7 @@ function updateGreeting() {
                         const textWidth = nameElement.scrollWidth;
                         const containerWidth = wrapper ? wrapper.clientWidth : 0;
 
-                        if (mediaQuery && textWidth > containerWidth) {
+                        if (isDesktop() && textWidth > containerWidth) {
                             h1.classList.add("marquee");
                             nameElement.style.animation = "marqueeOnce 5s linear forwards";
 
@@ -154,6 +187,7 @@ function updateGreeting() {
 
             // Update avatar initials in header
             updateAvatarInitials(user);
+            mobileDashboardAnimation ()
         }
     });
 }
