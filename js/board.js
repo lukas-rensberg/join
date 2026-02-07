@@ -863,7 +863,6 @@ function resetDeleteButtons(deleteButton, editButton, handleDeleteClick, handleC
 
     editButton.classList.remove("delete", "no");
     editButton.classList.add("d-card-footer-e");
-    editButton.innerHTML = "Edit";
 
     deleteButton.addEventListener("click", handleDeleteClick, {once: true});
     editButton.addEventListener("click", handleEditClick, {once: true});
@@ -1210,7 +1209,7 @@ function closeDialog() {
     setTimeout(() => {
         setTimeout(() => {
             dialogRef.removeAttribute("class")
-        }, 600);
+        }, 100);
         dialogRef.close();
     }, 300);
 
