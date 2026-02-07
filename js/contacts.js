@@ -14,6 +14,11 @@ let contacts = [];
 let currentContactId = null;
 let isEditMode = false;
 const desktopMediaQuery = window.matchMedia("(min-width: 1450px)");
+const contactModal = document.getElementById("contactModal");
+const modalHeader = document.querySelector(".modal-header");
+const cancelButton = document.getElementById("cancelButton");
+const detailViewDesktop = document.getElementById("contactDetailViewDesktop");
+const detailViewMobile = document.getElementById("contactDetailView");
 
 /**
  * Checks if the current viewport is desktop size
@@ -172,8 +177,8 @@ function closeFabMenu() {
  *
  */
 function setupAddContactBtnEventListener() {
-    document.getElementById("addContactBtn").addEventListener("click", (e) => {
-        e.preventDefault();
+    document.getElementById("addContactBtn").addEventListener("click", (event) => {
+        event.preventDefault();
         openContactModal(false);
     })
 }
@@ -219,8 +224,6 @@ function showContactDetail(contactId) {
  * @returns {void}
  */
 function showContactDetailDesktop(contact, contactId) {
-    const detailViewDesktop = document.getElementById("contactDetailViewDesktop");
-    const detailViewMobile = document.getElementById("contactDetailView");
 
     detailViewMobile.classList.remove("active");
     updateContactDetailViews(contact, contactId);
@@ -234,8 +237,6 @@ function showContactDetailDesktop(contact, contactId) {
  * @returns {void}
  */
 function showContactDetailMobile(contact, contactId) {
-    const detailViewDesktop = document.getElementById("contactDetailViewDesktop");
-    const detailViewMobile = document.getElementById("contactDetailView");
 
     detailViewDesktop.classList.remove("active");
     updateContactDetailViews(contact, contactId);
@@ -321,9 +322,6 @@ function editContact() {
  * @param {MediaQueryListEvent} event - The media query change event
  */
 function handleMediaQueryChange(event) {
-    const contactModal = document.getElementById("contactModal");
-    const modalHeader = document.querySelector(".modal-header");
-    const cancelButton = document.getElementById("cancelButton");
 
     if (isEditMode) {
         if (event.matches) {
@@ -353,23 +351,23 @@ function openContactModal(editMode) {
         setupEditContactModal(contact);
 
         if (isDesktop()) {
-            document.getElementById("contactModal").classList.add("edit-contact-modal");
-            document.getElementById("contactModal").classList.add("edit-dialog-swipe-in");
-            document.querySelector(".modal-header").classList.remove("add-modal-header")
-            document.querySelector(".modal-header").classList.add("edit-modal-header")
+            contactModal.classList.add("edit-contact-modal");
+            contactModal.classList.add("edit-dialog-swipe-in");
+            modalHeader.classList.remove("add-modal-header")
+            modalHeader.classList.add("edit-modal-header")
         } else {
-            document.getElementById("contactModal").classList.add("contact-modal");
-            document.getElementById("contactModal").classList.add("dialog-swipe-in");
+            contactModal.classList.add("contact-modal");
+            contactModal.classList.add("dialog-swipe-in");
         }
 
     } else {
         setupAddContactModal();
-        document.getElementById("contactModal").classList.add("contact-modal");
-        document.getElementById("contactModal").classList.add("dialog-swipe-in");
-        document.querySelector(".modal-header").classList.remove("edit-modal-header");
-        document.querySelector(".modal-header").classList.add("add-modal-header")
+        contactModal.classList.add("contact-modal");
+        contactModal.classList.add("dialog-swipe-in");
+        modalHeader.classList.remove("edit-modal-header");
+        modalHeader.classList.add("add-modal-header")
     }
-    document.getElementById("contactModal").showModal();
+    contactModal.showModal();
 
 }
 
@@ -407,9 +405,9 @@ function setupAddContactModal() {
     document.getElementById("deleteButton").style.display = "none";
 
     if (!isDesktop()) {
-        document.getElementById("cancelButton").style.display = "none";
+        cancelButton.style.display = "none";
     } else {
-        document.getElementById("cancelButton").style.display = "flex";
+        cancelButton.style.display = "flex";
     }
 
     clearModalFormFields();
@@ -483,9 +481,7 @@ export async function deleteContact() {
  * Closes the contact modal
  */
 function closeContactModal() {
-    const contactModal = document.getElementById("contactModal");
     const modalAvatar = document.getElementById("modalAvatar")
-    const modalHeader = document.querySelector(".modal-header");
 
     contactModal.classList.contains("edit-contact-modal") ?
         superToggle(contactModal, "edit-dialog-swipe-in", "edit-dialog-swipe-out") :
@@ -584,15 +580,15 @@ function setupClickListeners() {
     }
     const editContactLink = document.getElementById("editContactLink");
     if (editContactLink) {
-        editContactLink.addEventListener("click", (e) => {
-            e.preventDefault();
+        editContactLink.addEventListener("click", (event) => {
+            event.preventDefault();
             editContact();
         });
     }
     const deleteContactLink = document.getElementById("deleteContactLink");
     if (deleteContactLink) {
-        deleteContactLink.addEventListener("click", (e) => {
-            e.preventDefault();
+        deleteContactLink.addEventListener("click", (event) => {
+            event.preventDefault();
             deleteContact();
         });
     }
@@ -638,7 +634,6 @@ function setupClickListeners() {
  * @returns {void}
  */
 function init() {
-    const contactModal = document.getElementById("contactModal");
     loadContactsFromRTDB();
     setupClickOutsideListener();
     setupAddContactBtnEventListener();
@@ -654,7 +649,6 @@ function init() {
         showContactDetail(currentContactId);
 
     });
-
 
     const contactForm = document.getElementById("contactForm");
     if (contactForm) {

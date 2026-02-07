@@ -142,8 +142,8 @@ export function initLoginPage(loginUserCallback, guestLoginCallback, handleAuthE
       });
     }
 
-    loginForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
+    loginForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
 
@@ -179,8 +179,8 @@ export function initLogout(handleLogoutCallback) {
 
   logoutLinks.forEach((link) => {
     if (link.textContent.includes("Log Out") || link.textContent.includes("Logout")) {
-      link.addEventListener("click", async (e) => {
-        e.preventDefault();
+      link.addEventListener("click", async (event) => {
+        event.preventDefault();
         await handleLogoutCallback();
       });
     }

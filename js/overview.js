@@ -44,7 +44,7 @@ function mobileDashboardAnimation (){
 function cacheDashboardData(data) {
     try {
         localStorage.setItem(DASHBOARD_CACHE_KEY, JSON.stringify(data));
-    } catch (e) {
+    } catch (error) {
         // Silently fail if localStorage is not available
     }
 }
@@ -57,7 +57,7 @@ function getCachedDashboardData() {
     try {
         const cached = localStorage.getItem(DASHBOARD_CACHE_KEY);
         return cached ? JSON.parse(cached) : null;
-    } catch (e) {
+    } catch (error) {
         return null;
     }
 }

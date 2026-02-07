@@ -227,8 +227,8 @@ export function initSignupPage(signupUserCallback, handleAuthErrorCallback) {
       }
     });
 
-    signupForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
+    signupForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
 
       const username = document.querySelector('input[name="username"]').value.trim();
       const email = document.querySelector('input[name="email"]').value.trim();
