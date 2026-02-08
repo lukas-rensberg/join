@@ -372,8 +372,12 @@ h5 {
     border-radius: 62.4375rem;
 }
 
-.tasks-done {
-    font-size: 0.8rem;
+#tasks-done {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .user-prio-container {
