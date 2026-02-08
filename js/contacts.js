@@ -1,6 +1,5 @@
 /**
  * @fileoverview Handles contact management including adding, editing, deleting, and displaying contacts.
- * @author Lukas Rensberg
  */
 
 import {updateContact, database, createContact} from "./database.js";
@@ -163,7 +162,6 @@ function toggleFabMenu() {
 
 /**
  * Closes the FAB (floating action button) menu
- * @author Lukas Rensberg
  */
 function closeFabMenu() {
     const fabMenu = document.getElementById("fabMenu");
@@ -295,7 +293,6 @@ function populateContactDetailViewDesktop(contact) {
 
 /**
  * Hides the contact detail view and shows the contact list
- * @author Lukas Rensberg
  */
 function hideContactDetail() {
     document.getElementById("contactDetailView").classList.remove("active");
@@ -310,7 +307,6 @@ function hideContactDetail() {
 
 /**
  * Handles editing a contact - opens the modal in edit mode
- * @author Lukas Rensberg
  */
 function editContact() {
     if (!currentContactId) return;
@@ -593,7 +589,6 @@ function setupClickListeners() {
         });
     }
 
-    // Desktop Edit/Delete buttons
     const editContactDesktop = document.getElementById("editContactDesktop");
     if (editContactDesktop) {
         editContactDesktop.addEventListener("click", editContact);
@@ -639,7 +634,6 @@ function init() {
     setupAddContactBtnEventListener();
     setupClickListeners();
 
-    // Register media query change listener for live UI updates
     desktopMediaQuery.addEventListener("change", (event) => {
         handleMediaQueryChange(event);
 

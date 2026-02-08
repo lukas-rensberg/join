@@ -8,6 +8,10 @@ function clearFormErrors() {
   if (existingError) {
     existingError.remove();
   }
+
+  const errorMessages = document.querySelectorAll(".error-message");
+  errorMessages.forEach(msg => msg.remove());
+
   const form = document.querySelector("form");
   if (form) {
     const inputs = form.querySelectorAll('input[type="email"], input[type="password"], input[type="text"]');
@@ -69,12 +73,10 @@ function updatePasswordIcon(passwordInput, iconElement) {
   const img = iconElement.querySelector("img");
 
   if (passwordInput.value.length === 0) {
-    // No text: show lock icon
     img.src = "./assets/icons/lock.svg";
     iconElement.classList.remove("clickable");
     passwordInput.type = "password";
   } else {
-    // Has text: show visibility toggle
     iconElement.classList.add("clickable");
     if (passwordInput.type === "password") {
       img.src = "./assets/icons/visibility_off.svg";
@@ -92,7 +94,6 @@ function togglePasswordVisibility(toggleElement) {
   const passwordInput = document.getElementById(targetId);
   const img = toggleElement.querySelector("img");
 
-  // Only toggle if there's text
   if (passwordInput.value.length > 0) {
     if (passwordInput.type === "password") {
       passwordInput.type = "text";
@@ -118,7 +119,6 @@ export function initLoginPage(loginUserCallback, guestLoginCallback, handleAuthE
 
   const loginForm = document.querySelector("form");
   if (loginForm && document.getElementById("email")) {
-    // Clear error messages when user types
     const emailInput = document.getElementById("email");
     const passwordInput = document.getElementById("password");
 
@@ -128,15 +128,12 @@ export function initLoginPage(loginUserCallback, guestLoginCallback, handleAuthE
       }
     });
 
-    // Setup password visibility toggle
     const passwordIconToggle = document.querySelector(".password-icon-toggle");
     if (passwordInput && passwordIconToggle) {
-      // Update icon when user types
       passwordInput.addEventListener("input", () => {
         updatePasswordIcon(passwordInput, passwordIconToggle);
       });
 
-      // Toggle visibility on click
       passwordIconToggle.addEventListener("click", () => {
         togglePasswordVisibility(passwordIconToggle);
       });

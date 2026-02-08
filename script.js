@@ -8,7 +8,6 @@ function handleOutsideClick(event) {
     const label = toggleButton?.parentElement;
     const checkbox = document.getElementById("slideInSideMenu");
 
-    // Only close if menu is open and click is outside menu, toggle button, and label
     if (checkbox?.checked &&
         !swapMenu?.contains(event.target) &&
         !toggleButton?.contains(event.target) &&

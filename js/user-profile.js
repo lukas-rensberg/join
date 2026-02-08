@@ -9,7 +9,6 @@ function renderAuthenticatedHeader(user) {
   const headerRight = document.querySelector(".header-right");
   if (!headerRight) return;
 
-  // Remove existing auth elements if present
   const existingHelpLink = headerRight.querySelector(".help-link");
   const existingAvatarWrapper = headerRight.querySelector(".avatar-wrapper");
   if (existingHelpLink) existingHelpLink.remove();
@@ -17,7 +16,6 @@ function renderAuthenticatedHeader(user) {
 
   if (!user) return;
 
-  // Get initials
   let initials = "U";
   if (user.displayName) {
     const nameParts = user.displayName.trim().split(" ");
@@ -32,13 +30,11 @@ function renderAuthenticatedHeader(user) {
     initials = "GU";
   }
 
-  // Create help link
   const helpLink = document.createElement("a");
   helpLink.href = "help.html";
   helpLink.className = "help-link";
   helpLink.innerHTML = '<img src="./assets/icons/question_mark_.svg" alt="Question Mark Help">';
 
-  // Create avatar wrapper with checkbox, label, and menu
   const avatarWrapper = document.createElement("div");
   avatarWrapper.className = "avatar-wrapper";
   avatarWrapper.innerHTML = `
@@ -56,7 +52,6 @@ function renderAuthenticatedHeader(user) {
     </div>
   `;
 
-  // Insert after help-container text
   const helpContainer = headerRight.querySelector(".help-container");
   if (helpContainer) {
     helpContainer.appendChild(helpLink);
@@ -73,7 +68,6 @@ export function updateAvatarInitials() {
   });
 }
 
-// Initialize when page loads
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", updateAvatarInitials);
 } else {

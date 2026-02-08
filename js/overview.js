@@ -45,7 +45,6 @@ function cacheDashboardData(data) {
     try {
         localStorage.setItem(DASHBOARD_CACHE_KEY, JSON.stringify(data));
     } catch (error) {
-        // Silently fail if localStorage is not available
     }
 }
 
@@ -88,7 +87,6 @@ function getTimeBasedGreeting() {
 function moveGreetingContainer() {
     const greetingContainer = document.querySelector(".greeting-container");
     const dashboardContainer = document.querySelector(".dashboard-container");
-    // if (!greetingContainer || !dashboardContainer) return;
 
     if (isDesktop()) {
         dashboardContainer.insertBefore(greetingContainer, dashboardContainer.firstChild);
@@ -111,7 +109,6 @@ function updateGreeting() {
 
 
             if (greetingElement) {
-                // For anonymous users, remove comma and make greeting stand alone
                 if (user.isAnonymous) {
                     greetingElement.textContent = getTimeBasedGreeting();
                     greetingElement.classList.add("greeting-guest");
@@ -180,12 +177,10 @@ function updateGreeting() {
                 }
             }
 
-            // Show greeting container after data is loaded
             if (greetingContainer) {
                 greetingContainer.classList.add("loaded");
             }
 
-            // Update avatar initials in header
             updateAvatarInitials(user);
             mobileDashboardAnimation ()
         }
@@ -199,7 +194,7 @@ function updateAvatarInitials(user) {
     const avatarElement = document.querySelector(".avatar");
 
     if (avatarElement) {
-        let initials = "U"; // Default
+        let initials = "U";
 
         if (user.displayName) {
             const nameParts = user.displayName.trim().split(" ");
@@ -211,7 +206,7 @@ function updateAvatarInitials(user) {
         } else if (user.email) {
             initials = user.email[0].toUpperCase() + (user.email[1] || "").toUpperCase();
         } else if (user.isAnonymous) {
-            initials = "GU"; // Guest User
+            initials = "GU";
         }
 
         avatarElement.textContent = initials;
@@ -300,24 +295,20 @@ function updateDashboardNumbers(tasks) {
     const counts = countTasksByCategory(tasks);
     const urgentInfo = getUrgentInfo(tasks);
 
-    // Cache the data for faster initial load next time
     cacheDashboardData({
         counts,
         urgentCount: urgentInfo.urgentCount,
         nearestDeadline: urgentInfo.nearestDeadline ? urgentInfo.nearestDeadline.toISOString() : null
     });
 
-    // Update category counts
     updateNumberElement('.card-todo .number', counts['to-do']);
     updateNumberElement('.card-progress .number', counts['in-progress']);
     updateNumberElement('.card-feedback .number', counts['await-feedback']);
     updateNumberElement('.card-done .number', counts['done']);
     updateNumberElement('.card-board .number', counts.total);
 
-    // Update urgent count
     updateNumberElement('.card-urgent-deadline .number', urgentInfo.urgentCount);
 
-    // Update deadline
     const deadlineElement = document.querySelector('.deadline-section .date');
     if (deadlineElement) {
         const formattedDate = formatDeadlineDate(urgentInfo.nearestDeadline);
@@ -346,17 +337,14 @@ function applyCachedData(cachedData) {
 
     const {counts, urgentCount, nearestDeadline} = cachedData;
 
-    // Update category counts from cache
     updateNumberElement('.card-todo .number', counts['to-do']);
     updateNumberElement('.card-progress .number', counts['in-progress']);
     updateNumberElement('.card-feedback .number', counts['await-feedback']);
     updateNumberElement('.card-done .number', counts['done']);
     updateNumberElement('.card-board .number', counts.total);
 
-    // Update urgent count from cache
     updateNumberElement('.card-urgent-deadline .number', urgentCount);
 
-    // Update deadline from cache
     const deadlineElement = document.querySelector('.deadline-section .date');
     if (deadlineElement) {
         const date = nearestDeadline ? new Date(nearestDeadline) : null;
@@ -370,17 +358,14 @@ function applyCachedData(cachedData) {
  * First applies cached data for instant display, then loads fresh data
  */
 function initDashboard() {
-    // Apply cached data immediately for faster perceived load
     const cachedData = getCachedDashboardData();
     if (cachedData) {
         applyCachedData(cachedData);
     }
 
-    // Load fresh data from Firebase (will update and re-cache)
     loadTasks(updateDashboardNumbers);
 }
 
-// Initialize greeting when page loads
 if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => {
         moveGreetingContainer();
@@ -394,5 +379,4 @@ if (document.readyState === "loading") {
     addCardListeners();
     initDashboard();
 }
-// Update greeting container position on window resize
 window.addEventListener('resize', moveGreetingContainer);

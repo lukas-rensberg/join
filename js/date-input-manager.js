@@ -23,7 +23,7 @@ export function initializeDateInput(container = document) {
  */
 function formatDateInput(event) {
     const input = event.target;
-    let value = input.value.replace(/\D/g, ''); // Remove all non-numeric characters
+    let value = input.value.replace(/\D/g, '');
 
     if (value.length >= 2) {
         value = value.substring(0, 2) + '/' + value.substring(2);
@@ -61,15 +61,11 @@ function handleDateKeydown(event) {
  * @returns {boolean} - True if valid, false otherwise
  */
 export function isValidDate(dateString) {
-    if (!/^\d{2}\/\d{2}\/\d{4}$/.test(dateString)) {
-        return false;
-    }
-
+    if (!/^\d{2}\/\d{2}\/\d{4}$/.test(dateString)) return false;
     const [day, month, year] = dateString.split('/').map(Number);
     const date = new Date(year, month - 1, day);
 
-    return date.getFullYear() === year &&
-        date.getMonth() === month - 1 &&
-        date.getDate() === day &&
-        date >= new Date(new Date().setHours(0, 0, 0, 0));
+    return date.getFullYear() === year && date.getMonth() === month - 1 &&
+        date.getDate() === day && date >=
+        new Date(new Date().setHours(0, 0, 0, 0));
 }

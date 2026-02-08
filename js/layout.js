@@ -34,13 +34,9 @@ function getUserInitials(user) {
         return nameParts[0][0].toUpperCase() + (nameParts[0][1] || "").toUpperCase();
     }
 
-    if (user.email) {
-        return user.email[0].toUpperCase() + (user.email[1] || "").toUpperCase();
-    }
+    if (user.email) return user.email[0].toUpperCase() + (user.email[1] || "").toUpperCase();
 
-    if (user.isAnonymous) {
-        return "GU";
-    }
+    if (user.isAnonymous) return "GU";
 
     return "U";
 }
@@ -70,7 +66,7 @@ function generateAsideNavbar(activePage, isLoggedIn) {
 }
 
 function buildNavLinks(items, pos, activePage) {
-    return items.filter(i => i.pos === pos).map(i => {
+    return items.filter(item => item.pos === pos).map(i => {
         const active = activePage === i.href ? 'class="active-nav-link"' : "";
         if (pos === "bottom") return `<a href="${i.href}" ${active}>${i.label}</a>`;
         return `<a href="${i.href}" ${active}>
@@ -145,7 +141,6 @@ function renderAside(isLoggedIn) {
  */
 function generateFooterHTML(isLoggedIn, activePage) {
     if (isLoggedIn) {
-        // Logged in: Show full mobile navigation
         const navItems = [
             {href: "overview.html", class: "nav-summary", label: "Summary"},
             {href: "add-task.html", class: "nav-add-task", label: "Add Task"},
@@ -162,7 +157,6 @@ function generateFooterHTML(isLoggedIn, activePage) {
       `;
         }).join("");
     } else {
-        // Not logged in: Show login link and legal links
         const isPrivacyActive = activePage === "privacy.html" ? " active" : "";
         const isLegalActive = activePage === "legal_notice.html" ? " active" : "";
 
@@ -200,7 +194,6 @@ export function initLayout() {
     });
 }
 
-// Auto-initialize when DOM is ready
 if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => initLayout());
 } else {

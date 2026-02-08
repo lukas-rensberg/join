@@ -60,7 +60,6 @@ function getCategoryFromUrl() {
  * @returns {void}
  */
 document.addEventListener('DOMContentLoaded', () => {
-    // Only initialize on add-task.html, not on board.html
     const isAddTaskPage = document.querySelector('.add-task-form-container');
     if (!isAddTaskPage) return;
 
@@ -135,7 +134,6 @@ function attachInputListeners(container = document) {
  * @returns {void}
  */
 function attachCategoryListener(container = document) {
-    // Category error is cleared via event delegation in dropdown-manager
     container.addEventListener('click', (event) => {
         if (event.target.closest('.category-option')) {
             clearFieldError('category', container);
@@ -151,7 +149,6 @@ function attachCategoryListener(container = document) {
  */
 function showErrors(errors, container = document) {
     clearAllFieldErrors(container);
-
     if (errors.title) {
         showFieldError('title', errors.title, container);
     }

@@ -512,7 +512,7 @@ footer {
     font-size: 0.75rem;
     margin-top: 0.25rem;
     display: flex;
-    left: 0.75rem;
+    right: unset;
     width: fit-content;
     bottom: -1.5rem;
 }

@@ -94,20 +94,10 @@ export async function guestLogin() {
 export async function signupUser(email, password, username) {
   const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
-  await updateProfile(userCredential.user, {
-    displayName: username,
-  });
+  await updateProfile(userCredential.user, {displayName: username});
 
-  // Create contact in RTDB for the new user
-  await createContact(
-    userCredential.user.uid,
-    username,
-    email,
-    generatePhoneNumber(),
-    getRandomColor(),
-    getInitials(username),
-    true
-  );
+  await createContact(userCredential.user.uid, username, email, generatePhoneNumber(), getRandomColor(),
+    getInitials(username),true);
 
   showSuccessMessage();
 

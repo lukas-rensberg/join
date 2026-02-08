@@ -8,19 +8,16 @@ function clearFormErrors() {
   if (existingError) {
     existingError.remove();
   }
-  
-  // Clear field-specific error messages
-  const fieldErrors = document.querySelectorAll(".error-message");
-  fieldErrors.forEach(error => error.remove());
-  
+
+  document.querySelectorAll(".error-message").forEach(error => error.remove());
+
   const form = document.querySelector("form");
   if (form) {
-    const formInputs = form.querySelectorAll('input[type="email"], input[type="password"], input[type="text"]');
+    const formInputs = form.querySelectorAll('input[type="password"], input[type="text"], input[type="email"]');
     formInputs.forEach(inp => {
       inp.style.borderBottom = "";
     });
     
-    // Clear checkbox border color
     const checkbox = document.getElementById("confirm-check");
     if (checkbox) {
       checkbox.style.borderColor = "";
@@ -38,7 +35,6 @@ function showFormError(fieldId, message) {
   if (field) {
     field.style.borderBottom = "1px solid #ff4646";
     
-    // Check for existing error message and remove it
     const existingError = field.parentElement.querySelector(".error-message");
     if (existingError) {
       existingError.remove();
@@ -58,12 +54,10 @@ function updatePasswordIcon(passwordInput, iconElement) {
   const img = iconElement.querySelector("img");
   
   if (passwordInput.value.length === 0) {
-    // No text: show lock icon
     img.src = "./assets/icons/lock.svg";
     iconElement.classList.remove("clickable");
     passwordInput.type = "password";
   } else {
-    // Has text: show visibility toggle
     iconElement.classList.add("clickable");
     if (passwordInput.type === "password") {
       img.src = "./assets/icons/visibility_off.svg";
@@ -81,7 +75,6 @@ function togglePasswordVisibility(toggleElement) {
   const passwordInput = document.getElementById(targetId);
   const img = toggleElement.querySelector("img");
   
-  // Only toggle if there's text
   if (passwordInput.value.length > 0) {
     if (passwordInput.type === "password") {
       passwordInput.type = "text";
@@ -123,41 +116,39 @@ function updateSubmitButtonState() {
  */
 function validateSignupForm(username, email, password, confirmPassword, acceptedPolicy) {
   clearFormErrors();
-  
+  let isValid = true;
+
   if (!username.trim()) {
     showFormError("username", "Name is required");
-    return false;
+    isValid = false;
   }
   
   if (!email.trim()) {
     showFormError("email", "Email is required");
-    return false;
-  }
-  
-  if (!validateEmailFormat(email)) {
+    isValid = false;
+  } else if (!validateEmailFormat(email)) {
     showFormError("email", "Invalid email format");
-    return false;
+    isValid = false;
   }
 
   if (!password) {
     showFormError("signup-password", "Password is required");
-    return false;
-  }
-
-  if (password.length < 6) {
+    isValid = false;
+  } else if (password.length < 6) {
     showFormError("signup-password", "Password must be at least 6 characters");
-    return false;
+    isValid = false;
   }
 
-  if (password !== confirmPassword) {
+  if (!confirmPassword) {
+    showFormError("confirm-password", "Please confirm your password");
+    isValid = false;
+  } else if (password && password !== confirmPassword) {
     showFormError("confirm-password", "Passwords do not match");
-    return false;
+    isValid = false;
   }
 
   if (!acceptedPolicy) {
     const checkbox = document.getElementById("confirm-check");
-    
-    // Check for existing error message and remove it
     const existingError = checkbox.parentElement.querySelector(".error-message");
     if (existingError) {
       existingError.remove();
@@ -168,10 +159,10 @@ function validateSignupForm(username, email, password, confirmPassword, accepted
     errorMsg.className = "error-message";
     errorMsg.textContent = "Please accept the Privacy Policy";
     checkbox.parentElement.appendChild(errorMsg);
-    return false;
+    isValid = false;
   }
 
-  return true;
+  return isValid;
 }
 
 /**
@@ -208,19 +199,16 @@ export function initSignupPage(signupUserCallback, handleAuthErrorCallback) {
       checkbox.addEventListener("change", updateSubmitButtonState);
     }
 
-    // Setup password visibility toggle for all password fields
     const passwordToggles = document.querySelectorAll(".password-icon-toggle");
     passwordToggles.forEach(toggle => {
       const targetId = toggle.getAttribute("data-target");
       const passwordInput = document.getElementById(targetId);
       
       if (passwordInput) {
-        // Update icon when user types
         passwordInput.addEventListener("input", () => {
           updatePasswordIcon(passwordInput, toggle);
         });
         
-        // Toggle visibility on click
         toggle.addEventListener("click", () => {
           togglePasswordVisibility(toggle);
         });

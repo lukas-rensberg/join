@@ -1,6 +1,5 @@
 /**
  * @fileoverview Form validation for contact management
- * @author Lukas Rensberg
  */
 
 import { validateEmailFormat } from "../utils/contact.js";

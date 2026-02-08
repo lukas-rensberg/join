@@ -36,10 +36,8 @@ export function collectEditTaskData(container, originalTask) {
     const newSubtaskTexts = getSubtaskTexts(container);
     const originalDone = originalTask.subtasks_done || [];
 
-    // Subtasks that were done and still exist unchanged go to subtasks_done
     const subtasksDone = newSubtaskTexts.filter(text => originalDone.includes(text));
 
-    // All other subtasks go to subtasks (pending)
     const subtasks = newSubtaskTexts.filter(text => !originalDone.includes(text));
 
     return {

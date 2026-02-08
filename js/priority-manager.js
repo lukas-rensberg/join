@@ -56,11 +56,11 @@ export function initializePriorityButtons(container = document) {
  */
 export function getSelectedPriority(container = document) {
     const activeButton = container.querySelector('.priority-btn.active');
-    if (!activeButton) return 'medium'; // Default to medium if nothing selected
+    if (!activeButton) return 'medium';
 
     if (activeButton.classList.contains('urgent')) return 'urgent';
     if (activeButton.classList.contains('medium')) return 'medium';
     if (activeButton.classList.contains('low')) return 'low';
 
-    return 'medium'; // Fallback
+    return 'medium';
 }

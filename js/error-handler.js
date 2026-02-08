@@ -8,7 +8,6 @@ import {createAuthErrorMessage} from "./template.js";
  * Show error message below form fields (for auth forms)
  */
 export function showErrorMessage(message) {
-    // Remove any existing error messages
     const existingError = document.querySelector(".auth-error-message");
     if (existingError) {
         existingError.remove();
@@ -17,19 +16,15 @@ export function showErrorMessage(message) {
     const errorDiv = createAuthErrorMessage(message);
 
     const form = document.querySelector("form");
-    if (form) {
-        const inputs = form.querySelectorAll('input[type="email"], input[type="password"], input[type="text"]');
-        inputs.forEach(input => {
-            input.style.borderBottom = "0.06rem solid #ff0000";
-        });
+    if (!form) return;
+    const inputs = form.querySelectorAll('input[type="email"], input[type="password"], input[type="text"]');
+    inputs.forEach(input => {
+        input.style.borderBottom = "0.06rem solid #ff0000";
+    });
 
-        const buttonContainer = form.querySelector(".button-container");
-        if (buttonContainer) {
-            form.insertBefore(errorDiv, buttonContainer);
-        } else {
-            form.appendChild(errorDiv);
-        }
-    }
+    const buttonContainer = form.querySelector(".button-container");
+    if (buttonContainer) form.insertBefore(errorDiv, buttonContainer);
+    else form.appendChild(errorDiv);
 }
 
 /**
@@ -41,43 +36,28 @@ export const showInlineError = showErrorMessage;
  * Handle authentication errors (login page, signup page, protected pages)
  */
 export function handleAuthError(error) {
-
     let errorMessage;
-
     switch (error.code) {
         case "auth/invalid-email":
             errorMessage = "Invalid email address.";
             break;
-        case "auth/user-disabled":
-            errorMessage = "This account has been disabled.";
-            break;
         case "auth/user-not-found":
-            errorMessage = "Check your email and password. Please try again.";
-            break;
         case "auth/wrong-password":
-            errorMessage = "Check your email and password. Please try again.";
-            break;
         case "auth/invalid-credential":
             errorMessage = "Check your email and password. Please try again.";
             break;
         case "auth/too-many-requests":
             errorMessage = "Too many failed attempts. Please try again later.";
             break;
-
         case "auth/email-already-in-use":
             errorMessage = "This email is already registered.";
-            break;
-        case "auth/operation-not-allowed":
-            errorMessage = "Email/password accounts are not enabled.";
             break;
         case "auth/weak-password":
             errorMessage = "Password is too weak. Please use a stronger password.";
             break;
-
         default:
             errorMessage = error.message;
     }
-
     showErrorMessage(errorMessage);
 }
 
@@ -85,7 +65,7 @@ export function handleAuthError(error) {
  * Show field-specific error message below a form field
  * @param {string} fieldName - Name of the field (e.g., 'title', 'dueDate', 'category')
  * @param {string} message - Error message to display
- * @param {HTMLElement} container - The container element to scope queries (default: document)
+ * @param {HTMLElement|Document} container - The container element to scope queries (default: document)
  * @return {void}
  */
 export function showFieldError(fieldName, message, container = document) {
@@ -107,18 +87,13 @@ export function showFieldError(fieldName, message, container = document) {
 
     if (!formGroup) return;
 
-    // Remove existing error for this field
     const existingError = formGroup.querySelector('.field-error');
-    if (existingError) {
-        existingError.remove();
-    }
+    if (existingError) existingError.remove();
 
-    // Create error message element
     const errorDiv = document.createElement('div');
     errorDiv.className = 'field-error visible';
     errorDiv.textContent = message;
 
-    // Add red border to the input/dropdown
     if (inputElement) {
         if (fieldName === 'category') {
             const dropdownHeader = inputElement.querySelector('.dropdown-header');
@@ -135,7 +110,6 @@ export function showFieldError(fieldName, message, container = document) {
         }
     }
 
-    // Add error message to form group
     formGroup.appendChild(errorDiv);
     formGroup.classList.add('has-error');
 }
@@ -169,7 +143,6 @@ export function clearFieldError(fieldName, container = document) {
             errorElement.remove();
         }
 
-        // Remove red border
         if (inputElement) {
             if (fieldName === 'category') {
                 const dropdownHeader = inputElement.querySelector('.dropdown-header');

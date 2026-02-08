@@ -164,70 +164,6 @@ export function loadTasks(callback) {
 }
 
 /**
- * Gets a single task from the RTDB
- * @param {String} taskId The ID of the task to get
- * @return {Promise<Object|null>} A promise that resolves with the task data or null if not found
- */
-export async function getTask(taskId) {
-  try {
-    const snapshot = await get(ref(database, `tasks/${taskId}`));
-    return snapshot.exists() ? snapshot.val() : null;
-  } catch (error) {
-    return null;
-  }
-}
-
-/**
- * Migrates default tasks to RTDB if no tasks exist
- * @param {Array} defaultTasks Array of default task objects to migrate
- * @return {Promise<void>} A promise that resolves when migration is complete
- */
-export async function migrateDefaultTasks(defaultTasks) {
-  try {
-    const tasksRef = ref(database, 'tasks');
-    const snapshot = await get(tasksRef);
-    
-    if (!snapshot.exists()) {
-      for (const task of defaultTasks) {
-        await createTask(task);
-      }
-    } else {
-      // Check if existing tasks need member or due date updates
-      const existingTasks = snapshot.val();
-
-      for (const [taskId, task] of Object.entries(existingTasks)) {
-        const updates = {};
-        let needsUpdate = false;
-        
-        // Check for missing members
-        if (!task.member || task.member.length === 0) {
-          const defaultTask = defaultTasks.find(dt => dt.id === task.id);
-          if (defaultTask && defaultTask.member && defaultTask.member.length > 0) {
-            updates.member = defaultTask.member;
-            needsUpdate = true;
-          }
-        }
-        
-        // Check for missing due dates
-        if (!task.dueDate) {
-          const defaultTask = defaultTasks.find(dt => dt.id === task.id);
-          if (defaultTask && defaultTask.dueDate) {
-            updates.dueDate = defaultTask.dueDate;
-            needsUpdate = true;
-          }
-        }
-        
-        if (needsUpdate) {
-          await updateTask(taskId, updates);
-        }
-      }
-    }
-  } catch (error) {
-    // Silent error handling
-  }
-}
-
-/**
  * Create a new task in RTDB
  * @param {Object} taskData - Task data object
  * @returns {Promise<string>} - The ID of the created task
@@ -235,21 +171,13 @@ export async function migrateDefaultTasks(defaultTasks) {
 export async function createTask(taskData) {
   try {
     const user = auth.currentUser;
-    if (!user) {
-      throw new Error("User must be authenticated to create tasks");
-    }
-
+    if (!user) return;
     const tasksRef = ref(database, 'tasks');
     const newTaskRef = push(tasksRef);
-
     const now = Date.now();
-
     const task = getTaskObject(newTaskRef, taskData, now);
-
     await set(newTaskRef, task);
-  } catch (error) {
-    throw error;
-  }
+  } catch (_) {}
 }
 
 /**
@@ -275,5 +203,5 @@ function getTaskObject(newTaskRef,taskData, now) {
         updatedAt: now
     };
 }
-export { auth, database };
 
+export { auth, database };

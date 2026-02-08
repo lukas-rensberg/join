@@ -220,7 +220,6 @@ function exitEditMode(listItem, input, text) {
  * @param {HTMLElement} container - The container element to scope events
  */
 function setupSubtaskEventDelegation(container = document) {
-    // Subtask list click events (delete, edit, save, cancel)
     container.addEventListener('click', (event) => {
         const deleteBtn = event.target.closest('.subtask-delete');
         if (deleteBtn) {
@@ -246,20 +245,17 @@ function setupSubtaskEventDelegation(container = document) {
             return;
         }
 
-        // Icon cancel (clear input)
         if (event.target.closest('.icon-cancel')) {
             clearSubtaskInput(container);
             return;
         }
 
-        // Icon confirm (add subtask)
         if (event.target.closest('.icon-confirm')) {
             addNewSubtask(container);
             return;
         }
     });
 
-    // Subtask input events
     const subtaskInput = container.querySelector('.subtask-input');
     if (subtaskInput) {
         subtaskInput.addEventListener('input', () => toggleSubtaskIcons(container));
@@ -272,7 +268,6 @@ function setupSubtaskEventDelegation(container = document) {
  * @param {HTMLElement} container - The container element to scope queries (default: document)
  */
 export function initializeSubtasks(container = document) {
-    // Prevent duplicate event registration
     if (initializedContainers.has(container)) return;
     initializedContainers.add(container);
 
@@ -315,10 +310,8 @@ export function populateSubtasks(subtasks = [], subtasksDone = [], container = d
     const subtaskList = container.querySelector('.subtask-list');
     if (!subtaskList) return;
 
-    // Clear existing subtasks
     subtaskList.innerHTML = '';
 
-    // Combine all subtasks (both pending and done are rendered as pending in edit mode)
     const allSubtasks = [...subtasks, ...subtasksDone];
 
     allSubtasks.forEach(subtaskText => {
