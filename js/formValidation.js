@@ -3,8 +3,8 @@
  * Handles validation logic for task forms with scoped container support
  */
 
-import { isValidDate } from "./date-input-manager.js";
-import { getSelectedCategory } from "./dropdown-manager.js";
+import { isValidDate } from "./dateInputManager.js";
+import { getSelectedCategory } from "./dropdownManager.js";
 
 /**
  * Validates the task form

@@ -77,10 +77,10 @@ function buildNavLinks(items, pos, activePage) {
 
 function getNavItems() {
     return [
-        {href: "legal_notice.html", label: "Legal Notice", pos: "bottom"},
+        {href: "legalNotice.html", label: "Legal Notice", pos: "bottom"},
         {href: "privacy.html", label: "Privacy Policy", pos: "bottom"},
         {href: "overview.html", icon: "summary.svg", label: "Summary", pos: "top"},
-        {href: "add-task.html", icon: "add-task.svg", label: "Add Task", pos: "top"},
+        {href: "addTask.html", icon: "add-task.svg", label: "Add Task", pos: "top"},
         {href: "board.html", icon: "board.svg", label: "Board", pos: "top"},
         {href: "contacts.html", icon: "contacts.svg", label: "Contacts", pos: "top"}
     ];
@@ -143,7 +143,7 @@ function generateFooterHTML(isLoggedIn, activePage) {
     if (isLoggedIn) {
         const navItems = [
             {href: "overview.html", class: "nav-summary", label: "Summary"},
-            {href: "add-task.html", class: "nav-add-task", label: "Add Task"},
+            {href: "addTask.html", class: "nav-add-task", label: "Add Task"},
             {href: "board.html", class: "nav-board", label: "Board"},
             {href: "contacts.html", class: "nav-contacts", label: "Contacts"}
         ];
@@ -158,7 +158,7 @@ function generateFooterHTML(isLoggedIn, activePage) {
         }).join("");
     } else {
         const isPrivacyActive = activePage === "privacy.html" ? " active" : "";
-        const isLegalActive = activePage === "legal_notice.html" ? " active" : "";
+        const isLegalActive = activePage === "legalNotice.html" ? " active" : "";
 
         return `
       <a class="nav-item" href="index.html">
@@ -188,7 +188,6 @@ function renderFooter(isLoggedIn) {
 export function initLayout() {
     onAuthStateChanged(auth, (user) => {
         renderHeader(user);
-        console.log("user state changed in layout:", !!user);
         renderAside(!!user);
         renderFooter(!!user);
     });

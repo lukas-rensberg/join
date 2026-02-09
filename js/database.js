@@ -10,7 +10,7 @@ import {
   remove,
   onValue,
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
-import { showInlineError } from "./error-handler.js";
+import { showInlineError } from "./errorHandler.js";
 import { Credentials } from "./credentials.js";
 
 const firebaseConfig = getFirebaseConfig();

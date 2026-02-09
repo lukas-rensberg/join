@@ -86,7 +86,7 @@ function toggleContactSelection(contactId, isSelected, container = document) {
     if (!contact || !contactOption || !checkbox) return;
 
     if (isSelected) {
-        selectedContacts = selectedContacts.filter(c => c.id !== contactId);
+        selectedContacts = selectedContacts.filter(contact => contact.id !== contactId);
         contactOption.classList.remove('selected');
         checkbox.checked = false;
     } else {

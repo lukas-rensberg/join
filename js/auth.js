@@ -9,7 +9,7 @@ import {
 import { auth, ensureUserAsContact, createContact } from "./database.js";
 import { initLoginPage, initLogout } from "./login.js";
 import { initSignupPage, showSuccessMessage } from "./signup.js";
-import { handleAuthError, showInlineError } from "./error-handler.js";
+import { handleAuthError, showInlineError } from "./errorHandler.js";
 import { getRandomColor } from "../utils/contact.js";
 
 const PROTECTED_PAGES = ["overview.html", "contacts.html", "help.html", "kanban.html", "board.html"];

@@ -6,8 +6,8 @@ import {updateContact, database, createContact} from "./database.js";
 import {getRandomColor} from "../utils/contact.js";
 import {ref, remove, onValue} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 import {generateSectionTemplate, generateContactItemTemplate} from "./template.js";
-import {validateContactForm} from "./contact-form-validation.js";
-import {showInlineError} from "./error-handler.js";
+import {validateContactForm} from "./contactFormValidation.js";
+import {showInlineError} from "./errorHandler.js";
 
 let contacts = [];
 let currentContactId = null;

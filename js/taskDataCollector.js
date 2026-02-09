@@ -3,9 +3,9 @@
  * Handles collecting and formatting task data from form with scoped container support
  */
 
-import { getSelectedPriority } from "./priority-manager.js";
-import { getSelectedCategory, getSelectedContacts } from "./dropdown-manager.js";
-import { getSubtasks } from "./subtask-manager.js";
+import { getSelectedPriority } from "./priorityManager.js";
+import { getSelectedCategory, getSelectedContacts } from "./dropdownManager.js";
+import { getSubtasks } from "./subtaskManager.js";
 
 /**
  * Collects all task data from the form

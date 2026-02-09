@@ -1,16 +1,16 @@
 import {
     initializeSubtasks
-} from "./subtask-manager.js";
+} from "./subtaskManager.js";
 
 import {
     initializePriorityButtons
-} from "./priority-manager.js";
+} from "./priorityManager.js";
 
-import {initializeDateInput} from "./date-input-manager.js";
+import {initializeDateInput} from "./dateInputManager.js";
 
 import {
     initializeDropdowns
-} from "./dropdown-manager.js";
+} from "./dropdownManager.js";
 
 import {createTask} from "./database.js";
 
@@ -20,11 +20,11 @@ import {
     clearAllFieldErrors,
     showSuccessBanner,
     showErrorBanner
-} from "./error-handler.js";
+} from "./errorHandler.js";
 
-import {validateTaskForm} from "./form-validation.js";
+import {validateTaskForm} from "./formValidation.js";
 
-import {collectTaskData} from "./task-data-collector.js";
+import {collectTaskData} from "./taskDataCollector.js";
 
 import {
     clearFormInputs,
@@ -32,7 +32,7 @@ import {
     clearContactSelections,
     clearCategorySelection,
     clearSubtasksSection
-} from "./form-utils.js";
+} from "./formUtils.js";
 
 let activeContainer = null;
 
@@ -56,7 +56,7 @@ function getCategoryFromUrl() {
 
 /**
  * Initialize all components when DOM is fully loaded
- * Only runs on add-task.html page (not on board.html where it's handled separately)
+ * Only runs on addTask.html page (not on board.html where it's handled separately)
  * @returns {void}
  */
 document.addEventListener('DOMContentLoaded', () => {

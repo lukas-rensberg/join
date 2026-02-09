@@ -3,9 +3,9 @@
  * Helper functions for form manipulation and clearing with scoped container support
  */
 
-import { selectPriority } from "./priority-manager.js";
-import { clearSubtaskInput } from "./subtask-manager.js";
-import { clearSelectedContacts, clearSelectedCategory } from "./dropdown-manager.js";
+import { selectPriority } from "./priorityManager.js";
+import { clearSubtaskInput } from "./subtaskManager.js";
+import { clearSelectedContacts, clearSelectedCategory } from "./dropdownManager.js";
 
 /**
  * Clears all form input fields
