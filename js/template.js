@@ -1,4 +1,5 @@
 /**
+ * todo: this is functional => Need to move it out of template.js => no HTML generation
  * Create error message element for authentication errors
  * @param {string} message - The error message to display
  * @returns {HTMLElement} The error message div element
