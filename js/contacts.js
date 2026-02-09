@@ -9,21 +9,19 @@ import {generateContactItemTemplate, generateSectionTemplate} from "./template.j
 import {validateContactForm} from "./contactFormValidation.js";
 import {
     contactModal,
-    contacts,
-    currentContactId,
     deleteContact,
     desktopMediaQuery,
     editContact,
     handleFabClick,
     handleMediaQueryChange,
     hideContactDetail,
-    isEditMode,
     modalHeader,
+    setContacts,
     setupAddContactBtnEventListener,
     setupClickOutsideListener,
-    showContactDetail
+    showContactDetail,
+    setEditMode, getEditMode, setCurrentContactId, getCurrentContactId, getContacts
 } from "../utils/showContactDetail.js";
-
 
 /**
  * Generates a unique ID for contacts
@@ -54,12 +52,12 @@ export function getInitialsFromName(name) {
  * @returns void
  */
 export async function loadContactsFromRTDB() {
-    const contactsRef = ref(database, 'contacts');
+    let contactsRef = ref(database, 'contacts');
 
     onValue(contactsRef, (snapshot) => {
         if (snapshot.exists()) {
-            contacts = Object.values(snapshot.val());
-            renderContactsList(contacts);
+            setContacts(Object.values(snapshot.val()));
+            renderContactsList(getContacts());
         }
     });
 }
@@ -154,7 +152,7 @@ function closeContactModal() {
         modalHeader.classList.remove("add-modal-header");
     }, 300);
 
-    isEditMode = false;
+    setEditMode(false);
 }
 
 /**
@@ -204,11 +202,11 @@ async function saveContact(event) {
 
     const {name, email, phone} = formData;
 
-    if (isEditMode) {
-        await updateContact(currentContactId, name, email, phone, getInitialsFromName(name));
+    if (getEditMode()) {
+        await updateContact(getCurrentContactId(), name, email, phone, getInitialsFromName(name));
     } else {
         const newContactId = generateContactId();
-        currentContactId = newContactId;
+        setCurrentContactId(newContactId);
         await createContact(newContactId, name, email, phone, getRandomColor(), getInitialsFromName(name), false);
         addedContactRef.classList.add("forward-animation-contact");
         setTimeout(() => {
@@ -221,7 +219,7 @@ async function saveContact(event) {
     }
 
     if (document.getElementById("contactDetailView").classList.contains("active")) {
-        showContactDetail(currentContactId);
+        showContactDetail(getCurrentContactId());
     }
 
     closeContactModal();
@@ -299,10 +297,10 @@ function init() {
     desktopMediaQuery.addEventListener("change", (event) => {
         handleMediaQueryChange(event);
 
-        if (currentContactId && contactModal.open) {
+        if (getCurrentContactId() && contactModal.open) {
             closeContactModal()
         }
-        showContactDetail(currentContactId);
+        showContactDetail(getCurrentContactId());
 
     });
 

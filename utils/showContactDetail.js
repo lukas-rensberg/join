@@ -355,3 +355,53 @@ function generateModalAvatar(contact) {
     modalAvatar.textContent = contact.initials;
     modalAvatar.style.backgroundColor = contact.avatarColor;
 }
+
+/**
+ * Sets the contacts array with new data
+ * @param newContacts
+ */
+export function setContacts(newContacts) {
+    contacts = newContacts;
+}
+
+/**
+ * Sets the contacts array with new data
+ */
+export function getContacts() {
+    return contacts;
+}
+
+
+/**
+ * Sets the edit mode state
+ * @param {boolean} value - True for edit mode, false for add mode
+ * @return {void}
+ */
+export function setEditMode(value) {
+    isEditMode = value;
+}
+
+/**
+ * Gets the edit mode state
+ * @return {boolean} True if in edit mode, false if in add mode
+ */
+export function getEditMode() {
+    return isEditMode;
+}
+
+/**
+ * Sets the current contact ID being viewed or edited
+ * @param value
+ * @return {void}
+ */
+export function setCurrentContactId(value) {
+    currentContactId = value;
+}
+
+/**
+ * Gets the current contact ID being viewed or edited
+ * @return {string|null} The current contact ID or null if none is selected
+ */
+export function getCurrentContactId() {
+    return currentContactId;
+}
