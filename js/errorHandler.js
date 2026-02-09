@@ -2,7 +2,17 @@
  * Error Handler Module - Handles authentication and form validation errors with scoped container support
  */
 
-import {createAuthErrorMessage} from "./template.js";
+/**
+ * Create error message element for authentication errors
+ * @param {string} message - The error message to display
+ * @returns {HTMLElement} The error message div element
+ */
+export function createAuthErrorMessage(message) {
+    const errorDiv = document.createElement("div");
+    errorDiv.className = "auth-error-message";
+    errorDiv.textContent = message;
+    return errorDiv;
+}
 
 /**
  * Show error message below form fields (for auth forms)

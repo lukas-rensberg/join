@@ -1,17 +1,4 @@
 /**
- * todo: this is functional => Need to move it out of template.js => no HTML generation
- * Create error message element for authentication errors
- * @param {string} message - The error message to display
- * @returns {HTMLElement} The error message div element
- */
-export function createAuthErrorMessage(message) {
-  const errorDiv = document.createElement("div");
-  errorDiv.className = "auth-error-message";
-  errorDiv.textContent = message;
-  return errorDiv;
-}
-
-/**
  * Generates an HTML template for a section header with the given letter.
  * @param {string} letter - The letter to display as the section header.
  * @returns {string} The HTML string for the section header and separator.
