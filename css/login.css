@@ -138,6 +138,7 @@ input[type="password"] {
     border: none;
     border-bottom: 0.06rem solid var(--color-light-gray);
     padding: 0 0.75rem;
+    background: unset;
 
     &:focus {
         outline: none;
@@ -448,6 +449,10 @@ footer {
         .btn-signup {
             font-size: 1.3rem;
             padding: 0.82rem 1.3rem;
+        }
+
+        .error-message {
+            bottom: -1.75rem;
         }
     }
 
