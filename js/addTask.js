@@ -182,7 +182,7 @@ export async function handleCreateTask(container = document) {
 /**
  * Handles task creation without redirect (for board aside dialog)
  * @param {HTMLElement} container - The container element to scope queries
- * @param {string} [targetCategory='to-do'] - Die Ziel-Kategorie/Spalte für den neuen Task
+ * @param {string} [targetCategory='to-do'] - The target category/column for the new task
  * @returns {Promise<boolean>}
  * Returns true if task was created successfully, false otherwise
  */
