@@ -1,5 +1,6 @@
 import {auth, loadTasks} from "./database.js";
 import {onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import {renderContact} from "./userProfile.js";
 
 const DASHBOARD_CACHE_KEY = 'dashboardData';
 
@@ -7,21 +8,21 @@ const DASHBOARD_CACHE_KEY = 'dashboardData';
 const desktopMediaQuery = window.matchMedia("(min-width: 812px)");
 
 /**
-* Checks if the current viewport is desktop size
-* @returns {boolean} True if viewport width >= 812px
-*/
+ * Checks if the current viewport is desktop size
+ * @returns {boolean} True if viewport width >= 812px
+ */
 function isDesktop() {
     return desktopMediaQuery.matches;
 }
 
 /**
  * Handles the mobile dashboard animation sequence
- * 
+ *
  * Adds animation classes to greeting and dashboard containers on mobile devices.
  * After 3 seconds, removes the animation classes and updates the dashboard position.
  * Only triggers if the greeting container has the "loaded" class and viewport is mobile size.
  */
-function mobileDashboardAnimation (){
+function mobileDashboardAnimation() {
     const greetingContainer = document.querySelector(".greeting-container");
     const dashboardContainer = document.querySelector(".dashboard-container");
 
@@ -182,7 +183,7 @@ function updateGreeting() {
             }
 
             updateAvatarInitials(user);
-            mobileDashboardAnimation ()
+            mobileDashboardAnimation()
         }
     });
 }
@@ -194,22 +195,8 @@ function updateAvatarInitials(user) {
     const avatarElement = document.querySelector(".avatar");
 
     if (avatarElement) {
-        let initials = "U";
 
-        if (user.displayName) {
-            const nameParts = user.displayName.trim().split(" ");
-            if (nameParts.length >= 2) {
-                initials = nameParts[0][0].toUpperCase() + nameParts[1][0].toUpperCase();
-            } else {
-                initials = nameParts[0][0].toUpperCase() + (nameParts[0][1] || "").toUpperCase();
-            }
-        } else if (user.email) {
-            initials = user.email[0].toUpperCase() + (user.email[1] || "").toUpperCase();
-        } else if (user.isAnonymous) {
-            initials = "GU";
-        }
-
-        avatarElement.textContent = initials;
+        avatarElement.textContent = renderContact(user);
     }
 }
 
