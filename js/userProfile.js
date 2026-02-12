@@ -16,8 +16,6 @@ function renderAuthenticatedHeader(user) {
 
     if (!user) return;
 
-    renderContact(user)
-
     const helpLink = document.createElement("a");
     helpLink.href = "help.html";
     helpLink.className = "help-link";
