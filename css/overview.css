@@ -23,7 +23,8 @@ main {
     gap: 1rem;
     align-items: center;
     justify-content: center;
-    padding: 1.75rem var(--padding-side) 0;
+    /*padding: 1.75rem var(--padding-side) 0;*/
+    margin: auto;
     opacity: 0;
     grid-template-areas:
     "card-urgent-deadline card-urgent-deadline"
@@ -282,7 +283,6 @@ main {
     flex-direction: column;
     width: auto;
     height: auto;
-
     z-index: 20;
     top: 50%;
     opacity: 0;
@@ -422,7 +422,7 @@ main {
 
     .greeting-guest {
         font-size: 3rem;
-        margin-bottom: 4rem;
+        margin-bottom: auto;
     }
 
     .card-urgent-deadline {

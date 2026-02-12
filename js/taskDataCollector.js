@@ -13,7 +13,7 @@ import { getSubtasks } from "./subtaskManager.js";
  * @param {string} [targetCategory='to-do'] - The target category/column for the new task
  * @returns {Object} Task data object
  */
-export function collectTaskData(container = document, targetCategory = 'to-do') {
+export function collectTaskData(container, targetCategory = 'to-do') {
     return {
         title: getTaskTitle(container),
         text: getTaskDescription(container),
@@ -57,7 +57,7 @@ export function collectEditTaskData(container, originalTask) {
  * @param {HTMLElement} container - The container element to scope queries
  * @returns {string} Task title
  */
-export function getTaskTitle(container = document) {
+export function getTaskTitle(container) {
     return container.querySelector('.input-title')?.value?.trim() || '';
 }
 
@@ -66,7 +66,7 @@ export function getTaskTitle(container = document) {
  * @param {HTMLElement} container - The container element to scope queries
  * @returns {string} Task description
  */
-export function getTaskDescription(container = document) {
+export function getTaskDescription(container) {
     return container.querySelector('.task-description')?.value?.trim() || '';
 }
 
@@ -75,7 +75,7 @@ export function getTaskDescription(container = document) {
  * @param {HTMLElement} container - The container element to scope queries
  * @returns {string} ISO formatted date (YYYY-MM-DD)
  */
-export function getFormattedDueDate(container = document) {
+export function getFormattedDueDate(container) {
     const dueDate = container.querySelector('.due-date-input')?.value;
     if (!dueDate) return '';
     const [day, month, year] = dueDate.split('/');
@@ -96,7 +96,7 @@ export function getAssignedMemberIds() {
  * @param {HTMLElement} container - The container element to scope queries
  * @returns {string[]} Array of subtask texts
  */
-export function getSubtaskTexts(container = document) {
+export function getSubtaskTexts(container) {
     const subtasks = getSubtasks(container);
     return subtasks.map(subtask => subtask.text);
 }

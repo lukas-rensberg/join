@@ -2,30 +2,17 @@ import {database, loadTasks} from "./database.js";
 
 import {onValue, ref} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
-import {
-    getNoTaskTemplate,
-    getTemplateMarkedUser,
-    getTemplateRemainingMembers,
-    getTemplateTaskCard,
-} from "./template.js";
+import { getNoTaskTemplate, getTemplateMarkedUser, getTemplateRemainingMembers, getTemplateTaskCard } from "./template.js";
 
 import {desktopMediaQuery, handleBoardMediaQueryChange} from "../utils/mediaQuerySwitch.js";
 
-import {
-    allowDrop,
-    closeAllSwapMenus,
-    handleDragEnd,
-    handleDragOver,
-    moveTaskTo,
-    moveTo,
-    startDragging,
-    toggleSwapMenu
-} from "../utils/dragAndDrop.js";
+import { allowDrop, closeAllSwapMenus, handleDragEnd, handleDragOver, moveTaskTo, moveTo, startDragging, toggleSwapMenu } from "../utils/dragAndDrop.js";
 
 import {openAddTaskAside} from "../utils/addTaskAside.js";
 import {closeDialog, deleteTaskButton, editTaskInDialog, openDialog, saveTask} from "../utils/taskDialog.js";
 
 let findTask = document.getElementById("search-task");
+
 
 export let tasks = [];
 export let contacts = [];
@@ -141,8 +128,7 @@ function initializeTasks() {
             tasks = loadedTasks;
             updateHTML();
         });
-    } catch (_) {
-    }
+    } catch (_) {}
 }
 
 /**
@@ -276,7 +262,7 @@ async function addContactToTask(taskId, contactId) {
 }
 
 /**
- * Removes a contact from a task's member list.
+ * Removes a contact from a task's member list. => Database Function
  * Saves the update to Firebase after removal.
  * @param {string} taskId - The unique identifier of the task.
  * @param {string} contactId - The unique identifier of the contact to remove.
@@ -294,8 +280,7 @@ async function removeContactFromTask(taskId, contactId) {
 }
 
 /**
- * Removes a contact from all tasks where they are assigned.
- * Called when a contact is deleted from the system.
+ * Removes a contact from all tasks where they are assigned. => UI Function
  * @param {string} contactId - The unique identifier of the contact to remove.
  * @returns {Promise<void>}
  */
@@ -316,7 +301,6 @@ async function removeContactFromAllTasks(contactId) {
 /**
  * Updates the completion status of a subtask.
  * Moves subtasks between pending and completed arrays and saves to Firebase.
- * TODO: Add optimistic UI update with rollback on save failure
  * @param {string} taskId - The unique identifier of the task.
  * @param {string} subtask - The name of the subtask to update.
  * @param {boolean} isCompleted - Whether the subtask should be marked as completed.
@@ -329,22 +313,22 @@ async function updateSubtaskStatus(taskId, subtask, isCompleted) {
     if (!task.subtasks) task.subtasks = [];
     if (!task.subtasks_done) task.subtasks_done = [];
 
-    if (isCompleted) {
-        const subtaskIndex = task.subtasks.indexOf(subtask);
-        if (subtaskIndex > -1) {
-            task.subtasks.splice(subtaskIndex, 1);
-            task.subtasks_done.push(subtask);
-        }
-    } else {
-        const subtaskIndex = task.subtasks_done.indexOf(subtask);
-        if (subtaskIndex > -1) {
-            task.subtasks_done.splice(subtaskIndex, 1);
-            task.subtasks.push(subtask);
-        }
-    }
+    const subtaskIndex = task.subtasks_done.indexOf(subtask);
+    if (subtaskIndex > -1) superSwitch(isCompleted, task, subtaskIndex, subtask);
 
     await saveTask(task);
 }
+
+const superSwitch = (isCompleted, task, subtaskIndex, subtask) => {
+    if (isCompleted === true) {
+        task.subtasks.splice(subtaskIndex, 1);
+        task.subtasks_done.push(subtask);
+    } else {
+        task.subtasks_done.splice(subtaskIndex, 1);
+        task.subtasks.push(subtask);
+    }
+}
+
 
 document.addEventListener('DOMContentLoaded', () => {
     initializeTasks();

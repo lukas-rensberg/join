@@ -53,7 +53,7 @@ function swipeInAddTaskAside() {
  * Removes the swipe-in class and adds the swipe-out class, then closes the modal after 300ms delay.
  * @returns {void}
  */
-function swipeOutAddTaskAside() {
+export function swipeOutAddTaskAside() {
     addTaskRef.classList.remove("add-task-swipe-in");
     addTaskRef.classList.add("add-task-swipe-out");
     setTimeout(() => {
@@ -111,44 +111,73 @@ export function openAddTaskAside() {
     const addTaskBtn = document.querySelector('.add-task-btn');
 
     openIcons.forEach(icon => {
-        icon.addEventListener('click', () => {
-            const category = icon.dataset.category || 'to-do';
-            setTargetCategory(category);
-
-            if (isDesktop()) {
-                createAddTask();
-                swipeInAddTaskAside();
-            } else window.location.href = `add-task.html?category=${category}`;
-        });
+        getCategorySwitchEventListener(icon);
     });
 
     if (!addTaskBtn) return;
+    addTaskButtonHandler(addTaskBtn)
+    closeAddTaskAside()
+}
+
+
+/**
+ * Attaches click event listener to category switch icons.
+ * On click, sets the target category based on the icon's data-category attribute.
+ * Opens the add task interface appropriate for the device screen size (aside panel for desktop, redirect for mobile).
+ * @param {HTMLElement} icon - The DOM element representing the category switch icon, expected to have a data-category attribute.
+ * @returns {void}
+ */
+function getCategorySwitchEventListener(icon) {
+    icon.addEventListener('click', () => {
+        const category = icon.dataset.category || 'to-do';
+        setTargetCategory(category);
+        if (!isDesktop()) return window.location.href = `addTask.html?category=${category}`;
+        createAddTask();
+        swipeInAddTaskAside();
+    });
+}
+
+/**
+ * Attaches click event listener to the main add task button.
+ * On click, sets the target category to 'to-do' by default and opens the add task aside panel on desktop.
+ * On mobile, it can redirect to the addTask.html page or handle differently as needed.
+ * @param {HTMLElement} addTaskBtn - The DOM element representing the main add task button.
+ * @returns {void}
+ */
+function addTaskButtonHandler(addTaskBtn) {
     addTaskBtn.addEventListener('click', () => {
         setTargetCategory('to-do');
         if (isDesktop()) {
             createAddTask();
             swipeInAddTaskAside();
         }
-    });
+    })
+}
 
+/**
+ * Attaches click event listener to the close button of the add task aside panel.
+ * On click, triggers the swipe-out animation to close the aside panel.
+ * Also sets up the create button event listener for the add task form.
+ * @returns {void}
+ */
+function closeAddTaskAside() {
     const closeButton = document.querySelector('.close-add-task');
     if (closeButton) closeButton.addEventListener('click', swipeOutAddTaskAside);
     addTaskCreateButton()
 }
+
 
 /**
  * Creates and renders the add task dialog by clearing the description container
  * and inserting the add task template HTML.
  * Initializes all form components (date input, priority buttons, dropdowns, subtasks) after rendering.
  * Uses the dialog element as container for proper event delegation in modals.
- * TODO: Add error handling for missing DOM elements
  * @returns {void}
  */
 function createAddTask() {
     const dialogElement = document.querySelector('#aside-add-task');
     const refAddTask = dialogElement?.querySelector('.add-task-form');
     if (!refAddTask) return;
-    refAddTask.innerHTML = "";
     refAddTask.innerHTML = getTemplateAddTask();
 
     initializeDateInput(dialogElement);

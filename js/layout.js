@@ -4,9 +4,10 @@ import {
     signOut
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 import {
+    generateFooterWithActiveStates,
     generateLoggedInAsideHTML,
     generateLoggedInHeaderHTML, generateLoggedOutAsideHTML,
-    generateLoggedOutHeaderHTML
+    generateLoggedOutHeaderHTML, generateNavlinkWithActiveState
 } from "./template.js";
 
 /**
@@ -66,11 +67,11 @@ function generateAsideNavbar(activePage, isLoggedIn) {
 }
 
 function buildNavLinks(items, pos, activePage) {
-    return items.filter(item => item.pos === pos).map(i => {
-        const active = activePage === i.href ? 'class="active-nav-link"' : "";
-        if (pos === "bottom") return `<a href="${i.href}" ${active}>${i.label}</a>`;
-        return `<a href="${i.href}" ${active}>
-            <img src="./assets/menu_icons/${i.icon}" alt="${i.label} Icon"/>${i.label}
+    return items.filter(item => item.pos === pos).map(el => {
+        const active = activePage === el.href ? 'class="active-nav-link"' : "";
+        if (pos === "bottom") return `<a href="${el.href}" ${active}>${el.label}</a>`;
+        return `<a href="${el.href}" ${active}>
+            <img src="./assets/menu_icons/${el.icon}" alt="${el.label} Icon"/>${el.label}
         </a>`;
     }).join("");
 }
@@ -116,9 +117,7 @@ function renderHeader(user) {
     const header = document.querySelector("header");
     if (header) {
         header.innerHTML = generateHeaderHTML(user);
-        if (user) {
-            attachLogoutHandler();
-        }
+        if (user) attachLogoutHandler();
     }
 }
 
@@ -128,9 +127,7 @@ function renderHeader(user) {
  */
 function renderAside(isLoggedIn) {
     const aside = document.querySelector("aside.aside-desktop");
-    if (aside) {
-        aside.innerHTML = generateAsideNavbar(getCurrentPage(), isLoggedIn);
-    }
+    if (aside) aside.innerHTML = generateAsideNavbar(getCurrentPage(), isLoggedIn);
 }
 
 /**
@@ -141,34 +138,29 @@ function renderAside(isLoggedIn) {
  */
 function generateFooterHTML(isLoggedIn, activePage) {
     if (isLoggedIn) {
-        const navItems = [
-            {href: "overview.html", class: "nav-summary", label: "Summary"},
-            {href: "addTask.html", class: "nav-add-task", label: "Add Task"},
-            {href: "board.html", class: "nav-board", label: "Board"},
-            {href: "contacts.html", class: "nav-contacts", label: "Contacts"}
-        ];
-
-        return navItems.map(item => {
-            const isActive = activePage === item.href ? ' active' : '';
-            return `
-        <a class="nav-item${isActive}" href="${item.href}">
-          <span class="${item.class}">${item.label}</span>
-        </a>
-      `;
-        }).join("");
+        generateLoggedInFooter(activePage);
     } else {
-        const isPrivacyActive = activePage === "privacy.html" ? " active" : "";
-        const isLegalActive = activePage === "legalNotice.html" ? " active" : "";
-
-        return `
-      <a class="nav-item" href="index.html">
-        <img src="./assets/menu_icons/login.svg" alt="Login" class="footer-login-icon"/>
-        <span class="nav-login">Log In</span>
-      </a>
-      <a class="legal-link${isPrivacyActive}" href="privacy.html">Privacy Policy</a>
-      <a class="legal-link${isLegalActive}" href="legal_notice.html">Legal Notice</a>
-    `;
+        generateLoggedOutFooter(activePage)
     }
+}
+
+function generateLoggedInFooter(activePage) {
+    const navItems = [
+        {href: "overview.html", class: "nav-summary", label: "Summary"},
+        {href: "addTask.html", class: "nav-add-task", label: "Add Task"},
+        {href: "board.html", class: "nav-board", label: "Board"},
+        {href: "contacts.html", class: "nav-contacts", label: "Contacts"}
+    ];
+
+    return navItems.map(item => {
+        generateNavlinkWithActiveState(item, activePage === item.href ? ' active' : '')
+    }).join("");
+}
+
+function generateLoggedOutFooter(activePage) {
+    const isPrivacyActive = activePage === "privacy.html" ? " active" : "";
+    const isLegalActive = activePage === "legalNotice.html" ? " active" : "";
+    generateFooterWithActiveStates(isPrivacyActive, isLegalActive);
 }
 
 /**

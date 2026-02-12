@@ -47,10 +47,7 @@ export function clearFieldError(fieldId) {
   const formGroup = field.closest(".form-group");
   
   const errorSpan = formGroup.querySelector(".error-message");
-  if (errorSpan) {
-    errorSpan.textContent = "";
-  }
-  
+  if (errorSpan) errorSpan.textContent = "";
   field.style.borderBottom = "";
 }
 
@@ -65,9 +62,7 @@ export function validateContactForm(formData) {
   if (!formData.name.trim()) {
     showFieldError("contactName", "Name is required");
     isValid = false;
-  } else {
-    clearFieldError("contactName");
-  }
+  } else clearFieldError("contactName");
 
   if (!formData.email.trim()) {
     showFieldError("contactEmail", "Email is required");
@@ -75,9 +70,7 @@ export function validateContactForm(formData) {
   } else if (!validateEmailFormat(formData.email)) {
     showFieldError("contactEmail", "Invalid email format");
     isValid = false;
-  } else {
-    clearFieldError("contactEmail");
-  }
+  } else clearFieldError("contactEmail");
 
   if (!formData.phone.trim()) {
     showFieldError("contactPhone", "Phone is required");
@@ -85,9 +78,7 @@ export function validateContactForm(formData) {
   } else if (!validatePhone(formData.phone)) {
     showFieldError("contactPhone", "Invalid phone format");
     isValid = false;
-  } else {
-    clearFieldError("contactPhone");
-  }
+  } else clearFieldError("contactPhone");
 
   return isValid;
 }

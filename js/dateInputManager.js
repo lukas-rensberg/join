@@ -8,7 +8,7 @@
  * Adds automatic formatting for dd/mm/yyyy
  * @param {HTMLElement} container - The container element to scope queries (default: document)
  */
-export function initializeDateInput(container = document) {
+export function initializeDateInput(container) {
     const dateInput = container.querySelector('.due-date-input');
     if (dateInput) {
         dateInput.addEventListener('input', formatDateInput);

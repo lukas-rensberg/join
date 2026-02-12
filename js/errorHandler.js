@@ -45,30 +45,27 @@ export const showInlineError = showErrorMessage;
 /**
  * Handle authentication errors (login page, signup page, protected pages)
  */
-export function handleAuthError(error) {
-    let errorMessage;
-    switch (error.code) {
-        case "auth/invalid-email":
-            errorMessage = "Invalid email address.";
-            break;
-        case "auth/user-not-found":
-        case "auth/wrong-password":
-        case "auth/invalid-credential":
-            errorMessage = "Check your email and password. Please try again.";
-            break;
-        case "auth/too-many-requests":
-            errorMessage = "Too many failed attempts. Please try again later.";
-            break;
-        case "auth/email-already-in-use":
-            errorMessage = "This email is already registered.";
-            break;
-        case "auth/weak-password":
-            errorMessage = "Password is too weak. Please use a stronger password.";
-            break;
-        default:
-            errorMessage = error.message;
+export function handleAuthError(error) { showErrorMessage(getErrorMessage(error)); }
+
+/**
+ * Map Firebase authentication error codes to user-friendly messages
+ * @param error - The error object from Firebase authentication
+ * @returns {string} User-friendly error message
+ */
+function getErrorMessage(error) {
+    if (error.code === "auth/invalid-email") {
+        return "Invalid email address."
+    } else if (error.code === "auth/user-not-found" || error.code === "auth/wrong-password" || error.code === "auth/invalid-credential") {
+        return "Check your email and password. Please try again.";
+    } else if ("auth/too-many-requests") {
+        return "Too many failed attempts. Please try again later.";
+    } else if (error.code === "auth/email-already-in-use") {
+        return "This email is already registered."
+    } else if (error.code === "auth/weak-password") {
+        return "Password is too weak. Please use a stronger password.";
+    } else {
+        return error.message.toString();
     }
-    showErrorMessage(errorMessage);
 }
 
 /**
@@ -78,50 +75,32 @@ export function handleAuthError(error) {
  * @param {HTMLElement|Document} container - The container element to scope queries (default: document)
  * @return {void}
  */
-export function showFieldError(fieldName, message, container = document) {
-    let formGroup;
-    let inputElement;
-
-    if (fieldName === 'title') {
-        formGroup = container.querySelector('.form-group-title');
-        inputElement = formGroup?.querySelector('.input-title');
-    } else if (fieldName === 'dueDate') {
-        const dueDateInput = container.querySelector('.due-date-input');
-        formGroup = dueDateInput?.closest('.form-group');
-        inputElement = dueDateInput;
-    } else if (fieldName === 'category') {
-        const categoryWrapper = container.querySelector('.category-dropdown-wrapper');
-        formGroup = categoryWrapper?.closest('.form-group');
-        inputElement = categoryWrapper;
-    }
-
+export function showFieldError(fieldName, message, container) {
+    const { formGroup, inputElement } = getFieldElements(fieldName, container);
     if (!formGroup) return;
-
-    const existingError = formGroup.querySelector('.field-error');
-    if (existingError) existingError.remove();
-
+    formGroup.querySelector('.field-error')?.remove();
     const errorDiv = document.createElement('div');
     errorDiv.className = 'field-error visible';
     errorDiv.textContent = message;
-
-    if (inputElement) {
-        if (fieldName === 'category') {
-            const dropdownHeader = inputElement.querySelector('.dropdown-header');
-            if (dropdownHeader) {
-                dropdownHeader.style.borderBottomColor = '#ff3d00';
-            }
-        } else if (fieldName === 'dueDate') {
-            const inputWrapper = inputElement.closest('.input-with-icon');
-            if (inputWrapper) {
-                inputWrapper.style.borderColor = '#ff3d00';
-            }
-        } else {
-            inputElement.style.borderColor = '#ff3d00';
-        }
-    }
-
+    if (inputElement) setBorderColor(fieldName, inputElement, '#ff3d00');
     formGroup.appendChild(errorDiv);
     formGroup.classList.add('has-error');
+}
+
+function getFieldElements(fieldName, container) {
+    if (fieldName === 'title') {
+        const formGroup = container.querySelector('.form-group-title');
+        return { formGroup, inputElement: formGroup?.querySelector('.input-title') };
+    }
+    const selector = fieldName === 'dueDate' ? '.due-date-input' : '.category-dropdown-wrapper';
+    const inputElement = container.querySelector(selector);
+    return { formGroup: inputElement?.closest('.form-group'), inputElement };
+}
+
+function setBorderColor(fieldName, element, color) {
+    const target = fieldName === 'category' ? element.querySelector('.dropdown-header')
+        : fieldName === 'dueDate' ? element.closest('.input-with-icon') : element;
+    if (target) target.style[fieldName === 'category' ? 'borderBottomColor' : 'borderColor'] = color;
 }
 
 /**
@@ -130,74 +109,40 @@ export function showFieldError(fieldName, message, container = document) {
  * @param {HTMLElement} container - The container element to scope queries (default: document)
  * @return {void}
  */
-export function clearFieldError(fieldName, container = document) {
-    let formGroup;
-    let inputElement;
-
-    if (fieldName === 'title') {
-        formGroup = container.querySelector('.form-group-title');
-        inputElement = formGroup?.querySelector('.input-title');
-    } else if (fieldName === 'dueDate') {
-        const dueDateInput = container.querySelector('.due-date-input');
-        formGroup = dueDateInput?.closest('.form-group');
-        inputElement = dueDateInput;
-    } else if (fieldName === 'category') {
-        const categoryWrapper = container.querySelector('.category-dropdown-wrapper');
-        formGroup = categoryWrapper?.closest('.form-group');
-        inputElement = categoryWrapper;
-    }
-
+export function clearFieldError(fieldName, container) {
+    const { formGroup, inputElement } = getFieldElements(fieldName, container);
     if (formGroup) {
         const errorElement = formGroup.querySelector('.field-error');
-        if (errorElement) {
-            errorElement.remove();
-        }
-
+        if (errorElement) errorElement.remove();
         if (inputElement) {
             if (fieldName === 'category') {
                 const dropdownHeader = inputElement.querySelector('.dropdown-header');
-                if (dropdownHeader) {
-                    dropdownHeader.style.borderBottomColor = '';
-                }
+                if (dropdownHeader) dropdownHeader.style.borderBottomColor = '';
             } else if (fieldName === 'dueDate') {
                 const inputWrapper = inputElement.closest('.input-with-icon');
-                if (inputWrapper) {
-                    inputWrapper.style.borderColor = '';
-                }
-            } else {
-                inputElement.style.borderColor = '';
-            }
+                if (inputWrapper) inputWrapper.style.borderColor = '';
+            } else inputElement.style.borderColor = '';
         }
-
         formGroup.classList.remove('has-error');
     }
 }
 
 /**
  * Clear all field errors
- * @param {HTMLElement} container - The container element to scope queries (default: document)
+ * @param {HTMLElement|Document} container - The container element to scope queries (default: document)
  * @return {void}
  */
 export function clearAllFieldErrors(container = document) {
-    container.querySelectorAll('.field-error').forEach(error => {
-        error.remove();
-    });
+    executeOnHTMLElement(container, '.field-error', element => element.remove());
+    executeOnHTMLElement(container, '.form-group', group => group.classList.remove('has-error'));
+    executeOnHTMLElement(container, '.input-title, .due-date-input',input => input.style.borderColor = '');
+    executeOnHTMLElement(container, '.input-with-icon', wrapper => wrapper.style.borderColor = '');
+    executeOnHTMLElement(container, '.dropdown-header', header => header.style.borderBottomColor = '');
+}
 
-    container.querySelectorAll('.form-group').forEach(group => {
-        group.classList.remove('has-error');
-    });
-
-    container.querySelectorAll('.input-title, .due-date-input').forEach(input => {
-        input.style.borderColor = '';
-    });
-
-    container.querySelectorAll('.input-with-icon').forEach(wrapper => {
-        wrapper.style.borderColor = '';
-    });
-
-    container.querySelectorAll('.dropdown-header').forEach(header => {
-        header.style.borderBottomColor = '';
-    });
+function executeOnHTMLElement(container, selector, callback) {
+    if (container) container.querySelectorAll(selector).forEach(callback);
+    document.querySelectorAll(selector).forEach(callback);
 }
 
 /**
@@ -208,14 +153,9 @@ export function showSuccessBanner() {
     clearAllFieldErrors();
 
     let successBanner = document.getElementById("taskAdded")
-
     if (!successBanner) return;
-
     successBanner.classList.add('move-animation-add-task');
-
-    setTimeout(() => {
-        successBanner.classList.remove('move-animation-add-task');
-    }, 1000);
+    setTimeout(() => successBanner.classList.remove('move-animation-add-task'), 1000);
 }
 
 /**

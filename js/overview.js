@@ -89,11 +89,7 @@ function moveGreetingContainer() {
     const greetingContainer = document.querySelector(".greeting-container");
     const dashboardContainer = document.querySelector(".dashboard-container");
 
-    if (isDesktop()) {
-        dashboardContainer.insertBefore(greetingContainer, dashboardContainer.firstChild);
-    }
-
-
+    if (isDesktop()) dashboardContainer.insertBefore(greetingContainer, dashboardContainer.firstChild);
 }
 
 /**
@@ -109,29 +105,14 @@ function updateGreeting() {
             const headlineElement = document.createElement("h1");
             const headlineSpan = document.createElement("span");
 
-
             if (greetingElement) {
                 if (user.isAnonymous) {
-                    greetingElement.textContent = getTimeBasedGreeting();
-                    greetingElement.classList.add("greeting-guest");
-                    if (isDesktop()) {
-                        greetingElement.classList.add("greeting-guest-large");
-                    } else {
-                        greetingElement.classList.remove("greeting-guest-large");
-                    }
-
+                    setupGuestGreeting(greetingElement);
                 } else {
-                    greetingElement.textContent = getTimeBasedGreeting() + ",";
-                    greetingElement.classList.remove("greeting-guest");
-                    greetingElement.classList.remove("greeting-guest-large");
-                    greetingContainer.append(createSpan);
-                    createSpan.classList.add("h1-wrapper");
-                    createSpan.append(headlineElement);
-                    headlineElement.classList.add("h1-colorized");
-                    headlineElement.append(headlineSpan);
-                    headlineSpan.classList.add("marquee-text");
+                    setupUserGreeting(greetingContainer, greetingElement, createSpan, headlineElement, headlineSpan);
                 }
             }
+
             const nameElement = document.querySelector(".greeting-container .h1-colorized .marquee-text");
 
             if (nameElement) {
@@ -187,6 +168,28 @@ function updateGreeting() {
             mobileDashboardAnimation()
         }
     });
+}
+
+function setupUserGreeting(greetingContainer, greetingElement, createSpan, headlineElement, headlineSpan) {
+    greetingElement.textContent = getTimeBasedGreeting() + ",";
+    greetingElement.classList.remove("greeting-guest");
+    greetingElement.classList.remove("greeting-guest-large");
+    greetingContainer.append(createSpan);
+    createSpan.classList.add("h1-wrapper");
+    createSpan.append(headlineElement);
+    headlineElement.classList.add("h1-colorized");
+    headlineElement.append(headlineSpan);
+    headlineSpan.classList.add("marquee-text");
+}
+
+function setupGuestGreeting(greetingElement) {
+    greetingElement.textContent = getTimeBasedGreeting();
+    greetingElement.classList.add("greeting-guest");
+    if (isDesktop()) {
+        greetingElement.classList.add("greeting-guest-large");
+    } else {
+        greetingElement.classList.remove("greeting-guest-large");
+    }
 }
 
 /**
@@ -311,9 +314,7 @@ function updateDashboardNumbers(tasks) {
  */
 function updateNumberElement(selector, value) {
     const element = document.querySelector(selector);
-    if (element) {
-        element.textContent = value;
-    }
+    if (element) element.textContent = value.toString();
 }
 
 /**
@@ -322,7 +323,6 @@ function updateNumberElement(selector, value) {
  */
 function applyCachedData(cachedData) {
     if (!cachedData) return;
-
     const {counts, urgentCount, nearestDeadline} = cachedData;
 
     updateNumberElement('.card-todo .number', counts['to-do']);
@@ -332,7 +332,6 @@ function applyCachedData(cachedData) {
     updateNumberElement('.card-board .number', counts.total);
 
     updateNumberElement('.card-urgent-deadline .number', urgentCount);
-
     const deadlineElement = document.querySelector('.deadline-section .date');
     if (deadlineElement) {
         const date = nearestDeadline ? new Date(nearestDeadline) : null;
@@ -347,9 +346,7 @@ function applyCachedData(cachedData) {
  */
 function initDashboard() {
     const cachedData = getCachedDashboardData();
-    if (cachedData) {
-        applyCachedData(cachedData);
-    }
+    if (cachedData) applyCachedData(cachedData);
 
     loadTasks(updateDashboardNumbers);
 }

@@ -200,33 +200,30 @@ async function saveContact(event) {
 
     const formData = getFormData();
 
-    if (!validateContactForm(formData)) {
-        return;
-    }
+    if (!validateContactForm(formData)) return;
 
     const {name, email, phone} = formData;
 
-    if (getEditMode()) {
-        await updateContact(getCurrentContactId(), name, email, phone, getInitialsFromName(name));
-    } else {
-        const newContactId = generateContactId();
-        setCurrentContactId(newContactId);
-        await createContact(newContactId, name, email, phone, getRandomColor(), getInitialsFromName(name), false);
-        addedContactRef.classList.add("forward-animation-contact");
-        setTimeout(() => {
-            addedContactRef.classList.remove("forward-animation-contact");
-            addedContactRef.classList.add("backward-animation-contact");
-            setTimeout(() => {
-                addedContactRef.classList.remove("backward-animation-contact");
-            }, 500);
-        }, 1000);
-    }
+    if (getEditMode()) await updateContact(getCurrentContactId(), name, email, phone, getInitialsFromName(name));
+    else await createNewContact(addedContactRef, name, email, phone);
 
-    if (document.getElementById("contactDetailView").classList.contains("active")) {
-        showContactDetail(getCurrentContactId());
-    }
+    if (document.getElementById("contactDetailView").classList.contains("active")) showContactDetail(getCurrentContactId());
 
     closeContactModal();
+}
+
+async function createNewContact(container, name, email, phone) {
+    const newContactId = generateContactId();
+    setCurrentContactId(newContactId);
+    await createContact(newContactId, name, email, phone, getRandomColor(), getInitialsFromName(name), false);
+    container.classList.add("forward-animation-contact");
+    setTimeout(() => {
+        container.classList.remove("forward-animation-contact");
+        container.classList.add("backward-animation-contact");
+        setTimeout(() => {
+            container.classList.remove("backward-animation-contact");
+        }, 500);
+    }, 1000);
 }
 
 /**
@@ -234,10 +231,24 @@ async function saveContact(event) {
  * @returns {void}
  */
 function setupClickListeners() {
+    setupFabButton()
+    setupContactLinks()
+    setupDesktopActions()
+    setupContactModalCloseListeners()
+
+    const backButton = document.getElementById("backButton");
+    if (backButton) backButton.addEventListener("click", hideContactDetail);
+
+    const deleteButton = document.getElementById("deleteButton");
+    if (deleteButton) deleteButton.addEventListener("click", deleteContactFromModal);
+}
+
+function setupFabButton() {
     const fabButton = document.getElementById("fabButton");
-    if (fabButton) {
-        fabButton.addEventListener("click", handleFabClick);
-    }
+    if (fabButton) fabButton.addEventListener("click", handleFabClick);
+}
+
+function setupContactLinks() {
     const editContactLink = document.getElementById("editContactLink");
     if (editContactLink) {
         editContactLink.addEventListener("click", (event) => {
@@ -252,47 +263,24 @@ function setupClickListeners() {
             deleteContact();
         });
     }
-
-    const editContactDesktop = document.getElementById("editContactDesktop");
-    if (editContactDesktop) {
-        editContactDesktop.addEventListener("click", editContact);
-    }
-    const deleteContactDesktop = document.getElementById("deleteContactDesktop");
-    if (deleteContactDesktop) {
-        deleteContactDesktop.addEventListener("click", deleteContact);
-    }
-
-    const backButton = document.getElementById("backButton");
-    if (backButton) {
-        backButton.addEventListener("click", hideContactDetail);
-    }
-    const modalBackdrop = document.getElementById("modalBackdrop");
-    if (modalBackdrop) {
-        modalBackdrop.addEventListener("click", closeContactModal);
-    }
-    const modalCloseBtn = document.getElementById("modalCloseBtn");
-    if (modalCloseBtn) {
-        modalCloseBtn.addEventListener("click", closeContactModal);
-    }
-    const cancelButton = document.getElementById("cancelButton");
-    if (cancelButton) {
-        cancelButton.addEventListener("click", closeContactModal);
-    }
-    const deleteButton = document.getElementById("deleteButton");
-    if (deleteButton) {
-        deleteButton.addEventListener("click", deleteContactFromModal);
-    }
 }
 
-/**
- * Initializes the contacts module by loading contacts from the database,
- * setting up click outside listeners, add contact button event listener,
- * and various click listeners. Also registers a media query change listener
- * for responsive UI updates that handles modal closing and contact detail view updates.
- * Finally, sets up the contact form submit handler.
- * TODO: Consider splitting initialization into smaller functions for better maintainability
- * @returns {void}
- */
+function setupDesktopActions() {
+    const editContactDesktop = document.getElementById("editContactDesktop");
+    if (editContactDesktop) editContactDesktop.addEventListener("click", editContact);
+    const deleteContactDesktop = document.getElementById("deleteContactDesktop");
+    if (deleteContactDesktop) deleteContactDesktop.addEventListener("click", deleteContact);
+}
+
+function setupContactModalCloseListeners() {
+    const modalBackdrop = document.getElementById("modalBackdrop");
+    if (modalBackdrop) modalBackdrop.addEventListener("click", closeContactModal);
+    const modalCloseBtn = document.getElementById("modalCloseBtn");
+    if (modalCloseBtn) modalCloseBtn.addEventListener("click", closeContactModal);
+    const cancelButton = document.getElementById("cancelButton");
+    if (cancelButton) cancelButton.addEventListener("click", closeContactModal);
+}
+
 function init() {
     loadContactsFromRTDB();
     setupClickOutsideListener();
@@ -301,18 +289,12 @@ function init() {
 
     desktopMediaQuery.addEventListener("change", (event) => {
         handleMediaQueryChange(event);
-
-        if (getCurrentContactId() && contactModal.open) {
-            closeContactModal()
-        }
+        if (getCurrentContactId() && contactModal.open) closeContactModal()
         showContactDetail(getCurrentContactId());
-
     });
 
     const contactForm = document.getElementById("contactForm");
-    if (contactForm) {
-        contactForm.addEventListener("submit", saveContact);
-    }
+    if (contactForm) contactForm.addEventListener("submit", saveContact);
 }
 
 document.addEventListener("DOMContentLoaded", init);
