@@ -65,6 +65,7 @@ export async function createContact(uid, username, email, phone, avatarColor, in
 
 /**
  * Ensures the authenticated user exists as a contact in the RTDB.
+ * TODO: Add error handling and retry logic for network failures
  * @param {Object} user The authenticated user object from Firebase Auth.
  * @param {Function} generatePhoneNumber Function to generate a phone number for the contact.
  * @param {Function} getRandomColor Function to generate a random avatar color for the contact.

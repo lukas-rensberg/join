@@ -3,7 +3,7 @@
  * Handles all subtask-related operations with scoped container support
  */
 
-import { createSubtaskHTML, createEditActionsHTML, createNormalActionsHTML } from "./template.js";
+import {createSubtaskHTML, createEditActionsHTML, createNormalActionsHTML} from "./template.js";
 
 let activeContainer = null;
 const initializedContainers = new WeakSet();
@@ -302,6 +302,7 @@ export function getSubtasks(container = document) {
 /**
  * Populates the subtask list with existing subtasks from a task
  * All subtasks are rendered as not-done (changes reset the done status)
+ * TODO: Add option to preserve completion status when editing tasks
  * @param {string[]} subtasks - Array of pending subtask texts
  * @param {string[]} subtasksDone - Array of completed subtask texts
  * @param {HTMLElement} container - The container element to scope queries

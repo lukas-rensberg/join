@@ -152,12 +152,10 @@ input[type="password"] {
 
 .user-email {
     background: url("../assets/icons/mail.svg") center center no-repeat;
-    transform: scale(0.8);
 }
 
 .user-password {
     background: url("../assets/icons/lock.svg") center center no-repeat;
-    transform: scale(0.8);
 }
 
 .password-icon-toggle {
@@ -165,7 +163,6 @@ input[type="password"] {
     align-items: center;
     justify-content: center;
     transition: opacity 0.2s ease;
-    scale: 0.8;
 }
 
 .password-icon-toggle.clickable {

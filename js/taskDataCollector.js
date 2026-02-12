@@ -10,7 +10,7 @@ import { getSubtasks } from "./subtaskManager.js";
 /**
  * Collects all task data from the form
  * @param {HTMLElement} container - The container element to scope queries (default: document)
- * @param {string} [targetCategory='to-do'] - Die Ziel-Kategorie/Spalte für den neuen Task
+ * @param {string} [targetCategory='to-do'] - The target category/column for the new task
  * @returns {Object} Task data object
  */
 export function collectTaskData(container = document, targetCategory = 'to-do') {

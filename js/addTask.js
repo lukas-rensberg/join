@@ -207,6 +207,7 @@ export async function handleCreateTaskFromBoard(container = document, targetCate
 /**
  * Creates task and redirects to board page.
  * Uses urlTargetCategory from URL parameters (for mobile redirect from board).
+ * TODO: Implement better error recovery mechanism with user-friendly error messages
  * @param {HTMLElement} container - The container element to scope queries
  * @returns {Promise<boolean>}
  * Returns true if task was created successfully, false otherwise

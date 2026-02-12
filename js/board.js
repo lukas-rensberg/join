@@ -316,6 +316,7 @@ async function removeContactFromAllTasks(contactId) {
 /**
  * Updates the completion status of a subtask.
  * Moves subtasks between pending and completed arrays and saves to Firebase.
+ * TODO: Add optimistic UI update with rollback on save failure
  * @param {string} taskId - The unique identifier of the task.
  * @param {string} subtask - The name of the subtask to update.
  * @param {boolean} isCompleted - Whether the subtask should be marked as completed.

@@ -20,7 +20,11 @@ import {
     setupAddContactBtnEventListener,
     setupClickOutsideListener,
     showContactDetail,
-    setEditMode, getEditMode, setCurrentContactId, getCurrentContactId, getContacts
+    setEditMode,
+    getEditMode,
+    setCurrentContactId,
+    getCurrentContactId,
+    getContacts
 } from "../utils/showContactDetail.js";
 
 /**
@@ -286,6 +290,7 @@ function setupClickListeners() {
  * and various click listeners. Also registers a media query change listener
  * for responsive UI updates that handles modal closing and contact detail view updates.
  * Finally, sets up the contact form submit handler.
+ * TODO: Consider splitting initialization into smaller functions for better maintainability
  * @returns {void}
  */
 function init() {

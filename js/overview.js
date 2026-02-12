@@ -98,6 +98,7 @@ function moveGreetingContainer() {
 
 /**
  * Update greeting and username on the overview page
+ * TODO: Refactor into smaller functions to improve readability and testability
  */
 function updateGreeting() {
     onAuthStateChanged(auth, (user) => {

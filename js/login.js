@@ -69,7 +69,7 @@ function validateLoginForm(email, password) {
 /**
  * Update password icon based on input value
  */
-function updatePasswordIcon(passwordInput, iconElement) {
+export function updatePasswordIcon(passwordInput, iconElement) {
   const img = iconElement.querySelector("img");
 
   if (passwordInput.value.length === 0) {
@@ -89,7 +89,7 @@ function updatePasswordIcon(passwordInput, iconElement) {
 /**
  * Toggle password visibility
  */
-function togglePasswordVisibility(toggleElement) {
+export function togglePasswordVisibility(toggleElement) {
   const targetId = toggleElement.getAttribute("data-target");
   const passwordInput = document.getElementById(targetId);
   const img = toggleElement.querySelector("img");
@@ -108,6 +108,7 @@ function togglePasswordVisibility(toggleElement) {
 
 /**
  * Initialize login page functionality (login page)
+ * TODO: Refactor into smaller functions for better separation of concerns
  */
 export function initLoginPage(loginUserCallback, guestLoginCallback, handleAuthErrorCallback) {
   const wrapper = document.querySelector(".logo-wrapper");

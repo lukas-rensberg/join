@@ -237,6 +237,7 @@ export function handleMediaQueryChange(event) {
 
 /**
  * Opens the contact modal in either create or edit mode
+ * TODO: Refactor modal setup logic into separate mode-specific functions
  * @param {boolean} editMode - Whether to open in edit mode (true) or create mode (false)
  */
 function openContactModal(editMode) {

@@ -156,6 +156,7 @@ export function closeAllSwapMenus() {
 /**
  * Toggles the swap dropdown menu for a specific task card.
  * Hides the current category option and shows all others.
+ * TODO: Add animation for smooth menu open/close transitions
  * @param {Event} event - The click event object.
  * @param {string} taskId - The task id.
  * @param {string} currentCategory - The current category of the task.

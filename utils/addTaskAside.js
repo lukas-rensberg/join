@@ -141,6 +141,7 @@ export function openAddTaskAside() {
  * and inserting the add task template HTML.
  * Initializes all form components (date input, priority buttons, dropdowns, subtasks) after rendering.
  * Uses the dialog element as container for proper event delegation in modals.
+ * TODO: Add error handling for missing DOM elements
  * @returns {void}
  */
 function createAddTask() {

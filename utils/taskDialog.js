@@ -34,6 +34,7 @@ export function editTaskInDialog(element, dueDate) {
 
 /**
  * Displays the edit confirmation interface by replacing dialog content with edit form.
+ * TODO: Consider using a separate dialog element for edit mode instead of replacing content
  * @param {HTMLElement} dialogContentRef - The dialog content container element.
  * @param {Object} element - The task object being edited.
  * @param {string} dueDate - The formatted due date string for display.
@@ -385,6 +386,7 @@ function initMembers(memberIds) {
 /**
  * Initializes and renders the subtasks section in the task dialog.
  * Displays both pending and completed subtasks with checkboxes.
+ * TODO: Add drag-and-drop functionality to reorder subtasks
  * @param {string} taskId - The unique identifier of the task whose subtasks to render.
  */
 function initSubtasks(taskId) {

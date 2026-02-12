@@ -455,6 +455,7 @@ function handleMemberPreselection(contactId, container) {
 /**
  * Preselects a category based on task type name
  * Sets the category without opening/toggling the dropdown
+ * TODO: Add validation to ensure task type exists before preselection
  * @param {string} taskType - The task type name (e.g., "User Story", "Technical Task")
  * @param {HTMLElement|Document} container - The container element to scope queries
  */
