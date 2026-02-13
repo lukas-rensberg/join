@@ -1,10 +1,3 @@
-/**
- * Dropdown Management Functions
- * Handles contact and category dropdown functionality with scoped container support
- */
-
-// todo: File too long, split into smaller modules if possible
-
 import {getCategoryOptionHTML, generateContactOptionHTML, getContactChipHTML} from "./template.js";
 import {database} from "./database.js";
 import {ref, onValue} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
@@ -293,43 +286,55 @@ function setupDropdownEventDelegation(container, signal = null) {
     const options = signal ? {signal} : {};
 
     container.addEventListener('click', (event) => {
-        const contactHeader = event.target.closest('.contact-dropdown-header');
-        if (contactHeader && !event.target.closest('.contact-search-input')) {
-            toggleDropdown('contact', false, container);
-            return;
-        }
+        const {contactHeader, searchInput, categoryHeader, contactOption, categoryOption} = closestEvents(event)
 
-        const searchInput = event.target.closest('.contact-search-input');
-        if (searchInput) {
-            event.stopPropagation();
-            toggleDropdown('contact', true, container);
-            return;
-        }
+        setupToggleDropdownEventDelegation(event, contactHeader, searchInput, container)
 
-        const categoryHeader = event.target.closest('.category-dropdown-header');
-        if (categoryHeader) {
-            toggleDropdown('category', false, container);
-            return;
-        }
+        if (categoryHeader) return toggleDropdown('category', false, container);
+        setupContactOptionDelegation(contactOption, container);
+        setupCategoryOptionDelegation(categoryOption, container);
+    }, options);
+    setupContactEventDelegation(container, options);
+}
 
-        const contactOption = event.target.closest('.contact-option');
+function closestEvents(event) {
+    const contactHeader = event.target.closest('.contact-dropdown-header');
+    const searchInput = event.target.closest('.contact-search-input');
+    const categoryHeader = event.target.closest('.category-dropdown-header');
+    const contactOption = event.target.closest('.contact-option');
+    const categoryOption = event.target.closest('.category-option');
+    return {contactHeader, searchInput, categoryHeader, contactOption, categoryOption};
+}
+
+function setupContactOptionDelegation(contactOption, container) {
         if (contactOption) {
             const contactId = contactOption.getAttribute('data-contact-id');
             if (contactId) {
                 selectContact(contactId, container);
             }
-            return;
         }
+}
 
-        const categoryOption = event.target.closest('.category-option');
-        if (categoryOption) {
-            const categoryId = categoryOption.getAttribute('data-category-id');
-            if (categoryId) {
-                selectCategory(categoryId, container);
-            }
+function setupToggleDropdownEventDelegation(event, contactHeader, searchInput, container) {
+    if (contactHeader) {
+        if (!event.target.closest('.contact-search-input')) {
+            toggleDropdown('contact', false, container);
+        } else if (searchInput) {
+            event.stopPropagation();
+            toggleDropdown('contact', true, container);
         }
-    }, options);
+    }}
 
+function setupCategoryOptionDelegation(categoryOption, container) {
+    if (categoryOption) {
+        const categoryId = categoryOption.getAttribute('data-category-id');
+        if (categoryId) {
+            selectCategory(categoryId, container);
+        }
+    }
+}
+
+function setupContactEventDelegation(container, options) {
     container.addEventListener('input', (event) => {
         if (event.target.closest('.contact-search-input')) {
             filterOptions('contact', container);
@@ -469,4 +474,3 @@ export function preselectCategory(taskType, container) {
     const selectedOption = container.querySelector(`[data-category-id="${categoryId}"]`);
     if (selectedOption) selectedOption.classList.add('selected');
 }
-

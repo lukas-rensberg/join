@@ -1,5 +1,6 @@
 import {isDesktop} from "./mediaQuerySwitch.js";
 import {tasks} from "../js/board.js";
+import {saveTask} from "./taskDialog.js";
 
 export let dragState = {
     isDragging: false,

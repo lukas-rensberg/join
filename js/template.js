@@ -398,7 +398,7 @@ export function generateLoggedInHeaderHTML(userInitials) {
     <div class="header-right">
       <div class="help-container">
         Kanban Project Management Tool
-        <a href="help.html"><img src="./assets/icons/question_mark_.svg" alt="Help"></a>
+        <a href="help.html"><img src="./assets/icons/question_mark.svg" alt="Help"></a>
       </div>
       <input type="checkbox" id="slideInSideMenu"/>
       <label for="slideInSideMenu">
