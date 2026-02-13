@@ -1,10 +1,5 @@
 import {getTargetCategory, swipeOutAddTaskAside} from "./addTaskAside.js";
 
-/**
- * @fileoverview Handles media query changes for responsive design
- * Contains functions to check viewport size and respond to changes
- */
-
 export const desktopMediaQuery = window.matchMedia("(min-width: 812px)");
 
 /**

@@ -34,7 +34,6 @@ export function editTaskInDialog(element, dueDate) {
 
 /**
  * Displays the edit confirmation interface by replacing dialog content with edit form.
- * TODO: Consider using a separate dialog element for edit mode instead of replacing content
  * @param {HTMLElement} dialogContentRef - The dialog content container element.
  * @param {Object} element - The task object being edited.
  * @param {string} dueDate - The formatted due date string for display.

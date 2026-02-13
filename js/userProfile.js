@@ -1,50 +1,30 @@
 import {auth} from "./database.js";
 import {onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import {generateAvatarHTML} from "./template";
 
 /**
  * Render header elements only when logged in
  * @param {object|null} user - Firebase user object or null
  */
 function renderAuthenticatedHeader(user) {
-    const headerRight = document.querySelector(".header-right");
-    if (!headerRight) return;
+    const header = document.querySelector(".header-right");
+    if (!header) return;
 
-    const existingHelpLink = headerRight.querySelector(".help-link");
-    const existingAvatarWrapper = headerRight.querySelector(".avatar-wrapper");
-    if (existingHelpLink) existingHelpLink.remove();
-    if (existingAvatarWrapper) existingAvatarWrapper.remove();
-
+    header.querySelector(".help-link")?.remove();
+    header.querySelector(".avatar-wrapper")?.remove();
     if (!user) return;
 
     const helpLink = document.createElement("a");
     helpLink.href = "help.html";
     helpLink.className = "help-link";
-    helpLink.innerHTML = '<img src="./assets/icons/question_mark_.svg" alt="Question Mark Help">';
+    helpLink.innerHTML = '<img src="./assets/icons/question_mark.svg" alt="Help">';
 
-    const avatarWrapper = document.createElement("div");
-    avatarWrapper.className = "avatar-wrapper";
-    avatarWrapper.innerHTML = `
-    <input type="checkbox" id="slideInSideMenu" />
-    <label for="slideInSideMenu">
-      <div class="avatar" id="toggleSideMenu">${initials}</div>
-    </label>
-    <div class="side-menu" id="cardLegalLinks">
-      <nav>
-        <a class="link-none" href="help.html">Help</a>
-        <a href="legal_notice.html">Legal Notice</a>
-        <a href="privacy.html">Privacy Policy</a>
-        <a href="index.html">Log Out</a>
-      </nav>
-    </div>
-  `;
+    const avatar = document.createElement("div");
+    avatar.className = "avatar-wrapper";
+    avatar.innerHTML = generateAvatarHTML(user);
 
-    const helpContainer = headerRight.querySelector(".help-container");
-    if (helpContainer) {
-        helpContainer.appendChild(helpLink);
-        helpContainer.after(avatarWrapper);
-    }
+    header.querySelector(".help-container")?.append(helpLink, avatar);
 }
-
 
 export function renderContact(user) {
     let initials = "U";
@@ -63,19 +43,14 @@ export function renderContact(user) {
     return initials;
 }
 
-
 /**
  * Initialize auth state listener for header
  */
 export function updateAvatarInitials() {
-    onAuthStateChanged(auth, (user) => {
-        renderAuthenticatedHeader(user);
-    });
+    onAuthStateChanged(auth, (user) => { renderAuthenticatedHeader(user) });
 }
 
-if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", updateAvatarInitials);
-} else {
-    updateAvatarInitials();
-}
+document.readyState === "loading"
+    ? document.addEventListener("DOMContentLoaded", updateAvatarInitials)
+    : updateAvatarInitials();
 

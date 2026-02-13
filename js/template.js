@@ -268,6 +268,22 @@ export function getContactChipHTML(contact) {
     `;
 }
 
+export function generateAvatarHTML(user) {
+    return `
+    <input type="checkbox" id="slideInSideMenu" />
+    <label for="slideInSideMenu">
+      <div class="avatar" id="toggleSideMenu">${user.initials}</div>
+    </label>
+    <div class="side-menu" id="cardLegalLinks">
+      <nav>
+        <a class="link-none" href="help.html">Help</a>
+        <a href="legalNotice.html">Legal Notice</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="index.html">Log Out</a>
+      </nav>
+    </div>
+  `;
+}
 /**
  * Generates HTML for a category option in the dropdown
  * @param {Object} category - The category object
@@ -391,7 +407,7 @@ export function generateLoggedInHeaderHTML(userInitials) {
       <div class="side-menu" id="cardLegalLinks">
         <nav>
           <a class="link-none" href="help.html">Help</a>
-          <a href="legal_notice.html">Legal Notice</a>
+          <a href="legalNotice.html">Legal Notice</a>
           <a href="privacy.html">Privacy Policy</a>
           <a href="#" id="logoutLink">Log Out</a>
         </nav>
@@ -469,7 +485,6 @@ export function generateFooterWithActiveStates(isPrivacyActive, isLegalActive) {
         <span class="nav-login">Log In</span>
       </a>
       <a class="legal-link${isPrivacyActive}" href="privacy.html">Privacy Policy</a>
-      <a class="legal-link${isLegalActive}" href="legal_notice.html">Legal Notice</a>
+      <a class="legal-link${isLegalActive}" href="legalNotice.html">Legal Notice</a>
     `;
 }
-

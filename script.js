@@ -26,6 +26,17 @@ function slideOutMenu() {
     }
 }
 
+/**
+ * Utility "function" for multi-toggling of two classes
+ * @param {HTMLElement} element - The element to toggle
+ * @param {String} class0 - First class for toggling
+ * @param {String} class1 - Second class for toggling
+ */
+const superToggle = function (element, class0, class1) {
+    element.classList.remove(class0);
+    element.classList.add(class1);
+}
+
 document.addEventListener("mousedown", function (event) {
     handleOutsideClick(event);
 });

@@ -8,11 +8,6 @@ import {isDesktop} from "./mediaQuerySwitch.js";
 
 let addTaskRef = document.getElementById("aside-add-task");
 let addedTaskRef = document.getElementById("taskAdded");
-/**
- * Stores the target category for new tasks.
- * Gets set when a column-specific plus button is clicked.
- * @type {string}
- */
 let targetCategory = 'to-do';
 
 /**

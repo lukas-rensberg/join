@@ -1,9 +1,4 @@
 /**
- * Priority Management Functions
- * Handles priority button selection and icon updates with scoped container support
- */
-
-/**
  * Handles priority button selection
  * @param {HTMLElement} clickedButton - The clicked priority button
  * @param {HTMLElement} container - The container element to scope queries

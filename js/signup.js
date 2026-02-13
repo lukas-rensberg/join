@@ -1,28 +1,24 @@
 import {validateEmailFormat} from "../utils/contact.js";
 import {updatePasswordIcon, togglePasswordVisibility} from "./login.js";
+import {validatePassword} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 
 /**
  * Clear error messages and red borders from form inputs
  */
 function clearFormErrors() {
     const existingError = document.querySelector(".auth-error-message");
-    if (existingError) {
-        existingError.remove();
-    }
+    if (existingError) existingError.remove();
 
     document.querySelectorAll(".error-message").forEach(error => error.remove());
 
     const form = document.querySelector("form");
     if (form) {
         const formInputs = form.querySelectorAll('input[type="password"], input[type="text"], input[type="email"]');
-        formInputs.forEach(inp => {
-            inp.style.borderBottom = "";
-        });
-
         const checkbox = document.getElementById("confirm-check");
-        if (checkbox) {
-            checkbox.style.borderColor = "";
-        }
+        formInputs.forEach(input => { input.style.borderBottom = "" });
+
+        if (!checkbox) return;
+        checkbox.style.borderColor = "";
     }
 }
 
@@ -33,19 +29,16 @@ function clearFormErrors() {
  */
 function showFormError(fieldId, message) {
     const field = document.getElementById(fieldId);
-    if (field) {
-        field.style.borderBottom = "1px solid #ff4646";
+    if (!field) return;
+    field.style.borderBottom = "1px solid #ff4646";
 
-        const existingError = field.parentElement.querySelector(".error-message");
-        if (existingError) {
-            existingError.remove();
-        }
+    const existingError = field.parentElement.querySelector(".error-message");
+    if (existingError) existingError.remove();
 
-        const errorMsg = document.createElement("span");
-        errorMsg.className = "error-message";
-        errorMsg.textContent = message;
-        field.parentElement.appendChild(errorMsg);
-    }
+    const errorMsg = document.createElement("span");
+    errorMsg.className = "error-message";
+    errorMsg.textContent = message;
+    field.parentElement.appendChild(errorMsg);
 }
 
 /**
@@ -74,14 +67,46 @@ function updateSubmitButtonState() {
 
 
 /**
- * Validate signup form inputs (signup page)
+ * Validate signup form fields and show errors if invalid
+ * @param username
+ * @param email
+ * @param password
+ * @param confirmPassword
+ * @param acceptedPolicy
+ * @returns {boolean}
  */
 function validateSignupForm(username, email, password, confirmPassword, acceptedPolicy) {
     clearFormErrors();
     let isValid = true;
 
+    isValid = validatePasswordField(password, confirmPassword);
+    if (!isValid) return false;
+    isValid = validateUsernameAndEmail(username, email);
+    if (!isValid) return false;
+
+    if (!acceptedPolicy) {
+        const checkbox = document.getElementById("confirm-check");
+        checkbox.parentElement.querySelector(".error-message")?.remove();
+        checkbox.style.borderColor = "#ff4646";
+        const errorMsg = document.createElement("span");
+        errorMsg.className = "error-message";
+        errorMsg.textContent = "Please accept the Privacy Policy";
+        checkbox.parentElement.appendChild(errorMsg);
+
+        return false;
+    }
+}
+
+/**
+ * Validate username and email fields and show errors if invalid
+ * @param username
+ * @param email
+ * @returns {boolean}
+ */
+function validateUsernameAndEmail(username, email) {
+    let isValid = true;
     if (!username.trim()) {
-        showFormError("username", "Name is required");
+        showFormError("username", "Full name is required");
         isValid = false;
     }
 
@@ -93,6 +118,18 @@ function validateSignupForm(username, email, password, confirmPassword, accepted
         isValid = false;
     }
 
+
+    return isValid;
+}
+
+/**
+ * Validate password and confirm password fields and show errors if invalid
+ * @param password
+ * @param confirmPassword
+ * @returns {boolean}
+ */
+function validatePasswordField(password, confirmPassword) {
+    let isValid = true;
     if (!password) {
         showFormError("signup-password", "Password is required");
         isValid = false;
@@ -104,23 +141,8 @@ function validateSignupForm(username, email, password, confirmPassword, accepted
     if (!confirmPassword) {
         showFormError("confirm-password", "Please confirm your password");
         isValid = false;
-    } else if (password && password !== confirmPassword) {
+    } else if (password !== confirmPassword) {
         showFormError("confirm-password", "Passwords do not match");
-        isValid = false;
-    }
-
-    if (!acceptedPolicy) {
-        const checkbox = document.getElementById("confirm-check");
-        const existingError = checkbox.parentElement.querySelector(".error-message");
-        if (existingError) {
-            existingError.remove();
-        }
-
-        checkbox.style.borderColor = "#ff4646";
-        const errorMsg = document.createElement("span");
-        errorMsg.className = "error-message";
-        errorMsg.textContent = "Please accept the Privacy Policy";
-        checkbox.parentElement.appendChild(errorMsg);
         isValid = false;
     }
 
@@ -142,61 +164,58 @@ export function showSuccessMessage() {
 
 /**
  * Initialize signup page functionality (signup page)
- * TODO: Extract password toggle setup into separate reusable function
+ * @param {function} signupUserCallback - Callback function to handle user signup logic
+ * @param {function} handleAuthErrorCallback - Callback function to handle authentication errors
  */
 export function initSignupPage(signupUserCallback, handleAuthErrorCallback) {
     const signupForm = document.querySelector("form");
-    if (signupForm && document.querySelector('input[name="username"]')) {
-        updateSubmitButtonState();
+    const usernameInput = document.querySelector('input[name="username"]');
+    if (!signupForm || !usernameInput) return;
+    updateSubmitButtonState();
 
-        const inputs = signupForm.querySelectorAll('input[type="text"], input[type="email"], input[type="password"]');
-        inputs.forEach(input => {
-            input.addEventListener("input", () => {
-                clearFormErrors();
-                updateSubmitButtonState();
-            });
-        });
+    const inputs = signupForm.querySelectorAll(
+        'input[type="text"], input[type="email"], input[type="password"]'
+    );
+    inputs.forEach(input => input.addEventListener("input", handleInputChange));
 
-        const checkbox = document.getElementById("confirm-check");
-        if (checkbox) {
-            checkbox.addEventListener("change", updateSubmitButtonState);
-        }
+    const checkbox = document.getElementById("confirm-check");
+    if (checkbox) checkbox.addEventListener("change", updateSubmitButtonState);
 
-        const passwordToggles = document.querySelectorAll(".password-icon-toggle");
-        passwordToggles.forEach(toggle => {
-            const targetId = toggle.getAttribute("data-target");
-            const passwordInput = document.getElementById(targetId);
+    document.querySelectorAll(".password-icon-toggle").forEach(toggle => setupPasswordToggle(toggle));
 
-            if (passwordInput) {
-                passwordInput.addEventListener("input", () => {
-                    updatePasswordIcon(passwordInput, toggle);
-                });
-
-                toggle.addEventListener("click", () => {
-                    togglePasswordVisibility(toggle);
-                });
-            }
-        });
-
-        signupForm.addEventListener("submit", async (event) => {
-            event.preventDefault();
-
-            const username = document.querySelector('input[name="username"]').value.trim();
-            const email = document.querySelector('input[name="email"]').value.trim();
-            const password = document.querySelector('input[name="password"]').value;
-            const confirmPassword = document.querySelector('input[name="confirm-password"]').value;
-            const acceptedPolicy = document.getElementById("confirm-check").checked;
-
-            if (!validateSignupForm(username, email, password, confirmPassword, acceptedPolicy)) {
-                return;
-            }
-
-            try {
-                await signupUserCallback(email, password, username);
-            } catch (error) {
-                handleAuthErrorCallback(error, "signup");
-            }
-        });
-    }
+    signupForm.addEventListener("submit", async event => {
+        event.preventDefault();
+        await handleFormSubmit(signupUserCallback, handleAuthErrorCallback);
+    });
 }
 
+function handleInputChange() {
+    clearFormErrors();
+    updateSubmitButtonState();
+}
+
+function setupPasswordToggle(toggle) {
+    const targetId = toggle.dataset.target;
+    const passwordInput = document.getElementById(targetId);
+    if (!passwordInput) return;
+
+    passwordInput.addEventListener("input", () => updatePasswordIcon(passwordInput, toggle));
+    toggle.addEventListener("click", () => togglePasswordVisibility(toggle));
+}
+
+async function handleFormSubmit(signupUserCallback, handleAuthErrorCallback) {
+    const username = document.querySelector('input[name="username"]').value.trim();
+    const email = document.querySelector('input[name="email"]').value.trim();
+    const password = document.querySelector('input[name="password"]').value;
+    const confirmPassword = document.querySelector('input[name="confirm-password"]').value;
+    const acceptedPolicy = document.getElementById("confirm-check").checked;
+
+    const valid = validateSignupForm(username, email, password, confirmPassword, acceptedPolicy);
+    if (!valid) return;
+
+    try {
+        await signupUserCallback(email, password, username);
+    } catch (error) {
+        handleAuthErrorCallback(error, "signup");
+    }
+}

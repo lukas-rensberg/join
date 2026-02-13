@@ -1,3 +1,6 @@
+import {isDesktop} from "./mediaQuerySwitch.js";
+import {tasks} from "../js/board.js";
+
 export let dragState = {
     isDragging: false,
     taskId: null,
@@ -107,7 +110,6 @@ export function handleDragEnd() {
     if (dragState.currentSection) {
         removeDropHighlight(dragState.currentSection);
     }
-
     resetDragState();
 }
 
@@ -124,7 +126,6 @@ export async function moveTo(category) {
         taskToUpdate.category = category;
         await saveTask(taskToUpdate);
     }
-
     removeDropHighlight(category);
 }
 
@@ -156,7 +157,6 @@ export function closeAllSwapMenus() {
 /**
  * Toggles the swap dropdown menu for a specific task card.
  * Hides the current category option and shows all others.
- * TODO: Add animation for smooth menu open/close transitions
  * @param {Event} event - The click event object.
  * @param {string} taskId - The task id.
  * @param {string} currentCategory - The current category of the task.

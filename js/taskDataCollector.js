@@ -1,8 +1,3 @@
-/**
- * Task Data Collection Functions
- * Handles collecting and formatting task data from form with scoped container support
- */
-
 import { getSelectedPriority } from "./priorityManager.js";
 import { getSelectedCategory, getSelectedContacts } from "./dropdownManager.js";
 import { getSubtasks } from "./subtaskManager.js";
@@ -35,9 +30,7 @@ export function collectTaskData(container, targetCategory = 'to-do') {
 export function collectEditTaskData(container, originalTask) {
     const newSubtaskTexts = getSubtaskTexts(container);
     const originalDone = originalTask.subtasks_done || [];
-
     const subtasksDone = newSubtaskTexts.filter(text => originalDone.includes(text));
-
     const subtasks = newSubtaskTexts.filter(text => !originalDone.includes(text));
 
     return {

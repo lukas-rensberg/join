@@ -1,8 +1,3 @@
-/**
- * Subtask Management Functions
- * Handles all subtask-related operations with scoped container support
- */
-
 import {createSubtaskHTML, createEditActionsHTML, createNormalActionsHTML} from "./template.js";
 
 let activeContainer = null;
@@ -217,37 +212,21 @@ function exitEditMode(listItem, input, text) {
 function setupSubtaskEventDelegation(container) {
     container.addEventListener('click', (event) => {
         const deleteBtn = event.target.closest('.subtask-delete');
-        if (deleteBtn) {
-            deleteSubtask(deleteBtn);
-            return;
-        }
-
         const editBtn = event.target.closest('.subtask-edit');
-        if (editBtn) {
-            startEditingSubtask(editBtn);
-            return;
-        }
-
         const saveBtn = event.target.closest('.save-edit');
-        if (saveBtn) {
-            saveEdit(saveBtn);
-            return;
-        }
-
         const cancelBtn = event.target.closest('.cancel-edit');
-        if (cancelBtn) {
-            cancelEdit(cancelBtn);
-            return;
-        }
 
-        if (event.target.closest('.icon-cancel')) {
-            clearSubtaskInput(container);
-            return;
-        }
-
+        if (deleteBtn) return deleteSubtask(deleteBtn);
+        if (editBtn) return startEditingSubtask(editBtn);
+        if (saveBtn) return saveEdit(saveBtn);
+        if (cancelBtn) return cancelEdit(cancelBtn);
+        if (event.target.closest('.icon-cancel')) return clearSubtaskInput(container);
         if (event.target.closest('.icon-confirm')) addNewSubtask(container);
     });
+    setupSubtaskInputEventListener(container);
+}
 
+function setupSubtaskInputEventListener(container) {
     const subtaskInput = container.querySelector('.subtask-input');
     if (subtaskInput) {
         subtaskInput.addEventListener('input', () => toggleSubtaskIcons(container));
@@ -281,31 +260,26 @@ export function getSubtasks(container) {
 
     subtaskItems.forEach((item) => {
         const textElement = item.querySelector('.subtask-text');
-        if (textElement) {
-            subtasks.push({
-                text: textElement.textContent.trim(),
-                completed: false
-            });
-        }
+        if (!textElement) return;
+        subtasks.push({
+            text: textElement.textContent.trim(),
+            completed: false
+        });
     });
     return subtasks;
 }
 
 /**
  * Populates the subtask list with existing subtasks from a task
- * All subtasks are rendered as not-done (changes reset the done status)
- * TODO: Add option to preserve completion status when editing tasks
  * @param {string[]} subtasks - Array of pending subtask texts
  * @param {string[]} subtasksDone - Array of completed subtask texts
  * @param {HTMLElement} container - The container element to scope queries
  */
 export function populateSubtasks(subtasks = [], subtasksDone = [], container) {
     const subtaskList = container.querySelector('.subtask-list');
-    if (!subtaskList) return;
-
-    subtaskList.innerHTML = '';
-
     const allSubtasks = [...subtasks, ...subtasksDone];
+    if (!subtaskList) return;
+    subtaskList.innerHTML = '';
 
     allSubtasks.forEach(subtaskText => {
         if (!subtaskText) return;
