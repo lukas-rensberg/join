@@ -205,6 +205,7 @@ function handleInvalidEditForm(errors, container, element, dueDate) {
 function showEditErrors(errors, container) {
     clearAllFieldErrors(container);
     if (errors.title) showFieldError('title', errors.title, container);
+    if (errors.description) showFieldError('description', errors.description, container);
     if (errors.dueDate) showFieldError('dueDate', errors.dueDate, container);
     if (errors.category) showFieldError('category', errors.category, container);
 }

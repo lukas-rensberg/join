@@ -116,6 +116,9 @@ function showErrors(errors, container) {
     if (errors.title) {
         showFieldError('title', errors.title, container);
     }
+    if (errors.description) {
+        showFieldError('description', errors.description, container);
+    }
     if (errors.dueDate) {
         showFieldError('dueDate', errors.dueDate, container);
     }
