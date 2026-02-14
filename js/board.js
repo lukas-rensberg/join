@@ -341,23 +341,24 @@ async function updateSubtaskStatus(taskId, subtask, isCompleted) {
     const task = tasks.find(t => t.id === taskId);
     if (!task) return;
 
-    if (!task.subtasks) task.subtasks = [];
-    if (!task.subtasks_done) task.subtasks_done = [];
+    task.subtasks = Array.isArray(task.subtasks) ? task.subtasks : Object.values(task.subtasks || {});
+    task.subtasks_done = Array.isArray(task.subtasks_done) ? task.subtasks_done : Object.values(task.subtasks_done || {});
 
-    const subtaskIndex = task.subtasks_done.indexOf(subtask);
-    if (subtaskIndex > -1) superSwitch(isCompleted, task, subtaskIndex, subtask);
+    if (isCompleted) {
+        const pendingIndex = task.subtasks.indexOf(subtask);
+        if (pendingIndex > -1) {
+            task.subtasks.splice(pendingIndex, 1);
+            task.subtasks_done.push(subtask);
+        }
+    } else {
+        const doneIndex = task.subtasks_done.indexOf(subtask);
+        if (doneIndex > -1) {
+            task.subtasks_done.splice(doneIndex, 1);
+            task.subtasks.push(subtask);
+        }
+    }
 
     await saveTask(task);
-}
-
-const superSwitch = (isCompleted, task, subtaskIndex, subtask) => {
-    if (isCompleted === true) {
-        task.subtasks.splice(subtaskIndex, 1);
-        task.subtasks_done.push(subtask);
-    } else {
-        task.subtasks_done.splice(subtaskIndex, 1);
-        task.subtasks.push(subtask);
-    }
 }
 
 

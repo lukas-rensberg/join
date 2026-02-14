@@ -423,7 +423,7 @@ function addSubtaskEventListeners(taskId) {
         checkbox.addEventListener('change', function () {
             const subtask = this.dataset.subtask;
             const isCompleted = this.checked;
-            updateSubtaskStatus(taskId, subtask, isCompleted);
+            window.updateSubtaskStatus(taskId, subtask, isCompleted);
         });
     });
 }
