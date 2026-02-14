@@ -286,13 +286,12 @@ function setupDropdownEventDelegation(container, signal = null) {
     const options = signal ? {signal} : {};
 
     container.addEventListener('click', (event) => {
-        event.preventDefault();
         const {contactHeader, searchInput, categoryHeader, contactOption, categoryOption} = closestEvents(event)
 
         setupToggleDropdownEventDelegation(event, contactHeader, searchInput, container)
 
         if (categoryHeader) return toggleDropdown('category', false, container);
-        setupContactOptionDelegation(contactOption, container);
+        setupContactOptionDelegation(contactOption, container, event);
         setupCategoryOptionDelegation(categoryOption, container);
     }, options);
     setupContactEventDelegation(container, options);
@@ -307,14 +306,16 @@ function closestEvents(event) {
     return {contactHeader, searchInput, categoryHeader, contactOption, categoryOption};
 }
 
-function setupContactOptionDelegation(contactOption, container) {
-    if (contactOption) {
-        const contactId = contactOption.getAttribute('data-contact-id');
-        if (contactId) {
-            console.log(`Contact option clicked: ${contactId}`);
-            selectContact(contactId, container);
-        }
-    }
+function setupContactOptionDelegation(contactOption, container, event) {
+    if (!contactOption) return;
+    if (isClickOnCheckboxArea(event)) return;
+
+    const contactId = contactOption.getAttribute('data-contact-id');
+    if (contactId) selectContact(contactId, container);
+}
+
+function isClickOnCheckboxArea(event) {
+    return event.target.closest('.contact-option-checkbox');
 }
 
 function setupToggleDropdownEventDelegation(event, contactHeader, searchInput, container) {
@@ -338,10 +339,26 @@ function setupCategoryOptionDelegation(categoryOption, container) {
 }
 
 function setupContactEventDelegation(container, options) {
+    handleSearchInput(container, options);
+    handleCheckboxChange(container, options);
+}
+
+function handleSearchInput(container, options) {
     container.addEventListener('input', (event) => {
-        if (event.target.closest('.contact-search-input')) {
-            filterOptions('contact', container);
-        }
+        const isSearchInput = event.target.closest('.contact-search-input');
+        if (isSearchInput) filterOptions('contact', container);
+    }, options);
+}
+
+function handleCheckboxChange(container, options) {
+    container.addEventListener('change', (event) => {
+        const checkbox = event.target;
+        const isContactCheckbox = checkbox.matches('.contact-option-checkbox input[type="checkbox"]');
+        if (!isContactCheckbox) return;
+
+        const contactOption = checkbox.closest('.contact-option');
+        const contactId = contactOption?.getAttribute('data-contact-id');
+        if (contactId) selectContact(contactId, container);
     }, options);
 }
 
