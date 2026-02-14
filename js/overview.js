@@ -1,6 +1,6 @@
 import {auth, loadTasks} from "./database.js";
 import {onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-import {renderContact} from "./userProfile.js";
+import {renderContact} from "./contacts.js";
 
 const DASHBOARD_CACHE_KEY = 'dashboardData';
 
@@ -220,6 +220,11 @@ function finalizeGreeting(container) {
 }
 
 function setupUserGreeting(greetingContainer) {
+    const greetingElement = greetingContainer.querySelector("p");
+    if (greetingElement) {
+        greetingElement.textContent = getTimeBasedGreeting() + ",";
+    }
+
     const wrapper = greetingContainer.appendChild(document.createElement("span"));
     wrapper.className = "h1-wrapper";
 

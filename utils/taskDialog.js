@@ -4,7 +4,7 @@ import {collectEditTaskData} from "../js/taskDataCollector.js";
 import {createTask, deleteTask, updateTask} from "../js/database.js";
 import {getEditTaskTemplate, getTemplateDialog, getTemplateMember, getTemplateSubtask} from "../js/template.js";
 import {initializeDateInput} from "../js/dateInputManager.js";
-import {initializePriorityButtons} from "../js/priorityManager.js";
+import {initializePriorityButtons, updatePriorityIcon} from "../js/priorityManager.js";
 import {initializeDropdowns, preselectCategory, preselectContacts, resetDropdownState} from "../js/dropdownManager.js";
 import {initializeSubtasks, populateSubtasks, resetSubtaskInitialization} from "../js/subtaskManager.js";
 import {isDesktop} from "./mediaQuerySwitch.js";
@@ -151,10 +151,14 @@ function setPriorityButton(container, priority) {
     if (!priority) return;
 
     const allButtons = container.querySelectorAll('.priority-btn');
-    allButtons.forEach(btn => btn.classList.remove('active'));
+    allButtons.forEach(btn => {
+        btn.classList.remove('active')
+        updatePriorityIcon(btn, false);
+    });
 
     const priorityButton = container.querySelector(`.priority-btn.${priority}`);
     if (priorityButton) {
+        updatePriorityIcon(priorityButton, true);
         priorityButton.classList.add('active');
     }
 }

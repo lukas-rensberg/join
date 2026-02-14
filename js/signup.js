@@ -1,6 +1,5 @@
 import {validateEmailFormat} from "../utils/contact.js";
 import {updatePasswordIcon, togglePasswordVisibility} from "./login.js";
-import {validatePassword} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 
 /**
  * Clear error messages and red borders from form inputs
@@ -77,13 +76,9 @@ function updateSubmitButtonState() {
  */
 function validateSignupForm(username, email, password, confirmPassword, acceptedPolicy) {
     clearFormErrors();
-    let isValid = true;
 
-    isValid = validatePasswordField(password, confirmPassword);
-    if (!isValid) return false;
-    isValid = validateUsernameAndEmail(username, email);
-    if (!isValid) return false;
-
+    if (!validatePasswordField(password, confirmPassword)) return false;
+    if (!validateUsernameAndEmail(username, email)) return false;
     if (!acceptedPolicy) {
         const checkbox = document.getElementById("confirm-check");
         checkbox.parentElement.querySelector(".error-message")?.remove();
@@ -95,6 +90,8 @@ function validateSignupForm(username, email, password, confirmPassword, accepted
 
         return false;
     }
+
+    return true;
 }
 
 /**

@@ -484,7 +484,9 @@ export function generateFooterWithActiveStates(isPrivacyActive, isLegalActive) {
         <img src="./assets/menu_icons/login.svg" alt="Login" class="footer-login-icon"/>
         <span class="nav-login">Log In</span>
       </a>
-      <a class="legal-link${isPrivacyActive}" href="privacy.html">Privacy Policy</a>
-      <a class="legal-link${isLegalActive}" href="legalNotice.html">Legal Notice</a>
+      <div class="footer-separator">
+        <a class="legal-link${isPrivacyActive}" href="privacy.html">Privacy Policy</a>
+        <a class="legal-link${isLegalActive}" href="legalNotice.html">Legal Notice</a>
+      </div>
     `;
 }

@@ -19,7 +19,7 @@ export function selectPriority(clickedButton, container) {
  * @param {HTMLElement} button - The priority button
  * @param {boolean} isActive - Whether the button is active
  */
-function updatePriorityIcon(button, isActive) {
+export function updatePriorityIcon(button, isActive) {
     const img = button.querySelector('img');
 
     if (button.classList.contains('urgent')) {

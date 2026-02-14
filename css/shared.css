@@ -25,7 +25,6 @@
 }
 
 .priority-btn {
-    transition: all 200ms ease;
     display: inline-flex;
     align-items: center;
     justify-content: center;

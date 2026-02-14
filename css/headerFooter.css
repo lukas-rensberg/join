@@ -156,16 +156,16 @@ footer {
         color: var(--color-menu-item);
     }
 
-    .nav-item:has(.nav-login) {
-        /*margin-right: auto;*/
+    .footer-separator {
+        display: flex;
+        flex-direction: row;
+        gap: 1rem
     }
 
     .legal-link {
         font-size: 0.875rem;
         color: var(--color-menu-item);
         text-decoration: none;
-        /*margin-left: 1.5rem;*/
-
         &.active {
             color: var(--main-color);
         }

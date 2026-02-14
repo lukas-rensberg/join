@@ -61,7 +61,7 @@ function isLoginPage() {
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     await ensureUserAsContact(user, generatePhoneNumber, getRandomColor, getInitials);
-    
+
     if (isLoginPage() && !window.location.pathname.includes("signup.html")) {
       window.location.href = `./${OVERVIEW_PAGE}`;
     }
@@ -73,7 +73,6 @@ onAuthStateChanged(auth, async (user) => {
  */
 export async function loginUser(email, password) {
   await signInWithEmailAndPassword(auth, email, password);
-  window.location.href = `./${OVERVIEW_PAGE}`;
 }
 
 /**
@@ -81,7 +80,6 @@ export async function loginUser(email, password) {
  */
 export async function guestLogin() {
   await signInAnonymously(auth);
-  window.location.href = `./${OVERVIEW_PAGE}`;
 }
 
 /**

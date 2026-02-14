@@ -160,7 +160,7 @@ function generateLoggedInFooter(activePage) {
 function generateLoggedOutFooter(activePage) {
     const isPrivacyActive = activePage === "privacy.html" ? " active" : "";
     const isLegalActive = activePage === "legalNotice.html" ? " active" : "";
-    generateFooterWithActiveStates(isPrivacyActive, isLegalActive);
+    return generateFooterWithActiveStates(isPrivacyActive, isLegalActive);
 }
 
 /**

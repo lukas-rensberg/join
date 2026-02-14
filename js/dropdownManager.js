@@ -286,6 +286,7 @@ function setupDropdownEventDelegation(container, signal = null) {
     const options = signal ? {signal} : {};
 
     container.addEventListener('click', (event) => {
+        event.preventDefault();
         const {contactHeader, searchInput, categoryHeader, contactOption, categoryOption} = closestEvents(event)
 
         setupToggleDropdownEventDelegation(event, contactHeader, searchInput, container)
@@ -307,12 +308,13 @@ function closestEvents(event) {
 }
 
 function setupContactOptionDelegation(contactOption, container) {
-        if (contactOption) {
-            const contactId = contactOption.getAttribute('data-contact-id');
-            if (contactId) {
-                selectContact(contactId, container);
-            }
+    if (contactOption) {
+        const contactId = contactOption.getAttribute('data-contact-id');
+        if (contactId) {
+            console.log(`Contact option clicked: ${contactId}`);
+            selectContact(contactId, container);
         }
+    }
 }
 
 function setupToggleDropdownEventDelegation(event, contactHeader, searchInput, container) {
@@ -323,7 +325,8 @@ function setupToggleDropdownEventDelegation(event, contactHeader, searchInput, c
             event.stopPropagation();
             toggleDropdown('contact', true, container);
         }
-    }}
+    }
+}
 
 function setupCategoryOptionDelegation(categoryOption, container) {
     if (categoryOption) {

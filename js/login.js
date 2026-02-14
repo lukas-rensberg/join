@@ -135,7 +135,7 @@ function initLoginEventHandler(loginForm, loginUserCallback, handleAuthErrorCall
     [emailInput, passwordInput].forEach(input => input.addEventListener("input", clearFormErrors));
 
     const passwordIconToggle = document.querySelector(".password-icon-toggle");
-    if (!passwordInput || passwordIconToggle) return;
+    if (!passwordInput || !passwordIconToggle) return;
     passwordInput.addEventListener("input", () => updatePasswordIcon(passwordInput, passwordIconToggle));
     passwordIconToggle.addEventListener("click", () => togglePasswordVisibility(passwordIconToggle));
 
