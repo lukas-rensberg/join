@@ -198,7 +198,6 @@ const cancelButton = document.getElementById("cancelButton");
 
 /**
  * Set up an event listener to open the Add-Contact modal when clicking on the add-contact button (desktop-only)
- *
  */
 export function setupAddContactBtnEventListener() {
     document.getElementById("addContactBtn").addEventListener("click", (event) => {

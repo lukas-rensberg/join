@@ -289,6 +289,7 @@ export function renderContact(user) {
 
 
 function init() {
+    if (!window.location.pathname.endsWith("contacts.html")) return;
     loadContactsFromRTDB();
     setupClickOutsideListener();
     setupAddContactBtnEventListener();
