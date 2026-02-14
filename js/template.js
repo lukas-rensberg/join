@@ -1,28 +1,10 @@
 /**
- * Create error message element for authentication errors
- * @param {string} message - The error message to display
- * @returns {HTMLElement} The error message div element
- */
-export function createAuthErrorMessage(message) {
-  const errorDiv = document.createElement("div");
-  errorDiv.className = "auth-error-message";
-  errorDiv.textContent = message;
-  errorDiv.style.cssText = `
-    color: #ff0000;
-    font-size: 0.7rem;
-    margin-top: 0.5rem;
-    width: 90%;
-  `;
-  return errorDiv;
-}
-
-/**
  * Generates an HTML template for a section header with the given letter.
  * @param {string} letter - The letter to display as the section header.
  * @returns {string} The HTML string for the section header and separator.
  */
 export function generateSectionTemplate(letter) {
-  return `
+    return `
             <h2 class="section-header">${letter}</h2>
             <div class="section-separator"></div>
         `
@@ -38,7 +20,7 @@ export function generateSectionTemplate(letter) {
  * @returns {string} The HTML string representing the contact item.
  */
 export function generateContactItemTemplate(contact) {
-  return `
+    return `
                 <div class="contact-avatar" style="background-color: ${contact.avatarColor};">${contact.initials}</div>
                 <div class="contact-info">
                     <div class="contact-name">${contact.name}</div>
@@ -55,7 +37,7 @@ export function generateContactItemTemplate(contact) {
  * @returns {string} HTML string for the dialog.
  */
 export function getTemplateDialog(element, dueDate) {
-  return `<div class="dialog-content">
+    return `<div class="dialog-content">
         <div class="d-card-header">
           <div class="card-label card-bg-${element["task"].split(" ")[0].toLowerCase()}-${element["task"].split(" ")[1].toLowerCase()}">${element["task"]}</div>
           <div class="close-dialog" onclick="closeDialog()"></div>
@@ -86,7 +68,7 @@ export function getTemplateDialog(element, dueDate) {
         </section>
         <div class="d-card-footer">
           <div class="d-card-footer-d">Delete</div>
-          <div class="d-card-footer-e">Edit</div>
+          <div class="d-card-footer-e"></div>
         </div>
       </div>`;
 }
@@ -101,7 +83,7 @@ export function getTemplateDialog(element, dueDate) {
  */
 
 export function getTemplateTaskCard(element, subtasksDone, totalSubtasks, progressWidth) {
-  return `<div class="task-card" data-task-id="${element["id"]}" draggable="true" onclick="openDialog('${element["id"]}')" ondragstart="startDragging('${element["id"]}')" ondragend="handleDragEnd()" ontouchmove="startDragging('${element["id"]}')">
+    return `<div class="task-card" data-task-id="${element["id"]}" draggable="true" onclick="openDialog('${element["id"]}')" ondragstart="startDragging('${element["id"]}')" ondragend="handleDragEnd()" ontouchmove="startDragging('${element["id"]}')">
                             <div class="card-headline">
                                 <div class="card-label card-bg-${element["task"].split(" ")[0].toLowerCase()}-${element["task"].split(" ")[1].toLowerCase()}">${element["task"]}</div>
                                 <div class="card-swap-icon" onclick="toggleSwapMenu(event, '${element["id"]}', '${element["category"]}')">
@@ -143,6 +125,15 @@ export function getTemplateTaskCard(element, subtasksDone, totalSubtasks, progre
 }
 
 /**
+ * Returns the HTML template shown when a column has no tasks.
+ * @param {string} section - Display name for the empty state message.
+ * @returns {string} HTML string for the empty state display.
+ */
+export function getNoTaskTemplate(section) {
+    return `<div class="no-tasks">No tasks ${section}</div>`;
+}
+
+/**
  * Returns HTML for a member card used inside the task dialog's assigned members.
  * @param {string} memberName - Full name of the member.
  * @param {string} memberInitials - Initials to display in the avatar.
@@ -150,7 +141,7 @@ export function getTemplateTaskCard(element, subtasksDone, totalSubtasks, progre
  * @returns {string} HTML string for a member card.
  */
 export function getTemplateMember(memberName, memberInitials, avatarColor) {
-  return `<div class="d-assigned-member-cards">
+    return `<div class="d-assigned-member-cards">
                 <div class="d-assigned-member-icon" style="background-color: ${avatarColor};">
                   ${memberInitials}
                 </div>
@@ -167,8 +158,8 @@ export function getTemplateMember(memberName, memberInitials, avatarColor) {
  * @returns {string} HTML markup for the subtask.
  */
 export function getTemplateSubtask(subtask, taskId, index, isCompleted) {
-  const uniqueId = `subtask-${taskId}-${index}`;
-  return `<div class="d-subtask">
+    const uniqueId = `subtask-${taskId}-${index}`;
+    return `<div class="d-subtask">
                 <input type="checkbox" id="${uniqueId}" value="${subtask}" ${isCompleted ? 'checked' : ''} data-task-id="${taskId}" data-subtask="${subtask}"/>
                 <label for="${uniqueId}">${subtask}</label>
               </div>`;
@@ -182,7 +173,7 @@ export function getTemplateSubtask(subtask, taskId, index, isCompleted) {
  * @returns {string} HTML string for the marked user avatar.
  */
 export function getTemplateMarkedUser(memberIndex, memberInitials, avatarColor) {
-  return `<div class="marked-user marked-user-${memberIndex}" style="background-color: ${avatarColor || `var(--color-variant${memberIndex})`};">${memberInitials}</div>`
+    return `<div class="marked-user marked-user-${memberIndex}" style="background-color: ${avatarColor || `var(--color-variant${memberIndex})`};">${memberInitials}</div>`
 }
 
 /**
@@ -192,7 +183,7 @@ export function getTemplateMarkedUser(memberIndex, memberInitials, avatarColor) 
  * @returns {string} HTML string for the remaining-members indicator.
  */
 export function getTemplateRemainingMembers(memberIndex, remainingMembers) {
-  return `<div class="marked-user marked-user-${memberIndex}" style="background-color: var(--color-variant-over);">+${remainingMembers}</div>`
+    return `<div class="marked-user marked-user-${memberIndex}" style="background-color: var(--color-variant-over);">+${remainingMembers}</div>`
 }
 
 /**
@@ -201,7 +192,7 @@ export function getTemplateRemainingMembers(memberIndex, remainingMembers) {
  * @returns {string} HTML string for the subtask
  */
 export function createSubtaskHTML(text) {
-  return `
+    return `
     <span class="subtask-text">${text}</span>
     <div class="subtask-actions">
       <img src="./assets/icons/edit.svg" alt="Edit" class="subtask-edit" />
@@ -216,7 +207,7 @@ export function createSubtaskHTML(text) {
  * @returns {string} HTML string for edit actions
  */
 export function createEditActionsHTML() {
-  return `
+    return `
     <img src="./assets/icons/delete.svg" alt="Cancel" class="cancel-edit" />
     <span class="subtask-separator"></span>
     <img src="./assets/icons/check-blue.svg" alt="Save" class="save-edit" />
@@ -228,7 +219,7 @@ export function createEditActionsHTML() {
  * @returns {string} HTML string for normal actions
  */
 export function createNormalActionsHTML() {
-  return `
+    return `
     <img src="./assets/icons/edit.svg" alt="Edit" class="subtask-edit" />
     <span class="subtask-separator"></span>
     <img src="./assets/icons/delete.svg" alt="Delete" class="subtask-delete" />
@@ -246,7 +237,7 @@ export function createNormalActionsHTML() {
  * @returns {string} HTML string for the contact option
  */
 export function generateContactOptionHTML(contact) {
-  return `
+    return `
       <div class="contact-option-avatar" style="background-color: ${contact.avatarColor};">
         ${contact.initials}
       </div>
@@ -270,13 +261,29 @@ export function generateContactOptionHTML(contact) {
  * @returns {string} HTML string for the contact chip
  */
 export function getContactChipHTML(contact) {
-  return `
+    return `
       <div class="contact-avatar-small" style="background-color: ${contact.avatarColor};" title="${contact.name}">
         ${contact.initials}
       </div>
     `;
 }
 
+export function generateAvatarHTML(user) {
+    return `
+    <input type="checkbox" id="slideInSideMenu" />
+    <label for="slideInSideMenu">
+      <div class="avatar" id="toggleSideMenu">${user.initials}</div>
+    </label>
+    <div class="side-menu" id="cardLegalLinks">
+      <nav>
+        <a class="link-none" href="help.html">Help</a>
+        <a href="legalNotice.html">Legal Notice</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="index.html">Log Out</a>
+      </nav>
+    </div>
+  `;
+}
 /**
  * Generates HTML for a category option in the dropdown
  * @param {Object} category - The category object
@@ -284,7 +291,7 @@ export function getContactChipHTML(contact) {
  * @returns {string} HTML string for the category option
  */
 export function getCategoryOptionHTML(category) {
-  return `
+    return `
       <div class="category-option-name">${category.name}</div>
     `;
 }
@@ -294,7 +301,7 @@ export function getCategoryOptionHTML(category) {
  * @returns {string} HTML string containing the entire add task form structure
  */
 export function getTemplateAddTask() {
-  return `<div class="form-group form-group-title">
+    return `<div class="form-group form-group-title">
                     <input aria-label="Task Title" type="text" class="input-title" placeholder="Enter a title" />
                 </div>
 
@@ -375,3 +382,111 @@ export function getTemplateAddTask() {
                 </div>`;
 }
 
+
+export function generateLoggedOutHeaderHTML() {
+    return `    
+    <img src="./assets/icons/logo-white.svg" alt="Join Logo"/>
+    <div class="header-right">
+        <span class="header-title">Kanban Project Management Tool</span>
+    </div>
+  `;
+}
+
+export function generateLoggedInHeaderHTML(userInitials) {
+    return `
+    <img src="./assets/icons/logo-white.svg" alt="Join Logo"/>
+    <div class="header-right">
+      <div class="help-container">
+        Kanban Project Management Tool
+        <a href="help.html"><img src="./assets/icons/question_mark.svg" alt="Help"></a>
+      </div>
+      <input type="checkbox" id="slideInSideMenu"/>
+      <label for="slideInSideMenu">
+        <div class="avatar" id="toggleSideMenu">${userInitials}</div>
+      </label>
+      <div class="side-menu" id="cardLegalLinks">
+        <nav>
+          <a class="link-none" href="help.html">Help</a>
+          <a href="legalNotice.html">Legal Notice</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="#" id="logoutLink">Log Out</a>
+        </nav>
+      </div>
+    </div>
+  `;
+}
+
+/**
+ * Generates HTML for the aside navigation when the user is NOT logged in
+ * @param {string} navLinksBottom
+ * @returns {string}
+ */
+export function generateLoggedOutAsideHTML(navLinksBottom) {
+    return `
+      <div class="aside-navbar">
+        <a href="index.html" class="login-link">
+          <img src="./assets/menu_icons/login.svg" alt="Login Icon"/>
+          Log in
+        </a>
+      </div>
+      <div class="aside-links">
+        ${navLinksBottom}
+      </div>
+    `;
+}
+
+/**
+ * Generates HTML for the aside navigation when the user is logged in
+ * @param {string} navLinks
+ * @param {string} navLinksBottom
+ * @returns {string}
+ */
+export function generateLoggedInAsideHTML(navLinks, navLinksBottom) {
+    return `
+      <div class="aside-navbar">
+        ${navLinks}
+      </div>
+      <div class="aside-links">
+        ${navLinksBottom}
+      </div>
+    `;
+}
+
+/**
+ * Returns the HTML template for the edit task form with proper wrapper and close button
+ * @returns {string} HTML string for the edit task form
+ */
+export function getEditTaskTemplate() {
+    return `
+        <div class="edit-task-header">
+            <div class="close-edit-dialog"></div>
+        </div>
+        <div class="add-task-form edit-task-form">
+            ${getTemplateAddTask()}
+        </div>
+        <div class="d-card-footer">
+            <button class="confirm-edit-task-btn"></button>
+        </div>
+    `;
+}
+
+export function generateNavlinkWithActiveState(item, isActive) {
+    return `
+        <a class="nav-item${isActive}" href="${item.href}">
+          <span class="${item.class}">${item.label}</span>
+        </a>
+    `;
+}
+
+export function generateFooterWithActiveStates(isPrivacyActive, isLegalActive) {
+    return `
+      <a class="nav-item" href="index.html">
+        <img src="./assets/menu_icons/login.svg" alt="Login" class="footer-login-icon"/>
+        <span class="nav-login">Log In</span>
+      </a>
+      <div class="footer-separator">
+        <a class="legal-link${isPrivacyActive}" href="privacy.html">Privacy Policy</a>
+        <a class="legal-link${isLegalActive}" href="legalNotice.html">Legal Notice</a>
+      </div>
+    `;
+}

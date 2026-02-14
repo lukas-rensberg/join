@@ -10,59 +10,18 @@
     <link rel="stylesheet" href="./css/font.css"/>
     <link rel="stylesheet" href="./css/shared.css"/>
     <link rel="stylesheet" href="./css/board.css"/>
-    <link rel="stylesheet" href="./css/header-footer.css"/>
-    <link rel="stylesheet" href="./css/task-dialog.css"/>
+    <link rel="stylesheet" href="css/headerFooter.css"/>
+    <link rel="stylesheet" href="css/taskDialog.css"/>
     <link rel="stylesheet" href="./css/aside.css">
 </head>
 
 <body class="body-board">
-    <header>
-        <img src="./assets/icons/logo-white.svg" alt="Join Logo"/>
-        <div class="header-right">
-            <div class="help-container">Kanban Project Management Tool
-                <a href="help.html"><img src="./assets/icons/question_mark_.svg" alt="Question Mark Help"></a>
-            </div>
-            <input type="checkbox" id="slideInSideMenu"/>
-            <label for="slideInSideMenu">
-                <div class="avatar" id="toggleSideMenu"></div>
-            </label>
-            <div class="side-menu" id="cardLegalLinks">
-                <nav>
-                    <a class="link-none" href="help.html">Help</a>
-                    <a href="legal_notice.html">Legal Notice</a>
-                    <a href="privacy.html">Privacy Policy</a>
-                    <a href="index.html">Log Out</a>
-                </nav>
-            </div>
-        </div>
-    </header>
+<img id="landscapeGif" src="./assets/gif/rotate-landscape.gif" alt="Rotate your Phone Animation">
+    <header></header>
 
     <main>
 
-        <aside class="aside-desktop">
-            <div class="aside-navbar">
-                <a href="overview.html">
-                    <img src="./assets/menu_icons/summary.svg" alt="Summary Icon"/>
-                    Summary
-                </a>
-                <a href="add-task.html">
-                    <img src="./assets/menu_icons/add-task.svg" alt="Add Task Icon"/>
-                    Add Task
-                </a>
-                <a href="board.html" class="active-nav-link">
-                    <img src="./assets/menu_icons/board.svg" alt="Board Icon"/>
-                    Board
-                </a>
-                <a href="contacts.html">
-                    <img src="./assets/menu_icons/contacts.svg" alt="Contacts Icon"/>
-                    Contacts
-                </a>
-            </div>
-            <div class="aside-links">
-                <a href="legal_notice.html">Legal Notice</a>
-                <a href="privacy.html">Privacy Policy</a>
-            </div>
-        </aside>
+        <aside class="aside-desktop"></aside>
         <section class="src-container">
             <div class="input-container">
                 <input onkeyup="filterTasksBySearch()" class="pl-2" type="text" name="search-task" id="search-task"
@@ -129,32 +88,19 @@
             </section>
         </dialog>
 
-        <dialog class="task-added" id="task-added">Task added to board</dialog>
-        <dialog class="dialog-task" id="dialog-task"></dialog>
+        <dialog class="task-added" id="taskAdded">Task added to board</dialog>
+        <dialog id="dialog-task"></dialog>
 
     </main>
 
-    <footer>
-        <a class="nav-item" href="overview.html">
-            <span class="nav-summary">Summary</span>
-        </a>
-        <a class="nav-item" href="add-task.html">
-            <span class="nav-add-task">Add Task</span>
-        </a>
-        <a class="nav-item" href="board.html">
-            <span class="nav-board active-footer-icon active-icon-board">Board</span>
-        </a>
-        <a class="nav-item" href="contacts.html">
-            <span class="nav-contacts">Contacts</span>
-        </a>
-    </footer>
-
+    <footer></footer>
+    <script src="./script.js"></script>
+    <script type="module" src="./js/layout.js"></script>
     <script type="module" src="./js/template.js"></script>
     <script type="module" src="./js/auth.js"></script>
-    <script type="module" src="./js/user-profile.js"></script>
     <script type="module" src="./js/board.js"></script>
-    <script type="module" src="./js/add-task.js"></script>
-    <script src="./script.js"></script>
+    <script type="module" src="js/addTask.js"></script>
+
 </body>
 
 </html>

@@ -47,6 +47,7 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
+        align-items: center;
         margin-bottom: 66px;
         gap: 1rem;
 
@@ -63,7 +64,7 @@
             transition: all 200ms ease;
 
             &:hover {
-                color: var(--color-light-blue);
+                color: var(--color-primary-button-hover);
                 cursor: pointer;
             }
         }
@@ -76,30 +77,11 @@
 
 
 .add-task-swipe-in {
-    animation: addTaskSwipeIn 300ms ease-in-out forwards;
-}
-
-@keyframes addTaskSwipeIn {
-    100% {
-        opacity: 1;
-        transform: translateX(-100%) translateY(-50%);
-
-    }
+    animation: modalSwipeIn 300ms ease-in-out forwards;
 }
 
 .add-task-swipe-out {
-    animation: addTaskSwipeOut 300ms ease-in-out forwards;
-}
-
-@keyframes addTaskSwipeOut {
-    0% {
-        opacity: 1;
-        transform: translateX(-100%) translateY(-50%);
-    }
-    100% {
-        opacity: 0;
-        transform: translateX(0) translateY(-50%);
-    }
+    animation: modalSwipeOut 300ms ease-in-out forwards;
 }
 
 .aside-add-task {
@@ -157,7 +139,6 @@
         .input-title {
             width: 100%;
             height: auto;
-            border: none;
             border-bottom: 0.0625rem solid var(--color-light-gray);
             border-radius: 0;
             padding: 0.5rem 1rem 0.5rem 1rem;
