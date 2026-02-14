@@ -1,9 +1,4 @@
-/**
- * Subtask Management Functions
- * Handles all subtask-related operations with scoped container support
- */
-
-import { createSubtaskHTML, createEditActionsHTML, createNormalActionsHTML } from "./template.js";
+import {createSubtaskHTML, createEditActionsHTML, createNormalActionsHTML} from "./template.js";
 
 let activeContainer = null;
 const initializedContainers = new WeakSet();
@@ -22,7 +17,7 @@ export function resetSubtaskInitialization(container) {
  * Toggles visibility of subtask input icons based on input content
  * @param {HTMLElement} container - The container element to scope queries
  */
-export function toggleSubtaskIcons(container = document) {
+export function toggleSubtaskIcons(container) {
     const input = container.querySelector(".subtask-input");
     const icons = container.querySelector(".subtask-icons");
 
@@ -39,7 +34,7 @@ export function toggleSubtaskIcons(container = document) {
  * Clears the subtask input field and hides icons
  * @param {HTMLElement} container - The container element to scope queries
  */
-export function clearSubtaskInput(container = document) {
+export function clearSubtaskInput(container) {
     const input = container.querySelector(".subtask-input");
     const icons = container.querySelector(".subtask-icons");
 
@@ -52,10 +47,10 @@ export function clearSubtaskInput(container = document) {
 
 /**
  * Handles Enter key press in input field
- * @param {KeyboardEvent} event - The keyboard event
+ * @param {KeyboardEvent|Event} event - The keyboard event
  * @param {HTMLElement} container - The container element to scope queries
  */
-export function handleSubtaskEnter(event, container = document) {
+export function handleSubtaskEnter(event, container) {
     if (event.key === "Enter") {
         event.preventDefault();
         addNewSubtask(container);
@@ -66,7 +61,7 @@ export function handleSubtaskEnter(event, container = document) {
  * Adds a new subtask to the list
  * @param {HTMLElement} container - The container element to scope queries
  */
-export function addNewSubtask(container = document) {
+export function addNewSubtask(container) {
     const input = container.querySelector(".subtask-input");
     const list = container.querySelector(".subtask-list");
 
@@ -108,25 +103,23 @@ export function deleteSubtask(button) {
 /**
  * Creates an edit input element
  * @param {string} text - The current text value
- * @param {HTMLElement} container - The container element to scope queries
  * @returns {HTMLInputElement} The input element
  */
-function createEditInput(text, container = document) {
+function createEditInput(text) {
     const input = document.createElement("input");
     input.type = "text";
     input.className = "subtask-edit-input";
     input.value = text;
     input.setAttribute("data-original", text);
-    input.addEventListener("keypress", (event) => handleEditEnter(event, input, container));
+    input.addEventListener("keypress", (event) => handleEditEnter(event, input));
     return input;
 }
 
 /**
  * Starts editing mode for a subtask
  * @param {HTMLElement} button - The edit button element
- * @param {HTMLElement} container - The container element to scope queries
  */
-export function startEditingSubtask(button, container = document) {
+export function startEditingSubtask(button) {
     const listItem = button.closest(".subtask-item");
     if (!listItem) return;
 
@@ -136,7 +129,7 @@ export function startEditingSubtask(button, container = document) {
     const currentText = textSpan.textContent;
 
     listItem.classList.add("subtask-item-editing");
-    const input = createEditInput(currentText, container);
+    const input = createEditInput(currentText);
     textSpan.replaceWith(input);
     input.focus();
 
@@ -148,14 +141,13 @@ export function startEditingSubtask(button, container = document) {
  * Handles Enter key press during editing
  * @param {KeyboardEvent} event - The keyboard event
  * @param {HTMLInputElement} input - The input field element
- * @param {HTMLElement} container - The container element to scope queries
  */
-export function handleEditEnter(event, input, container = document) {
+export function handleEditEnter(event, input) {
     if (event.key === "Enter") {
         event.preventDefault();
         const saveBtn = input.closest(".subtask-item").querySelector(".save-edit");
         if (saveBtn) {
-            saveEdit(saveBtn, container);
+            saveEdit(saveBtn);
         }
     }
 }
@@ -163,9 +155,8 @@ export function handleEditEnter(event, input, container = document) {
 /**
  * Cancels editing and restores original text
  * @param {HTMLElement} button - The cancel button element
- * @param {HTMLElement} container - The container element to scope queries
  */
-export function cancelEdit(button, container = document) {
+export function cancelEdit(button) {
     const listItem = button.closest(".subtask-item");
     if (!listItem) return;
 
@@ -179,9 +170,8 @@ export function cancelEdit(button, container = document) {
 /**
  * Saves edited text
  * @param {HTMLElement} button - The save button element
- * @param {HTMLElement} container - The container element to scope queries
  */
-export function saveEdit(button, container = document) {
+export function saveEdit(button) {
     const listItem = button.closest(".subtask-item");
     if (!listItem) return;
 
@@ -219,47 +209,24 @@ function exitEditMode(listItem, input, text) {
  * Setup event delegation for subtasks
  * @param {HTMLElement} container - The container element to scope events
  */
-function setupSubtaskEventDelegation(container = document) {
-    // Subtask list click events (delete, edit, save, cancel)
+function setupSubtaskEventDelegation(container) {
     container.addEventListener('click', (event) => {
         const deleteBtn = event.target.closest('.subtask-delete');
-        if (deleteBtn) {
-            deleteSubtask(deleteBtn);
-            return;
-        }
-
         const editBtn = event.target.closest('.subtask-edit');
-        if (editBtn) {
-            startEditingSubtask(editBtn, container);
-            return;
-        }
-
         const saveBtn = event.target.closest('.save-edit');
-        if (saveBtn) {
-            saveEdit(saveBtn, container);
-            return;
-        }
-
         const cancelBtn = event.target.closest('.cancel-edit');
-        if (cancelBtn) {
-            cancelEdit(cancelBtn, container);
-            return;
-        }
 
-        // Icon cancel (clear input)
-        if (event.target.closest('.icon-cancel')) {
-            clearSubtaskInput(container);
-            return;
-        }
-
-        // Icon confirm (add subtask)
-        if (event.target.closest('.icon-confirm')) {
-            addNewSubtask(container);
-            return;
-        }
+        if (deleteBtn) return deleteSubtask(deleteBtn);
+        if (editBtn) return startEditingSubtask(editBtn);
+        if (saveBtn) return saveEdit(saveBtn);
+        if (cancelBtn) return cancelEdit(cancelBtn);
+        if (event.target.closest('.icon-cancel')) return clearSubtaskInput(container);
+        if (event.target.closest('.icon-confirm')) addNewSubtask(container);
     });
+    setupSubtaskInputEventListener(container);
+}
 
-    // Subtask input events
+function setupSubtaskInputEventListener(container) {
     const subtaskInput = container.querySelector('.subtask-input');
     if (subtaskInput) {
         subtaskInput.addEventListener('input', () => toggleSubtaskIcons(container));
@@ -271,8 +238,7 @@ function setupSubtaskEventDelegation(container = document) {
  * Initialize subtask event listeners
  * @param {HTMLElement} container - The container element to scope queries (default: document)
  */
-export function initializeSubtasks(container = document) {
-    // Prevent duplicate event registration
+export function initializeSubtasks(container) {
     if (initializedContainers.has(container)) return;
     initializedContainers.add(container);
 
@@ -285,7 +251,7 @@ export function initializeSubtasks(container = document) {
  * @param {HTMLElement} container - The container element to scope queries
  * @returns {Array} Array of subtask objects with text and completed status
  */
-export function getSubtasks(container = document) {
+export function getSubtasks(container) {
     const subtaskList = container.querySelector('.subtask-list');
     if (!subtaskList) return [];
 
@@ -294,32 +260,26 @@ export function getSubtasks(container = document) {
 
     subtaskItems.forEach((item) => {
         const textElement = item.querySelector('.subtask-text');
-        if (textElement) {
-            subtasks.push({
-                text: textElement.textContent.trim(),
-                completed: false
-            });
-        }
+        if (!textElement) return;
+        subtasks.push({
+            text: textElement.textContent.trim(),
+            completed: false
+        });
     });
     return subtasks;
 }
 
 /**
  * Populates the subtask list with existing subtasks from a task
- * All subtasks are rendered as not-done (changes reset the done status)
  * @param {string[]} subtasks - Array of pending subtask texts
  * @param {string[]} subtasksDone - Array of completed subtask texts
  * @param {HTMLElement} container - The container element to scope queries
  */
-export function populateSubtasks(subtasks = [], subtasksDone = [], container = document) {
+export function populateSubtasks(subtasks = [], subtasksDone = [], container) {
     const subtaskList = container.querySelector('.subtask-list');
-    if (!subtaskList) return;
-
-    // Clear existing subtasks
-    subtaskList.innerHTML = '';
-
-    // Combine all subtasks (both pending and done are rendered as pending in edit mode)
     const allSubtasks = [...subtasks, ...subtasksDone];
+    if (!subtaskList) return;
+    subtaskList.innerHTML = '';
 
     allSubtasks.forEach(subtaskText => {
         if (!subtaskText) return;

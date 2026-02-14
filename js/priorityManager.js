@@ -1,14 +1,9 @@
 /**
- * Priority Management Functions
- * Handles priority button selection and icon updates with scoped container support
- */
-
-/**
  * Handles priority button selection
  * @param {HTMLElement} clickedButton - The clicked priority button
  * @param {HTMLElement} container - The container element to scope queries
  */
-export function selectPriority(clickedButton, container = document) {
+export function selectPriority(clickedButton, container) {
     const allPriorityButtons = container.querySelectorAll('.priority-btn');
     allPriorityButtons.forEach(button => {
         button.classList.remove('active');
@@ -24,7 +19,7 @@ export function selectPriority(clickedButton, container = document) {
  * @param {HTMLElement} button - The priority button
  * @param {boolean} isActive - Whether the button is active
  */
-function updatePriorityIcon(button, isActive) {
+export function updatePriorityIcon(button, isActive) {
     const img = button.querySelector('img');
 
     if (button.classList.contains('urgent')) {
@@ -40,7 +35,7 @@ function updatePriorityIcon(button, isActive) {
  * Initializes priority button event listeners with event delegation
  * @param {HTMLElement} container - The container element to scope queries (default: document)
  */
-export function initializePriorityButtons(container = document) {
+export function initializePriorityButtons(container) {
     container.addEventListener('click', (event) => {
         const priorityBtn = event.target.closest('.priority-btn');
         if (priorityBtn) {
@@ -54,13 +49,13 @@ export function initializePriorityButtons(container = document) {
  * @param {HTMLElement} container - The container element to scope queries
  * @returns {string} The selected priority ('urgent', 'medium', or 'low')
  */
-export function getSelectedPriority(container = document) {
+export function getSelectedPriority(container) {
     const activeButton = container.querySelector('.priority-btn.active');
-    if (!activeButton) return 'medium'; // Default to medium if nothing selected
+    if (!activeButton) return 'medium';
 
     if (activeButton.classList.contains('urgent')) return 'urgent';
     if (activeButton.classList.contains('medium')) return 'medium';
     if (activeButton.classList.contains('low')) return 'low';
 
-    return 'medium'; // Fallback
+    return 'medium';
 }

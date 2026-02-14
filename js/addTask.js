@@ -1,45 +1,26 @@
-import {
-    initializeSubtasks
-} from "./subtask-manager.js";
-
-import {
-    initializePriorityButtons
-} from "./priority-manager.js";
-
-import {initializeDateInput} from "./date-input-manager.js";
-
-import {
-    initializeDropdowns
-} from "./dropdown-manager.js";
-
+import {initializeSubtasks} from "./subtaskManager.js";
+import {initializePriorityButtons} from "./priorityManager.js";
+import {initializeDateInput} from "./dateInputManager.js";
+import {initializeDropdowns} from "./dropdownManager.js";
 import {createTask} from "./database.js";
-
 import {
     showFieldError,
     clearFieldError,
     clearAllFieldErrors,
     showSuccessBanner,
     showErrorBanner
-} from "./error-handler.js";
-
-import {validateTaskForm} from "./form-validation.js";
-
-import {collectTaskData} from "./task-data-collector.js";
-
+} from "./errorHandler.js";
+import {validateTaskForm} from "./formValidation.js";
+import {collectTaskData} from "./taskDataCollector.js";
 import {
     clearFormInputs,
     resetPriorityToMedium,
     clearContactSelections,
     clearCategorySelection,
     clearSubtasksSection
-} from "./form-utils.js";
+} from "./formUtils.js";
 
 let activeContainer = null;
-
-/**
- * Stores the target category from URL parameters (for mobile redirect).
- * @type {string}
- */
 let urlTargetCategory = 'to-do';
 
 /**
@@ -56,24 +37,11 @@ function getCategoryFromUrl() {
 
 /**
  * Initialize all components when DOM is fully loaded
- * Only runs on add-task.html page (not on board.html where it's handled separately)
  * @returns {void}
  */
-document.addEventListener('DOMContentLoaded', () => {
-    // Only initialize on add-task.html, not on board.html
-    const isAddTaskPage = document.querySelector('.add-task-form-container');
-    if (!isAddTaskPage) return;
-
+function initAddTaskPage() {
     urlTargetCategory = getCategoryFromUrl();
-    initializeAddTaskForm(isAddTaskPage);
-});
-
-/**
- * Initialize add task form with all components
- * @param {HTMLElement} container - The container element to scope queries
- * @returns {void}
- */
-export function initializeAddTaskForm(container = document) {
+    let container = document.getElementsByClassName("add-task-form-container")[0];
     activeContainer = container;
     initializePriorityButtons(container);
     initializeDateInput(container);
@@ -82,12 +50,14 @@ export function initializeAddTaskForm(container = document) {
     initializeFormButtons(container);
 }
 
+window.init = initAddTaskPage;
+
 /**
  * Initialize form button event listeners
  * @param {HTMLElement} container - The container element to scope queries
  * @returns {void}
  */
-function initializeFormButtons(container = document) {
+function initializeFormButtons(container) {
     attachButtonListeners(container);
     attachInputListeners(container);
     attachCategoryListener(container);
@@ -99,17 +69,13 @@ function initializeFormButtons(container = document) {
  * @param {HTMLElement} container - The container element to scope queries
  * @returns {void}
  */
-function attachButtonListeners(container = document) {
+function attachButtonListeners(container) {
     const createButton = container.querySelector('.btn-create') || document.querySelector('.btn-create');
     const clearButton = container.querySelector('.btn-clear') || document.querySelector('.btn-clear');
 
-    if (createButton) {
-        createButton.addEventListener('click', () => handleCreateTask(container));
-    }
-
-    if (clearButton) {
-        clearButton.addEventListener('click', () => handleClearForm(container));
-    }
+    if (!createButton || !clearButton) return;
+    createButton.addEventListener('click', () => handleCreateTask(container));
+    clearButton.addEventListener('click', () => handleClearForm(container));
 }
 
 /**
@@ -117,16 +83,12 @@ function attachButtonListeners(container = document) {
  * @param {HTMLElement} container - The container element to scope queries
  * @returns {void}
  */
-function attachInputListeners(container = document) {
+function attachInputListeners(container) {
     const titleInput = container.querySelector('.input-title');
-    if (titleInput) {
-        titleInput.addEventListener('input', () => clearFieldError('title', container));
-    }
-
     const dueDateInput = container.querySelector('.due-date-input');
-    if (dueDateInput) {
-        dueDateInput.addEventListener('input', () => clearFieldError('dueDate', container));
-    }
+    if (!titleInput || !dueDateInput) return;
+    titleInput.addEventListener('input', () => clearFieldError('title', container));
+    dueDateInput.addEventListener('input', () => clearFieldError('dueDate', container));
 }
 
 /**
@@ -134,8 +96,7 @@ function attachInputListeners(container = document) {
  * @param {HTMLElement} container - The container element to scope queries
  * @returns {void}
  */
-function attachCategoryListener(container = document) {
-    // Category error is cleared via event delegation in dropdown-manager
+function attachCategoryListener(container) {
     container.addEventListener('click', (event) => {
         if (event.target.closest('.category-option')) {
             clearFieldError('category', container);
@@ -149,17 +110,15 @@ function attachCategoryListener(container = document) {
  * @param {HTMLElement} container - The container element to scope queries
  * @returns {void}
  */
-function showErrors(errors, container = document) {
+function showErrors(errors, container) {
     clearAllFieldErrors(container);
 
     if (errors.title) {
         showFieldError('title', errors.title, container);
     }
-
     if (errors.dueDate) {
         showFieldError('dueDate', errors.dueDate, container);
     }
-
     if (errors.category) {
         showFieldError('category', errors.category, container);
     }
@@ -171,25 +130,22 @@ function showErrors(errors, container = document) {
  * @returns {Promise<boolean>}
  * Returns true if task was created successfully, false otherwise
  */
-export async function handleCreateTask(container = document) {
+export async function handleCreateTask(container) {
     const validation = validateTaskForm(container);
+    if (validation.isValid) return await createAndRedirect(container);
 
-    if (!validation.isValid) {
-        showErrors(validation.errors, container);
-        return false;
-    }
-
-    return await createAndRedirect(container);
+    showErrors(validation.errors, container);
+    return false;
 }
 
 /**
  * Handles task creation without redirect (for board aside dialog)
- * @param {HTMLElement} container - The container element to scope queries
- * @param {string} [targetCategory='to-do'] - Die Ziel-Kategorie/Spalte für den neuen Task
+ * @param {HTMLElement|Document} container - The container element to scope queries
+ * @param {string} [targetCategory='to-do'] - The target category/column for the new task
  * @returns {Promise<boolean>}
  * Returns true if task was created successfully, false otherwise
  */
-export async function handleCreateTaskFromBoard(container = document, targetCategory = 'to-do') {
+export async function handleCreateTaskFromBoard(container, targetCategory = 'to-do') {
     const validation = validateTaskForm(container);
 
     if (!validation.isValid) {
@@ -208,13 +164,13 @@ export async function handleCreateTaskFromBoard(container = document, targetCate
 }
 
 /**
- * Creates task and redirects to board page.
- * Uses urlTargetCategory from URL parameters (for mobile redirect from board).
+ * Creates task and redirects to board page
+ * Uses urlTargetCategory from URL parameters (for mobile redirect from board)
  * @param {HTMLElement} container - The container element to scope queries
  * @returns {Promise<boolean>}
  * Returns true if task was created successfully, false otherwise
  */
-async function createAndRedirect(container = document) {
+async function createAndRedirect(container) {
     try {
         const taskData = collectTaskData(container, urlTargetCategory);
         await createTask(taskData);
@@ -231,12 +187,10 @@ async function createAndRedirect(container = document) {
  * Handles errors during task creation
  * @returns {void}
  */
-function handleCreateTaskError() {
-    showErrorBanner('Error creating task. Please try again.');
-}
+function handleCreateTaskError() { showErrorBanner('Error creating task. Please try again.'); }
 
 /**
- * Redirects to board page after short delay
+ * Redirects to board page after short delay (to allow success banner to be seen)
  * @returns {void}
  */
 function redirectToBoard() {
@@ -250,7 +204,7 @@ function redirectToBoard() {
  * @param {HTMLElement} container - The container element to scope queries
  * @returns {void}
  */
-function handleClearForm(container = document) {
+function handleClearForm(container) {
     clearFormInputs(container);
     resetPriorityToMedium(container);
     clearContactSelections(container);

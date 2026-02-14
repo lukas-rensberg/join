@@ -3,16 +3,16 @@
  * Helper functions for form manipulation and clearing with scoped container support
  */
 
-import { selectPriority } from "./priority-manager.js";
-import { clearSubtaskInput } from "./subtask-manager.js";
-import { clearSelectedContacts, clearSelectedCategory } from "./dropdown-manager.js";
+import { selectPriority } from "./priorityManager.js";
+import { clearSubtaskInput } from "./subtaskManager.js";
+import { clearSelectedContacts, clearSelectedCategory } from "./dropdownManager.js";
 
 /**
  * Clears all form input fields
  * @param {HTMLElement} container - The container element to scope queries (default: document)
  * @returns {void}
  */
-export function clearFormInputs(container = document) {
+export function clearFormInputs(container) {
     const titleInput = container.querySelector('.input-title');
     const descriptionInput = container.querySelector('.task-description');
     const dueDateInput = container.querySelector('.due-date-input');
@@ -27,7 +27,7 @@ export function clearFormInputs(container = document) {
  * @param {HTMLElement} container - The container element to scope queries (default: document)
  * @returns {void}
  */
-export function resetPriorityToMedium(container = document) {
+export function resetPriorityToMedium(container) {
     const mediumButton = container.querySelector('.priority-btn.medium');
     if (mediumButton) {
         selectPriority(mediumButton, container);
@@ -39,7 +39,7 @@ export function resetPriorityToMedium(container = document) {
  * @param {HTMLElement} container - The container element to scope queries (default: document)
  * @returns {void}
  */
-export function clearContactSelections(container = document) {
+export function clearContactSelections(container) {
     clearSelectedContacts();
     clearContactDropzone(container);
     clearContactCheckboxes(container);
@@ -50,7 +50,7 @@ export function clearContactSelections(container = document) {
  * @param {HTMLElement} container - The container element to scope queries (default: document)
  * @returns {void}
  */
-export function clearContactDropzone(container = document) {
+export function clearContactDropzone(container) {
     const dropzone = container.querySelector('.dropzone');
     if (dropzone) {
         dropzone.innerHTML = '';
@@ -62,7 +62,7 @@ export function clearContactDropzone(container = document) {
  * @param {HTMLElement} container - The container element to scope queries (default: document)
  * @returns {void}
  */
-export function clearContactCheckboxes(container = document) {
+export function clearContactCheckboxes(container) {
     container.querySelectorAll('.contact-option').forEach(option => {
         option.classList.remove('selected');
         const checkbox = option.querySelector('input[type="checkbox"]');
@@ -77,7 +77,7 @@ export function clearContactCheckboxes(container = document) {
  * @param {HTMLElement} container - The container element to scope queries (default: document)
  * @returns {void}
  */
-export function clearCategorySelection(container = document) {
+export function clearCategorySelection(container) {
     clearSelectedCategory();
     resetCategoryDisplay(container);
     clearCategoryOptions(container);
@@ -88,7 +88,7 @@ export function clearCategorySelection(container = document) {
  * @param {HTMLElement} container - The container element to scope queries (default: document)
  * @returns {void}
  */
-export function resetCategoryDisplay(container = document) {
+export function resetCategoryDisplay(container) {
     const categoryDisplay = container.querySelector('.category-display');
     if (categoryDisplay) {
         categoryDisplay.textContent = 'Select task category';
@@ -100,7 +100,7 @@ export function resetCategoryDisplay(container = document) {
  * @param {HTMLElement} container - The container element to scope queries (default: document)
  * @returns {void}
  */
-export function clearCategoryOptions(container = document) {
+export function clearCategoryOptions(container) {
     container.querySelectorAll('.category-option').forEach(option => {
         option.classList.remove('selected');
     });
@@ -111,7 +111,7 @@ export function clearCategoryOptions(container = document) {
  * @param {HTMLElement} container - The container element to scope queries (default: document)
  * @returns {void}
  */
-export function clearSubtasksSection(container = document) {
+export function clearSubtasksSection(container) {
     const subtaskList = container.querySelector('.subtask-list');
     if (subtaskList) {
         subtaskList.innerHTML = '';
