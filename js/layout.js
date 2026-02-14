@@ -138,9 +138,9 @@ function renderAside(isLoggedIn) {
  */
 function generateFooterHTML(isLoggedIn, activePage) {
     if (isLoggedIn) {
-        generateLoggedInFooter(activePage);
+        return generateLoggedInFooter(activePage);
     } else {
-        generateLoggedOutFooter(activePage)
+        return  generateLoggedOutFooter(activePage)
     }
 }
 
@@ -153,7 +153,7 @@ function generateLoggedInFooter(activePage) {
     ];
 
     return navItems.map(item => {
-        generateNavlinkWithActiveState(item, activePage === item.href ? ' active' : '')
+        return generateNavlinkWithActiveState(item, activePage === item.href ? ' active' : '')
     }).join("");
 }
 

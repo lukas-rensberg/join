@@ -173,17 +173,6 @@ function moveTaskTo(event, taskId, category) {
     closeAllSwapMenus();
 }
 
-
-/**
- * Returns the HTML template shown when a column has no tasks.
- * @param {string} section - Display name for the empty state message.
- * @returns {string} HTML string for the empty state display.
- */
-function getNoTaskTemplate(section) {
-    return `<div class="no-tasks">No tasks ${section}</div>`;
-}
-
-
 /**
  * Shows a dashed placeholder card in a column once during dragover.
  * Prevents duplicate placeholders for the same section while dragging.
