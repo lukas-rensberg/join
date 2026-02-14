@@ -89,7 +89,7 @@ Run join using the following methods:
 - [X] **`Add the board`**: <strike>Add the entire board with drag & drop</strike>
 - [X] **`Add Task`**: <strike>Add functions to add tasks to the board</strike>
 - [X] **`Fix mobile drag & drop`**: <strike>Mobile Drag and Drop not working - make it works.</strike>
-- [ ] **`Responsive Design`**: Make the app responsive.
+- [X] **`Responsive Design`**: Make the app responsive.
 
 ---
 
