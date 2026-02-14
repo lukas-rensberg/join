@@ -92,6 +92,10 @@ function getFieldElements(fieldName, container) {
         const formGroup = container.querySelector('.form-group-title');
         return { formGroup, inputElement: formGroup?.querySelector('.input-title') };
     }
+    if (fieldName === 'description') {
+        const inputElement = container.querySelector('.task-description');
+        return { formGroup: inputElement?.closest('.form-group'), inputElement };
+    }
     const selector = fieldName === 'dueDate' ? '.due-date-input' : '.category-dropdown-wrapper';
     const inputElement = container.querySelector(selector);
     return { formGroup: inputElement?.closest('.form-group'), inputElement };

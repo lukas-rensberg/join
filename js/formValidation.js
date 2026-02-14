@@ -5,6 +5,9 @@
 
 import { isValidDate } from "./dateInputManager.js";
 import { getSelectedCategory } from "./dropdownManager.js";
+import { containsHtmlChars } from "./template.js";
+
+const HACK_ATTEMPT_MSG = "Want to hack me? Nah Ah! Use no special chars";
 
 /**
  * Validates the task form
@@ -14,11 +17,12 @@ import { getSelectedCategory } from "./dropdownManager.js";
 export function validateTaskForm(container) {
     const errors = {
         title: validateTitle(container),
+        description: validateDescription(container),
         dueDate: validateDueDate(container),
         category: validateCategory()
     };
 
-    const isValid = !errors.title && !errors.dueDate && !errors.category;
+    const isValid = !errors.title && !errors.description && !errors.dueDate && !errors.category;
 
     return { isValid, errors };
 }
@@ -30,7 +34,20 @@ export function validateTaskForm(container) {
  */
 export function validateTitle(container) {
     const title = container.querySelector('.input-title')?.value?.trim();
-    return !title ? 'Title is required' : null;
+    if (!title) return 'Title is required';
+    if (containsHtmlChars(title)) return HACK_ATTEMPT_MSG;
+    return null;
+}
+
+/**
+ * Validates the description field for HTML special characters
+ * @param {HTMLElement} container - The container element to scope queries
+ * @returns {string|null} Error message or null if valid
+ */
+export function validateDescription(container) {
+    const description = container.querySelector('.task-description')?.value?.trim();
+    if (description && containsHtmlChars(description)) return HACK_ATTEMPT_MSG;
+    return null;
 }
 
 /**

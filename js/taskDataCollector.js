@@ -51,7 +51,7 @@ export function collectEditTaskData(container, originalTask) {
  * @returns {string} Task title
  */
 export function getTaskTitle(container) {
-    return container.querySelector('.input-title')?.value?.trim() || '';
+    return container.querySelector('.input-title')?.innerText?.trim() || '';
 }
 
 /**
@@ -60,7 +60,7 @@ export function getTaskTitle(container) {
  * @returns {string} Task description
  */
 export function getTaskDescription(container) {
-    return container.querySelector('.task-description')?.value?.trim() || '';
+    return container.querySelector('.task-description')?.innerText?.trim() || '';
 }
 
 /**
