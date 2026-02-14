@@ -9,10 +9,10 @@ import {
 import { auth, ensureUserAsContact, createContact } from "./database.js";
 import { initLoginPage, initLogout } from "./login.js";
 import { initSignupPage, showSuccessMessage } from "./signup.js";
-import { handleAuthError, showInlineError } from "./error-handler.js";
+import { handleAuthError, showInlineError } from "./errorHandler.js";
 import { getRandomColor } from "../utils/contact.js";
 
-const PROTECTED_PAGES = ["overview.html", "contacts.html", "help.html", "legal_notice.html", "kanban.html", "board.html"];
+const PROTECTED_PAGES = ["overview.html", "contacts.html", "help.html", "kanban.html", "board.html"];
 const LOGIN_PAGE = "index.html";
 const OVERVIEW_PAGE = "overview.html";
 
@@ -61,15 +61,11 @@ function isLoginPage() {
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     await ensureUserAsContact(user, generatePhoneNumber, getRandomColor, getInitials);
-    
+
     if (isLoginPage() && !window.location.pathname.includes("signup.html")) {
       window.location.href = `./${OVERVIEW_PAGE}`;
     }
-  } else {
-    if (isProtectedPage()) {
-      window.location.href = `./${LOGIN_PAGE}`;
-    }
-  }
+  } else if (isProtectedPage()) window.location.href = `./${LOGIN_PAGE}`;
 });
 
 /**
@@ -77,7 +73,6 @@ onAuthStateChanged(auth, async (user) => {
  */
 export async function loginUser(email, password) {
   await signInWithEmailAndPassword(auth, email, password);
-  window.location.href = `./${OVERVIEW_PAGE}`;
 }
 
 /**
@@ -85,7 +80,6 @@ export async function loginUser(email, password) {
  */
 export async function guestLogin() {
   await signInAnonymously(auth);
-  window.location.href = `./${OVERVIEW_PAGE}`;
 }
 
 /**
@@ -93,21 +87,8 @@ export async function guestLogin() {
  */
 export async function signupUser(email, password, username) {
   const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-
-  await updateProfile(userCredential.user, {
-    displayName: username,
-  });
-
-  // Create contact in RTDB for the new user
-  await createContact(
-    userCredential.user.uid,
-    username,
-    email,
-    generatePhoneNumber(),
-    getRandomColor(),
-    getInitials(username),
-    true
-  );
+  await updateProfile(userCredential.user, {displayName: username});
+  await createContact(userCredential.user.uid, username, email, generatePhoneNumber(), getRandomColor(), getInitials(username),true);
 
   showSuccessMessage();
 
@@ -123,9 +104,7 @@ export async function handleLogout() {
   try {
     await signOut(auth);
     window.location.href = `./${LOGIN_PAGE}`;
-  } catch (error) {
-    showInlineError("An error occurred during logout. Please try again.");
-  }
+  } catch (error) { showInlineError("An error occurred during logout. Please try again."); }
 }
 
 /**
@@ -136,11 +115,8 @@ export function initAuth() {
 
   if (currentPage === LOGIN_PAGE || currentPage === "") {
     initLoginPage(loginUser, guestLogin, handleAuthError);
-  } else if (currentPage === "signup.html") {
-    initSignupPage(signupUser, handleAuthError);
-  } else if (isProtectedPage()) {
-    initLogout(handleLogout);
-  }
+  } else if (currentPage === "signup.html") initSignupPage(signupUser, handleAuthError);
+  else if (isProtectedPage()) initLogout(handleLogout);
 }
 
 document.addEventListener("DOMContentLoaded", initAuth);

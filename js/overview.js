@@ -1,7 +1,48 @@
 import {auth, loadTasks} from "./database.js";
 import {onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import {renderContact} from "./contacts.js";
 
 const DASHBOARD_CACHE_KEY = 'dashboardData';
+
+let counts = {
+    'to-do': 0,
+    'in-progress': 0,
+    'await-feedback': 0,
+    'done': 0,
+    total: 0
+};
+let urgentCount = 0;
+let nearestDeadline = null;
+
+const desktopMediaQuery = window.matchMedia("(min-width: 812px)");
+
+/**
+ * Checks if the current viewport is desktop size
+ * @returns {boolean} True if viewport width >= 812px
+ */
+const isDesktop = () => desktopMediaQuery.matches;
+
+/**
+ * Handles the mobile dashboard animation sequence
+ *
+ * Adds animation classes to greeting and dashboard containers on mobile devices.
+ * After 3 seconds, removes the animation classes and updates the dashboard position.
+ * Only triggers if the greeting container has the "loaded" class and viewport is mobile size.
+ */
+function mobileDashboardAnimation() {
+    const greetingContainer = document.querySelector(".greeting-container");
+    const dashboardContainer = document.querySelector(".dashboard-container");
+
+    if (greetingContainer.classList.contains("loaded") && !isDesktop()) {
+        greetingContainer.classList.add("greeting-animation-mobile");
+        dashboardContainer.classList.add("dashboard-animation-mobile");
+    }
+    setTimeout(() => {
+        dashboardContainer.classList.add("dashboard-position");
+        dashboardContainer.classList.remove("dashboard-animation-mobile");
+        greetingContainer.classList.remove("greeting-animation-mobile", "loaded");
+    }, 3000);
+}
 
 /**
  * Saves dashboard data to localStorage for faster initial load
@@ -10,8 +51,7 @@ const DASHBOARD_CACHE_KEY = 'dashboardData';
 function cacheDashboardData(data) {
     try {
         localStorage.setItem(DASHBOARD_CACHE_KEY, JSON.stringify(data));
-    } catch (e) {
-        // Silently fail if localStorage is not available
+    } catch (_) {
     }
 }
 
@@ -23,8 +63,7 @@ function getCachedDashboardData() {
     try {
         const cached = localStorage.getItem(DASHBOARD_CACHE_KEY);
         return cached ? JSON.parse(cached) : null;
-    } catch (e) {
-        return null;
+    } catch (_) {
     }
 }
 
@@ -45,106 +84,161 @@ function getTimeBasedGreeting() {
 
 /**
  * Handles responsive repositioning of the greeting container
- *
- * Manages the DOM placement of the greeting container element based on the current viewport width.
- * When the viewport is 812px or larger, inserts the greeting container as the first child of the dashboard.
- * Otherwise, maintains the greeting container's current position in the DOM.
- * This function is called on page load and during window resize events to ensure proper positioning.
+ * On desktop, moves the greeting container inside the dashboard container for better layout.
+ * On mobile, it remains in its original position for optimal display.
+ * This function is called on page load and on window resize to ensure correct positioning.
  */
 function moveGreetingContainer() {
-    const mediaQuery = window.matchMedia("(min-width: 812px)").matches;
     const greetingContainer = document.querySelector(".greeting-container");
     const dashboardContainer = document.querySelector(".dashboard-container");
-    // if (!greetingContainer || !dashboardContainer) return;
 
-    if (mediaQuery) {
-        dashboardContainer.insertBefore(greetingContainer, dashboardContainer.firstChild);
-    }
+    if (isDesktop()) dashboardContainer.insertBefore(greetingContainer, dashboardContainer.firstChild);
 }
 
 /**
- * Update greeting and username on the overview page
+ * Adds a marquee effect to the username if it exceeds the container width on desktop devices.
+ * On mobile devices, it simply displays the username without animation.
+ * @param nameElement
+ * @param wrapper
+ * @param h1
+ */
+function addMarqueeEffect(nameElement, wrapper, h1) {
+    requestAnimationFrame(() => {
+        const overflow = isDesktop() && nameElement.scrollWidth > (wrapper?.clientWidth ?? 0);
+
+        if (!overflow) {
+            h1.classList.add("fixed");
+            return (nameElement.style.display = "unset");
+        }
+
+        h1.classList.add("marquee");
+        nameElement.style.animation = "marqueeOnce 5s linear forwards";
+
+        nameElement.addEventListener("animationend", () => {
+            nameElement.style.animation = nameElement.style.transform = "none";
+            superToggle(h1, "marquee", "fixed");
+            nameElement.style.display = "unset";
+        }, { once: true });
+    });
+}
+
+/**
+ * Initializes greeting update based on auth state.
+ * @returns {void}
  */
 function updateGreeting() {
-    const mediaQuery = window.matchMedia("(min-width: 812px)").matches;
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            const greetingContainer = document.querySelector(".greeting-container");
-            const greetingElement = document.querySelector(".greeting-container p");
-            const nameElement = document.querySelector(".greeting-container .h1-colorized .marquee-text");
+    onAuthStateChanged(auth, handleAuthStateChange);
+}
 
-            if (greetingElement) {
-                // For anonymous users, remove comma and make greeting stand alone
-                if (user.isAnonymous) {
-                    greetingElement.textContent = getTimeBasedGreeting();
-                    greetingElement.classList.add("greeting-guest");
-                    if (mediaQuery) {
-                        greetingElement.classList.add("greeting-guest-large");
-                    } else {
-                        greetingElement.classList.remove("greeting-guest-large");
-                    }
+/**
+ * Handles authentication state changes.
+ * @param {Object|null} user
+ * @returns {void}
+ */
+function handleAuthStateChange(user) {
+    if (!user) return;
 
-                } else {
-                    greetingElement.textContent = getTimeBasedGreeting() + ",";
-                    greetingElement.classList.remove("greeting-guest");
-                    greetingElement.classList.remove("greeting-guest-large");
-                }
-            }
+    const dom = getGreetingDOM();
+    if (!dom.greetingElement) return;
 
-            if (nameElement) {
-                if (user.displayName) {
-                    nameElement.textContent = user.displayName;
-                    nameElement.title = user.displayName;
+    setupGreeting(user, dom);
+    updateName(user);
+    finalizeGreeting(dom.container);
 
-                    const h1 = nameElement.closest(".h1-colorized");
-                    const wrapper = document.querySelector(".h1-wrapper");
+    updateAvatarInitials(user);
+    mobileDashboardAnimation();
+}
 
-                    requestAnimationFrame(() => {
-                        const textWidth = nameElement.scrollWidth;
-                        const containerWidth = wrapper ? wrapper.clientWidth : 0;
+/**
+ * Collects required DOM elements.
+ * @returns {{container:Element, greetingElement:Element}}
+ */
+function getGreetingDOM() {
+    return {
+        container: document.querySelector(".greeting-container"),
+        greetingElement: document.querySelector(".greeting-container p")
+    };
+}
 
-                        if (mediaQuery && textWidth > containerWidth) {
-                            h1.classList.add("marquee");
-                            nameElement.style.animation = "marqueeOnce 5s linear forwards";
+/**
+ * Sets up greeting depending on user type.
+ * @param {Object} user
+ * @param {{container:Element, greetingElement:Element}} dom
+ */
+function setupGreeting(user, dom) {
+    if (user.isAnonymous) return setupGuestGreeting(dom.greetingElement);
+    setupUserGreeting(dom.container);
+}
 
-                            nameElement.addEventListener(
-                                "animationend",
-                                () => {
-                                    nameElement.style.animation = "none";
-                                    nameElement.style.transform = "translateX(0)";
+/**
+ * Updates displayed username.
+ * @param {Object} user
+ */
+function updateName(user) {
+    const nameElement = document.querySelector(
+        ".greeting-container .h1-colorized .marquee-text"
+    );
+    if (!nameElement) return;
 
-                                    h1.classList.remove("marquee");
-                                    h1.classList.add("fixed");
+    if (user.displayName) return applyName(nameElement, user.displayName);
+    if (user.isAnonymous) nameElement.style.display = "none";
+    if (user.email) applyName(nameElement, formatEmailName(user.email));
+}
 
-                                    nameElement.style.display = "unset";
-                                },
-                                {once: true}
-                            );
-                        } else {
-                            h1.classList.add("fixed");
-                            nameElement.style.display = "unset";
-                        }
-                    });
-                } else if (user.isAnonymous) {
-                    nameElement.style.display = "none";
-                } else if (user.email) {
-                    const emailName = user.email.split("@")[0];
-                    const formattedName = emailName.charAt(0).toUpperCase() + emailName.slice(1);
-                    nameElement.textContent = formattedName;
-                    nameElement.title = formattedName;
-                    nameElement.style.display = "block";
-                }
-            }
+/**
+ * Applies a name to the DOM and adds marquee effect.
+ * @param {HTMLElement} element
+ * @param {string} name
+ */
+function applyName(element, name) {
+    element.textContent = name;
+    element.title = name;
+    element.style.display = "block";
 
-            // Show greeting container after data is loaded
-            if (greetingContainer) {
-                greetingContainer.classList.add("loaded");
-            }
+    const h1 = element.closest(".h1-colorized");
+    const wrapper = document.querySelector(".h1-wrapper");
 
-            // Update avatar initials in header
-            updateAvatarInitials(user);
-        }
-    });
+    addMarqueeEffect(element, wrapper, h1);
+}
+
+/**
+ * Formats email into a readable name.
+ * @param {string} email
+ * @returns {string}
+ */
+function formatEmailName(email) {
+    const name = email.split("@")[0];
+    return name.charAt(0).toUpperCase() + name.slice(1);
+}
+
+/**
+ * Marks greeting as loaded.
+ * @param {HTMLElement|null} container
+ */
+function finalizeGreeting(container) {
+    container?.classList.add("loaded");
+}
+
+function setupUserGreeting(greetingContainer) {
+    const greetingElement = greetingContainer.querySelector("p");
+    if (greetingElement) {
+        greetingElement.textContent = getTimeBasedGreeting() + ",";
+    }
+
+    const wrapper = greetingContainer.appendChild(document.createElement("span"));
+    wrapper.className = "h1-wrapper";
+
+    const headline = wrapper.appendChild(document.createElement("h1"));
+    headline.className = "h1-colorized";
+
+    headline.appendChild(document.createElement("span")).className = "marquee-text";
+}
+
+function setupGuestGreeting(greetingElement) {
+    greetingElement.textContent = getTimeBasedGreeting();
+    greetingElement.classList.add("greeting-guest");
+    if (isDesktop()) greetingElement.classList.add("greeting-guest-large");
+    else greetingElement.classList.remove("greeting-guest-large");
 }
 
 /**
@@ -154,22 +248,7 @@ function updateAvatarInitials(user) {
     const avatarElement = document.querySelector(".avatar");
 
     if (avatarElement) {
-        let initials = "U"; // Default
-
-        if (user.displayName) {
-            const nameParts = user.displayName.trim().split(" ");
-            if (nameParts.length >= 2) {
-                initials = nameParts[0][0].toUpperCase() + nameParts[1][0].toUpperCase();
-            } else {
-                initials = nameParts[0][0].toUpperCase() + (nameParts[0][1] || "").toUpperCase();
-            }
-        } else if (user.email) {
-            initials = user.email[0].toUpperCase() + (user.email[1] || "").toUpperCase();
-        } else if (user.isAnonymous) {
-            initials = "GU"; // Guest User
-        }
-
-        avatarElement.textContent = initials;
+        avatarElement.textContent = renderContact(user);
     }
 }
 
@@ -188,17 +267,9 @@ function addCardListeners() {
 /**
  * Counts tasks by their category
  * @param {Array} tasks - Array of task objects
- * @returns {Object} Object with counts for each category and total
+ * @return {Object} Object with counts for each category and total
  */
 function countTasksByCategory(tasks) {
-    const counts = {
-        'to-do': 0,
-        'in-progress': 0,
-        'await-feedback': 0,
-        'done': 0,
-        total: 0
-    };
-
     tasks.forEach(task => {
         const category = task.category || 'to-do';
         if (counts.hasOwnProperty(category)) {
@@ -206,7 +277,6 @@ function countTasksByCategory(tasks) {
         }
         counts.total++;
     });
-
     return counts;
 }
 
@@ -216,14 +286,10 @@ function countTasksByCategory(tasks) {
  * @returns {Object} Object with urgentCount and nearestDeadline
  */
 function getUrgentInfo(tasks) {
-    let urgentCount = 0;
-    let nearestDeadline = null;
-
     tasks.forEach(task => {
         if (task.priority === 'urgent') {
             urgentCount++;
         }
-
         if (task.dueDate) {
             const taskDate = new Date(task.dueDate);
             if (!nearestDeadline || taskDate < nearestDeadline) {
@@ -231,7 +297,6 @@ function getUrgentInfo(tasks) {
             }
         }
     });
-
     return {urgentCount, nearestDeadline};
 }
 
@@ -255,27 +320,28 @@ function updateDashboardNumbers(tasks) {
     const counts = countTasksByCategory(tasks);
     const urgentInfo = getUrgentInfo(tasks);
 
-    // Cache the data for faster initial load next time
     cacheDashboardData({
         counts,
         urgentCount: urgentInfo.urgentCount,
         nearestDeadline: urgentInfo.nearestDeadline ? urgentInfo.nearestDeadline.toISOString() : null
     });
+    updateCounts(urgentCount)
+    updateDeadline(urgentInfo.nearestDeadline)
+}
 
-    // Update category counts
+function updateCounts(urgentCount) {
     updateNumberElement('.card-todo .number', counts['to-do']);
     updateNumberElement('.card-progress .number', counts['in-progress']);
     updateNumberElement('.card-feedback .number', counts['await-feedback']);
     updateNumberElement('.card-done .number', counts['done']);
     updateNumberElement('.card-board .number', counts.total);
+    updateNumberElement('.card-urgent-deadline .number', urgentCount);
+}
 
-    // Update urgent count
-    updateNumberElement('.card-urgent-deadline .number', urgentInfo.urgentCount);
-
-    // Update deadline
+function updateDeadline(nearestDeadline) {
     const deadlineElement = document.querySelector('.deadline-section .date');
     if (deadlineElement) {
-        const formattedDate = formatDeadlineDate(urgentInfo.nearestDeadline);
+        const formattedDate = formatDeadlineDate(nearestDeadline);
         deadlineElement.textContent = formattedDate || 'No upcoming deadline';
     }
 }
@@ -287,9 +353,7 @@ function updateDashboardNumbers(tasks) {
  */
 function updateNumberElement(selector, value) {
     const element = document.querySelector(selector);
-    if (element) {
-        element.textContent = value;
-    }
+    if (element) element.textContent = value.toString();
 }
 
 /**
@@ -298,20 +362,9 @@ function updateNumberElement(selector, value) {
  */
 function applyCachedData(cachedData) {
     if (!cachedData) return;
+    const {urgentCount, nearestDeadline} = cachedData;
+    updateCounts(urgentCount)
 
-    const {counts, urgentCount, nearestDeadline} = cachedData;
-
-    // Update category counts from cache
-    updateNumberElement('.card-todo .number', counts['to-do']);
-    updateNumberElement('.card-progress .number', counts['in-progress']);
-    updateNumberElement('.card-feedback .number', counts['await-feedback']);
-    updateNumberElement('.card-done .number', counts['done']);
-    updateNumberElement('.card-board .number', counts.total);
-
-    // Update urgent count from cache
-    updateNumberElement('.card-urgent-deadline .number', urgentCount);
-
-    // Update deadline from cache
     const deadlineElement = document.querySelector('.deadline-section .date');
     if (deadlineElement) {
         const date = nearestDeadline ? new Date(nearestDeadline) : null;
@@ -325,29 +378,21 @@ function applyCachedData(cachedData) {
  * First applies cached data for instant display, then loads fresh data
  */
 function initDashboard() {
-    // Apply cached data immediately for faster perceived load
     const cachedData = getCachedDashboardData();
-    if (cachedData) {
-        applyCachedData(cachedData);
-    }
+    if (cachedData) applyCachedData(cachedData);
 
-    // Load fresh data from Firebase (will update and re-cache)
     loadTasks(updateDashboardNumbers);
 }
 
-// Initialize greeting when page loads
-if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => {
-        moveGreetingContainer();
-        updateGreeting();
-        addCardListeners();
-        initDashboard();
-    });
-} else {
+window.addEventListener('resize', moveGreetingContainer);
+
+const onReady = () => {
     moveGreetingContainer();
     updateGreeting();
     addCardListeners();
     initDashboard();
-}
-// Update greeting container position on window resize
-window.addEventListener('resize', moveGreetingContainer);
+};
+
+document.readyState === "loading"
+    ? document.addEventListener("DOMContentLoaded", onReady)
+    : onReady();

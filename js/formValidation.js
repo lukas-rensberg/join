@@ -3,15 +3,15 @@
  * Handles validation logic for task forms with scoped container support
  */
 
-import { isValidDate } from "./date-input-manager.js";
-import { getSelectedCategory } from "./dropdown-manager.js";
+import { isValidDate } from "./dateInputManager.js";
+import { getSelectedCategory } from "./dropdownManager.js";
 
 /**
  * Validates the task form
  * @param {HTMLElement} container - The container element to scope queries (default: document)
  * @returns {{isValid: boolean, errors: Object}} Validation result
  */
-export function validateTaskForm(container = document) {
+export function validateTaskForm(container) {
     const errors = {
         title: validateTitle(container),
         dueDate: validateDueDate(container),
@@ -28,7 +28,7 @@ export function validateTaskForm(container = document) {
  * @param {HTMLElement} container - The container element to scope queries
  * @returns {string|null} Error message or null if valid
  */
-export function validateTitle(container = document) {
+export function validateTitle(container) {
     const title = container.querySelector('.input-title')?.value?.trim();
     return !title ? 'Title is required' : null;
 }
@@ -38,16 +38,10 @@ export function validateTitle(container = document) {
  * @param {HTMLElement} container - The container element to scope queries
  * @returns {string|null} Error message or null if valid
  */
-export function validateDueDate(container = document) {
+export function validateDueDate(container) {
     const dueDate = container.querySelector('.due-date-input')?.value;
-
-    if (!dueDate) {
-        return 'Due date is required';
-    }
-
-    if (!isValidDate(dueDate)) {
-        return 'Please enter a valid date (dd/mm/yyyy)';
-    }
+    if (!dueDate) return 'Due date is required';
+    if (!isValidDate(dueDate)) return 'Please enter a valid date (dd/mm/yyyy)';
 
     return null;
 }

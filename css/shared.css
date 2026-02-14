@@ -1,3 +1,17 @@
+/*footer in signup.html and index.html*/
+.body-signup footer,
+.body-login footer{
+    width: 100%;
+    height: 3.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    color: white;
+    margin-top: 2.5rem;
+    padding: 0 1rem;
+}
+
 .priority-selection {
     margin-top: 0.5rem;
     display: flex;
@@ -11,7 +25,6 @@
 }
 
 .priority-btn {
-    transition: all 200ms ease;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -104,7 +117,7 @@
     height: auto;
     border-bottom: 0.0625rem solid var(--color-light-gray) !important;
     border-radius: 0;
-    padding: 0.5rem 1rem 0.5rem 1rem;
+    padding: 1rem 1rem 0.5rem 1rem;
     font-size: 1.5rem;
     font-weight: 500;
     color: black;
@@ -112,7 +125,7 @@
     transition: border-color 0.2s;
 
     &:focus {
-        border-bottom: 0.0625rem solid var(--main-color);
+        border-bottom: 0.0625rem solid var(--main-color) !important;
     }
 
     &::placeholder {
@@ -395,14 +408,15 @@
     width: 100%;
     height: auto;
     border: none;
-    border-bottom: 0.0625rem solid var(--color-light-gray);
     border-radius: 0;
-    padding: 0.5rem 5rem 0.5rem 1rem;
-    color: black;
     outline: none;
+
+    &::placeholder {
+        color: var(--color-menu-text) !important;
+    }
 }
 
-.subtask-input-wrapper input:focus {
+.subtask-input-wrapper:has(input:focus) {
     border-bottom: 0.0625rem solid var(--main-color);
 }
 
@@ -501,7 +515,7 @@
 }
 
 .subtask-item-editing {
-    border-bottom: 1px solid red;
+    border-bottom: 1px solid var(--main-color);
     display: flex;
     align-items: center;
     padding: 0 !important;
@@ -568,7 +582,8 @@
     margin: 0 2px;
 }
 
-.task-added {
+.task-added,
+.contact-added {
     width: 18.5rem;
     height: 4.75rem;
     display: flex;
@@ -587,27 +602,35 @@
     border: none;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.16);
     overflow: hidden;
-    opacity: 0;
-
-    &::after {
-        content: "";
-        display: inline-block;
-        width: 1.375rem;
-        height: 1.625rem;
-        background-image: url("../assets/menu_icons/board.svg");
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-        filter: brightness(0) invert(1);
-    }
+    opacity: 1;
 
     &::backdrop {
         background-color: transparent;
     }
 }
 
+.task-added::after {
+    content: "";
+    display: inline-block;
+    width: 1.375rem;
+    height: 1.625rem;
+    background-image: url("../assets/menu_icons/board.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    filter: brightness(0) invert(1);
+}
+
 .move-animation-add-task {
     animation: move-to-middle 100ms ease forwards;
+}
+
+.forward-animation-contact {
+    animation: move-to-middle 300ms ease forwards;
+}
+
+.backward-animation-contact {
+    animation: move-to-back-from-middle 300ms ease forwards;
 }
 
 @keyframes move-to-middle {
@@ -618,6 +641,18 @@
     100% {
         top: 50vh;
         opacity: 1;
+    }
+}
+
+@keyframes move-to-back-from-middle {
+    0% {
+        top: 50vh;
+        opacity: 1;
+    }
+
+    100% {
+        top: 120vh;
+        opacity: 0;
     }
 }
 
@@ -647,6 +682,42 @@
     }
 }
 
+@keyframes modalSwipeIn {
+    100% {
+        opacity: 1;
+        transform: translate(-100%, -50%);
+    }
+}
+
+@keyframes modalEditSwipeIn {
+    100% {
+        opacity: 1;
+        transform: translate(0%, -50%);
+    }
+}
+
+@keyframes modalSwipeOut {
+    0% {
+        opacity: 1;
+        transform: translate(-100%, -50%);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(0, -50%);
+    }
+}
+
+@keyframes modalEditSwipeOut {
+    0% {
+        opacity: 1;
+        transform: translate(0%, -50%);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-100%, -50%);
+    }
+}
+
 @media (width < 600px) {
     .priority-btn {
         font-size: 16px;
@@ -664,5 +735,233 @@
 @media (width >= 812px) {
     .priority-selection {
         gap: 1rem;
+    }
+}
+
+/* Heading with back arrow */
+.heading-with-back {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.heading-with-back h1 {
+    margin-bottom: 0 !important;
+}
+
+.back-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background-color: transparent;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.back-arrow:hover {
+    background-color: var(--main-color);
+    opacity: 1;
+}
+
+.back-arrow:hover img {
+    filter: brightness(0) invert(1);
+}
+
+.back-arrow img {
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+.btn-clear,
+.btn-cancel,
+.btn-delete {
+    background-color: #ffffff;
+    color: #647188;
+    border: 1px solid #647188;
+    min-width: fit-content;
+    height: 100%;
+
+    &:hover {
+        border: 1px solid var(--main-color);
+        color: var(--main-color);
+
+    }
+}
+
+.btn-clear,
+.btn-cancel {
+    &:hover {
+        border: 1px solid var(--main-color);
+        color: var(--main-color);
+
+        &::after {
+            background: url('../assets/menu_icons/iconoir_cancel_hover.svg') center center no-repeat;
+        }
+    }
+
+    &:active {
+        border: 1px solid var(--color-primary-button-hover);
+        color: var(--color-primary-button-hover);
+
+        &::after {
+            background: url('../assets/menu_icons/iconoir_cancel_click.svg') center center no-repeat;
+        }
+    }
+
+    &::after {
+        content: '';
+        background: url('../assets/menu_icons/iconoir_cancel.svg') center center no-repeat;
+        width: 20px;
+        height: 20px;
+        transform: scale(1);
+    }
+}
+
+
+.btn-clear::before {
+    content: 'Clear';
+}
+
+.btn-cancel::before {
+    content: 'Cancel';
+}
+
+.btn-delete::before {
+    content: 'Delete';
+}
+
+.button-group button,
+.form-actions button,
+.d-card-footer button {
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--button-radius);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 1.25rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+}
+
+.btn-create,
+.btn-save,
+.confirm-edit-task-btn {
+    background-color: var(--main-color);
+    color: #ffffff;
+    border: none;
+
+    &:hover {
+        background-color: var(--color-primary-button-hover);
+    }
+
+    &:active {
+        background-color: var(--color-primary-button-click);
+        color: var(--main-color);
+
+        &::after {
+            background: url('../assets/icons/check_blue.svg') center center no-repeat;
+        }
+    }
+
+    &::after {
+        content: '';
+        background: url('../assets/menu_icons/check.svg') center center no-repeat;
+        width: 20px;
+        height: 20px;
+        transform: scale(1);
+    }
+}
+
+.btn-create::before {
+    content: 'Create Task';
+}
+
+.confirm-edit-task-btn::before {
+    content: 'Ok';
+}
+
+.d-card-footer-d,
+.action-item-d {
+    display: flex;
+    align-items: center;
+    height: 24px;
+
+    &::before {
+        content: '';
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        background: url('../assets/icons/delete.svg') center center no-repeat;
+        transform: scale(1);
+        margin-right: 0.5rem;
+    }
+
+    &:active,
+    &:hover {
+        cursor: pointer;
+
+        &::before {
+            background: url('../assets/icons/delete_clicked.svg') center center no-repeat;
+        }
+
+        color: var(--main-color);
+        font-weight: 700;
+    }
+}
+
+.d-card-footer-d {
+    &::after {
+        content: '';
+        height: 24px;
+        border: 1px solid var(--color-border-gray);
+        margin: 0 .5rem;
+    }
+}
+
+.d-card-footer-e,
+.action-item-e {
+    display: flex;
+    align-items: center;
+    height: fit-content;
+    width: 64px;
+
+    &::before {
+        content: '';
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        background-image: url('../assets/icons/edit.svg');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        transform: scale(1);
+        margin-right: 0.5rem;
+    }
+
+    &::after {
+        content: 'Edit';
+    }
+
+    &:active,
+    &:hover {
+        cursor: pointer;
+
+        &::before {
+            background-image: url('../assets/icons/edit_clicked.svg');
+        }
+
+        color: var(--main-color);
+        font-weight: 700;
     }
 }

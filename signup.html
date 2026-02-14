@@ -9,9 +9,11 @@
     <link rel="stylesheet" href="./style.css"/>
     <link rel="stylesheet" href="./css/font.css"/>
     <link rel="stylesheet" href="./css/signup.css"/>
+    <link rel="stylesheet" href="./css/shared.css"/>
 </head>
 
 <body class="body-signup">
+<img id="landscapeGif" src="./assets/gif/rotate-landscape.gif" alt="Rotate your Phone Animation">
 <div class="signed-up-container">
     <div class="signed-up-text">
         <p>You Signed Up successfully</p>
@@ -23,23 +25,23 @@
         <h2><a class="back-arrow-signup" href="index.html"></a>Sign up</h2>
 
         <div class="input-field">
-            <input type="text" name="username" id="username" placeholder="Name"/><span class="user-name"></span>
+            <input type="text" name="username" id="username" placeholder="Name"/><span class="user-name icon"></span>
         </div>
 
         <div class="input-field">
-            <input type="email" name="email" id="email" placeholder="Email"/><span class="user-email"></span>
+            <input type="text" name="email" id="email" placeholder="Email"/><span class="user-email icon"></span>
         </div>
 
         <div class="input-field">
             <input type="password" name="password" id="signup-password" placeholder="Password"/>
-            <span class="password-icon-toggle" data-target="signup-password">
-          <img src="./assets/icons/lock.svg" alt="Password"/>
+            <span class="password-icon-toggle icon" data-target="signup-password">
+            <img src="./assets/icons/lock.svg" alt="Password"/>
         </span>
         </div>
 
         <div class="input-field">
             <input type="password" name="confirm-password" id="confirm-password" placeholder="Confirm Password"/>
-            <span class="password-icon-toggle" data-target="confirm-password">
+            <span class="password-icon-toggle icon" data-target="confirm-password">
           <img src="./assets/icons/lock.svg" alt="Password"/>
         </span>
         </div>
@@ -53,12 +55,12 @@
             </div>
             <a href="privacy.html">Privacy Policy</a>
         </div>
-        <button type="submit">Sign up</button>
+        <button type="submit" disabled>Sign up</button>
     </form>
 </main>
 <footer>
     <a href="privacy.html">Privacy Policy</a>
-    <a href="legal_notice.html">Legal Notice</a>
+    <a href="legalNotice.html">Legal Notice</a>
 </footer>
 <script type="module" src="./js/auth.js"></script>
 </body>
