@@ -9,18 +9,6 @@ export function containsHtmlChars(text) {
 }
 
 /**
- * Escapes HTML special characters to prevent XSS attacks.
- * @param {string} text - The text to escape.
- * @returns {string} The escaped text safe for HTML insertion.
- */
-function escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.innerText = text;
-    return div.innerHTML;
-}
-
-/**
  * Generates an HTML template for a section header with the given letter.
  * @param {string} letter - The letter to display as the section header.
  * @returns {string} The HTML string for the section header and separator.
@@ -43,10 +31,10 @@ export function generateSectionTemplate(letter) {
  */
 export function generateContactItemTemplate(contact) {
     return `
-                <div class="contact-avatar" style="background-color: ${contact.avatarColor};">${escapeHtml(contact.initials)}</div>
+                <div class="contact-avatar" style="background-color: ${contact.avatarColor};">${contact.initials}</div>
                 <div class="contact-info">
-                    <div class="contact-name">${escapeHtml(contact.name)}</div>
-                    <div class="contact-email">${escapeHtml(contact.email)}</div>
+                    <div class="contact-name">${contact.name}</div>
+                    <div class="contact-email">${contact.email}</div>
                 </div>
             `;
 }
@@ -66,9 +54,9 @@ export function getTemplateDialog(element, dueDate) {
         </div>
         <section>
           <div class="d-card-headline">
-            <h2>${escapeHtml(element["title"])}</h2>
+            <h2>${element["title"]}</h2>
           </div>
-          <p>${escapeHtml(element["text"])}</p>
+          <p>${element["text"]}</p>
           <div class="d-due-date-prio">
             <p><strong>Due date:</strong></p>
             <p>${dueDate}</p>
@@ -127,8 +115,8 @@ export function getTemplateTaskCard(element, subtasksDone, totalSubtasks, progre
                                 </div>
                             </div>
                             <div class="card-task-wrapper">
-                              <div class="card-task-title">${escapeHtml(element["title"])}</div>
-                              <div class="card-task-text">${escapeHtml(element["text"])}</div>
+                              <div class="card-task-title">${element["title"]}</div>
+                              <div class="card-task-text">${element["text"]}</div>
                               <div class="card-progress-container" id="card-progress-container-${element["id"]}">
                                   <div class="card-progress-bar">
                                       <div class="card-sub-progress-bar" style="width: ${progressWidth}%;"></div>
@@ -165,9 +153,9 @@ export function getNoTaskTemplate(section) {
 export function getTemplateMember(memberName, memberInitials, avatarColor) {
     return `<div class="d-assigned-member-cards">
                 <div class="d-assigned-member-icon" style="background-color: ${avatarColor};">
-                  ${escapeHtml(memberInitials)}
+                  ${memberInitials}
                 </div>
-                <p>${escapeHtml(memberName)}</p>
+                <p>${memberName}</p>
               </div>`;
 }
 
@@ -181,10 +169,9 @@ export function getTemplateMember(memberName, memberInitials, avatarColor) {
  */
 export function getTemplateSubtask(subtask, taskId, index, isCompleted) {
     const uniqueId = `subtask-${taskId}-${index}`;
-    const escapedSubtask = escapeHtml(subtask);
     return `<div class="d-subtask">
-                <input type="checkbox" id="${uniqueId}" value="${escapedSubtask}" ${isCompleted ? 'checked' : ''} data-task-id="${taskId}" data-subtask="${escapedSubtask}"/>
-                <label for="${uniqueId}">${escapedSubtask}</label>
+                <input type="checkbox" id="${uniqueId}" value="${subtask}" ${isCompleted ? 'checked' : ''} data-task-id="${taskId}" data-subtask="${subtask}"/>
+                <label for="${uniqueId}">${subtask}</label>
               </div>`;
 }
 
@@ -196,7 +183,7 @@ export function getTemplateSubtask(subtask, taskId, index, isCompleted) {
  * @returns {string} HTML string for the marked user avatar.
  */
 export function getTemplateMarkedUser(memberIndex, memberInitials, avatarColor) {
-    return `<div class="marked-user marked-user-${memberIndex}" style="background-color: ${avatarColor || `var(--color-variant${memberIndex})`};">${escapeHtml(memberInitials)}</div>`
+    return `<div class="marked-user marked-user-${memberIndex}" style="background-color: ${avatarColor || `var(--color-variant${memberIndex})`};">${memberInitials}</div>`
 }
 
 /**
@@ -211,12 +198,12 @@ export function getTemplateRemainingMembers(memberIndex, remainingMembers) {
 
 /**
  * Creates HTML for a subtask item
- * @param {string} text - The subtask text content (will be escaped to prevent XSS)
+ * @param {string} text - The subtask text content
  * @returns {string} HTML string for the subtask
  */
 export function createSubtaskHTML(text) {
     return `
-    <span class="subtask-text">${escapeHtml(text)}</span>
+    <span class="subtask-text">${text}</span>
     <div class="subtask-actions">
       <img src="./assets/icons/edit.svg" alt="Edit" class="subtask-edit" />
       <span class="subtask-separator"></span>
@@ -262,11 +249,11 @@ export function createNormalActionsHTML() {
 export function generateContactOptionHTML(contact) {
     return `
       <div class="contact-option-avatar" style="background-color: ${contact.avatarColor};">
-        ${escapeHtml(contact.initials)}
+        ${contact.initials}
       </div>
       <div class="contact-option-info">
-        <div class="contact-option-name">${escapeHtml(contact.name)}</div>
-        <div class="contact-option-email">${escapeHtml(contact.email)}</div>
+        <div class="contact-option-name">${contact.name}</div>
+        <div class="contact-option-email">${contact.email}</div>
       </div>
       <div class="contact-option-checkbox">
         <input type="checkbox" name="checkbox-${contact.id}" id="checkbox-${contact.id}">
@@ -285,8 +272,8 @@ export function generateContactOptionHTML(contact) {
  */
 export function getContactChipHTML(contact) {
     return `
-      <div class="contact-avatar-small" style="background-color: ${contact.avatarColor};" title="${escapeHtml(contact.name)}">
-        ${escapeHtml(contact.initials)}
+      <div class="contact-avatar-small" style="background-color: ${contact.avatarColor};" title="${contact.name}">
+        ${contact.initials}
       </div>
     `;
 }

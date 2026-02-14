@@ -6,7 +6,7 @@ import { getNoTaskTemplate, getTemplateMarkedUser, getTemplateRemainingMembers, 
 
 import {desktopMediaQuery, handleBoardMediaQueryChange} from "../utils/mediaQuerySwitch.js";
 
-import { allowDrop, closeAllSwapMenus, handleDragEnd, handleDragOver, moveTaskTo, moveTo, startDragging, toggleSwapMenu } from "../utils/dragAndDrop.js";
+import { allowDrop, closeAllSwapMenus, handleDragEnd, handleDragOver, moveTo, startDragging, toggleSwapMenu } from "../utils/dragAndDrop.js";
 
 import {openAddTaskAside} from "../utils/addTaskAside.js";
 import {closeDialog, deleteTaskButton, editTaskInDialog, openDialog, saveTask} from "../utils/taskDialog.js";
@@ -16,7 +16,7 @@ let findTask = document.getElementById("search-task");
 
 export let tasks = [];
 export let contacts = [];
-
+export let currentDraggedElement = null;
 
 /**
  * Filters tasks by search input from the search field.
@@ -153,10 +153,8 @@ function initMarkedUsers(element) {
                 markedUserContainer.innerHTML += getTemplateMarkedUser(memberIndex, contact.initials, contact.avatarColor);
             }
         }
-    });
+    }
 
-    // Toggle the dropdown
-    dropdown.classList.toggle('open');
 }
 
 /**
@@ -177,28 +175,6 @@ function moveTaskTo(event, taskId, category) {
 
 
 /**
- * Adds the dragover CSS class to the container to provide visual feedback during drag operations.
- * @param {string} id - Container element id.
- * @returns {void}
- */
-function bgContainer(id) {
-    document.getElementById(id).classList.add("task-card-container-dragover");
-}
-
-
-/**
- * Removes the dragover CSS class and hides the dashed placeholder for a container.
- * Cleans up visual feedback after drag operation completes.
- * @param {string} id - Container element id.
- * @returns {void}
- */
-function bgContainerRemove(id) {
-    hideDashedBox(id);
-    document.getElementById(id).classList.remove("task-card-container-dragover");
-}
-
-
-/**
  * Returns the HTML template shown when a column has no tasks.
  * @param {string} section - Display name for the empty state message.
  * @returns {string} HTML string for the empty state display.
@@ -214,29 +190,6 @@ function getNoTaskTemplate(section) {
  * @param {string} section - Column id where the placeholder should appear.
  * @returns {void}
  */
-function showDashedBoxOnce(section) {
-    // Prevent repeated calls for the same section
-    if (activeDragOverSection === section) return;
-
-    const container = document.getElementById(section);
-    if (!container) return;
-
-    // Check if already has empty card to avoid duplicate additions
-    if (container.querySelector(".empty-card")) {
-        activeDragOverSection = section;
-        return;
-    }
-
-    const noTasksElem = container.querySelector(".no-tasks");
-    if (noTasksElem) {
-        noTasksElem.style.display = "none";
-    }
-
-    // Use insertAdjacentHTML instead of innerHTML += to avoid reflow
-    container.insertAdjacentHTML('beforeend', generateEmptyCard());
-    activeDragOverSection = section;
-}
-
 
 /**
  * Hides the dashed placeholder and restores the "no tasks" message.
@@ -244,25 +197,6 @@ function showDashedBoxOnce(section) {
  * @param {string} section - Column id.
  * @returns {void}
  */
-function hideDashedBox(section) {
-    const container = document.getElementById(section);
-    if (!container) return;
-
-    const noTasksElem = container.querySelector(".no-tasks");
-    if (noTasksElem) {
-        noTasksElem.style.display = "flex";
-    }
-
-    const emptyCard = container.querySelector(".empty-card");
-    if (emptyCard) {
-        emptyCard.remove(); // Use remove() instead of parentNode.removeChild
-    }
-
-    // Reset the active section flag
-    if (activeDragOverSection === section) {
-        activeDragOverSection = null;
-    }
-}
 
 /**
  * Renders tasks for a specific category by filtering tasks and displaying them in the category container.
