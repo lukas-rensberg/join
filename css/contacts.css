@@ -4,7 +4,6 @@
     flex-direction: column;
     min-height: 100vh;
     width: 100vw;
-    max-width: 1920px;
     background-color: rgb(255, 255, 255);
 }
 
@@ -15,7 +14,7 @@
 }
 
 .contacts-container {
-    padding: var(--padding-side);
+    padding: 3.75rem var(--padding-side);
     width: min(465px, 100%);
 }
 
@@ -92,7 +91,7 @@
 }
 
 .fab-mobile {
-    position: fixed;
+    position: absolute;
     bottom: 6.25rem;
     right: 1.25rem;
     width: 3.5rem;
@@ -468,7 +467,6 @@
 .avatar-default {
     background-color: var(--color-light-gray);
 
-
     &::before {
         width: 2rem;
         height: 2rem;
@@ -496,7 +494,7 @@
 
 .form-group {
     position: relative;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1.25rem;
 }
 
 .form-group input[type="text"], .form-group input[type="email"], .form-group input[type="tel"] {
@@ -511,6 +509,7 @@
     color: rgb(0, 0, 0);
     background-color: transparent;
     transition: border-color 0.2s;
+    anchor-name: --contact-input;
 }
 
 .form-group input[type="text"]:focus, .form-group input[type="email"]:focus, .form-group input[type="tel"]:focus {
@@ -549,32 +548,19 @@
     }
 }
 
-/*.btn-save {*/
-/*    background-color: var(--main-color);*/
-/*    color: rgb(255, 255, 255);*/
-/*    border-color: var(--main-color);*/
-
-/*    &:hover, &:active {*/
-/*    }*/
-/*}*/
-
-/*.btn-save:hover {*/
-/*    background-color: rgb(0, 93, 255);*/
-/*    border-color: rgb(0, 93, 255);*/
-/*    box-shadow: rgba(0, 0, 0, 0.2) 0 0.25rem 0.5rem;*/
-/*}*/
-
-/*.save-icon {*/
-/*    width: 1.5rem;*/
-/*    height: 1.5rem;*/
-/*}*/
-
 .error-message {
     display: block;
     color: rgb(255, 70, 70);
     font-size: 0.75rem;
-    margin-top: 0.25rem;
+    position: absolute;
+    position-anchor: --contact-input;
+    top: anchor(bottom);
+    left: anchor(left);
+    padding-top: 0.25rem;
     margin-left: 0.75rem;
+    z-index: 10;
+    pointer-events: none;
+    white-space: nowrap;
 }
 
 .form-group input[type="text"].error, .form-group input[type="email"].error, .form-group input[type="tel"].error {
@@ -611,6 +597,7 @@
         margin-left: 250px;
         width: 465px;
         height: 100%;
+        padding: 6rem 0 0 0;
         overflow: hidden;
         box-shadow: 4px 0 6px 0 rgba(0, 0, 0, 0.08);
     }
@@ -685,6 +672,7 @@
         flex: 1 1 0;
         padding: 4.5rem 3.875rem;
         transform: translateX(100%);
+        max-width: calc(1920px - 675px);
         opacity: 0;
         transition: transform 0.3s ease-out, opacity 0.3s ease-out;
     }
@@ -692,6 +680,7 @@
     .contact-detail-view-desktop.active {
         transform: translateX(0);
         opacity: 1;
+        padding: 10rem 3.875rem;
     }
 
     .contact-detail-header-desktop {
@@ -704,7 +693,7 @@
 
     .contact-detail-header-desktop .contact-detail-avatar {
         width: 7.5rem;
-        max-width: 7.5rem;
+        min-width: 7.5rem;
         height: 7.5rem;
         font-size: 2.875rem;
         border: 0.1rem solid rgb(255, 255, 255);
@@ -780,7 +769,8 @@
         border-radius: var(--main-radius) 0 var(--main-radius) var(--main-radius);
         background-color: #ffffff;
         position: fixed;
-        left: 100%;
+        position-anchor: --header;
+        left: anchor(right);
         top: 50%;
         opacity: 1;
         transform: translate(0%, -50%);

@@ -79,6 +79,10 @@ html:focus-within {
     scroll-behavior: auto;
 }
 
+body {
+    overflow-x: hidden;
+}
+
 html:has(dialog[open]) {
     overflow: hidden;
 }

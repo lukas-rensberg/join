@@ -15,6 +15,16 @@ export function validatePhone(phone) {
 }
 
 /**
+ * Validates name format (first name + last name with Unicode support)
+ * @param {string} name Full name
+ * @return {boolean} True if valid (e.g., "Max Mustermann")
+ */
+export function validateName(name) {
+  const nameRegex = /^\p{L}+\s\p{L}+$/u;
+  return nameRegex.test(name.trim());
+}
+
+/**
  * Shows validation error for form field
  * @param {string} fieldId Input element ID
  * @param {string} errorMessage Error message to display
@@ -61,6 +71,9 @@ export function validateContactForm(formData) {
 
   if (!formData.name.trim()) {
     showFieldError("contactName", "Name is required");
+    isValid = false;
+  } else if (!validateName(formData.name)) {
+    showFieldError("contactName", "Please enter first and last name");
     isValid = false;
   } else clearFieldError("contactName");
 

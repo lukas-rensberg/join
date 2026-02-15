@@ -8,7 +8,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 import { auth, ensureUserAsContact, createContact } from "./database.js";
 import { initLoginPage, initLogout } from "./login.js";
-import { initSignupPage, showSuccessMessage } from "./signup.js";
+import { initSignupPage } from "./signup.js";
 import { handleAuthError, showInlineError } from "./errorHandler.js";
 import { getRandomColor } from "../utils/contact.js";
 
@@ -84,17 +84,15 @@ export async function guestLogin() {
 
 /**
  * Create new user account (signup page)
+ * No auto-login - redirect is handled by showSuccessMessage
  */
 export async function signupUser(email, password, username) {
   const userCredential = await createUserWithEmailAndPassword(auth, email, password);
   await updateProfile(userCredential.user, {displayName: username});
-  await createContact(userCredential.user.uid, username, email, generatePhoneNumber(), getRandomColor(), getInitials(username),true);
+  await createContact(userCredential.user.uid, username, email, generatePhoneNumber(), getRandomColor(), getInitials(username), true);
 
-  showSuccessMessage();
-
-  setTimeout(() => {
-    window.location.href = `./${LOGIN_PAGE}`;
-  }, 2000);
+  // Sign out immediately after signup - no auto-login
+  await signOut(auth);
 }
 
 /**

@@ -1,21 +1,16 @@
-/*html:has(dialog[open]) {*/
-/*    overflow: hidden;*/
-/*}*/
-
-/* Mobile Default (< 812px): Von rechts in die Mitte */
 .dialog-task {
+    position: fixed;
+    position-anchor: --header;
+    left: anchor(center);
+    top: 50%;
+    translate: 100vw -50%;
     display: flex;
     border: none;
     outline: none;
     width: 90%;
     max-width: calc(25rem + (2 * var(--padding-side)));
     height: min(700px, calc(100vh - 1rem));
-    position: fixed;
-    z-index: 1100;
-    top: 50%;
-    left: 100%;
     opacity: 0;
-    transform: translateY(-50%);
     border-radius: var(--main-radius);
     box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.1);
 
@@ -25,16 +20,19 @@
     }
 }
 
-/* Mobile (< 812px): Animation von rechts */
+/* Mobile: swipe in von rechts (RTL), swipe out nach links (LTR) */
 .dialog-swipe-in-mobile {
     animation: dialogSwipeInMobile 300ms ease-in-out forwards
 }
 
 @keyframes dialogSwipeInMobile {
+    0% {
+        opacity: 0;
+        translate: 100vw -50%;
+    }
     100% {
         opacity: 1;
-        transform: translate(-50%, -50%);
-        left: 50%;
+        translate: -50% -50%;
     }
 }
 
@@ -45,13 +43,11 @@
 @keyframes dialogSwipeOutMobile {
     0% {
         opacity: 1;
-        transform: translateX(-50%) translateY(-50%);
-        left: 50%;
+        translate: -50% -50%;
     }
     100% {
         opacity: 0;
-        transform: translateY(-50%);
-        left: 100%;
+        translate: 100vw -50%;
     }
 }
 
@@ -309,7 +305,6 @@ strong {
     }
 }
 
-/* Mobile (< 812px): Zusätzliche Styles */
 @media (width < 812px) {
     .d-assigned-members {
         max-height: 9rem;
@@ -330,7 +325,6 @@ strong {
         align-items: center;
 
         label {
-
             &::before {
                 transform: scale(0.8);
             }
@@ -342,22 +336,19 @@ strong {
     }
 }
 
-/* Desktop (>= 812px): Von unten in die Mitte */
 @media (width >= 812px) {
-    .dialog-task {
-        top: 100%;
-        left: 50%;
-        transform: translateX(-50%);
-    }
-
     .dialog-swipe-in-desktop {
         animation: dialogSwipeInDesktop 300ms ease-in-out forwards;
     }
 
     @keyframes dialogSwipeInDesktop {
+        0% {
+            opacity: 0;
+            translate: -50% 100vh;
+        }
         100% {
             opacity: 1;
-            transform: translateX(-50%) translateY(-125%);
+            translate: -50% -50%;
         }
     }
 
@@ -368,16 +359,12 @@ strong {
     @keyframes dialogSwipeOutDesktop {
         0% {
             opacity: 1;
-            transform: translateX(-50%) translateY(-125%);
+            translate: -50% -50%;
         }
         100% {
             opacity: 0;
-            transform: translateX(-50%) translateY(100%);
+            translate: -50% 100vh;
         }
-    }
-
-    dialog {
-        transform: translateX(-50%) translateY(100%);
     }
 }
 

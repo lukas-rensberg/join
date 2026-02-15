@@ -5,7 +5,6 @@
     align-items: center;
     min-height: 100vh;
     width: 100vw;
-    max-width: 1920px;
 }
 
 .body-legal-notice main {
@@ -13,6 +12,7 @@
     flex-direction: row;
     width: 100%;
     flex: 1;
+    padding-top: 6rem;
 }
 
 .content-section {
@@ -21,6 +21,7 @@
     margin: 50px 0;
     padding: 0 2rem 0 17rem;
     line-height: 1.6;
+    max-width: 1920px;
 }
 
 .content-section h1 {
@@ -78,11 +79,12 @@
 @media (width <= 812px) {
     .body-legal-notice main {
         flex-direction: column;
+        padding: 4rem 1rem;
     }
 
     .content-section {
-        margin: 20px auto;
-        padding: 0 1rem;
+        margin: 0;
+        padding: 0;
     }
 
     .content-section h1 {

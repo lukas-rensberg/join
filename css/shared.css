@@ -591,7 +591,8 @@
     justify-content: center;
     gap: 1.25rem;
     position: fixed;
-    left: 50vw;
+    position-anchor: --header;
+    left: anchor(center);
     top: 120vh;
     transform: translate(-50%, -50%);
     background-color: var(--main-color);

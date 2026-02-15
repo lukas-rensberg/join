@@ -88,7 +88,8 @@
     border-radius: var(--main-radius) 0 var(--main-radius) var(--main-radius);
     background-color: #ffffff;
     position: fixed;
-    left: 100%;
+    position-anchor: --header;
+    left: anchor(right);
     top: 50%;
     opacity: 1;
     transform: translateX(0%) translateY(-50%);

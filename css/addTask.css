@@ -5,14 +5,13 @@
     align-items: center;
     height: 100vh;
     width: 100%;
-    max-width: 120rem;
     overflow: hidden;
 }
 
 .page-container {
     width: 100%;
     max-width: 500px;
-    flex: 1;
+    /* flex: 1; */
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -21,7 +20,7 @@
 .add-task-form-container {
     display: flex;
     flex-direction: column;
-    padding: 0 var(--padding-side);
+    padding: 60px var(--padding-side);
     width: 100%;
     flex: 1;
     overflow-y: auto;
@@ -286,14 +285,18 @@
         align-items: unset;
     }
 
+    .add-task-form-container {
+        padding: 100px var(--padding-side);
+    }
+
     .page-container {
         margin-left: 16rem;
     }
 
     .button-group {
         max-width: 500px;
+        position: fixed;
         background-color: white;
-        padding: var(--padding-side) var(--padding-side) 2rem;
     }
 }
 
@@ -310,12 +313,14 @@
     .body-add-task {
         align-items: unset;
     }
+}
 
+@media (width >= 1160px) {
     .button-group {
         position: fixed;
-        bottom: 0;
-        right: 0;
-        padding: 2rem 4rem;
+        position-anchor: --header;
+        right: anchor(right);
+        margin: 2rem 4rem;
         justify-content: flex-end;
         background-color: transparent;
         width: auto;

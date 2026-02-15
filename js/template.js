@@ -395,34 +395,38 @@ export function getTemplateAddTask() {
 
 export function generateLoggedOutHeaderHTML() {
     return `    
-    <img src="./assets/icons/logo-white.svg" alt="Join Logo"/>
-    <div class="header-right">
-        <span class="header-title">Kanban Project Management Tool</span>
-    </div>
+    <section class="header">
+        <img src="./assets/icons/logo-white.svg" alt="Join Logo"/>
+        <div class="header-right">
+            <span class="header-title">Kanban Project Management Tool</span>
+        </div>
+    </section>
   `;
 }
 
 export function generateLoggedInHeaderHTML(userInitials) {
     return `
-    <img src="./assets/icons/logo-white.svg" alt="Join Logo"/>
-    <div class="header-right">
-      <div class="help-container">
-        Kanban Project Management Tool
-        <a href="help.html"><img src="./assets/icons/question_mark.svg" alt="Help"></a>
-      </div>
-      <input type="checkbox" id="slideInSideMenu"/>
-      <label for="slideInSideMenu">
-        <div class="avatar" id="toggleSideMenu">${userInitials}</div>
-      </label>
-      <div class="side-menu" id="cardLegalLinks">
-        <nav>
-          <a class="link-none" href="help.html">Help</a>
-          <a href="legalNotice.html">Legal Notice</a>
-          <a href="privacy.html">Privacy Policy</a>
-          <a href="#" id="logoutLink">Log Out</a>
-        </nav>
-      </div>
-    </div>
+    <section class="header">
+        <img src="./assets/icons/logo-white.svg" alt="Join Logo"/>
+        <div class="header-right">
+          <div class="help-container">
+            Kanban Project Management Tool
+            <a href="help.html"><img src="./assets/icons/question_mark.svg" alt="Help"></a>
+          </div>
+          <input type="checkbox" id="slideInSideMenu"/>
+          <label for="slideInSideMenu">
+            <div class="avatar" id="toggleSideMenu">${userInitials}</div>
+          </label>
+          <div class="side-menu" id="cardLegalLinks">
+            <nav>
+              <a class="link-none" href="help.html">Help</a>
+              <a href="legalNotice.html">Legal Notice</a>
+              <a href="privacy.html">Privacy Policy</a>
+              <a href="#" id="logoutLink">Log Out</a>
+            </nav>
+          </div>
+        </div>
+    </section>
   `;
 }
 

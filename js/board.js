@@ -6,7 +6,7 @@ import { getNoTaskTemplate, getTemplateMarkedUser, getTemplateRemainingMembers, 
 
 import {desktopMediaQuery, handleBoardMediaQueryChange} from "../utils/mediaQuerySwitch.js";
 
-import { allowDrop, closeAllSwapMenus, handleDragEnd, handleDragOver, moveTo, startDragging, toggleSwapMenu } from "../utils/dragAndDrop.js";
+import { allowDrop, closeAllSwapMenus, handleDragEnd, handleDragOver, moveTo, moveTaskTo, startDragging, toggleSwapMenu } from "../utils/dragAndDrop.js";
 
 import {openAddTaskAside} from "../utils/addTaskAside.js";
 import {closeDialog, deleteTaskButton, editTaskInDialog, openDialog, saveTask} from "../utils/taskDialog.js";
@@ -155,22 +155,6 @@ function initMarkedUsers(element) {
         }
     }
 
-}
-
-/**
- * Moves a task to a new category using the swap menu.
- * @param {Event} event - The click event object.
- * @param {string} taskId - The task id to move.
- * @param {string} category - The target category.
- * @returns {void}
- */
-function moveTaskTo(event, taskId, category) {
-    event.stopPropagation();
-
-    currentDraggedElement = taskId;
-    moveTo(category);
-
-    closeAllSwapMenus();
 }
 
 /**

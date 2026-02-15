@@ -16,6 +16,7 @@ export function createAuthErrorMessage(message) {
 
 /**
  * Show error message below form fields (for auth forms)
+ * Positions the error at the bottom of the form (absolute positioned)
  */
 export function showErrorMessage(message) {
     const existingError = document.querySelector(".auth-error-message");
@@ -27,14 +28,13 @@ export function showErrorMessage(message) {
 
     const form = document.querySelector("form");
     if (!form) return;
+
     const inputs = form.querySelectorAll('input[type="email"], input[type="password"], input[type="text"]');
     inputs.forEach(input => {
         input.style.borderBottom = "0.06rem solid #ff0000";
     });
 
-    const buttonContainer = form.querySelector(".button-container");
-    if (buttonContainer) form.insertBefore(errorDiv, buttonContainer);
-    else form.appendChild(errorDiv);
+    form.appendChild(errorDiv);
 }
 
 /**
@@ -57,7 +57,7 @@ function getErrorMessage(error) {
         return "Invalid email address."
     } else if (error.code === "auth/user-not-found" || error.code === "auth/wrong-password" || error.code === "auth/invalid-credential") {
         return "Check your email and password. Please try again.";
-    } else if ("auth/too-many-requests") {
+    } else if (error.code === "auth/too-many-requests") {
         return "Too many failed attempts. Please try again later.";
     } else if (error.code === "auth/email-already-in-use") {
         return "This email is already registered."

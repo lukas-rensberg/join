@@ -10,22 +10,39 @@ html {
     align-items: center;
     min-height: 100vh;
     width: 100vw;
-    max-width: 1920px;
 }
 
 .body-help main {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     width: 100%;
     flex: 1;
 }
 
 .body-help .content-section {
-    text-align: justify;
+    text-align: left;
     flex: 1;
-    margin: 50px 0;
-    padding: 0 2rem 0 17rem;
+    margin-top: 4.5rem;
+    margin-bottom: 4.5rem;
+    padding: 0 1rem;
     line-height: 1.6;
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.body-help .content-section > div {
+    max-width: 100%;
+}
+
+.heading-with-back {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    margin-bottom: 1.5rem;
 }
 
 .headline {
@@ -34,9 +51,33 @@ html {
     width: 100%;
     align-items: center;
     position: relative;
-    margin-bottom: 2.5rem;
+    margin-bottom: 1.5rem;
 }
 
+.back-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    transition: all 200ms ease;
+
+    &:hover {
+        background-color: #E3EEFF;
+        cursor: pointer;
+    }
+
+    &:active {
+        transform: scale(0.95);
+        background-color: #E3EEFF;
+    }
+
+    img {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+}
 
 .back-arrow-signup {
     width: 1.5rem;
@@ -60,33 +101,182 @@ html {
 }
 
 h1 {
-    font-size: 2rem;
+    font-size: 1.5rem;
 }
 
 h2 {
-    margin: 1rem 0;
-    font-size: 1.5rem;
+    margin: 0.75rem 0;
+    font-size: 1.25rem;
     color: var(--main-color);
 }
 
 h3 {
-    font-size: 1rem;
+    font-size: 0.95rem;
     color: var(--color-primary-button-hover);
+}
+
+p {
+    font-size: 0.95rem;
 }
 
 .info-list {
     display: flex;
     flex-direction: row;
-    column-gap: 1.25rem;
-    margin: 1rem 0;
+    column-gap: 0.75rem;
+    margin: 0.75rem 0;
 }
 
 .info-index {
     margin: 0 !important;
     color: var(--color-primary-button-hover) !important;
+    font-size: 1.25rem !important;
+    min-width: 1.5rem;
 }
 
-span, a {
+.info-content {
+    flex: 1;
+    min-width: 0;
+}
+
+main span, main a {
     text-decoration: none;
     color: var(--main-color);
+}
+
+@media (min-width: 375px) {
+    .body-help .content-section {
+        padding: 0 1.25rem;
+    }
+
+    h1 {
+        font-size: 1.75rem;
+    }
+
+    h2 {
+        font-size: 1.35rem;
+    }
+}
+
+@media (min-width: 480px) {
+    .body-help .content-section {
+        padding: 0 1.5rem;
+        text-align: justify;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    h2 {
+        margin: 1rem 0;
+        font-size: 1.5rem;
+    }
+
+    h3 {
+        font-size: 1rem;
+    }
+
+    p {
+        font-size: 1rem;
+    }
+
+    .info-list {
+        column-gap: 1rem;
+        margin: 1rem 0;
+    }
+
+    .info-index {
+        font-size: 1.5rem !important;
+    }
+
+    .heading-with-back,
+    .headline {
+        margin-bottom: 2rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .body-help .content-section {
+        padding: 0 2rem;
+        margin-top: 5rem;
+        margin-bottom: 3rem;
+    }
+
+    .info-list {
+        column-gap: 1.25rem;
+    }
+
+    .heading-with-back,
+    .headline {
+        margin-bottom: 2.5rem;
+    }
+}
+
+@media (min-width: 812px) {
+    .body-help main {
+        flex-direction: row;
+    }
+
+    .body-help .content-section {
+        padding: 0 2rem 2rem calc(250px + 2rem);
+        margin-top: 7rem;
+        max-width: 1920px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .body-help .content-section {
+        padding: 0 3rem 2rem calc(250px + 3rem);
+    }
+
+    .body-help .content-section > div {
+        max-width: 900px;
+    }
+}
+
+@media (min-width: 1440px) {
+    .body-help .content-section {
+        padding: 0 4rem 2rem calc(250px + 4rem);
+    }
+
+    .body-help .content-section > div {
+        max-width: 1000px;
+    }
+}
+
+@media (min-width: 1920px) {
+    .body-help .content-section {
+        padding: 0 5rem 2rem calc(250px + 5rem);
+    }
+
+    .body-help .content-section > div {
+        max-width: 1200px;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+    }
+
+    h2 {
+        font-size: 1.75rem;
+    }
+
+    h3 {
+        font-size: 1.125rem;
+    }
+
+    p, span, a {
+        font-size: 1.125rem;
+        line-height: 1.8;
+    }
+}
+
+@media (min-width: 2560px) {
+    .body-help .content-section {
+        padding: 0 6rem 2rem calc(250px + 6rem);
+    }
+
+    .body-help .content-section > div {
+        max-width: 1400px;
+    }
 }

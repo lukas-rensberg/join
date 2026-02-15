@@ -1,5 +1,8 @@
 import {validateEmailFormat} from "../utils/contact.js";
 import {updatePasswordIcon, togglePasswordVisibility} from "./login.js";
+import {containsHtmlChars} from "./template.js";
+
+const HACK_ATTEMPT_MSG = "Want to hack me? Nah Ah! Remove HTML chars and \",\'";
 
 /**
  * Clear error messages and red borders from form inputs
@@ -25,8 +28,9 @@ function clearFormErrors() {
  * Show form validation error for a specific field
  * @param {string} fieldId The ID of the input field
  * @param {string} message The error message to display
+ * @param {boolean} isHtml Whether the message contains HTML (default: false)
  */
-function showFormError(fieldId, message) {
+function showFormError(fieldId, message, isHtml = false) {
     const field = document.getElementById(fieldId);
     if (!field) return;
     field.style.borderBottom = "1px solid #ff4646";
@@ -36,7 +40,11 @@ function showFormError(fieldId, message) {
 
     const errorMsg = document.createElement("span");
     errorMsg.className = "error-message";
-    errorMsg.textContent = message;
+    if (isHtml) {
+        errorMsg.innerHTML = message;
+    } else {
+        errorMsg.textContent = message;
+    }
     field.parentElement.appendChild(errorMsg);
 }
 
@@ -102,13 +110,24 @@ function validateSignupForm(username, email, password, confirmPassword, accepted
  */
 function validateUsernameAndEmail(username, email) {
     let isValid = true;
+    const nameRegex = /^\p{L}+\s\p{L}+$/u;
+
     if (!username.trim()) {
         showFormError("username", "Full name is required");
+        isValid = false;
+    } else if (containsHtmlChars(username)) {
+        showFormError("username", HACK_ATTEMPT_MSG);
+        isValid = false;
+    } else if (!nameRegex.test(username.trim())) {
+        showFormError("username", "Please enter first and last name");
         isValid = false;
     }
 
     if (!email.trim()) {
         showFormError("email", "Email is required");
+        isValid = false;
+    } else if (containsHtmlChars(email)) {
+        showFormError("email", HACK_ATTEMPT_MSG);
         isValid = false;
     } else if (!validateEmailFormat(email)) {
         showFormError("email", "Invalid email format");
@@ -121,22 +140,39 @@ function validateUsernameAndEmail(username, email) {
 
 /**
  * Validate password and confirm password fields and show errors if invalid
+ * Firebase requirements: lowercase, uppercase, non-alphanumeric character
  * @param password
  * @param confirmPassword
  * @returns {boolean}
  */
 function validatePasswordField(password, confirmPassword) {
     let isValid = true;
+
     if (!password) {
         showFormError("signup-password", "Password is required");
         isValid = false;
-    } else if (password.length < 6) {
-        showFormError("signup-password", "Password must be at least 6 characters");
+    } else if (containsHtmlChars(password)) {
+        showFormError("signup-password", HACK_ATTEMPT_MSG);
         isValid = false;
+    } else {
+        const errors = [];
+        if (password.length < 6) errors.push("min. 6");
+        if (!/[a-z]/.test(password)) errors.push("lowercase chars");
+        if (!/[A-Z]/.test(password)) errors.push("uppercase");
+        if (!/[0-9]/.test(password)) errors.push("number");
+        if (!/[^a-zA-Z0-9]/.test(password)) errors.push("special");
+
+        if (errors.length > 0) {
+            showFormError("signup-password", `Insecure Password - <a href="https://www.bsi.bund.de/EN/Themen/Verbraucherinnen-und-Verbraucher/Informationen-und-Empfehlungen/Cyber-Sicherheitsempfehlungen/Accountschutz/Sichere-Passwoerter-erstellen/sichere-passwoerter-erstellen_node.html" target="_blank" rel="noopener">BSI</a>`, true);
+            isValid = false;
+        }
     }
 
     if (!confirmPassword) {
         showFormError("confirm-password", "Please confirm your password");
+        isValid = false;
+    } else if (containsHtmlChars(confirmPassword)) {
+        showFormError("confirm-password", HACK_ATTEMPT_MSG);
         isValid = false;
     } else if (password !== confirmPassword) {
         showFormError("confirm-password", "Passwords do not match");
@@ -148,15 +184,18 @@ function validatePasswordField(password, confirmPassword) {
 
 /**
  * Show success message after signup (signup page)
+ * Shows for 800ms then redirects to login page (no auto-login)
  */
 export function showSuccessMessage() {
-    const successContainer = document.querySelector(".signed-up-container");
-    if (successContainer) {
-        successContainer.style.display = "flex";
-        setTimeout(() => {
-            successContainer.style.display = "none";
-        }, 2000);
-    }
+    const successDialog = document.getElementById("signupSuccess");
+    if (!successDialog) return;
+
+    successDialog.showModal();
+
+    setTimeout(() => {
+        successDialog.close();
+        window.location.href = "index.html";
+    }, 800);
 }
 
 /**
@@ -212,6 +251,8 @@ async function handleFormSubmit(signupUserCallback, handleAuthErrorCallback) {
 
     try {
         await signupUserCallback(email, password, username);
+        // Show success message only after successful signup
+        showSuccessMessage();
     } catch (error) {
         handleAuthErrorCallback(error, "signup");
     }
