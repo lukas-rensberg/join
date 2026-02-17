@@ -2,7 +2,7 @@ html, body {
     height: 100%;
 }
 
-.body-login {
+.body-auth {
     font-family: sans-serif;
     color: var(--color-menu-text);
     background: var(--main-color);
@@ -107,6 +107,8 @@ h2 {
 
 .login-title::after {
     content: "";
+    display: block;
+    position: absolute;
     bottom: -0.5rem;
     left: 50%;
     transform: translateX(-50%);
@@ -142,6 +144,11 @@ span {
 .email-icon {
     background: url("../assets/icons/mail.svg") center center no-repeat;
     transform: scale(0.8);
+}
+
+.person-icon {
+    background: url("../assets/icons/person.svg") center center no-repeat;
+    transform: scale(1.0);
 }
 
 .password-icon {
@@ -297,18 +304,6 @@ footer {
 
 .legal-link:hover {
     color: var(--main-color);
-}
-
-@keyframes loginFadeIn {
-    0% {
-        opacity: 0;
-        transform: translateY(1.25rem);
-    }
-
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
 }
 
 .bottom-section {

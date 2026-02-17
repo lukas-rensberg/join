@@ -1,64 +1,101 @@
 <!DOCTYPE html>
 <html lang="de">
-
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Join | Signup</title>
-    <link rel="shortcut icon" href="./assets/icons/logo-blue.svg" type="image/svg+xml"/>
-    <link rel="stylesheet" href="./style.css"/>
+    <link
+            rel="shortcut icon"
+            href="./assets/icons/logo-blue.svg"
+            type="image/svg+xml"
+    />
     <link rel="stylesheet" href="./css/font.css"/>
+    <link rel="stylesheet" href="./style.css"/>
+    <link rel="stylesheet" href="css/authPages.css"/>
     <link rel="stylesheet" href="./css/signup.css"/>
     <link rel="stylesheet" href="./css/shared.css"/>
 </head>
 
-<body class="body-signup">
+<body class="body-auth">
+<div class="login-content">
+    <div class="logo-wrapper">
+        <img src="./assets/icons/logo-blue.svg" class="login-logo" alt="Logo"/>
+    </div>
+
+    <div class="login-container">
+        <div class="login-card">
+            <form>
+                <a class="back-arrow-signup" href="./"></a>
+                <h2 class="login-title">Sign Up</h2>
+                <div class="input-group">
+                    <input
+                            type="text"
+                            placeholder="Name"
+                            class="input-field"
+                            id="username"
+                            name="username"
+                            autocomplete="name"
+                    /><span class="person-icon"></span>
+                </div>
+
+                <div class="input-group">
+                    <input
+                            type="email"
+                            placeholder="Email"
+                            class="input-field"
+                            id="email"
+                            name="email"
+                            autocomplete="email"
+                    /><span class="email-icon"></span>
+                </div>
+
+                <div class="input-group">
+                    <input
+                            type="password"
+                            placeholder="Password"
+                            class="input-field"
+                            autocomplete="new-password"
+                            id="signup-password"
+                            name="password"
+                    />
+                    <span class="password-icon-toggle" data-target="signup-password">
+              <img src="./assets/icons/lock.svg" alt="Password"/>
+            </span>
+                </div>
+
+                <div class="input-group">
+                    <input
+                            type="password"
+                            placeholder="Confirm Password"
+                            class="input-field"
+                            autocomplete="new-password"
+                            id="confirm-password"
+                            name="confirmPassword"
+                    />
+                    <span class="password-icon-toggle" data-target="confirm-password">
+              <img src="./assets/icons/lock.svg" alt="Confirm Password"/>
+            </span>
+                </div>
+                <div class="checkbox-container checkbox">
+                    <input type="checkbox" id="confirm-check" name="terms"/>
+                    <label for="confirm-check">I accept the <a href="./privacy.html">Privacy policy</a></label>
+                </div>
+
+                <div class="button-container">
+                    <button type="submit" class="btn-primary">Sign up</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+    <footer class="legal-links">
+        <a href="./privacy.html" class="legal-link">Privacy Policy</a>
+        <a href="legalNotice.html" class="legal-link">Legal Notice</a>
+    </footer>
+</div>
 <img id="landscapeGif" src="./assets/gif/rotate-landscape.gif" alt="Rotate your Phone Animation">
-<dialog class="signup-success" id="signupSuccess">You signed up successfully</dialog>
-<main>
-    <div class="logo-container-signup"></div>
-    <form>
-        <h2><a class="back-arrow-signup" href="index.html"></a>Sign up</h2>
 
-        <div class="input-field">
-            <input type="text" name="username" id="username" placeholder="Name"/><span class="user-name icon"></span>
-        </div>
-
-        <div class="input-field">
-            <input type="text" name="email" id="email" placeholder="Email"/><span class="user-email icon"></span>
-        </div>
-
-        <div class="input-field">
-            <input type="password" name="password" id="signup-password" placeholder="Password"/>
-            <span class="password-icon-toggle icon" data-target="signup-password">
-            <img src="./assets/icons/lock.svg" alt="Password"/>
-        </span>
-        </div>
-
-        <div class="input-field">
-            <input type="password" name="confirm-password" id="confirm-password" placeholder="Confirm Password"/>
-            <span class="password-icon-toggle icon" data-target="confirm-password">
-          <img src="./assets/icons/lock.svg" alt="Password"/>
-        </span>
-        </div>
-        <p class="pw-not-matching">
-            Your passwords don't match. Please try again.
-        </p>
-        <div class="checkbox-container">
-            <div class="checkbox">
-                <input type="checkbox" name="confirm-check" id="confirm-check">
-                <label for="confirm-check">I accept the </label>
-            </div>
-            <a href="privacy.html">Privacy Policy</a>
-        </div>
-        <button type="submit" disabled>Sign up</button>
-    </form>
-</main>
-<footer>
-    <a href="privacy.html">Privacy Policy</a>
-    <a href="legalNotice.html">Legal Notice</a>
-</footer>
+<script src="script.js"></script>
 <script type="module" src="./js/auth.js"></script>
 </body>
-
 </html>

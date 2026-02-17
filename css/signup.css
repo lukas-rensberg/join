@@ -1,11 +1,6 @@
-.body-signup {
-    background-color: var(--main-color);
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    width: 100vw;
+* {
+    animation: unset !important;
+    opacity: 1 !important;
 }
 
 main {
@@ -19,50 +14,22 @@ main {
     flex: 1;
 }
 
-.logo-container-signup {
-    width: 6.31rem;
-    height: 7.63rem;
-    display: flex;
-    position: absolute;
-    top: 2%;
-    left: 2%;
-    background: url("../assets/icons/logo-white.svg") center center no-repeat;
-    transform: scale(0.5);
+.logo-wrapper {
+    top: 2rem;
+    left: 1rem;
+    transform: translate(0, 0) scale(1);
 }
 
-form {
-    margin-top: 4.5rem;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    width: 100%;
-    background-color: white;
-    border-radius: var(--main-radius);
-    position: relative;
-    box-shadow: 0 0 0.75rem 0.25rem rgba(0, 0, 0, 0.08);
+.login-title {
+    anchor-name: --login-title;
 }
 
-h2 {
-    width: 100%;
-    margin-top: 1.25rem;
-    text-align: center;
-    font-size: 2.5rem;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.login-logo {
+    animation: unset !important;
 }
 
-h2::after {
-    content: "";
-    position: absolute;
-    bottom: -0.5rem;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 5.63rem;
-    height: 0.19rem;
-    background: var(--main-color);
-    border-radius: 0.12rem;
+.button-container {
+    margin: unset;
 }
 
 .back-arrow-signup {
@@ -72,8 +39,10 @@ h2::after {
     position: absolute;
     left: 1.75rem;
     background: url("../assets/icons/arrow-left-line.svg") center center no-repeat;
-    transform: scale(1);
+    transform: scale(1) translateY(-50%);
     cursor: pointer;
+    position-anchor: --login-title;
+    top: anchor(center);
 
     &:hover {
         cursor: pointer;
@@ -86,97 +55,13 @@ h2::after {
     }
 }
 
-.input-field {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 90%;
-    height: 2.5rem;
-    margin-top: 1.25rem;
-    margin-bottom: 1rem;
-    border: none;
-    position: relative;
-    anchor-name: --input-field;
-}
-
-.input-field input {
+.input-group input {
     anchor-name: --field-input;
-}
-
-p {
-    font-size: 0.88rem;
-    text-align: center;
-}
-
-.icon {
-    width: 1.5rem;
-    height: 1.5rem;
-    position: absolute;
-    right: 0.75rem;
 }
 
 .user-name {
     background: url("../assets/icons/person.svg") center center no-repeat;
     transform: scale(1);
-}
-
-.user-email {
-    background: url("../assets/icons/mail.svg") center center no-repeat;
-    transform: scale(1);
-}
-
-.user-password {
-    background: url("../assets/icons/lock.svg") center center no-repeat;
-    transform: scale(0.8);
-}
-
-.password-icon-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: opacity 0.2s ease;
-}
-
-.password-icon-toggle.clickable {
-    cursor: pointer;
-}
-
-.password-icon-toggle.clickable:hover {
-    opacity: 0.7;
-}
-
-.password-icon-toggle img {
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-}
-
-input[type="text"],
-input[type="email"],
-input[type="password"] {
-    width: 100%;
-    height: 100%;
-    border: none;
-    border-bottom: 0.06rem solid var(--color-light-gray);
-    padding: 0 0.75rem;
-
-    &:focus {
-        outline: none;
-        border-bottom: 0.06rem solid var(--main-color);
-    }
-
-    &::placeholder {
-        color: var(--color-light-gray);
-    }
-}
-
-.pw-not-matching {
-    margin-top: 0.25rem;
-    width: 90%;
-    height: 0.75rem;
-    font-size: 0.63rem;
-    color: red;
-    visibility: hidden;
 }
 
 .checkbox-container {
@@ -185,22 +70,30 @@ input[type="password"] {
     justify-content: center;
     margin-top: 1.25rem;
     gap: 0.5rem;
-    font-size: 0.75rem;
     color: #42526e;
 
     a {
         color: var(--main-color);
         text-decoration: none;
         font-size: 0.88rem;
+        transition: color 0.2s ease, border 0.2s ease;
+
+        &:hover {
+            color: var(--color-primary-button-hover);
+            cursor: pointer;
+            text-decoration: underline;
+            font-weight: 700;
+            text-decoration-color: #999;
+        }
     }
 }
 
 .checkbox {
-
     label {
         font-size: 0.88rem;
         cursor: pointer;
         display: flex;
+        gap: 0.25rem;
         align-items: center;
 
         &::before {
@@ -208,7 +101,7 @@ input[type="password"] {
             transform: scale(0.8);
             width: 1rem;
             height: 1rem;
-            margin-right: 1rem;
+            margin-right: 0.5rem;
 
             &:hover {
                 cursor: pointer;
@@ -220,7 +113,7 @@ input[type="password"] {
     input[type="checkbox"] {
         margin-right: 1rem;
         cursor: pointer;
-        opacity: 0;
+        opacity: 0 !important;
         position: absolute;
 
         &:hover + label::before {
@@ -255,7 +148,7 @@ button[type="submit"] {
 }
 
 footer {
-    a {
+    a.legal-link {
         color: #ffffff;
         text-decoration: none;
         font-size: 0.88rem;
@@ -263,6 +156,7 @@ footer {
 
         &:hover {
             cursor: pointer;
+            color: var(--color-primary-button-hover);
         }
     }
 }
@@ -389,4 +283,3 @@ footer {
         transform: translate(-50%, -50%);
     }
 }
-

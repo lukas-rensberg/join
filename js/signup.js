@@ -63,12 +63,21 @@ function areAllFieldsFilled() {
 }
 
 /**
- * Update the submit button state based on form completeness
+ * Check if there are any validation errors on the form
+ * @returns {boolean} True if there are errors
+ */
+function hasValidationErrors() {
+    const errorMessages = document.querySelectorAll(".error-message");
+    return errorMessages.length > 0;
+}
+
+/**
+ * Update the submit button state based on form completeness and errors
  */
 function updateSubmitButtonState() {
     const submitButton = document.querySelector('form button[type="submit"]');
     if (submitButton) {
-        submitButton.disabled = !areAllFieldsFilled();
+        submitButton.disabled = !areAllFieldsFilled() || hasValidationErrors();
     }
 }
 
@@ -314,7 +323,7 @@ function validateEmailOnInput(email) {
         return;
     }
 
-    if (email.includes("@") && !validateEmailFormat(email)) {
+    if (!validateEmailFormat(email)) {
         showFormError("email", "Invalid email format");
     }
 }
