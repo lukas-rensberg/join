@@ -77,11 +77,9 @@ html, body {
     justify-content: center;
     opacity: 0;
     animation: loginFadeIn 500ms ease-in-out 700ms forwards;
-    z-index: 10;
     width: 100%;
     height: 100%;
     flex: 1;
-    margin-top: 4.5rem;
 }
 
 .login-card {
@@ -324,8 +322,8 @@ footer {
             transform: translate(-50%, -50%) scale(1);
         }
         100% {
-            top: 10px;
-            left: 16px;
+            top: 2rem;
+            left: 1rem;
             transform: translate(0, 0) scale(1);
         }
     }
@@ -349,8 +347,8 @@ footer {
             transform: translate(-50%, -50%) scale(1.5);
         }
         100% {
-            top: 10px;
-            left: 16px;
+            top: 2rem;
+            left: 1rem;
             transform: translate(0, 0) scale(1);
         }
     }
@@ -426,8 +424,8 @@ footer {
             transform: translate(-50%, -50%) scale(2);
         }
         100% {
-            top: 10px;
-            left: 16px;
+            top: 2rem;
+            left: 1rem;
             transform: translate(0, 0) scale(1);
         }
     }
@@ -450,8 +448,7 @@ footer {
 
     .login-card {
         max-width: 32.5rem;
-        margin: 5.85rem 0 1.95rem;
-
+        margin: 5.85rem 0 0;
         form {
             padding: 2rem;
         }

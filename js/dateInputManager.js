@@ -11,55 +11,16 @@ import { calendarJs } from "./calendar.min.js"
  * @param {HTMLElement} container - The container element to scope queries (default: document)
  */
 export function initializeDateInput(container) {
-    const dateInput = container.querySelector('.due-date-input');
+    const dateInput = container.querySelector('.date-input-hidden');
     if (dateInput) {
-        const calendarInstance = new calendarJs( "calendar", {
+        new calendarJs( "calendar", {
             views: {
                 datePicker: {
-                    selectedDateFormat: "{dd}/{mm}/{yyyy}"
+                    selectedDateFormat: "{dd}/{mm}/{yyyy}",
+                    minimumDate: new Date()
                 }
-            },
-            selectedDateFormat: "{dd}/{mm}/{yyyy}"
+            }
         } );
-    }
-}
-
-/**
- * Formats the date input to dd/mm/yyyy format
- * Automatically adds slashes
- * @param {Event} event - The input event
- */
-function formatDateInput(event) {
-    const input = event.target;
-    let value = input.value.replace(/\D/g, '');
-
-    if (value.length >= 2) {
-        value = value.substring(0, 2) + '/' + value.substring(2);
-    }
-    if (value.length >= 5) {
-        value = value.substring(0, 5) + '/' + value.substring(5, 9);
-    }
-
-    input.value = value;
-}
-
-/**
- * Handles keydown events for the date input
- * Allows proper backspace functionality
- * @param {KeyboardEvent} event - The keyboard event
- */
-function handleDateKeydown(event) {
-    const input = event.target;
-
-    if (event.key === 'Backspace') {
-        const cursorPosition = input.selectionStart;
-        const value = input.value;
-
-        if (cursorPosition > 0 && value[cursorPosition - 1] === '/') {
-            event.preventDefault();
-            input.value = value.substring(0, cursorPosition - 2) + value.substring(cursorPosition);
-            input.setSelectionRange(cursorPosition - 2, cursorPosition - 2);
-        }
     }
 }
 

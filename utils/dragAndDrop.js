@@ -50,7 +50,7 @@ export function allowDrop(event) {
 /**
  * Handles dragover events for board columns.
  * Only updates DOM when section actually changes.
- * @param {DragEvent} event - The dragover event object.
+ * @param {Event} event - The dragover event object.
  * @param {string} section - The id of the column being dragged over.
  */
 export function handleDragOver(event, section) {
