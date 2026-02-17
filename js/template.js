@@ -324,8 +324,8 @@ export function getTemplateAddTask() {
                 <div class="form-group">
                     <label>Due date</label>
                     <div class="input-with-icon">
-                        <input aria-label="Enter Due Date" type="text" class="due-date due-date-input"
-                            placeholder="dd/mm/yyyy" maxlength="10" />
+                        <input aria-label="Due Date" type="date" id="calendar" value="2026-03-01" class="due-date due-date-input"
+                       placeholder="dd/mm/yyyy" maxlength="10"/>
                         <span class="icon">
                             <img src="./assets/icons/calendar.svg" alt="Calendar Symbol, not working" />
                         </span>

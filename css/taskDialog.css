@@ -20,7 +20,6 @@
     }
 }
 
-/* Mobile: swipe in von rechts (RTL), swipe out nach links (LTR) */
 .dialog-swipe-in-mobile {
     animation: dialogSwipeInMobile 300ms ease-in-out forwards
 }
@@ -368,7 +367,6 @@ strong {
     }
 }
 
-/* Edit Task Dialog Styles */
 .edit-task-header {
     display: flex;
     justify-content: flex-end;

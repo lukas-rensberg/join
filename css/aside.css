@@ -1,18 +1,12 @@
 .aside-desktop {
     grid-area: aside-desktop;
-    /*position: fixed;*/
     z-index: 10;
-    /*top: 0;*/
-    /*left: 0;*/
-    /*height: 100vh;*/
-    /*width: 250px;*/
     background-color: #ffffff;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.16);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    /*padding-top: 8.375rem;*/
     padding-top: 2.5rem;
 
     .aside-navbar {
@@ -91,9 +85,7 @@
     background-color: #ffffff;
     position: fixed;
     position-anchor: --header;
-    /*left: anchor(--header right);*/
     left: calc(anchor(right) + 2.5rem);
-    /*left: 100%;*/
     top: 50%;
     opacity: 1;
     transform: translateX(0%) translateY(-50%);
@@ -186,8 +178,6 @@
                 cursor: text;
             }
         }
-
-        /* Subtask Input Wrapper */
 
         .subtask-input-wrapper input {
             width: 100%;

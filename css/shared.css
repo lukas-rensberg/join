@@ -71,7 +71,6 @@
     background-color: var(--color-priority-low);
 }
 
-/* Form Groups & Error Handling */
 .form-group {
     margin-bottom: 20px;
     width: 100%;
@@ -110,7 +109,6 @@
     display: block;
 }
 
-/* Input Fields */
 .input-title {
     width: 100%;
     height: auto;
@@ -143,7 +141,6 @@
     border-bottom: 0.0625rem solid var(--color-light-gray);
 }
 
-/* Custom Dropdown Styles */
 .custom-dropdown {
     position: relative;
     width: 100%;
@@ -169,7 +166,6 @@
     transform: rotate(180deg);
 }
 
-/* Contact dropdown specific styles */
 #contactDropdownWrapper .dropdown-header {
     padding: 0;
 }
@@ -226,7 +222,6 @@
     display: block;
 }
 
-/* Contact Option Styles */
 .contact-option {
     border-radius: 10px;
     display: flex;
@@ -332,7 +327,6 @@
     content: url(../assets/icons/checked_white.svg);
 }
 
-/* Category Option Styles */
 .category-option {
     display: flex;
     align-items: center;
@@ -364,7 +358,6 @@
     flex-grow: 1;
 }
 
-/* Contact Chip Styles */
 .dropzone {
     margin-top: 10px;
     display: flex;
@@ -394,7 +387,6 @@
     cursor: pointer;
 }
 
-/* Subtask Input Wrapper */
 .subtask-input-wrapper {
     padding-right: 5rem;
 }
@@ -459,14 +451,21 @@
     background-color: var(--color-light-gray);
 }
 
-/* Subtask List Styles */
 .subtask-list {
     padding: 0 0 0 15px;
     margin: 10px 0 0 1rem;
     color: black;
+    max-height: 8rem;
+    overflow-y: auto;
 }
 
-.subtask-list li::marker {
+li {
+    position: relative;
+}
+
+li::marker {
+    position: absolute;
+    top: 0;
     font-size: 0.6rem;
 }
 
@@ -476,7 +475,6 @@
     position: relative;
     line-height: 1.4;
     margin-bottom: 4px;
-    display: list-item;
     list-style-position: outside;
 
     &:hover {
@@ -575,6 +573,12 @@
     height: 16px;
     background-color: var(--color-light-gray);
     margin: 0 2px;
+}
+
+.icon {
+    position: absolute;
+    right: anchor(--date-input right);
+    cursor: pointer;
 }
 
 .task-added,
@@ -746,7 +750,6 @@
     }
 }
 
-/* Heading with back arrow */
 .heading-with-back {
     display: flex;
     align-items: center;

@@ -243,7 +243,6 @@ footer {
     pointer-events: none;
 }
 
-
 .input-field input:focus,
 .input-field input:invalid {
     outline: none;
