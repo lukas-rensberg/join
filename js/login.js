@@ -165,12 +165,12 @@ async function initLoginSubmitHandler(event, loginUserCallback, handleAuthErrorC
 }
 
 function initLogoWrapper() {
-    const wrapper = document.querySelector(".logo-wrapper");
-    if (wrapper) {
-        setTimeout(() => {
-            wrapper.style.position = "absolute";
-        }, 700);
-    }
+    // const wrapper = document.querySelector(".logo-wrapper");
+    // if (wrapper) {
+    //     setTimeout(() => {
+    //         wrapper.style.position = "absolute";
+    //     }, 700);
+    // }
 }
 
 /**

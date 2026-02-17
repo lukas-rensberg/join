@@ -1,57 +1,73 @@
-html.loading,
-body.loading {
-    overflow: hidden;
+html, body {
+    height: 100%;
 }
 
 .body-login {
+    font-family: sans-serif;
+    color: var(--color-menu-text);
+    background: var(--main-color);
+    animation: backgroundFade 1.8s ease-in-out 0.4s forwards;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    width: 100vw;
-    padding: 0 var(--padding-side);
-    overflow: hidden;
-    animation: backgroundFade 700ms ease-in-out forwards;
+}
+
+.login-content {
+    flex: 1;
+    position: relative;
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 6rem 16px 0;
 }
 
 .logo-wrapper {
-    position: fixed;
-    top: 2%;
-    left: 2%;
-    width: 6.31rem;
-    height: 7.63rem;
-    z-index: 1000;
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+    width: 80px;
+    height: 80px;
+    margin: 5% 0 0 5%;
+    transform: translate(-50%, -50%) scale(2);
+    position-anchor: --body-anchor;
+    anchor-name: --logo-anchor;
+    animation: logoSlideIn 1.8s cubic-bezier(0.25, 1, 0.5, 1) 0.4s forwards;
 }
 
-.logo-container {
-    width: 100%;
-    height: 100%;
-    background: url("../assets/icons/logo-white.svg") center center no-repeat;
-    background-size: contain;
-    opacity: 1;
-    animation: logoSlideIn 1s ease-in-out forwards;
+.login-logo {
+    width: 80px;
+    height: 80px;
+    filter: brightness(0) invert(1);
+    animation: logoShrinkColor 1.8s cubic-bezier(0.25, 1, 0.5, 1) 0.4s forwards;
 }
 
 @keyframes logoSlideIn {
-    from {
-        transform: translate(calc(50vw - 3.13rem), calc(50vh - 3.81rem)) scale(1.5);
+    0% {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(2);
     }
+    100% {
+        top: 2rem;
+        left: 1rem;
+        transform: translate(0, 0) scale(1);
+    }
+}
 
-    to {
-        transform: translate(0, 0) scale(0.5);
-        background: url("../assets/icons/logo-blue.svg") center center no-repeat;
+@keyframes logoShrinkColor {
+    0%   {
+        filter: brightness(0) invert(1);
+    }
+    100% {
+        filter: none;
     }
 }
 
 @keyframes backgroundFade {
-    0% {
-        background-color: var(--main-color);
-    }
-
-    100% {
-        background-color: #ffffff;
-    }
+    to { background: #fff; }
 }
 
 .login-container {
@@ -74,7 +90,7 @@ body.loading {
     box-shadow: 0 0 0.75rem 0.25rem rgba(0, 0, 0, 0.08);
     width: 100%;
     max-width: 25rem;
-    margin: 4.5rem 0 1.5rem;
+    margin: 0 0 1.5rem;
 }
 
 h2 {
@@ -91,7 +107,6 @@ h2 {
 
 .login-title::after {
     content: "";
-    position: absolute;
     bottom: -0.5rem;
     left: 50%;
     transform: translateX(-50%);
@@ -195,7 +210,12 @@ form {
 
 .button-container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem 0 1rem 0;
+    width: 90%;
 }
 
 .btn-primary {
@@ -206,7 +226,7 @@ form {
     border: none;
     border-radius: var(--button-radius);
     cursor: pointer;
-    margin: 2rem 0 1rem 0;
+    margin: 0;
     transition: background-color 0.2s ease;
 }
 
@@ -223,7 +243,7 @@ form {
     border-radius: var(--button-radius);
     cursor: pointer;
     transition: border-color 0.2s ease;
-    margin-bottom: 2rem;
+    margin: 0;
 }
 
 .btn-secondary:hover {
@@ -236,7 +256,9 @@ form {
     justify-content: center;
     flex-direction: row;
     gap: 1rem;
-    margin-bottom: 2rem;
+    transform: translateY(-50%);
+    opacity: 0;
+    animation: loginFadeIn 500ms ease-in-out 700ms forwards;
 }
 
 .btn-signup {
@@ -301,37 +323,62 @@ footer {
 
 @media (min-width: 480px) {
     @keyframes logoSlideIn {
-        from {
-            transform: translate(calc(50vw - 4rem), calc(50vh - 4.835rem)) scale(1.6);
+        0% {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1);
         }
+        100% {
+            top: 10px;
+            left: 16px;
+            transform: translate(0, 0) scale(1);
+        }
+    }
 
-        to {
-            transform: translate(0, 0) scale(0.6);
-            background: url("../assets/icons/logo-blue.svg") center center no-repeat;
-        }
+    .logo-wrapper {
+        width: 100px;
+        height: 100px;
+    }
+
+    .login-logo {
+        width: 100px;
+        height: 100px;
     }
 }
 
 @media (min-width: 768px) {
     @keyframes logoSlideIn {
-        from {
-            transform: translate(calc(50vw - 4rem), calc(50vh - 4.835rem)) scale(1.75);
+        0% {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1.5);
         }
-
-        to {
-            transform: translate(0, 0) scale(0.75);
-            background: url("../assets/icons/logo-blue.svg") center center no-repeat;
+        100% {
+            top: 10px;
+            left: 16px;
+            transform: translate(0, 0) scale(1);
         }
-    }
-
-    .logo-wrapper {
-        top: 5%;
-        left: 5%;
     }
 
     .signup-section {
         position: absolute;
-        top: 1rem;
+        right: 2%;
+        position-anchor: --logo-anchor;
+        top: anchor(center);
+    }
+
+
+    .logo-wrapper {
+        width: 120px;
+        height: 120px;
+    }
+
+    .login-logo {
+        width: 120px;
+        height: 120px;
+    }
+
+    .signup-section {
         right: 3rem;
     }
 
@@ -374,39 +421,24 @@ footer {
             padding: 0.69rem 1.1rem;
         }
     }
-
-    .button-container {
-        display: flex;
-        gap: 1rem;
-        justify-content: center;
-        flex-direction: row;
-        align-items: center;
-        margin: 2rem 0 1rem 0;
-    }
-
-    .btn-primary,
-    .btn-secondary {
-        width: auto;
-        padding: 0 1rem;
-        margin: 0;
-    }
 }
 
 @media (min-width: 1400px) {
     @keyframes logoSlideIn {
-        from {
-            transform: translate(calc(50vw - 3.13rem), calc(50vh - 3.81rem)) scale(2);
+        0% {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(2);
         }
-
-        to {
+        100% {
+            top: 10px;
+            left: 16px;
             transform: translate(0, 0) scale(1);
-            background: url("../assets/icons/logo-blue.svg") center center no-repeat;
         }
     }
 
     .logo-wrapper {
-        top: 7%;
-        left: 5%;
+        margin: 4% 0 0 4%;
     }
 
     .signup-section {

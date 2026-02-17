@@ -72,6 +72,20 @@ function updateSubmitButtonState() {
     }
 }
 
+/**
+ * Show error message for privacy policy checkbox
+ * @returns {boolean} Always returns false to indicate validation failure
+ */
+function showPolicyError() {
+    const checkbox = document.getElementById("confirm-check");
+    checkbox.parentElement.querySelector(".error-message")?.remove();
+    checkbox.style.borderColor = "#ff4646";
+    const errorMsg = document.createElement("span");
+    errorMsg.className = "error-message";
+    errorMsg.textContent = "Please accept the Privacy Policy";
+    checkbox.parentElement.appendChild(errorMsg);
+    return false;
+}
 
 /**
  * Validate signup form fields and show errors if invalid
@@ -87,55 +101,65 @@ function validateSignupForm(username, email, password, confirmPassword, accepted
 
     if (!validatePasswordField(password, confirmPassword)) return false;
     if (!validateUsernameAndEmail(username, email)) return false;
-    if (!acceptedPolicy) {
-        const checkbox = document.getElementById("confirm-check");
-        checkbox.parentElement.querySelector(".error-message")?.remove();
-        checkbox.style.borderColor = "#ff4646";
-        const errorMsg = document.createElement("span");
-        errorMsg.className = "error-message";
-        errorMsg.textContent = "Please accept the Privacy Policy";
-        checkbox.parentElement.appendChild(errorMsg);
-
-        return false;
-    }
+    if (!acceptedPolicy) return showPolicyError();
 
     return true;
 }
 
 /**
- * Validate username and email fields and show errors if invalid
- * @param username
- * @param email
+ * Validate username field (first and last name required)
+ * @param {string} username
  * @returns {boolean}
  */
-function validateUsernameAndEmail(username, email) {
-    let isValid = true;
+function validateUsername(username) {
     const nameRegex = /^\p{L}+\s\p{L}+$/u;
 
     if (!username.trim()) {
         showFormError("username", "Full name is required");
-        isValid = false;
-    } else if (containsHtmlChars(username)) {
-        showFormError("username", HACK_ATTEMPT_MSG);
-        isValid = false;
-    } else if (!nameRegex.test(username.trim())) {
-        showFormError("username", "Please enter first and last name");
-        isValid = false;
+        return false;
     }
+    if (containsHtmlChars(username)) {
+        showFormError("username", HACK_ATTEMPT_MSG);
+        return false;
+    }
+    if (!nameRegex.test(username.trim())) {
+        showFormError("username", "Please enter first and last name");
+        return false;
+    }
+    return true;
+}
 
+/**
+ * Validate email field
+ * @param {string} email
+ * @returns {boolean}
+ */
+function validateEmail(email) {
     if (!email.trim()) {
         showFormError("email", "Email is required");
-        isValid = false;
-    } else if (containsHtmlChars(email)) {
-        showFormError("email", HACK_ATTEMPT_MSG);
-        isValid = false;
-    } else if (!validateEmailFormat(email)) {
-        showFormError("email", "Invalid email format");
-        isValid = false;
+        return false;
     }
+    if (containsHtmlChars(email)) {
+        showFormError("email", HACK_ATTEMPT_MSG);
+        return false;
+    }
+    if (!validateEmailFormat(email)) {
+        showFormError("email", "Invalid email format");
+        return false;
+    }
+    return true;
+}
 
-
-    return isValid;
+/**
+ * Validate username and email fields and show errors if invalid
+ * @param {string} username
+ * @param {string} email
+ * @returns {boolean}
+ */
+function validateUsernameAndEmail(username, email) {
+    const isUsernameValid = validateUsername(username);
+    const isEmailValid = validateEmail(email);
+    return isUsernameValid && isEmailValid;
 }
 
 /**
@@ -154,18 +178,9 @@ function validatePasswordField(password, confirmPassword) {
     } else if (containsHtmlChars(password)) {
         showFormError("signup-password", HACK_ATTEMPT_MSG);
         isValid = false;
-    } else {
-        const errors = [];
-        if (password.length < 6) errors.push("min. 6");
-        if (!/[a-z]/.test(password)) errors.push("lowercase chars");
-        if (!/[A-Z]/.test(password)) errors.push("uppercase");
-        if (!/[0-9]/.test(password)) errors.push("number");
-        if (!/[^a-zA-Z0-9]/.test(password)) errors.push("special");
-
-        if (errors.length > 0) {
-            showFormError("signup-password", `Insecure Password - <a href="https://www.bsi.bund.de/EN/Themen/Verbraucherinnen-und-Verbraucher/Informationen-und-Empfehlungen/Cyber-Sicherheitsempfehlungen/Accountschutz/Sichere-Passwoerter-erstellen/sichere-passwoerter-erstellen_node.html" target="_blank" rel="noopener">BSI</a>`, true);
-            isValid = false;
-        }
+    } else if (password.length < 6 || !/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/[0-9]/.test(password) || !/[^a-zA-Z0-9]/.test(password)) {
+        showFormError("signup-password", `Insecure Password - <a href="https://www.bsi.bund.de/EN/Themen/Verbraucherinnen-und-Verbraucher/Informationen-und-Empfehlungen/Cyber-Sicherheitsempfehlungen/Accountschutz/Sichere-Passwoerter-erstellen/sichere-passwoerter-erstellen_node.html" target="_blank" rel="noopener">BSI</a>`, true);
+        isValid = false;
     }
 
     if (!confirmPassword) {
@@ -225,9 +240,119 @@ export function initSignupPage(signupUserCallback, handleAuthErrorCallback) {
     });
 }
 
-function handleInputChange() {
-    clearFormErrors();
+function handleInputChange(event) {
+    const input = event.target;
+    clearFieldError(input.id);
+    validateFieldOnInput(input);
     updateSubmitButtonState();
+}
+
+/**
+ * Clear error for a specific field
+ * @param {string} fieldId The ID of the input field
+ */
+function clearFieldError(fieldId) {
+    const field = document.getElementById(fieldId);
+    if (!field) return;
+    field.style.borderBottom = "";
+    const existingError = field.parentElement.querySelector(".error-message");
+    if (existingError) existingError.remove();
+}
+
+/**
+ * Validate a single field on input
+ * @param {HTMLInputElement} input The input element to validate
+ */
+function validateFieldOnInput(input) {
+    const value = input.value;
+    const id = input.id;
+
+    switch (id) {
+        case "username":
+            validateUsernameOnInput(value);
+            break;
+        case "email":
+            validateEmailOnInput(value);
+            break;
+        case "signup-password":
+            validatePasswordOnInput(value);
+            validateConfirmPasswordOnInput();
+            break;
+        case "confirm-password":
+            validateConfirmPasswordOnInput();
+            break;
+    }
+}
+
+/**
+ * Validate username field on input
+ * @param {string} username
+ */
+function validateUsernameOnInput(username) {
+    if (!username.trim()) return;
+
+    if (containsHtmlChars(username)) {
+        showFormError("username", HACK_ATTEMPT_MSG);
+        return;
+    }
+
+    const nameRegex = /^\p{L}+\s\p{L}+$/u;
+    if (username.trim().length > 2 && !nameRegex.test(username.trim())) {
+        showFormError("username", "Please enter first and last name");
+    }
+}
+
+/**
+ * Validate email field on input
+ * @param {string} email
+ */
+function validateEmailOnInput(email) {
+    if (!email.trim()) return;
+
+    if (containsHtmlChars(email)) {
+        showFormError("email", HACK_ATTEMPT_MSG);
+        return;
+    }
+
+    if (email.includes("@") && !validateEmailFormat(email)) {
+        showFormError("email", "Invalid email format");
+    }
+}
+
+/**
+ * Validate password field on input
+ * @param {string} password
+ */
+function validatePasswordOnInput(password) {
+    if (!password) return;
+
+    if (containsHtmlChars(password)) {
+        showFormError("signup-password", HACK_ATTEMPT_MSG);
+        return;
+    }
+
+    if (password.length >= 1 && (password.length < 6 || !/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/[0-9]/.test(password) || !/[^a-zA-Z0-9]/.test(password))) {
+        showFormError("signup-password", `Insecure Password - <a href="https://www.bsi.bund.de/EN/Themen/Verbraucherinnen-und-Verbraucher/Informationen-und-Empfehlungen/Cyber-Sicherheitsempfehlungen/Accountschutz/Sichere-Passwoerter-erstellen/sichere-passwoerter-erstellen_node.html" target="_blank" rel="noopener">BSI</a>`, true);
+    }
+}
+
+/**
+ * Validate confirm password field on input
+ */
+function validateConfirmPasswordOnInput() {
+    const password = document.getElementById("signup-password")?.value;
+    const confirmPassword = document.getElementById("confirm-password")?.value;
+
+    if (!confirmPassword) return;
+
+    if (containsHtmlChars(confirmPassword)) {
+        showFormError("confirm-password", HACK_ATTEMPT_MSG);
+        return;
+    }
+
+    if (password && confirmPassword && password !== confirmPassword) {
+        showFormError("confirm-password", "Passwords do not match");
+    }
 }
 
 function setupPasswordToggle(toggle) {
@@ -251,7 +376,6 @@ async function handleFormSubmit(signupUserCallback, handleAuthErrorCallback) {
 
     try {
         await signupUserCallback(email, password, username);
-        // Show success message only after successful signup
         showSuccessMessage();
     } catch (error) {
         handleAuthErrorCallback(error, "signup");
