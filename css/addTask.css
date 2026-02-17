@@ -1,26 +1,39 @@
+/*.body-add-task {*/
+/*    position: relative;*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    align-items: center;*/
+/*    height: 100vh;*/
+/*    width: 100%;*/
+/*    overflow: hidden;*/
+/*}*/
+
 .body-add-task {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100vh;
-    width: 100%;
-    overflow: hidden;
+    display: grid;
+    min-height: 100vh;
+    grid-template-columns: 1fr;
+    grid-template-rows: 3.75rem 1fr 3.75rem;
+    grid-template-areas:
+    "header"
+    "main"
+    "footer";
 }
 
 .page-container {
+    grid-area: main;
     width: 100%;
     max-width: 500px;
     /* flex: 1; */
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    margin: auto;
 }
 
 .add-task-form-container {
     display: flex;
     flex-direction: column;
-    padding: 60px var(--padding-side);
+    padding: 0 var(--padding-side) 72px;
     width: 100%;
     flex: 1;
     overflow-y: auto;
@@ -29,37 +42,6 @@
 .task-description {
     cursor: pointer;
     margin-top: 1rem;
-    width: 100%;
-    min-height: 6.5rem;
-    border: 0.0625rem solid var(--color-light-gray);
-    border-radius: 0 0.625rem 0.625rem 0.625rem;
-    padding: 0.5rem 1rem;
-    background: #ffffff;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-    outline: none;
-    font-size: 0.9rem;
-    resize: vertical;
-    overflow-y: auto;
-    transition: border-color 0.2s;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-
-    & p {
-        margin: 2rem 0 0 0;
-        font-size: 1rem;
-        font-weight: 700;
-        color: var(--color-menu-item);
-    }
-
-    &::placeholder {
-        color: var(--color-light-gray);
-    }
-
-    &:focus {
-        border-color: var(--main-color);
-        cursor: text;
-    }
 }
 
 .due-date-input::placeholder {
@@ -90,17 +72,8 @@
     font-weight: 400;
 }
 
-.input-with-icon {
-    position: relative;
-    display: flex;
-    align-items: center;
-    width: 100%;
-    padding: 12px;
-    border-bottom: 0.0625rem solid var(--color-light-gray);
-
-    &:focus-within {
-        border-bottom-color: var(--main-color);
-    }
+.input-with-icon:focus-within {
+    border-bottom-color: var(--main-color);
 }
 
 /* Error and Success Message Styles */
@@ -230,8 +203,9 @@
     gap: 1rem;
     padding: var(--padding-side);
     background-color: white;
-    position: sticky;
-    bottom: 0;
+    position: fixed;
+    bottom: 3.75rem;
+    left: 0;
     width: 100%;
     margin-top: auto;
 }
@@ -264,38 +238,48 @@
     pointer-events: auto;
 }
 
-.subtask-icons img {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-    opacity: 0.8;
-    transition: opacity 0.2s ease;
-}
+/*.subtask-icons img {*/
+/*    width: 18px;*/
+/*    height: 18px;*/
+/*    cursor: pointer;*/
+/*    opacity: 0.8;*/
+/*    transition: opacity 0.2s ease;*/
+/*}*/
 
-.subtask-icons img:hover {
-    opacity: 1;
-}
+/*.subtask-icons img:hover {*/
+/*    opacity: 1;*/
+/*}*/
 
-.subtask-icons img.icon-confirm {
-    width: 1.2rem;
-}
+/*.subtask-icons img.icon-confirm {*/
+/*    width: 1.2rem;*/
+/*}*/
 
 @media (width >= 812px) {
+    .body-add-task {
+        display: grid;
+        min-height: 100vh;
+        grid-template-columns: 250px 1fr;
+        grid-template-rows: 6rem 1fr;
+        grid-template-areas:
+    "header header"
+    "aside-desktop main"
+    }
+
     .body-add-task {
         align-items: unset;
     }
 
     .add-task-form-container {
-        padding: 100px var(--padding-side);
+        padding: 3rem 1.5rem;
     }
 
     .page-container {
-        margin-left: 16rem;
+        margin: unset;
     }
 
     .button-group {
         max-width: 500px;
-        position: fixed;
+        left: unset;
         background-color: white;
     }
 }
@@ -319,7 +303,7 @@
     .button-group {
         position: fixed;
         position-anchor: --header;
-        right: anchor(right);
+        right: anchor(--header right);
         margin: 2rem 4rem;
         justify-content: flex-end;
         background-color: transparent;

@@ -1,3 +1,5 @@
+import { calendarJs } from "./calendar.min.js"
+
 /**
  * Date Input Management Functions
  * Handles date input formatting and validation with scoped container support
@@ -11,8 +13,14 @@
 export function initializeDateInput(container) {
     const dateInput = container.querySelector('.due-date-input');
     if (dateInput) {
-        dateInput.addEventListener('input', formatDateInput);
-        dateInput.addEventListener('keydown', handleDateKeydown);
+        const calendarInstance = new calendarJs( "calendar", {
+            views: {
+                datePicker: {
+                    selectedDateFormat: "{dd}/{mm}/{yyyy}"
+                }
+            },
+            selectedDateFormat: "{dd}/{mm}/{yyyy}"
+        } );
     }
 }
 

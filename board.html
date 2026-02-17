@@ -13,93 +13,94 @@
     <link rel="stylesheet" href="css/headerFooter.css"/>
     <link rel="stylesheet" href="css/taskDialog.css"/>
     <link rel="stylesheet" href="./css/aside.css">
+    <link rel="stylesheet" href="./css/calendar.js.min.css">
+    <link rel="stylesheet" href="./css/calendar.js.dark.theme.css">
 </head>
 
 <body class="body-board">
 <img id="landscapeGif" src="./assets/gif/rotate-landscape.gif" alt="Rotate your Phone Animation">
-    <header></header>
-
-    <main>
-
-        <aside class="aside-desktop"></aside>
-        <section class="src-container">
-            <div class="input-container">
-                <input onkeyup="filterTasksBySearch()" class="pl-2" type="text" name="search-task" id="search-task"
-                    placeholder="Find Task" />
-                <div class="inp-src-icon"></div>
+<header></header>
+<aside class="aside-desktop"></aside>
+<main>
+    <section class="src-container">
+        <div class="input-container">
+            <input onkeyup="filterTasksBySearch()" class="pl-2" type="text" name="search-task" id="search-task"
+                   placeholder="Find Task"/>
+            <div class="inp-src-icon"></div>
+        </div>
+        <button class="add-task-btn">Add Task <img src="./assets/icons/plus_symbol.svg" alt="Plus Symbol"></button>
+        <div class="task-title-desk-container">
+            <div class="task-title-desk">
+                <div class="task-headline">To do</div>
+                <div class="add-task-icon" data-category="to-do"></div>
             </div>
-            <button class="add-task-btn">Add Task <img src="./assets/icons/plus_symbol.svg" alt="Plus Symbol"></button>
-            <div class="task-title-desk-container">
-                <div class="task-title-desk">
-                    <div class="task-headline">To do</div>
-                    <div class="add-task-icon" data-category="to-do"></div>
-                </div>
-                <div class="task-title-desk">
-                    <div class="task-headline">In progress</div>
-                    <div class="add-task-icon" data-category="in-progress"></div>
-                </div>
-                <div class="task-title-desk">
-                    <div class="task-headline">Await feedback</div>
-                    <div class="add-task-icon" data-category="await-feedback"></div>
-                </div>
-                <div class="task-title-desk">
-                    <div class="task-headline">Done</div>
-                </div>
+            <div class="task-title-desk">
+                <div class="task-headline">In progress</div>
+                <div class="add-task-icon" data-category="in-progress"></div>
             </div>
+            <div class="task-title-desk">
+                <div class="task-headline">Await feedback</div>
+                <div class="add-task-icon" data-category="await-feedback"></div>
+            </div>
+            <div class="task-title-desk">
+                <div class="task-headline">Done</div>
+            </div>
+        </div>
+    </section>
+    <section class="section-tasks">
+        <div class="tasks-container">
+            <div class="task-title">
+                <div class="task-headline">To do</div>
+                <div class="add-task-icon" data-category="to-do"></div>
+            </div>
+            <div class="task-card-container" id="to-do" ondrop="moveTo('to-do')"
+                 ondragover="handleDragOver(event, 'to-do')"></div>
+            <div class="task-title">
+                <div class="task-headline">In progress</div>
+                <div class="add-task-icon" data-category="in-progress"></div>
+            </div>
+            <div class="task-card-container" id="in-progress" ondrop="moveTo('in-progress')"
+                 ondragover="handleDragOver(event, 'in-progress')">
+            </div>
+
+            <div class="task-title">
+                <div class="task-headline">Await feedback</div>
+                <div class="add-task-icon" data-category="await-feedback"></div>
+            </div>
+            <div class="task-card-container" id="await-feedback" ondrop="moveTo('await-feedback')"
+                 ondragover="handleDragOver(event, 'await-feedback')"></div>
+
+            <div class="task-title">
+                <div class="task-headline">Done</div>
+            </div>
+            <div class="task-card-container" id="done" ondrop="moveTo('done')"
+                 ondragover="handleDragOver(event, 'done')"></div>
+        </div>
+    </section>
+
+    <dialog class="aside-add-task add-task-swipe-out" id="aside-add-task">
+
+        <div class="close-add-task"></div>
+        <h1>Add Task</h1>
+        <section class="add-task-form"></section>
+        <section class="btn-section-add-task">
+            <button class="btn-create-aside"></button>
         </section>
-        <section class="section-tasks">
-            <div class="tasks-container">
-                <div class="task-title">
-                    <div class="task-headline">To do</div>
-                    <div class="add-task-icon" data-category="to-do"></div>
-                </div>
-                <div class="task-card-container" id="to-do" ondrop="moveTo('to-do')"
-                     ondragover="handleDragOver(event, 'to-do')"></div>
-                <div class="task-title">
-                    <div class="task-headline">In progress</div>
-                    <div class="add-task-icon" data-category="in-progress"></div>
-                </div>
-                <div class="task-card-container" id="in-progress" ondrop="moveTo('in-progress')"
-                     ondragover="handleDragOver(event, 'in-progress')">
-                </div>
+    </dialog>
 
-                <div class="task-title">
-                    <div class="task-headline">Await feedback</div>
-                    <div class="add-task-icon" data-category="await-feedback"></div>
-                </div>
-                <div class="task-card-container" id="await-feedback" ondrop="moveTo('await-feedback')"
-                     ondragover="handleDragOver(event, 'await-feedback')"></div>
+    <dialog class="task-added" id="taskAdded">Task added to board</dialog>
+    <dialog id="dialog-task"></dialog>
 
-                <div class="task-title">
-                    <div class="task-headline">Done</div>
-                </div>
-                <div class="task-card-container" id="done" ondrop="moveTo('done')"
-                     ondragover="handleDragOver(event, 'done')"></div>
-            </div>
-        </section>
+</main>
 
-        <dialog class="aside-add-task add-task-swipe-out" id="aside-add-task">
-
-            <div class="close-add-task"></div>
-            <h1>Add Task</h1>
-            <section class="add-task-form"></section>
-            <section class="btn-section-add-task">
-                <button class="btn-create-aside"></button>
-            </section>
-        </dialog>
-
-        <dialog class="task-added" id="taskAdded">Task added to board</dialog>
-        <dialog id="dialog-task"></dialog>
-
-    </main>
-
-    <footer></footer>
-    <script src="./script.js"></script>
-    <script type="module" src="./js/layout.js"></script>
-    <script type="module" src="./js/template.js"></script>
-    <script type="module" src="./js/auth.js"></script>
-    <script type="module" src="./js/board.js"></script>
-    <script type="module" src="js/addTask.js"></script>
+<footer></footer>
+<script src="./script.js"></script>
+<script type="module" src="./js/layout.js"></script>
+<script type="module" src="./js/template.js"></script>
+<script type="module" src="./js/auth.js"></script>
+<script src="./js/calendar.min.js"></script>
+<script type="module" src="./js/board.js"></script>
+<script type="module" src="js/addTask.js"></script>
 
 </body>
 
