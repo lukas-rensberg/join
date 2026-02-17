@@ -115,12 +115,32 @@ function updateSelectedContactsDisplay(container) {
 
     dropzone.innerHTML = '';
 
-    selectedContacts.forEach(contact => {
-        const contactChip = document.createElement('div');
-        contactChip.className = 'contact-chip';
-        contactChip.innerHTML = getContactChipHTML(contact);
-        dropzone.appendChild(contactChip);
-    });
+    if (selectedContacts.length >= 5) {
+        for (let i = 0; i < selectedContacts.length; i++) {
+            if (i < 5) appendContactChip(selectedContacts[i], dropzone);
+        }
+
+        const overflowCount = selectedContacts.length - 5;
+        if (overflowCount > 0) generateOverflowChip(overflowCount, dropzone);
+    } else {
+        selectedContacts.forEach(contact => {
+            appendContactChip(contact, dropzone);
+        });
+    }
+}
+
+function generateOverflowChip(count, dropzone) {
+    const overflowChip = document.createElement('div');
+    overflowChip.className = 'contact-chip overflow';
+    overflowChip.textContent = `+${count}`;
+    dropzone.appendChild(overflowChip);
+}
+
+function appendContactChip(contact, dropzone) {
+    const contactChip = document.createElement('div');
+    contactChip.className = 'contact-chip';
+    contactChip.innerHTML = getContactChipHTML(contact);
+    dropzone.appendChild(contactChip);
 }
 
 /**
@@ -214,9 +234,9 @@ function closeAllDropdowns(except = null, container) {
     const types = ['contact', 'category'];
 
     types.forEach(type => {
-        if (type !== except && type === 'contact') {
+        if (type !== except) {
             clearDropdown(type, container);
-            filterOptions('contact', container);
+            if (type === 'contact') filterOptions('contact', container);
         }
     });
 }
@@ -265,16 +285,11 @@ export function filterOptions(type, container) {
  * @returns {void}
  */
 function closeDropdownOnClickOutside(event, container) {
-    const types = ['contact', 'category'];
-    types.forEach(type => {
-        const {wrapper, dropdownContent, dropdownHeader} = getDropdownElements(type, container);
+    const isClickInsideContact = event.target.closest('.contact-dropdown-wrapper');
+    const isClickInsideCategory = event.target.closest('.category-dropdown-wrapper');
 
-        if (!wrapper || !dropdownContent || !dropdownHeader) return;
-
-        if (!wrapper.contains(event.target) && type) {
-            clearDropdown(type, container);
-        }
-    });
+    if (!isClickInsideContact) clearDropdown('contact', container);
+    if (!isClickInsideCategory) clearDropdown('category', container);
 }
 
 /**
@@ -364,19 +379,20 @@ function handleCheckboxChange(container, options) {
 
 /**
  * Initialize dropdown functionality
- * @param {HTMLElement} container - The container element to scope queries (default: document)
+ * @param {HTMLElement} container - The container element to scope queries
+ * @param {HTMLElement} pageContainer - The main page container for global event delegation
  * @returns {void}
  */
-export function initializeDropdowns(container) {
+export function initializeDropdowns(container, pageContainer) {
     const signal = renewAbortController(container);
 
     activeContainer = container;
 
     loadContacts().then(() => populateContactsDropdown(container));
     populateCategoriesDropdown(container);
-    setupDropdownEventDelegation(container, signal);
+    setupDropdownEventDelegation(pageContainer, signal);
 
-    container.addEventListener('click', (event) => closeDropdownOnClickOutside(event, container), {signal});
+    pageContainer.addEventListener('click', (event) => closeDropdownOnClickOutside(event, container), {signal});
 
     container.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') closeAllDropdowns(null, container)

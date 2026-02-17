@@ -12,7 +12,6 @@
 .page-container {
     grid-area: main;
     width: 100%;
-    max-width: 500px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -24,6 +23,7 @@
     flex-direction: column;
     padding: 0 var(--padding-side) 72px;
     width: 100%;
+    max-width: 500px;
     flex: 1;
     overflow-y: auto;
 }
