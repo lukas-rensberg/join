@@ -49,17 +49,50 @@ function showFormError(fieldId, message, isHtml = false) {
 }
 
 /**
- * Check if all required signup fields are filled
- * @returns {boolean} True if all required fields are filled
+ * Check if all text input fields are filled (excluding checkbox)
+ * @returns {boolean} True if all text fields are filled
  */
-function areAllFieldsFilled() {
+function areAllTextFieldsFilled() {
     const username = document.getElementById("username")?.value.trim();
     const email = document.getElementById("email")?.value.trim();
     const password = document.getElementById("signup-password")?.value;
     const confirmPassword = document.getElementById("confirm-password")?.value;
-    const acceptedPolicy = document.getElementById("confirm-check")?.checked;
 
-    return !!(username && email && password && confirmPassword && acceptedPolicy);
+    return !!(username && email && password && confirmPassword);
+}
+
+/**
+ * Check if all required signup fields are filled
+ * @returns {boolean} True if all required fields are filled
+ */
+function areAllFieldsFilled() {
+    const acceptedPolicy = document.getElementById("confirm-check")?.checked;
+    return areAllTextFieldsFilled() && acceptedPolicy;
+}
+
+/**
+ * Check privacy checkbox state and show warning if all fields filled but checkbox unchecked
+ */
+function checkPrivacyWarning() {
+    const checkbox = document.getElementById("confirm-check");
+    if (!checkbox) return;
+
+    const existingWarning = checkbox.parentElement.querySelector(".privacy-warning");
+
+    if (areAllTextFieldsFilled() && !checkbox.checked) {
+        if (!existingWarning) {
+            checkbox.style.borderColor = "#ff4646";
+            const warning = document.createElement("span");
+            warning.className = "privacy-warning error-message";
+            warning.textContent = "Please accept the Privacy Policy";
+            checkbox.parentElement.appendChild(warning);
+        }
+    } else {
+        if (existingWarning) {
+            existingWarning.remove();
+            checkbox.style.borderColor = "";
+        }
+    }
 }
 
 /**
@@ -239,7 +272,10 @@ export function initSignupPage(signupUserCallback, handleAuthErrorCallback) {
     inputs.forEach(input => input.addEventListener("input", handleInputChange));
 
     const checkbox = document.getElementById("confirm-check");
-    if (checkbox) checkbox.addEventListener("change", updateSubmitButtonState);
+    if (checkbox) checkbox.addEventListener("change", () => {
+        checkPrivacyWarning();
+        updateSubmitButtonState();
+    });
 
     document.querySelectorAll(".password-icon-toggle").forEach(toggle => setupPasswordToggle(toggle));
 
@@ -253,6 +289,7 @@ function handleInputChange(event) {
     const input = event.target;
     clearFieldError(input.id);
     validateFieldOnInput(input);
+    checkPrivacyWarning();
     updateSubmitButtonState();
 }
 

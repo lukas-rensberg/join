@@ -46,13 +46,14 @@ function showEditConfirmation(dialogContentRef, element, dueDate) {
     dialogContentRef.style.padding = "0";
     dialogContentRef.style.overflow = "visible";
 
+    populateEditFormBasicFields(dialogContentRef, element);
     initializeDateInput(dialogContentRef);
     initializePriorityButtons(dialogContentRef);
     resetDropdownState();
-    initializeDropdowns(dialogContentRef);
+    initializeDropdowns(dialogContentRef, document.querySelector(".edit-task-form"));
     resetSubtaskInitialization(dialogContentRef);
     initializeSubtasks(dialogContentRef);
-    populateEditForm(dialogContentRef, element);
+    populateEditFormAdvancedFields(dialogContentRef, element);
     initializeEventHandler(dialogContentRef, element, dueDate)
 }
 
@@ -106,12 +107,13 @@ function resetDialogContentStyle(dialogContentRef) {
 }
 
 /**
- * Populates the edit form with existing task data from Firebase
+ * Populates basic fields in the edit form (title, description, dueDate)
+ * Should be called BEFORE initializing the calendar
  * @param {HTMLElement} container - The dialog content container element
  * @param {Object} element - The task object containing all task data
  * @returns {void}
  */
-function populateEditForm(container, element) {
+function populateEditFormBasicFields(container, element) {
     const titleInput = container.querySelector('.input-title');
     if (titleInput) titleInput.value = element.title || '';
 
@@ -119,27 +121,25 @@ function populateEditForm(container, element) {
     if (descriptionInput) descriptionInput.value = element.text || '';
 
     const dueDateInput = container.querySelector('.due-date-input');
-    if (dueDateInput && element.dueDate) dueDateInput.value = formatDateForInput(element.dueDate);
+    console.log('populateEditFormBasicFields - element.dueDate:', element.dueDate);
+    if (dueDateInput && element.dueDate) {
+        dueDateInput.value = element.dueDate;
+        console.log('populateEditFormBasicFields - dueDateInput.value set to:', dueDateInput.value);
+    }
+}
 
+/**
+ * Populates advanced fields in the edit form (priority, contacts, category, subtasks)
+ * Should be called AFTER initializing dropdowns and other components
+ * @param {HTMLElement} container - The dialog content container element
+ * @param {Object} element - The task object containing all task data
+ * @returns {void}
+ */
+function populateEditFormAdvancedFields(container, element) {
     setPriorityButton(container, element.priority);
     preselectContacts(element.member, container);
     preselectCategory(element.task, container);
     populateSubtasks(element.subtasks || [], element.subtasks_done || [], container);
-}
-
-/**
- * Converts a date from YYYY-MM-DD format to dd/mm/yyyy format
- * @param {string} dateString - Date in YYYY-MM-DD format
- * @returns {string} Date in dd/mm/yyyy format
- */
-function formatDateForInput(dateString) {
-    if (!dateString) return '';
-
-    const parts = dateString.split('-');
-    if (parts.length !== 3) return dateString;
-
-    const [year, month, day] = parts;
-    return `${day}/${month}/${year}`;
 }
 
 /**

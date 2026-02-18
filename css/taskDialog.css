@@ -395,44 +395,6 @@ strong {
     gap: 1rem;
 }
 
-.dialog-content .edit-task-form .input-title {
-    width: 100%;
-    border: none;
-    border-bottom: 0.0625rem solid var(--color-light-gray);
-    border-radius: 0;
-    padding: 0.5rem 1rem;
-    font-size: 1.25rem;
-    outline: none;
-}
-
-.dialog-content .edit-task-form .input-title:focus {
-    border-bottom-color: var(--main-color);
-}
-
-.dialog-content .edit-task-form .task-description {
-    cursor: pointer;
-    margin-top: 0.5rem;
-}
-
-.dialog-content .edit-task-form .subtask-input-wrapper input {
-    width: 100%;
-    height: auto;
-    border: none;
-    border-bottom: 0.0625rem solid var(--color-light-gray);
-    border-radius: 0;
-    padding: 0.5rem 3.5rem 0.5rem 1rem;
-    color: #000;
-    outline: none;
-}
-
-.dialog-content .edit-task-form .subtask-input-wrapper input:focus {
-    border-bottom-color: var(--main-color);
-}
-
-.dialog-content .edit-task-form .subtask-input-wrapper input::placeholder {
-    color: var(--color-light-gray);
-}
-
 .dialog-content .d-card-footer {
     padding: 1rem 1.5rem;
     display: flex;

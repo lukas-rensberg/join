@@ -589,7 +589,7 @@ li::marker {
 
 .icon {
     position: absolute;
-    right: anchor(--date-input right);
+    right: 1rem;
     cursor: pointer;
 }
 

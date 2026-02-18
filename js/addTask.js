@@ -42,7 +42,6 @@ function getCategoryFromUrl() {
 function initAddTaskPage() {
     urlTargetCategory = getCategoryFromUrl();
     let pageContainer = document.getElementsByClassName("page-container")[0];
-    console.log(pageContainer);
     let container = document.getElementsByClassName("add-task-form-container")[0];
     activeContainer = container;
     initializePriorityButtons(container);
