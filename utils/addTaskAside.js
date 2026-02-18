@@ -178,7 +178,7 @@ function createAddTask() {
     initializeDateInput(dialogElement);
     initializePriorityButtons(dialogElement);
     resetDropdownState();
-    initializeDropdowns(dialogElement);
+    initializeDropdowns(dialogElement, dialogElement);
     resetSubtaskInitialization(dialogElement);
     initializeSubtasks(dialogElement);
 }

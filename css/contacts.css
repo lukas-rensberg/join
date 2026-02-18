@@ -230,8 +230,9 @@
 }
 
 .contact-detail-view {
-    position: absolute;
-    top: 60px;
+    position: fixed;
+    position-anchor: --header;
+    top: anchor(--header bottom);
     display: none;
     flex-direction: column;
     height: 100%;
@@ -556,8 +557,8 @@
     font-size: 0.75rem;
     position: absolute;
     position-anchor: --contact-input;
-    top: anchor(bottom);
-    left: anchor(left);
+    top: anchor(--contact-input bottom);
+    left: anchor(--contact-input left);
     padding-top: 0.25rem;
     margin-left: 0.75rem;
     z-index: 10;
@@ -777,7 +778,7 @@
         background-color: #ffffff;
         position: fixed;
         position-anchor: --header;
-        left: calc(anchor(right) + 2.5rem);
+        left: calc(anchor(--header right) + 2.5rem);
         top: 50%;
         opacity: 1;
         transform: translate(0%, -50%);

@@ -324,9 +324,9 @@ export function getTemplateAddTask() {
                 <div class="form-group">
                     <label>Due date</label>
                     <div class="input-with-icon">
-                        <input type="text" class="date-input-hidden due-date-input calendar-input" placeholder="dd/mm/yyyy"/>
-                        <label class="icon calendar-icon">
-                            <img src="./assets/icons/calendar.svg" alt="Calendar"/>
+                        <input type="date" id="calendar" class="date-input-hidden"/>
+                        <label for="calendar" class="icon calendar-icon">
+                        <img src="./assets/icons/calendar.svg" alt="Calendar"/>
                         </label>
                     </div>
                 </div>
@@ -336,15 +336,15 @@ export function getTemplateAddTask() {
                     <div class="priority-selection">
                         <button class="priority-btn urgent" type="button">
                             Urgent
-                            <img src="./assets/priority_icons/prio_urgent_colored.svg" alt="Image with two arrows up" />
+                            <img src="./assets/priority_icons/prio_urgent_colored.svg" alt="Image with two arrows up"/>
                         </button>
                         <button class="priority-btn medium active" type="button">
                             Medium
-                            <img src="./assets/priority_icons/medium.svg" alt="Image with two stripes horizontal" />
+                            <img src="./assets/priority_icons/medium.svg" alt="Image with two stripes horizontal"/>
                         </button>
                         <button class="priority-btn low" type="button">
                             Low
-                            <img src="./assets/priority_icons/prio_low_colored.svg" alt="Image with two arrows down" />
+                            <img src="./assets/priority_icons/prio_low_colored.svg" alt="Image with two arrows down"/>
                         </button>
                     </div>
                 </div>
@@ -354,9 +354,9 @@ export function getTemplateAddTask() {
                     <div class="custom-dropdown contact-dropdown-wrapper">
                         <div class="dropdown-header contact-dropdown-header">
                             <input type="text" class="dropdown-search-input contact-search-input"
-                                placeholder="Select contacts to assign" />
+                                placeholder="Select contacts to assign"/>
                             <img src="./assets/menu_icons/arrow-drop-down.svg" class="dropdown-arrow"
-                                alt="Little Image indicating an dropdown" />
+                                alt="Little Image indicating an dropdown"/>
                         </div>
                         <div class="dropdown-content contact-dropdown-content">
                         </div>
@@ -370,21 +370,21 @@ export function getTemplateAddTask() {
                         <div class="dropdown-header category-dropdown-header">
                             <span class="dropdown-display-text category-display">Select task category</span>
                             <img src="./assets/menu_icons/arrow-drop-down.svg" class="dropdown-arrow"
-                                alt="Little Image indicating an dropdown" />
+                                alt="Little Image indicating an dropdown"/>
                         </div>
                         <div class="dropdown-content category-dropdown-content">
                         </div>
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group mobile-last">
                     <label>Subtasks <span class="optional">(optional)</span></label>
                     <div class="input-with-icon subtask-input-wrapper">
-                        <input type="text" class="subtask-input" placeholder="Add a subtask" />
+                        <input type="text" class="subtask-input" placeholder="Add a subtask"/>
                         <div class="subtask-icons">
-                            <img src="./assets/icons/close.svg" alt="Cancel" class="icon-cancel" />
+                            <img src="./assets/icons/close.svg" alt="Cancel" class="icon-cancel"/>
                             <span class="icon-separator"></span>
-                            <img src="./assets/icons/check-blue.svg" alt="Confirm" class="icon-confirm" />
+                            <img src="./assets/icons/check-blue.svg" alt="Confirm" class="icon-confirm"/>
                         </div>
                     </div>
                     <ul class="subtask-list"></ul>

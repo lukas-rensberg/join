@@ -159,20 +159,6 @@ function initMarkedUsers(element) {
 }
 
 /**
- * Shows a dashed placeholder card in a column once during dragover.
- * Prevents duplicate placeholders for the same section while dragging.
- * @param {string} section - Column id where the placeholder should appear.
- * @returns {void}
- */
-
-/**
- * Hides the dashed placeholder and restores the "no tasks" message.
- * Cleans up drag visual feedback after drag operation ends.
- * @param {string} section - Column id.
- * @returns {void}
- */
-
-/**
  * Renders tasks for a specific category by filtering tasks and displaying them in the category container.
  * Shows empty state message if no tasks exist in the category.
  * @param {string} category - Task category identifier (e.g., "todo", "in-progress", "done").
@@ -379,3 +365,4 @@ window.openAddTaskAside = openAddTaskAside;
 window.deleteTaskButton = deleteTaskButton;
 window.filterTasksBySearch = filterTasksBySearch;
 window.editTaskInDialog = editTaskInDialog;
+window.openAddTaskAside = openAddTaskAside;

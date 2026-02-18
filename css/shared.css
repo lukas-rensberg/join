@@ -76,6 +76,10 @@
     width: 100%;
 }
 
+input[type="text"] {
+    border-bottom: 0.0625rem solid var(--color-light-gray);
+}
+
 .form-group label,
 .form-group p {
     display: block;
@@ -95,7 +99,7 @@
 }
 
 .form-group.has-error .dropdown-header {
-    border-bottom-color: #ff3d00;
+    border-bottom-color: #ff3d00 !important;
 }
 
 .field-error {
@@ -112,7 +116,7 @@
 .input-title {
     width: 100%;
     height: auto;
-    border-bottom: 0.0625rem solid var(--color-light-gray) !important;
+    /*border-bottom: 0.0625rem solid var(--color-light-gray);*/
     border-radius: 0;
     padding: 1rem 1rem 0.5rem 1rem;
     font-size: 1.5rem;
@@ -139,6 +143,48 @@
     width: 100%;
     padding: 12px;
     border-bottom: 0.0625rem solid var(--color-light-gray);
+}
+
+.task-description {
+    cursor: pointer;
+    margin-top: 1rem;
+    width: 100%;
+    min-height: 6.5rem;
+    box-shadow: rgba(0, 0, 0, 0.04) 0 1px 2px;
+    font-size: 0.9rem;
+    resize: vertical;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    border: 0.0625rem solid var(--color-light-gray);
+    border-radius: 0 0.625rem 0.625rem;
+    padding: 0.5rem 1rem;
+    background: rgb(255, 255, 255);
+    outline: none;
+    transition: border-color 0.2s;
+    gap: 1rem;
+
+    &:focus-within {
+        cursor: text;
+    }
+}
+
+.task-description p {
+    margin: 2rem 0 0 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-menu-item);
+}
+
+.due-date-input::placeholder {
+    color: var(--color-light-gray);
+}
+
+.task-description p {
+    margin: 2rem 0 0 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-menu-item);
 }
 
 .custom-dropdown {
@@ -175,6 +221,10 @@
     font-size: 1rem;
     color: var(--color-menu-text);
     cursor: text;
+}
+
+input.dropdown-search-input[type="text"] {
+    border-bottom: none;
 }
 
 .dropdown-search-input::placeholder {
@@ -272,7 +322,6 @@
 }
 
 .contact-option-name {
-    font-size: 0.9rem;
     font-weight: 500;
     color: var(--color-menu-text);
     margin-bottom: 2px;
@@ -352,7 +401,6 @@
 }
 
 .category-option-name {
-    font-size: 0.9rem;
     font-weight: 500;
     color: var(--color-menu-text);
     flex-grow: 1;
@@ -544,13 +592,8 @@ li::marker {
 }
 
 .subtask-edit-input {
-    flex-grow: 1;
-    border: none;
-    border-radius: 0;
-    font-size: 0.9rem;
-    outline: none;
+    margin-left: 18px;
     background-color: transparent;
-    font-family: inherit;
 }
 
 .subtask-actions {
@@ -603,7 +646,7 @@ li::marker {
     gap: 1.25rem;
     position: fixed;
     position-anchor: --header;
-    left: anchor(center);
+    left: anchor(--header center);
     top: 120vh;
     transform: translate(-50%, -50%);
     background-color: var(--main-color);

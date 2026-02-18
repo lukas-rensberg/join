@@ -141,17 +141,14 @@ span {
 
 .email-icon {
     background: url("../assets/icons/mail.svg") center center no-repeat;
-    transform: scale(0.8);
 }
 
 .person-icon {
     background: url("../assets/icons/person.svg") center center no-repeat;
-    transform: scale(1.0);
 }
 
 .password-icon {
     background: url("../assets/icons/lock.svg") center center no-repeat;
-    transform: scale(0.8);
 }
 
 input[type="text"],

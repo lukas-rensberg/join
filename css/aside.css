@@ -186,9 +186,8 @@
             width: 100%;
             height: auto;
             border: none;
-            border-bottom: 0.0625rem solid var(--color-light-gray);
             border-radius: 0;
-            padding: 0.5rem 3.5rem 0.5rem 1rem;
+            padding: 0.5rem 0.5rem 0.5rem 0;
             color: #333;
             outline: none;
         }
