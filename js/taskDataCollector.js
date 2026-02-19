@@ -71,7 +71,7 @@ export function getTaskDescription(container) {
 export function getFormattedDueDate(container) {
     const dueDate = container.querySelector('.due-date-input')?.value;
     if (!dueDate) return '';
-    const [day, month, year] = dueDate.split('/');
+    const [year, month, day] = dueDate.split('-');
     return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
 }
 

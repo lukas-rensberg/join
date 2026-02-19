@@ -121,11 +121,7 @@ function populateEditFormBasicFields(container, element) {
     if (descriptionInput) descriptionInput.value = element.text || '';
 
     const dueDateInput = container.querySelector('.due-date-input');
-    console.log('populateEditFormBasicFields - element.dueDate:', element.dueDate);
-    if (dueDateInput && element.dueDate) {
-        dueDateInput.value = element.dueDate;
-        console.log('populateEditFormBasicFields - dueDateInput.value set to:', dueDateInput.value);
-    }
+    if (dueDateInput && element.dueDate) dueDateInput.value = element.dueDate;
 }
 
 /**
@@ -205,7 +201,7 @@ function handleInvalidEditForm(errors, container, element, dueDate) {
 function showEditErrors(errors, container) {
     clearAllFieldErrors(container);
     if (errors.title) showFieldError('title', errors.title, container);
-    // if (errors.description) showFieldError('description', errors.description, container);
+    if (errors.description) showFieldError('description', errors.description, container);
     if (errors.dueDate) showFieldError('dueDate', errors.dueDate, container);
     if (errors.category) showFieldError('category', errors.category, container);
 }

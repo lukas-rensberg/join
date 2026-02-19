@@ -116,7 +116,6 @@ input[type="text"] {
 .input-title {
     width: 100%;
     height: auto;
-    /*border-bottom: 0.0625rem solid var(--color-light-gray);*/
     border-radius: 0;
     padding: 1rem 1rem 0.5rem 1rem;
     font-size: 1.5rem;

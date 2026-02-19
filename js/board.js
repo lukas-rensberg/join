@@ -13,11 +13,8 @@ import {closeDialog, deleteTaskButton, editTaskInDialog, openDialog, saveTask} f
 
 let findTask = document.getElementById("search-task");
 
-
-
 export let tasks = [];
 export let contacts = [];
-export let currentDraggedElement = null;
 
 /**
  * Filters tasks by search input from the search field.

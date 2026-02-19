@@ -1,4 +1,4 @@
-import { calendarJs } from "./calendar.min.js"
+import {calendarJs} from "./calendar.min.js"
 
 /**
  * Date Input Management Functions
@@ -16,25 +16,15 @@ export function initializeDateInput(container) {
     const dateInput = container.querySelector('.date-input-hidden');
     if (!dateInput) return;
 
-    if (!dateInput.id) {
-        dateInput.id = `calendar-${calendarCounter++}`;
-    }
-
-    const label = container.querySelector('.calendar-icon');
-    if (label) {
-        label.setAttribute('for', dateInput.id);
-    }
-
-    console.log('DateInputManager - Original value:', dateInput.value);
+    if (!dateInput.id) dateInput.id = `calendar-${calendarCounter++}`;
+    container.querySelector('.calendar-icon')?.setAttribute('for', dateInput.id);
 
     let convertedValue = null;
     if (dateInput.value && /^\d{4}-\d{2}-\d{2}$/.test(dateInput.value)) {
         const [year, month, day] = dateInput.value.split('-');
         convertedValue = `${day}/${month}/${year}`;
-        console.log('DateInputManager - Will convert to:', convertedValue);
     }
 
-    // Initialize calendar with date input - calendarJs will handle the display format
     new calendarJs(dateInput.id, {
         views: {
             datePicker: {
@@ -44,20 +34,13 @@ export function initializeDateInput(container) {
         }
     });
 
-    console.log('DateInputManager - Value after calendar init:', dateInput.value);
-
-    // Set the converted value AFTER calendar initialization using requestAnimationFrame
     if (convertedValue) {
-        // Double requestAnimationFrame ensures calendar has finished initialization
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {
-                console.log('DateInputManager - Setting converted value:', convertedValue);
                 dateInput.value = convertedValue;
-                // Trigger both input and change events to notify calendar
-                dateInput.dispatchEvent(new Event('input', { bubbles: true }));
-                dateInput.dispatchEvent(new Event('change', { bubbles: true }));
-                console.log('DateInputManager - Final value:', dateInput.value);
-            });
+                dateInput.dispatchEvent(new Event('input', {bubbles: true}));
+                dateInput.dispatchEvent(new Event('change', {bubbles: true}));
+            })
         });
     }
 }

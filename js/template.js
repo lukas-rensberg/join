@@ -324,8 +324,8 @@ export function getTemplateAddTask() {
                 <div class="form-group">
                     <label>Due date</label>
                     <div class="input-with-icon">
-                        <input type="date" id="calendar" class="date-input-hidden"/>
-                        <label for="calendar" class="icon calendar-icon">
+                        <input type="date" class="date-input-hidden"/>
+                        <label class="icon calendar-icon">
                         <img src="./assets/icons/calendar.svg" alt="Calendar"/>
                         </label>
                     </div>
