@@ -207,7 +207,6 @@ function hideEmptySubtasks(taskId, subtasks, subtasksDone) {
     const progressContainer = document.getElementById(`card-progress-container-${taskId}`);
     const hasSubtasks = subtasks.length > 0;
     const hasSubtasksDone = subtasksDone.length > 0;
-    console.log(`Task ${taskId} has subtasks: ${hasSubtasks}, has subtasks done: ${hasSubtasksDone}`);
     if (!hasSubtasks || !hasSubtasksDone) progressContainer.classList.add("d-none");
 }
 
