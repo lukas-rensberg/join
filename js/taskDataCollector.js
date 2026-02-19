@@ -64,15 +64,22 @@ export function getTaskDescription(container) {
 }
 
 /**
- * Gets and formats the due date to ISO format
+ * Gets and formats the due date to ISO format.
+ * Reads from the visible CalendarJS input (dd/mm/yyyy) and converts to YYYY-MM-DD for Firebase.
+ * Falls back to the hidden input if the visible one is not available.
  * @param {HTMLElement} container - The container element to scope queries
- * @returns {string} ISO formatted date (YYYY-MM-DD)
+ * @returns {string} ISO formatted date (YYYY-MM-DD) or empty string
  */
 export function getFormattedDueDate(container) {
-    const dueDate = container.querySelector('.due-date-input')?.value;
+    const visibleInput = container.querySelector('.calendar-date-picker-input');
+    const dueDate = visibleInput?.value || container.querySelector('.date-input-hidden')?.value;
     if (!dueDate) return '';
-    const [year, month, day] = dueDate.split('-');
-    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(dueDate)) {
+        const [day, month, year] = dueDate.split('/');
+        return `${year}-${month}-${day}`;
+    }
+    return dueDate;
 }
 
 /**

@@ -96,7 +96,7 @@ function getFieldElements(fieldName, container) {
         const inputElement = container.querySelector('.task-description');
         return { formGroup: inputElement?.closest('.form-group'), inputElement };
     }
-    const selector = fieldName === 'dueDate' ? '.due-date-input' : '.category-dropdown-wrapper';
+    const selector = fieldName === 'dueDate' ? '.calendar-date-picker-input' : '.category-dropdown-wrapper';
     const inputElement = container.querySelector(selector);
     return { formGroup: inputElement?.closest('.form-group'), inputElement };
 }
@@ -139,7 +139,7 @@ export function clearFieldError(fieldName, container) {
 export function clearAllFieldErrors(container = document) {
     executeOnHTMLElement(container, '.field-error', element => element.remove());
     executeOnHTMLElement(container, '.form-group', group => group.classList.remove('has-error'));
-    executeOnHTMLElement(container, '.input-title, .due-date-input',input => input.style.borderColor = '');
+    executeOnHTMLElement(container, '.input-title, .calendar-date-picker-input',input => input.style.borderColor = '');
     executeOnHTMLElement(container, '.input-with-icon', wrapper => wrapper.style.borderColor = '');
     executeOnHTMLElement(container, '.dropdown-header', header => header.style.borderBottomColor = '');
 }

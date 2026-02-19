@@ -264,11 +264,6 @@
 
 div.calendar-date-picker {
     z-index: 1;
-
-    div.calendar {
-        top: 100% !important;
-        bottom: auto;
-    }
 }
 
 .date-input-hidden {

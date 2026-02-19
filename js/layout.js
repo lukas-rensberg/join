@@ -95,9 +95,7 @@ async function handleLogout(event) {
     try {
         await signOut(auth);
         window.location.href = "./index.html";
-    } catch (error) {
-        console.error("Logout error:", error);
-    }
+    } catch (_) {}
 }
 
 /**

@@ -8,7 +8,7 @@ import {initializePriorityButtons, updatePriorityIcon} from "../js/priorityManag
 import {initializeDropdowns, preselectCategory, preselectContacts, resetDropdownState} from "../js/dropdownManager.js";
 import {initializeSubtasks, populateSubtasks, resetSubtaskInitialization} from "../js/subtaskManager.js";
 import {isDesktop} from "./mediaQuerySwitch.js";
-import {clearAllFieldErrors, showFieldError} from "../js/errorHandler.js";
+import {clearAllFieldErrors, clearFieldError, showFieldError} from "../js/errorHandler.js";
 
 let dialogRef = document.getElementById("dialog-task");
 
@@ -46,8 +46,16 @@ function showEditConfirmation(dialogContentRef, element, dueDate) {
     dialogContentRef.style.padding = "0";
     dialogContentRef.style.overflow = "visible";
 
-    populateEditFormBasicFields(dialogContentRef, element);
-    initializeDateInput(dialogContentRef);
+    const dueDateInput = dialogContentRef.querySelector('.date-input-hidden');
+    if (dueDateInput && element.dueDate) {
+        dueDateInput.value = element.dueDate;
+    }
+
+    initializeDateInput(dialogContentRef, {
+        allowPastDates: true,
+        onDateChanged: () => clearFieldError('dueDate', dialogContentRef)
+    });
+    populateEditFormBasicFieldsWithoutDate(dialogContentRef, element);
     initializePriorityButtons(dialogContentRef);
     resetDropdownState();
     initializeDropdowns(dialogContentRef, document.querySelector(".edit-task-form"));
@@ -107,21 +115,18 @@ function resetDialogContentStyle(dialogContentRef) {
 }
 
 /**
- * Populates basic fields in the edit form (title, description, dueDate)
- * Should be called BEFORE initializing the calendar
+ * Populates basic fields in the edit form (title, description) without date
+ * Date is set before calendar initialization in showEditConfirmation
  * @param {HTMLElement} container - The dialog content container element
  * @param {Object} element - The task object containing all task data
  * @returns {void}
  */
-function populateEditFormBasicFields(container, element) {
+function populateEditFormBasicFieldsWithoutDate(container, element) {
     const titleInput = container.querySelector('.input-title');
     if (titleInput) titleInput.value = element.title || '';
 
     const descriptionInput = container.querySelector('.task-description');
     if (descriptionInput) descriptionInput.value = element.text || '';
-
-    const dueDateInput = container.querySelector('.due-date-input');
-    if (dueDateInput && element.dueDate) dueDateInput.value = element.dueDate;
 }
 
 /**

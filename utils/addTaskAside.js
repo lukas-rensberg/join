@@ -4,6 +4,7 @@ import {initializePriorityButtons} from "../js/priorityManager.js";
 import {initializeDropdowns, resetDropdownState} from "../js/dropdownManager.js";
 import {initializeSubtasks, resetSubtaskInitialization} from "../js/subtaskManager.js";
 import {handleCreateTaskFromBoard} from "../js/addTask.js";
+import {clearFieldError} from "../js/errorHandler.js";
 import {isDesktop} from "./mediaQuerySwitch.js";
 
 let addTaskRef = document.getElementById("aside-add-task");
@@ -175,7 +176,9 @@ function createAddTask() {
     if (!refAddTask) return;
     refAddTask.innerHTML = getTemplateAddTask();
 
-    initializeDateInput(dialogElement);
+    initializeDateInput(dialogElement, {
+        onDateChanged: () => clearFieldError('dueDate', dialogElement)
+    });
     initializePriorityButtons(dialogElement);
     resetDropdownState();
     initializeDropdowns(dialogElement, dialogElement);

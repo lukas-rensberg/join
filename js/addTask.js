@@ -45,7 +45,9 @@ function initAddTaskPage() {
     let container = document.getElementsByClassName("add-task-form-container")[0];
     activeContainer = container;
     initializePriorityButtons(container);
-    initializeDateInput(container);
+    initializeDateInput(container, {
+        onDateChanged: () => clearFieldError('dueDate', container)
+    });
     initializeDropdowns(container, pageContainer);
     initializeSubtasks(container);
     initializeFormButtons(container);
@@ -86,10 +88,8 @@ function attachButtonListeners(container) {
  */
 function attachInputListeners(container) {
     const titleInput = container.querySelector('.input-title');
-    const dueDateInput = container.querySelector('.due-date-input');
-    if (!titleInput || !dueDateInput) return;
+    if (!titleInput) return;
     titleInput.addEventListener('input', () => clearFieldError('title', container));
-    dueDateInput.addEventListener('input', () => clearFieldError('dueDate', container));
 }
 
 /**

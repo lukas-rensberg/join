@@ -8,40 +8,56 @@ import {calendarJs} from "./calendar.min.js"
 let calendarCounter = 0;
 
 /**
- * Initializes the date input field
- * Adds automatic formatting for dd/mm/yyyy
- * @param {HTMLElement} container - The container element to scope queries (default: document)
+ * Initializes the date input field with calendar.js date picker.
+ * Converts any pre-set YYYY-MM-DD value to dd/mm/yyyy before calendarJs init,
+ * since calendarJs internally parses the hidden input value with split("/").
+ * @param {HTMLElement} container - The container element to scope queries
+ * @param {Object} [options] - Optional configuration
+ * @param {boolean} [options.allowPastDates=false] - Whether to allow selecting past dates (useful for editing existing tasks)
+ * @param {Function} [options.onDateChanged] - Callback fired when a date is selected via the picker
  */
-export function initializeDateInput(container) {
+export function initializeDateInput(container, options = {}) {
     const dateInput = container.querySelector('.date-input-hidden');
     if (!dateInput) return;
 
     if (!dateInput.id) dateInput.id = `calendar-${calendarCounter++}`;
     container.querySelector('.calendar-icon')?.setAttribute('for', dateInput.id);
 
-    let convertedValue = null;
+    // Convert YYYY-MM-DD → dd/mm/yyyy BEFORE calendarJs init so it can parse with split("/")
+    let formattedDate = '';
     if (dateInput.value && /^\d{4}-\d{2}-\d{2}$/.test(dateInput.value)) {
         const [year, month, day] = dateInput.value.split('-');
-        convertedValue = `${day}/${month}/${year}`;
+        formattedDate = `${day}/${month}/${year}`;
+        dateInput.value = formattedDate;
+    } else if (dateInput.value && /^\d{2}\/\d{2}\/\d{4}$/.test(dateInput.value)) {
+        formattedDate = dateInput.value;
     }
 
-    new calendarJs(dateInput.id, {
+    const calendarOptions = {
         views: {
             datePicker: {
                 selectedDateFormat: "{dd}/{mm}/{yyyy}",
-                minimumDate: new Date()
             }
-        }
-    });
+        },
+        events: {}
+    };
 
-    if (convertedValue) {
-        requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-                dateInput.value = convertedValue;
-                dateInput.dispatchEvent(new Event('input', {bubbles: true}));
-                dateInput.dispatchEvent(new Event('change', {bubbles: true}));
-            })
-        });
+    if (!options.allowPastDates) {
+        calendarOptions.views.datePicker.minimumDate = new Date();
+    }
+
+    if (typeof options.onDateChanged === 'function') {
+        calendarOptions.events.onDatePickerDateChanged = options.onDateChanged;
+    }
+
+    new calendarJs(dateInput.id, calendarOptions);
+
+    // After CalendarJS init, sync the value to the visible input it creates
+    if (formattedDate) {
+        const visibleInput = container.querySelector('.calendar-date-picker-input');
+        if (visibleInput) {
+            visibleInput.value = formattedDate;
+        }
     }
 }
 

@@ -278,22 +278,6 @@ export function getContactChipHTML(contact) {
     `;
 }
 
-export function generateAvatarHTML(user) {
-    return `
-    <input type="checkbox" id="slideInSideMenu" />
-    <label for="slideInSideMenu">
-      <div class="avatar" id="toggleSideMenu">${user.initials}</div>
-    </label>
-    <div class="side-menu" id="cardLegalLinks">
-      <nav>
-        <a class="link-none" href="help.html">Help</a>
-        <a href="legalNotice.html">Legal Notice</a>
-        <a href="privacy.html">Privacy Policy</a>
-        <a href="index.html">Log Out</a>
-      </nav>
-    </div>
-  `;
-}
 /**
  * Generates HTML for a category option in the dropdown
  * @param {Object} category - The category object
@@ -324,9 +308,9 @@ export function getTemplateAddTask() {
                 <div class="form-group">
                     <label>Due date</label>
                     <div class="input-with-icon">
-                        <input type="date" class="date-input-hidden"/>
+                        <input type="text" class="date-input-hidden"/>
                         <label class="icon calendar-icon">
-                        <img src="./assets/icons/calendar.svg" alt="Calendar"/>
+                            <img src="./assets/icons/calendar.svg" alt="Calendar"/>
                         </label>
                     </div>
                 </div>

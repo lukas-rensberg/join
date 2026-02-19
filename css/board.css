@@ -133,8 +133,12 @@ main {
     margin-bottom: 0.5rem;
 }
 
-.due-date-input::placeholder {
-    color: var(--color-light-gray);
+.calendar-date-picker-input::placeholder {
+    color: var(--color-menu-text);
+}
+
+.input-container input[type="text"] {
+    border: unset;
 }
 
 .task-title-desk-container {

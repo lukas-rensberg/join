@@ -108,7 +108,6 @@ export async function updateContact(uid, name, email, phone, initials) {
       initials: initials,
     });
   } catch (error) {
-    console.error("Error updating contact:", error);
     showInlineError("Failed to update contact. Please try again.");
   }
 }

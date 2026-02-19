@@ -2,11 +2,25 @@ import {database, loadTasks} from "./database.js";
 
 import {onValue, ref} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
-import { getNoTaskTemplate, getTemplateMarkedUser, getTemplateRemainingMembers, getTemplateTaskCard } from "./template.js";
+import {
+    getNoTaskTemplate,
+    getTemplateMarkedUser,
+    getTemplateRemainingMembers,
+    getTemplateTaskCard
+} from "./template.js";
 
 import {desktopMediaQuery, handleBoardMediaQueryChange} from "../utils/mediaQuerySwitch.js";
 
-import { allowDrop, closeAllSwapMenus, handleDragEnd, handleDragOver, moveTo, moveTaskTo, startDragging, toggleSwapMenu } from "../utils/dragAndDrop.js";
+import {
+    allowDrop,
+    closeAllSwapMenus,
+    handleDragEnd,
+    handleDragOver,
+    moveTo,
+    moveTaskTo,
+    startDragging,
+    toggleSwapMenu
+} from "../utils/dragAndDrop.js";
 
 import {openAddTaskAside} from "../utils/addTaskAside.js";
 import {closeDialog, deleteTaskButton, editTaskInDialog, openDialog, saveTask} from "../utils/taskDialog.js";
@@ -55,7 +69,7 @@ function renderFilteredTasks(filteredTasks) {
             const progressWidth = totalSubtasks > 0 ? (subtasksDone.length / totalSubtasks) * 100 : 0;
             containerRef.innerHTML += getTemplateTaskCard(task, subtasksDone, totalSubtasks, progressWidth);
             initMarkedUsers(task);
-            hideEmptySubtasks(task);
+            hideEmptySubtasks(task.id, subtasks, subtasksDone);
         });
     });
 }
@@ -126,7 +140,8 @@ function initializeTasks() {
             tasks = loadedTasks;
             updateHTML();
         });
-    } catch (_) {}
+    } catch (_) {
+    }
 }
 
 /**
@@ -176,22 +191,24 @@ function renderTasksByCategory(category, displayName) {
         const progressWidth = totalSubtasks > 0 ? (subtasksDone.length / totalSubtasks) * 100 : 0;
         containerRef.innerHTML += getTemplateTaskCard(task, subtasksDone, totalSubtasks, progressWidth);
         initMarkedUsers(task);
-        hideEmptySubtasks(task)
+        hideEmptySubtasks(task.id, subtasks, subtasksDone)
     });
 }
 
 let updateTimeout;
 
 /**
- * Hides the progress container for tasks that have no subtasks.
- * @param {Object} task - The task object to check for subtasks.
- * @returns {void}
+ * Hides the progress bar container for a task if it has no subtasks (neither pending nor done).
+ * @param {string} taskId - The unique identifier of the task.
+ * @param subtasks - Array of pending subtask names for the task.
+ * @param subtasksDone - Array of completed subtask names for the task.
  */
-function hideEmptySubtasks(task) {
-    const progressContainer = document.getElementById(`card-progress-container-${task.id}`);
-    if (task.subtasks === undefined && task.subtasks_done === undefined) {
-        progressContainer.classList.add("d-none");
-    }
+function hideEmptySubtasks(taskId, subtasks, subtasksDone) {
+    const progressContainer = document.getElementById(`card-progress-container-${taskId}`);
+    const hasSubtasks = subtasks.length > 0;
+    const hasSubtasksDone = subtasksDone.length > 0;
+    console.log(`Task ${taskId} has subtasks: ${hasSubtasks}, has subtasks done: ${hasSubtasksDone}`);
+    if (!hasSubtasks || !hasSubtasksDone) progressContainer.classList.add("d-none");
 }
 
 /**
@@ -240,7 +257,8 @@ export async function createNewTask(taskData) {
         tasks.push(newTask);
         updateHTML();
         await saveTask(newTask);
-    } catch (_) {}
+    } catch (_) {
+    }
 }
 
 /**

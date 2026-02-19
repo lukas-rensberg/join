@@ -51,12 +51,13 @@ export function validateDescription(container) {
 }
 
 /**
- * Validates the due date field
+ * Validates the due date field.
+ * Reads from the visible calendar input which holds the dd/mm/yyyy formatted value.
  * @param {HTMLElement} container - The container element to scope queries
  * @returns {string|null} Error message or null if valid
  */
 export function validateDueDate(container) {
-    const dueDate = container.querySelector('.due-date-input')?.value;
+    const dueDate = container.querySelector('.calendar-date-picker-input')?.value;
     if (!dueDate) return 'Due date is required';
     if (!isValidDate(dueDate)) return 'Please enter a valid date (dd/mm/yyyy)';
 
