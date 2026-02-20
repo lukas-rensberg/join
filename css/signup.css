@@ -1,7 +1,4 @@
-* {
-    animation: unset !important;
-    opacity: 1 !important;
-}
+
 
 main {
     display: flex;
@@ -42,7 +39,7 @@ main {
     transform: scale(1) translateY(-50%);
     cursor: pointer;
     position-anchor: --login-title;
-    top: anchor(center);
+    top: anchor(--login-title center);
 
     &:hover {
         cursor: pointer;
@@ -192,8 +189,8 @@ footer {
     display: block;
     position: absolute;
     position-anchor: --field-input;
-    top: anchor(bottom);
-    left: anchor(left);
+    top: anchor(--field-input bottom);
+    left: anchor(--field-input left);
     padding-top: 0.25rem;
     white-space: nowrap;
     z-index: 10;
@@ -218,19 +215,6 @@ footer {
     margin-top: 0.25rem;
 }
 
-.auth-error-message {
-    color: #ff4646;
-    font-size: 0.75rem;
-    display: block;
-    text-align: center;
-    position: absolute;
-    bottom: 0.5rem;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    pointer-events: none;
-}
-
 .input-field input:focus,
 .input-field input:invalid {
     outline: none;
@@ -252,18 +236,18 @@ footer {
     border: none;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     z-index: 1000;
-    animation: slideUpToCenter 300ms ease-out forwards;
+    animation: slideUpToCenter 300ms ease-out forwards !important;
 
     &::backdrop {
-        background-color: rgba(255, 255, 255, 0.7);
+        background-color: rgba(255, 255, 255, 0.1);
         backdrop-filter: blur(4px);
     }
 }
 
 @keyframes slideUpToCenter {
     0% {
-        top: 75%;
-        transform: translate(-50%, -50%);
+        top: 100%;
+        transform: translate(-50%, 0);
     }
     100% {
         top: 50%;

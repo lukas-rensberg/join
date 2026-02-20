@@ -244,6 +244,7 @@ function validatePasswordField(password, confirmPassword) {
  * Shows for 800ms then redirects to login page (no auto-login)
  */
 export function showSuccessMessage() {
+    console.log("geht in die show success message")
     const successDialog = document.getElementById("signupSuccess");
     if (!successDialog) return;
 
@@ -414,14 +415,17 @@ async function handleFormSubmit(signupUserCallback, handleAuthErrorCallback) {
     const username = document.querySelector('input[name="username"]').value.trim();
     const email = document.querySelector('input[name="email"]').value.trim();
     const password = document.querySelector('input[name="password"]').value;
-    const confirmPassword = document.querySelector('input[name="confirm-password"]').value;
+    const confirmPassword = document.querySelector('input[name="confirmPassword"]').value;
     const acceptedPolicy = document.getElementById("confirm-check").checked;
 
     const valid = validateSignupForm(username, email, password, confirmPassword, acceptedPolicy);
+    console.log(valid)
     if (!valid) return;
 
     try {
+        console.log("geht in den try")
         await signupUserCallback(email, password, username);
+        console.log("nach dem await im try")
         showSuccessMessage();
     } catch (error) {
         handleAuthErrorCallback(error, "signup");

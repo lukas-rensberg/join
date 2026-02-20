@@ -163,6 +163,7 @@ function populateContactDetailViewDesktop(contact) {
  */
 export function hideContactDetail() {
     document.getElementById("contactDetailView").classList.remove("active");
+    document.getElementById("contactDetailViewDesktop").classList.remove("active");
     document.querySelector(".contacts-container").style.display = "block";
 
     const fabIcon = document.getElementById("fabIcon");
