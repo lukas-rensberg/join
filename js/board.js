@@ -69,7 +69,7 @@ function renderFilteredTasks(filteredTasks) {
             const progressWidth = totalSubtasks > 0 ? (subtasksDone.length / totalSubtasks) * 100 : 0;
             containerRef.innerHTML += getTemplateTaskCard(task, subtasksDone, totalSubtasks, progressWidth);
             initMarkedUsers(task);
-            hideEmptySubtasks(task.id, subtasks, subtasksDone);
+            hideEmptySubtasks(task);
         });
     });
 }
@@ -191,23 +191,22 @@ function renderTasksByCategory(category, displayName) {
         const progressWidth = totalSubtasks > 0 ? (subtasksDone.length / totalSubtasks) * 100 : 0;
         containerRef.innerHTML += getTemplateTaskCard(task, subtasksDone, totalSubtasks, progressWidth);
         initMarkedUsers(task);
-        hideEmptySubtasks(task.id, subtasks, subtasksDone)
+        hideEmptySubtasks(task)
     });
 }
 
 let updateTimeout;
 
 /**
- * Hides the progress bar container for a task if it has no subtasks (neither pending nor done).
- * @param {string} taskId - The unique identifier of the task.
- * @param subtasks - Array of pending subtask names for the task.
- * @param subtasksDone - Array of completed subtask names for the task.
+ * Hides the progress container for tasks that have no subtasks.
+ * @param {Object} task - The task object to check for subtasks.
+ * @returns {void}
  */
-function hideEmptySubtasks(taskId, subtasks, subtasksDone) {
-    const progressContainer = document.getElementById(`card-progress-container-${taskId}`);
-    const hasSubtasks = subtasks.length > 0;
-    const hasSubtasksDone = subtasksDone.length > 0;
-    if (!hasSubtasks || !hasSubtasksDone) progressContainer.classList.add("d-none");
+function hideEmptySubtasks(task) {
+    const progressContainer = document.getElementById(`card-progress-container-${task.id}`);
+    if (task.subtasks === undefined && task.subtasks_done === undefined) {
+        progressContainer.classList.add("d-none");
+    }
 }
 
 /**
