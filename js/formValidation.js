@@ -1,8 +1,3 @@
-/**
- * Form Validation Functions
- * Handles validation logic for task forms with scoped container support
- */
-
 import { isValidDate } from "./dateInputManager.js";
 import { getSelectedCategory } from "./dropdownManager.js";
 import { containsHtmlChars } from "./template.js";
@@ -21,7 +16,6 @@ export function validateTaskForm(container) {
         dueDate: validateDueDate(container),
         category: validateCategory()
     };
-
     const isValid = !errors.title && !errors.description && !errors.dueDate && !errors.category;
 
     return { isValid, errors };

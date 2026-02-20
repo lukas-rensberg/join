@@ -17,8 +17,9 @@ function clearFormErrors() {
     if (form) {
         const formInputs = form.querySelectorAll('input[type="password"], input[type="text"], input[type="email"]');
         const checkbox = document.getElementById("confirm-check");
-        formInputs.forEach(input => { input.style.borderBottom = "" });
-
+        formInputs.forEach(input => {
+            input.style.borderBottom = ""
+        });
         if (!checkbox) return;
         checkbox.style.borderColor = "";
     }
@@ -71,6 +72,18 @@ function areAllFieldsFilled() {
 }
 
 /**
+ * Display privacy warning message next to checkbox
+ * @param {HTMLElement} checkbox - The privacy checkbox element
+ */
+function showPrivacyWarning(checkbox) {
+    checkbox.style.borderColor = "#ff4646";
+    const warning = document.createElement("span");
+    warning.className = "privacy-warning error-message";
+    warning.textContent = "Please accept the Privacy Policy";
+    checkbox.parentElement.appendChild(warning);
+}
+
+/**
  * Check privacy checkbox state and show warning if all fields filled but checkbox unchecked
  */
 function checkPrivacyWarning() {
@@ -80,13 +93,7 @@ function checkPrivacyWarning() {
     const existingWarning = checkbox.parentElement.querySelector(".privacy-warning");
 
     if (areAllTextFieldsFilled() && !checkbox.checked) {
-        if (!existingWarning) {
-            checkbox.style.borderColor = "#ff4646";
-            const warning = document.createElement("span");
-            warning.className = "privacy-warning error-message";
-            warning.textContent = "Please accept the Privacy Policy";
-            checkbox.parentElement.appendChild(warning);
-        }
+        if (!existingWarning) showPrivacyWarning(checkbox);
     } else {
         if (existingWarning) {
             existingWarning.remove();
@@ -214,6 +221,19 @@ function validateUsernameAndEmail(username, email) {
 function validatePasswordField(password, confirmPassword) {
     let isValid = true;
 
+    validateUserPassword(password);
+    confirmUserPassword(confirmPassword);
+
+    return isValid;
+}
+
+/**
+ * Validates the user password against security requirements
+ * @param {string} password - The password to validate
+ * @returns {boolean} True if password is valid, false otherwise
+ */
+function validateUserPassword(password) {
+    let isValid = true;
     if (!password) {
         showFormError("signup-password", "Password is required");
         isValid = false;
@@ -224,7 +244,16 @@ function validatePasswordField(password, confirmPassword) {
         showFormError("signup-password", `Insecure Password - <a href="https://www.bsi.bund.de/EN/Themen/Verbraucherinnen-und-Verbraucher/Informationen-und-Empfehlungen/Cyber-Sicherheitsempfehlungen/Accountschutz/Sichere-Passwoerter-erstellen/sichere-passwoerter-erstellen_node.html" target="_blank" rel="noopener">BSI</a>`, true);
         isValid = false;
     }
+    return isValid;
+}
 
+/**
+ * Validates the confirmation password field matches the original password
+ * @param {string} confirmPassword - The confirmation password to validate
+ * @returns {boolean} True if confirmation password is valid and matches, false otherwise
+ */
+function confirmUserPassword(confirmPassword) {
+    let isValid = true;
     if (!confirmPassword) {
         showFormError("confirm-password", "Please confirm your password");
         isValid = false;
@@ -235,16 +264,15 @@ function validatePasswordField(password, confirmPassword) {
         showFormError("confirm-password", "Passwords do not match");
         isValid = false;
     }
-
     return isValid;
 }
+
 
 /**
  * Show success message after signup (signup page)
  * Shows for 800ms then redirects to login page (no auto-login)
  */
 export function showSuccessMessage() {
-    console.log("geht in die show success message")
     const successDialog = document.getElementById("signupSuccess");
     if (!successDialog) return;
 
@@ -255,6 +283,8 @@ export function showSuccessMessage() {
         window.location.href = "index.html";
     }, 800);
 }
+
+
 
 /**
  * Initialize signup page functionality (signup page)
@@ -267,16 +297,8 @@ export function initSignupPage(signupUserCallback, handleAuthErrorCallback) {
     if (!signupForm || !usernameInput) return;
     updateSubmitButtonState();
 
-    const inputs = signupForm.querySelectorAll(
-        'input[type="text"], input[type="email"], input[type="password"]'
-    );
-    inputs.forEach(input => input.addEventListener("input", handleInputChange));
-
-    const checkbox = document.getElementById("confirm-check");
-    if (checkbox) checkbox.addEventListener("change", () => {
-        checkPrivacyWarning();
-        updateSubmitButtonState();
-    });
+    setupInputChangeListeners(signupForm);
+    setupCheckboxChangeListener();
 
     document.querySelectorAll(".password-icon-toggle").forEach(toggle => setupPasswordToggle(toggle));
 
@@ -286,6 +308,33 @@ export function initSignupPage(signupUserCallback, handleAuthErrorCallback) {
     });
 }
 
+/**
+ * Sets up input change event listeners for all text, email and password fields
+ * @param {HTMLFormElement} form - The form element containing the inputs
+ */
+function setupInputChangeListeners(form) {
+    const inputs = form.querySelectorAll(
+        'input[type="text"], input[type="email"], input[type="password"]'
+    );
+    inputs.forEach(input => input.addEventListener("input", handleInputChange));
+}
+
+/**
+ * Sets up the change event listener for the privacy checkbox
+ */
+function setupCheckboxChangeListener() {
+    const checkbox = document.getElementById("confirm-check");
+    if (checkbox) checkbox.addEventListener("change", () => {
+        checkPrivacyWarning();
+        updateSubmitButtonState();
+    });
+}
+
+/**
+ * Handles input change events for form fields by clearing errors, validating, and updating button state
+ * @param {Event} event - The input change event
+ * @returns {void}
+ */
 function handleInputChange(event) {
     const input = event.target;
     clearFieldError(input.id);
@@ -361,9 +410,7 @@ function validateEmailOnInput(email) {
         return;
     }
 
-    if (!validateEmailFormat(email)) {
-        showFormError("email", "Invalid email format");
-    }
+    if (!validateEmailFormat(email)) {showFormError("email", "Invalid email format");}
 }
 
 /**
@@ -402,6 +449,11 @@ function validateConfirmPasswordOnInput() {
     }
 }
 
+/**
+ * Sets up password visibility toggle functionality for a toggle element
+ * @param {HTMLElement} toggle - The toggle element with data-target attribute
+ * @returns {void}
+ */
 function setupPasswordToggle(toggle) {
     const targetId = toggle.dataset.target;
     const passwordInput = document.getElementById(targetId);
@@ -411,6 +463,12 @@ function setupPasswordToggle(toggle) {
     toggle.addEventListener("click", () => togglePasswordVisibility(toggle));
 }
 
+/**
+ * Handles the signup form submission by validating inputs and calling signup callback
+ * @param {Function} signupUserCallback - Callback function to handle user signup
+ * @param {Function} handleAuthErrorCallback - Callback function to handle authentication errors
+ * @returns {Promise<void>}
+ */
 async function handleFormSubmit(signupUserCallback, handleAuthErrorCallback) {
     const username = document.querySelector('input[name="username"]').value.trim();
     const email = document.querySelector('input[name="email"]').value.trim();
@@ -419,13 +477,10 @@ async function handleFormSubmit(signupUserCallback, handleAuthErrorCallback) {
     const acceptedPolicy = document.getElementById("confirm-check").checked;
 
     const valid = validateSignupForm(username, email, password, confirmPassword, acceptedPolicy);
-    console.log(valid)
     if (!valid) return;
 
     try {
-        console.log("geht in den try")
         await signupUserCallback(email, password, username);
-        console.log("nach dem await im try")
         showSuccessMessage();
     } catch (error) {
         handleAuthErrorCallback(error, "signup");

@@ -237,38 +237,51 @@ export function handleMediaQueryChange(event) {
 
 /**
  * Opens the contact modal in either create or edit mode
- * TODO: Refactor modal setup logic into separate mode-specific functions
  * @param {boolean} editMode - Whether to open in edit mode (true) or create mode (false)
  */
 function openContactModal(editMode) {
     isEditMode = editMode;
-
     if (isEditMode) {
         const contact = findContactById(currentContactId);
         if (!contact) return;
-
         setupEditContactModal(contact);
 
         if (isDesktop()) {
-            contactModal.classList.add("edit-contact-modal");
-            contactModal.classList.add("edit-dialog-swipe-in");
-            modalHeader.classList.remove("add-modal-header")
-            modalHeader.classList.add("edit-modal-header")
+            openContactModalDesktop();
         } else {
             contactModal.classList.add("contact-modal");
             contactModal.classList.add("dialog-swipe-in");
         }
-
     } else {
         setupAddContactModal();
-        contactModal.classList.add("contact-modal");
-        contactModal.classList.add("dialog-swipe-in");
-        modalHeader.classList.remove("edit-modal-header");
-        modalHeader.classList.add("add-modal-header")
+        openContactModalMobile();
     }
     contactModal.showModal();
-
 }
+
+/**
+ * Opens the contact modal with desktop-specific styling for edit mode
+ * @returns {void}
+ */
+function openContactModalDesktop() {
+    contactModal.classList.add("edit-contact-modal");
+    contactModal.classList.add("edit-dialog-swipe-in");
+    modalHeader.classList.remove("add-modal-header")
+    modalHeader.classList.add("edit-modal-header")
+}
+
+/**
+ * Opens the contact modal with mobile-specific styling
+ * @returns {void}
+ */
+function openContactModalMobile() {
+    contactModal.classList.add("contact-modal");
+    contactModal.classList.add("dialog-swipe-in");
+    modalHeader.classList.remove("edit-modal-header");
+    modalHeader.classList.add("add-modal-header")
+}
+
+
 
 /**
  * Finds a contact by its ID

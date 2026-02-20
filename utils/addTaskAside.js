@@ -65,7 +65,6 @@ export function swipeOutAddTaskAside() {
  */
 function addTaskCreateButton() {
     const addedTaskBtn = document.querySelector(".btn-create-aside");
-
     addedTaskBtn.addEventListener("click", async () => {
         const successAdded = await handleCreateTaskFromBoard(document, getTargetCategory());
         if (!successAdded) return;

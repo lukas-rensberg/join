@@ -291,6 +291,20 @@ export function getCategoryOptionHTML(category) {
 }
 
 /**
+ * Generates the complete HTML for the category dropdown options
+ * @returns {string} HTML string containing all category options
+ */
+export function getCategoryDropdownOptionsHTML() {
+    return `
+        <div class="category-option" data-category-id="technical">
+            ${getCategoryOptionHTML({id: 'technical', name: 'Technical Task'})}
+        </div>
+        <div class="category-option" data-category-id="user-story">
+            ${getCategoryOptionHTML({id: 'user-story', name: 'User Story'})}
+        </div>`;
+}
+
+/**
  * Generates the complete HTML template for the add task form
  * @returns {string} HTML string containing the entire add task form structure
  */
@@ -375,7 +389,10 @@ export function getTemplateAddTask() {
                 </div>`;
 }
 
-
+/**
+ * Generates the HTML template for the header when user is not logged in
+ * @returns {string} HTML string for the logged out header
+ */
 export function generateLoggedOutHeaderHTML() {
     return `    
     <section class="header">
@@ -387,6 +404,11 @@ export function generateLoggedOutHeaderHTML() {
   `;
 }
 
+/**
+ * Generates the HTML template for the header when user is logged in
+ * @param {string} userInitials - The initials of the logged in user to display in the avatar
+ * @returns {string} HTML string for the logged in header
+ */
 export function generateLoggedInHeaderHTML(userInitials) {
     return `
     <section class="header">
@@ -467,7 +489,16 @@ export function getEditTaskTemplate() {
     `;
 }
 
-export function generateNavlinkWithActiveState(item, isActive) {
+/**
+ * Generates HTML for a navigation link with optional active state styling
+ * @param {Object} item - The navigation item object
+ * @param {string} item.href - The URL the link points to
+ * @param {string} item.class - CSS class for the navigation item
+ * @param {string} item.label - Display text for the navigation item
+ * @param {string} isActive - CSS class string to add when link is active (e.g., ' active')
+ * @returns {string} HTML string for the navigation link
+ */
+export function generateNavLinkWithActiveState(item, isActive) {
     return `
         <a class="nav-item${isActive}" href="${item.href}">
           <span class="${item.class}">${item.label}</span>
@@ -475,6 +506,12 @@ export function generateNavlinkWithActiveState(item, isActive) {
     `;
 }
 
+/**
+ * Generates HTML for the footer navigation with active state styling for legal links
+ * @param {string} isPrivacyActive - CSS class string to add when privacy link is active (e.g., ' active')
+ * @param {string} isLegalActive - CSS class string to add when legal notice link is active (e.g., ' active')
+ * @returns {string} HTML string for the footer navigation
+ */
 export function generateFooterWithActiveStates(isPrivacyActive, isLegalActive) {
     return `
       <a class="nav-item" href="index.html">

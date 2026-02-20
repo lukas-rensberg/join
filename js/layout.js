@@ -7,7 +7,7 @@ import {
     generateFooterWithActiveStates,
     generateLoggedInAsideHTML,
     generateLoggedInHeaderHTML, generateLoggedOutAsideHTML,
-    generateLoggedOutHeaderHTML, generateNavlinkWithActiveState
+    generateLoggedOutHeaderHTML, generateNavLinkWithActiveState
 } from "./template.js";
 
 /**
@@ -34,7 +34,6 @@ function getUserInitials(user) {
         }
         return nameParts[0][0].toUpperCase() + (nameParts[0][1] || "").toUpperCase();
     }
-
     if (user.email) return user.email[0].toUpperCase() + (user.email[1] || "").toUpperCase();
 
     if (user.isAnonymous) return "GU";
@@ -66,16 +65,27 @@ function generateAsideNavbar(activePage, isLoggedIn) {
     return generateLoggedInAsideHTML(topLinks, bottomLinks);
 }
 
+/**
+ * Builds navigation links HTML from nav items array
+ * @param {Array<{href: string, label: string, pos: string, icon?: string}>} items - Array of navigation items
+ * @param {string} pos - Position filter ('top' or 'bottom')
+ * @param {string} activePage - The current active page filename
+ * @returns {string} HTML string of navigation links
+ */
 function buildNavLinks(items, pos, activePage) {
-    return items.filter(item => item.pos === pos).map(el => {
-        const active = activePage === el.href ? 'class="active-nav-link"' : "";
-        if (pos === "bottom") return `<a href="${el.href}" ${active}>${el.label}</a>`;
-        return `<a href="${el.href}" ${active}>
-            <img src="./assets/menu_icons/${el.icon}" alt="${el.label} Icon"/>${el.label}
+    return items.filter(item => item.pos === pos).map(element => {
+        const active = activePage === element.href ? 'class="active-nav-link"' : "";
+        if (pos === "bottom") return `<a href="${element.href}" ${active}>${element.label}</a>`;
+        return `<a href="${element.href}" ${active}>
+            <img src="./assets/menu_icons/${element.icon}" alt="${element.label} Icon"/>${element.label}
         </a>`;
     }).join("");
 }
 
+/**
+ * Returns an array of navigation items with their properties
+ * @returns {Array<{href: string, label: string, pos: string, icon?: string}>} Array of navigation item objects
+ */
 function getNavItems() {
     return [
         {href: "legalNotice.html", label: "Legal Notice", pos: "bottom"},
@@ -142,6 +152,11 @@ function generateFooterHTML(isLoggedIn, activePage) {
     }
 }
 
+/**
+ * Generates HTML for the logged-in footer navigation
+ * @param {string} activePage - The current active page filename
+ * @returns {string} HTML string of footer navigation links
+ */
 function generateLoggedInFooter(activePage) {
     const navItems = [
         {href: "overview.html", class: "nav-summary", label: "Summary"},
@@ -151,10 +166,15 @@ function generateLoggedInFooter(activePage) {
     ];
 
     return navItems.map(item => {
-        return generateNavlinkWithActiveState(item, activePage === item.href ? ' active' : '')
+        return generateNavLinkWithActiveState(item, activePage === item.href ? ' active' : '')
     }).join("");
 }
 
+/**
+ * Generates HTML for the logged-out footer navigation with privacy and legal notice links
+ * @param {string} activePage - The current active page filename
+ * @returns {string} HTML string of footer navigation links for logged-out users
+ */
 function generateLoggedOutFooter(activePage) {
     const isPrivacyActive = activePage === "privacy.html" ? " active" : "";
     const isLegalActive = activePage === "legalNotice.html" ? " active" : "";

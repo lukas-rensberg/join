@@ -1,10 +1,5 @@
 import {calendarJs} from "./calendar.min.js"
 
-/**
- * Date Input Management Functions
- * Handles date input formatting and validation with scoped container support
- */
-
 let calendarCounter = 0;
 
 /**

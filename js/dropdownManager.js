@@ -1,4 +1,4 @@
-import {getCategoryOptionHTML, generateContactOptionHTML, getContactChipHTML} from "./template.js";
+import {generateContactOptionHTML, getContactChipHTML, getCategoryDropdownOptionsHTML} from "./template.js";
 import {database} from "./database.js";
 import {ref, onValue} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
@@ -129,6 +129,12 @@ function updateSelectedContactsDisplay(container) {
     }
 }
 
+/**
+ * Generates an overflow chip showing the count of additional contacts
+ * @param {number} count - The number of additional contacts to display
+ * @param {HTMLElement} dropzone - The dropzone element to append the chip to
+ * @returns {void}
+ */
 function generateOverflowChip(count, dropzone) {
     const overflowChip = document.createElement('div');
     overflowChip.className = 'contact-chip overflow';
@@ -136,6 +142,12 @@ function generateOverflowChip(count, dropzone) {
     dropzone.appendChild(overflowChip);
 }
 
+/**
+ * Appends a contact chip element to the dropzone
+ * @param {Object} contact - The contact object containing contact information
+ * @param {HTMLElement} dropzone - The dropzone element to append the chip to
+ * @returns {void}
+ */
 function appendContactChip(contact, dropzone) {
     const contactChip = document.createElement('div');
     contactChip.className = 'contact-chip';
@@ -151,14 +163,7 @@ function populateCategoriesDropdown(container) {
     const dropdownContent = container.querySelector('.category-dropdown-content');
     if (!dropdownContent) return;
 
-    dropdownContent.innerHTML = `
-        <div class="category-option" data-category-id="technical">
-            ${getCategoryOptionHTML({id: 'technical', name: 'Technical Task'})}
-        </div>
-        <div class="category-option" data-category-id="user-story">
-            ${getCategoryOptionHTML({id: 'user-story', name: 'User Story'})}
-        </div>
-    `;
+    dropdownContent.innerHTML = getCategoryDropdownOptionsHTML();
 }
 
 /**
@@ -182,7 +187,6 @@ export function selectCategory(categoryId, container) {
     if (selectedOption) {
         selectedOption.classList.add('selected');
     }
-
     toggleDropdown('category', false, container);
 }
 
@@ -312,6 +316,11 @@ function setupDropdownEventDelegation(container, signal = null) {
     setupContactEventDelegation(container, options);
 }
 
+/**
+ * Gets the closest matching elements for dropdown event handling
+ * @param {MouseEvent} event - The mouse event to analyze
+ * @returns {Object} Object containing the closest header, input, and option elements
+ */
 function closestEvents(event) {
     const contactHeader = event.target.closest('.contact-dropdown-header');
     const searchInput = event.target.closest('.contact-search-input');
@@ -321,6 +330,13 @@ function closestEvents(event) {
     return {contactHeader, searchInput, categoryHeader, contactOption, categoryOption};
 }
 
+/**
+ * Handles contact option click delegation
+ * @param {HTMLElement|null} contactOption - The clicked contact option element
+ * @param {HTMLElement} container - The container element to scope queries
+ * @param {MouseEvent} event - The mouse event
+ * @returns {void}
+ */
 function setupContactOptionDelegation(contactOption, container, event) {
     if (!contactOption) return;
     if (isClickOnCheckboxArea(event)) return;
@@ -329,10 +345,23 @@ function setupContactOptionDelegation(contactOption, container, event) {
     if (contactId) selectContact(contactId, container);
 }
 
+/**
+ * Checks if the click event occurred on the checkbox area
+ * @param {MouseEvent} event - The mouse event to check
+ * @returns {boolean} True if click was on checkbox area, false otherwise
+ */
 function isClickOnCheckboxArea(event) {
     return event.target.closest('.contact-option-checkbox');
 }
 
+/**
+ * Sets up toggle dropdown event delegation for contact header clicks
+ * @param {MouseEvent} event - The mouse event
+ * @param {HTMLElement|null} contactHeader - The contact header element
+ * @param {HTMLElement|null} searchInput - The search input element
+ * @param {HTMLElement} container - The container element to scope queries
+ * @returns {void}
+ */
 function setupToggleDropdownEventDelegation(event, contactHeader, searchInput, container) {
     if (contactHeader) {
         if (!event.target.closest('.contact-search-input')) {
@@ -344,6 +373,12 @@ function setupToggleDropdownEventDelegation(event, contactHeader, searchInput, c
     }
 }
 
+/**
+ * Handles category option click delegation
+ * @param {HTMLElement|null} categoryOption - The clicked category option element
+ * @param {HTMLElement} container - The container element to scope queries
+ * @returns {void}
+ */
 function setupCategoryOptionDelegation(categoryOption, container) {
     if (categoryOption) {
         const categoryId = categoryOption.getAttribute('data-category-id');
@@ -353,11 +388,23 @@ function setupCategoryOptionDelegation(categoryOption, container) {
     }
 }
 
+/**
+ * Sets up event delegation for contact-related events (search and checkbox)
+ * @param {HTMLElement} container - The container element to scope events
+ * @param {Object} options - Event listener options including AbortSignal
+ * @returns {void}
+ */
 function setupContactEventDelegation(container, options) {
     handleSearchInput(container, options);
     handleCheckboxChange(container, options);
 }
 
+/**
+ * Handles search input events for filtering contacts
+ * @param {HTMLElement} container - The container element to scope events
+ * @param {Object} options - Event listener options including AbortSignal
+ * @returns {void}
+ */
 function handleSearchInput(container, options) {
     container.addEventListener('input', (event) => {
         const isSearchInput = event.target.closest('.contact-search-input');
@@ -365,6 +412,12 @@ function handleSearchInput(container, options) {
     }, options);
 }
 
+/**
+ * Handles checkbox change events for contact selection
+ * @param {HTMLElement} container - The container element to scope events
+ * @param {Object} options - Event listener options including AbortSignal
+ * @returns {void}
+ */
 function handleCheckboxChange(container, options) {
     container.addEventListener('change', (event) => {
         const checkbox = event.target;
@@ -399,6 +452,11 @@ export function initializeDropdowns(container, pageContainer) {
     }, {signal});
 }
 
+/**
+ * Renews the AbortController for a container, aborting any existing controller
+ * @param {HTMLElement} container - The container element to associate with the AbortController
+ * @returns {AbortSignal} The signal from the new AbortController
+ */
 function renewAbortController(container) {
     const existingController = dropdownAbortControllers.get(container);
     if (existingController) existingController.abort();
@@ -470,10 +528,15 @@ export async function preselectContacts(memberIds, container) {
     memberIds.forEach(contactId => {
         handleMemberPreselection(contactId, container);
     });
-
     updateSelectedContactsDisplay(container);
 }
 
+/**
+ * Handles the preselection of a single member by ID
+ * @param {string} contactId - The contact ID to preselect
+ * @param {HTMLElement} container - The container element to scope queries
+ * @returns {void}
+ */
 function handleMemberPreselection(contactId, container) {
     const contact = contacts.find(c => c.id === contactId);
     if (!contact) return;

@@ -42,22 +42,18 @@ function showValidationError(fieldName, errorMessage) {
  */
 function validateLoginForm(email, password) {
     clearFormErrors();
-
     if (!email.trim()) {
         showValidationError("email", "Email is required");
         return false;
     }
-
     if (!validateEmailFormat(email)) {
         showValidationError("email", "Invalid email format");
         return false;
     }
-
     if (!password) {
         showValidationError("password", "Password is required");
         return false;
     }
-
     return true;
 }
 
@@ -105,8 +101,6 @@ export function togglePasswordVisibility(toggleElement) {
  * Initialize login page functionality (login page)
  */
 export function initLoginPage(loginUserCallback, guestLoginCallback, handleAuthErrorCallback) {
-    initLogoWrapper()
-
     const loginForm = document.querySelector("form");
     if (loginForm && document.getElementById("email")) initLoginEventHandler(loginForm, loginUserCallback, handleAuthErrorCallback);
 
@@ -162,15 +156,6 @@ async function initLoginSubmitHandler(event, loginUserCallback, handleAuthErrorC
     } catch (error) {
         handleAuthErrorCallback(error, "login")
     }
-}
-
-function initLogoWrapper() {
-    // const wrapper = document.querySelector(".logo-wrapper");
-    // if (wrapper) {
-    //     setTimeout(() => {
-    //         wrapper.style.position = "absolute";
-    //     }, 700);
-    // }
 }
 
 /**

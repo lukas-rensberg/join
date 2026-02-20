@@ -167,7 +167,6 @@ function initMarkedUsers(element) {
             }
         }
     }
-
 }
 
 /**
@@ -309,7 +308,6 @@ async function removeContactFromAllTasks(contactId) {
             await saveTask(task);
         }
     }
-
     updateHTML();
 }
 
@@ -341,10 +339,8 @@ async function updateSubtaskStatus(taskId, subtask, isCompleted) {
             task.subtasks.push(subtask);
         }
     }
-
     await saveTask(task);
 }
-
 
 document.addEventListener('DOMContentLoaded', () => {
     initializeTasks();

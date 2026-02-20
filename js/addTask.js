@@ -18,7 +18,7 @@ import {
     clearContactSelections,
     clearCategorySelection,
     clearSubtasksSection
-} from "./formUtils.js";
+} from "../utils/formUtils.js";
 
 let activeContainer = null;
 let urlTargetCategory = 'to-do';

@@ -110,10 +110,8 @@ function addMarqueeEffect(nameElement, wrapper, h1) {
             h1.classList.add("fixed");
             return (nameElement.style.display = "unset");
         }
-
         h1.classList.add("marquee");
         nameElement.style.animation = "marqueeOnce 5s linear forwards";
-
         nameElement.addEventListener("animationend", () => {
             nameElement.style.animation = nameElement.style.transform = "none";
             superToggle(h1, "marquee", "fixed");
@@ -393,6 +391,4 @@ const onReady = () => {
     initDashboard();
 };
 
-document.readyState === "loading"
-    ? document.addEventListener("DOMContentLoaded", onReady)
-    : onReady();
+document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", onReady) : onReady();

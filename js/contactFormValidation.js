@@ -2,7 +2,7 @@
  * @fileoverview Form validation for contact management
  */
 
-import { validateEmailFormat } from "../utils/contact.js";
+import {validateEmailFormat} from "../utils/contact.js";
 
 /**
  * Validates phone number format
@@ -10,8 +10,8 @@ import { validateEmailFormat } from "../utils/contact.js";
  * @return {boolean} True if valid
  */
 export function validatePhone(phone) {
-  const phoneRegex = /^\+?[\d\s\-().]{5,}$/;
-  return phoneRegex.test(phone);
+    const phoneRegex = /^\+?[\d\s\-().]{5,}$/;
+    return phoneRegex.test(phone);
 }
 
 /**
@@ -20,8 +20,8 @@ export function validatePhone(phone) {
  * @return {boolean} True if valid (e.g., "Max Mustermann")
  */
 export function validateName(name) {
-  const nameRegex = /^\p{L}+\s\p{L}+$/u;
-  return nameRegex.test(name.trim());
+    const nameRegex = /^\p{L}+\s\p{L}+$/u;
+    return nameRegex.test(name.trim());
 }
 
 /**
@@ -30,20 +30,20 @@ export function validateName(name) {
  * @param {string} errorMessage Error message to display
  */
 export function showFieldError(fieldId, errorMessage) {
-  const field = document.getElementById(fieldId);
-  if (!field) return;
-  
-  const formGroup = field.closest(".form-group");
-  
-  let errorSpan = formGroup.querySelector(".error-message");
-  if (!errorSpan) {
-    errorSpan = document.createElement("span");
-    errorSpan.className = "error-message";
-    formGroup.appendChild(errorSpan);
-  }
-  
-  errorSpan.textContent = errorMessage;
-  field.style.borderBottom = "2px solid #ff4646";
+    const field = document.getElementById(fieldId);
+    if (!field) return;
+
+    const formGroup = field.closest(".form-group");
+
+    let errorSpan = formGroup.querySelector(".error-message");
+    if (!errorSpan) {
+        errorSpan = document.createElement("span");
+        errorSpan.className = "error-message";
+        formGroup.appendChild(errorSpan);
+    }
+
+    errorSpan.textContent = errorMessage;
+    field.style.borderBottom = "2px solid #ff4646";
 }
 
 /**
@@ -51,14 +51,14 @@ export function showFieldError(fieldId, errorMessage) {
  * @param {string} fieldId Input element ID
  */
 export function clearFieldError(fieldId) {
-  const field = document.getElementById(fieldId);
-  if (!field) return;
-  
-  const formGroup = field.closest(".form-group");
-  
-  const errorSpan = formGroup.querySelector(".error-message");
-  if (errorSpan) errorSpan.textContent = "";
-  field.style.borderBottom = "";
+    const field = document.getElementById(fieldId);
+    if (!field) return;
+
+    const formGroup = field.closest(".form-group");
+
+    const errorSpan = formGroup.querySelector(".error-message");
+    if (errorSpan) errorSpan.textContent = "";
+    field.style.borderBottom = "";
 }
 
 /**
@@ -67,31 +67,62 @@ export function clearFieldError(fieldId) {
  * @return {boolean} True if all fields are valid
  */
 export function validateContactForm(formData) {
-  let isValid = true;
+    let isValid = true;
 
-  if (!formData.name.trim()) {
-    showFieldError("contactName", "Name is required");
-    isValid = false;
-  } else if (!validateName(formData.name)) {
-    showFieldError("contactName", "Please enter first and last name");
-    isValid = false;
-  } else clearFieldError("contactName");
+    validateContactFormName(formData);
+    validateContactFormEmail(formData);
+    validateContactFormPhone(formData);
 
-  if (!formData.email.trim()) {
-    showFieldError("contactEmail", "Email is required");
-    isValid = false;
-  } else if (!validateEmailFormat(formData.email)) {
-    showFieldError("contactEmail", "Invalid email format");
-    isValid = false;
-  } else clearFieldError("contactEmail");
+    return isValid;
+}
 
-  if (!formData.phone.trim()) {
-    showFieldError("contactPhone", "Phone is required");
-    isValid = false;
-  } else if (!validatePhone(formData.phone)) {
-    showFieldError("contactPhone", "Invalid phone format");
-    isValid = false;
-  } else clearFieldError("contactPhone");
+/**
+ * Validates contact Name
+ * @param {Object} formData Form data object
+ * @returns {boolean}
+ */
+function validateContactFormName(formData) {
+    let isValid = true;
+    if (!formData.name.trim()) {
+        showFieldError("contactName", "Name is required");
+        isValid = false;
+    } else if (!validateName(formData.name)) {
+        showFieldError("contactName", "Please enter first and last name");
+        isValid = false;
+    } else clearFieldError("contactName");
+    return isValid;
+}
 
-  return isValid;
+/**
+ * Validates contact email
+ * @param {Object} formData Form data object
+ * @returns {boolean}
+ */
+function validateContactFormEmail(formData) {
+    let isValid = true;
+    if (!formData.email.trim()) {
+        showFieldError("contactEmail", "Email is required");
+        isValid = false;
+    } else if (!validateEmailFormat(formData.email)) {
+        showFieldError("contactEmail", "Invalid email format");
+        isValid = false;
+    } else clearFieldError("contactEmail");
+    return isValid;
+}
+
+/**
+ * Validates contact phone
+ * @param {Object} formData Form data object
+ * @returns {boolean}
+ */
+function validateContactFormPhone(formData) {
+    let isValid = true;
+    if (!formData.phone.trim()) {
+        showFieldError("contactPhone", "Phone is required");
+        isValid = false;
+    } else if (!validatePhone(formData.phone)) {
+        showFieldError("contactPhone", "Invalid phone format");
+        isValid = false;
+    } else clearFieldError("contactPhone");
+    return isValid;
 }

@@ -169,19 +169,31 @@ export function toggleSwapMenu(event, taskId, currentCategory) {
     const dropdown = document.getElementById(`swap-dropdown-${taskId}`);
     if (!dropdown) return;
 
-    const allDropdowns = document.querySelectorAll('.card-swap-dropdown');
-    allDropdowns.forEach(openDropdown => {
-        if (openDropdown !== dropdown) openDropdown.classList.remove('open');
-    });
-
-    const items = dropdown.querySelectorAll('.move-to-do, .move-to-review');
-    items.forEach(item => {
-        if (item.dataset.category === currentCategory) {
-            item.style.display = 'none';
-        } else {
-            item.style.display = 'flex';
-        }
-    });
+    closeOtherDropdowns(dropdown);
+    filterDropdownItems(dropdown, currentCategory);
 
     dropdown.classList.toggle('open');
+}
+
+/**
+ * Closes all swap dropdown menus except the specified one.
+ * @param {HTMLElement} excludeDropdown - The dropdown to keep open.
+ */
+function closeOtherDropdowns(excludeDropdown) {
+    const allDropdowns = document.querySelectorAll('.card-swap-dropdown');
+    allDropdowns.forEach(openDropdown => {
+        if (openDropdown !== excludeDropdown) openDropdown.classList.remove('open');
+    });
+}
+
+/**
+ * Filters dropdown items to hide the current category and show all others.
+ * @param {HTMLElement} dropdown - The dropdown element containing the items.
+ * @param {string} currentCategory - The current category to hide.
+ */
+function filterDropdownItems(dropdown, currentCategory) {
+    const items = dropdown.querySelectorAll('.move-to-do, .move-to-review');
+    items.forEach(item => {
+        item.style.display = item.dataset.category === currentCategory ? 'none' : 'flex';
+    });
 }

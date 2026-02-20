@@ -1,8 +1,4 @@
 /**
- * Error Handler Module - Handles authentication and form validation errors with scoped container support
- */
-
-/**
  * Create error message element for authentication errors
  * @param {string} message - The error message to display
  * @returns {HTMLElement} The error message div element
@@ -23,7 +19,6 @@ export function showErrorMessage(message) {
     if (existingError) {
         existingError.remove();
     }
-
     const errorDiv = createAuthErrorMessage(message);
 
     const form = document.querySelector("form");
@@ -33,7 +28,6 @@ export function showErrorMessage(message) {
     inputs.forEach(input => {
         input.style.borderBottom = "0.06rem solid #ff0000";
     });
-
     form.appendChild(errorDiv);
 }
 
@@ -87,6 +81,12 @@ export function showFieldError(fieldName, message, container) {
     formGroup.classList.add('has-error');
 }
 
+/**
+ * Gets form group and input elements for a specific field
+ * @param {string} fieldName - Name of the field (e.g., 'title', 'description', 'dueDate', 'category')
+ * @param {HTMLElement|Document} container - The container element to scope queries
+ * @returns {{formGroup: HTMLElement|null, inputElement: HTMLElement|null}} Object containing formGroup and inputElement
+ */
 function getFieldElements(fieldName, container) {
     if (fieldName === 'title') {
         const formGroup = container.querySelector('.form-group-title');
@@ -101,6 +101,13 @@ function getFieldElements(fieldName, container) {
     return { formGroup: inputElement?.closest('.form-group'), inputElement };
 }
 
+/**
+ * Sets the border color for a form field element based on field type
+ * @param {string} fieldName - Name of the field (e.g., 'title', 'dueDate', 'category')
+ * @param {HTMLElement} element - The input element to style
+ * @param {string} color - The CSS color value to apply
+ * @returns {void}
+ */
 function setBorderColor(fieldName, element, color) {
     const target = fieldName === 'category' ? element.querySelector('.dropdown-header')
         : fieldName === 'dueDate' ? element.closest('.input-with-icon') : element;
@@ -144,6 +151,13 @@ export function clearAllFieldErrors(container = document) {
     executeOnHTMLElement(container, '.dropdown-header', header => header.style.borderBottomColor = '');
 }
 
+/**
+ * Executes a callback function on all elements matching a selector within a container and document
+ * @param {HTMLElement|Document} container - The container element to scope queries
+ * @param {string} selector - CSS selector to match elements
+ * @param {Function} callback - Callback function to execute on each matched element
+ * @returns {void}
+ */
 function executeOnHTMLElement(container, selector, callback) {
     if (container) container.querySelectorAll(selector).forEach(callback);
     document.querySelectorAll(selector).forEach(callback);

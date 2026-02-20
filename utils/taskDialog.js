@@ -50,11 +50,22 @@ function showEditConfirmation(dialogContentRef, element, dueDate) {
     if (dueDateInput && element.dueDate) {
         dueDateInput.value = element.dueDate;
     }
-
     initializeDateInput(dialogContentRef, {
         allowPastDates: true,
         onDateChanged: () => clearFieldError('dueDate', dialogContentRef)
     });
+    showEditConfirmationSub(dialogContentRef, element, dueDate);
+}
+
+/**
+ * Continues the edit confirmation setup by initializing form components and populating fields.
+ * Handles priority buttons, dropdowns, subtasks, and event handlers initialization.
+ * @param {HTMLElement} dialogContentRef - The dialog content container element.
+ * @param {Object} element - The task object being edited.
+ * @param {string} dueDate - The formatted due date string for display.
+ * @returns {void}
+ */
+function showEditConfirmationSub(dialogContentRef, element, dueDate) {
     populateEditFormBasicFieldsWithoutDate(dialogContentRef, element);
     initializePriorityButtons(dialogContentRef);
     resetDropdownState();
@@ -107,6 +118,12 @@ function cancelEditMode(element, dueDate) {
     editButton.addEventListener("click", handleEditClick, {once: true});
 }
 
+/**
+ * Resets the dialog content element's inline styles to default values.
+ * Restores padding and removes overflow styling after exiting edit mode.
+ * @param {HTMLElement} dialogContentRef - The dialog content container element.
+ * @returns {void}
+ */
 function resetDialogContentStyle(dialogContentRef) {
     if (dialogContentRef) {
         dialogContentRef.style.padding = "1.25rem 1rem";
@@ -186,11 +203,19 @@ async function confirmEdit(element, dueDate) {
         closeDialog();
     } catch (error) {
         const confirmEditBtn = dialogContentRef.querySelector('.confirm-edit-task-btn');
-        if (confirmEditBtn) confirmEditBtn.addEventListener("click", () =>
-            confirmEdit(element, dueDate), {once: true});
+        if (confirmEditBtn) confirmEditBtn.addEventListener("click", () => confirmEdit(element, dueDate), {once: true});
     }
 }
 
+/**
+ * Handles invalid edit form submission by displaying errors and re-attaching the confirm button listener.
+ * Shows validation errors and allows the user to retry after fixing issues.
+ * @param {Object} errors - Object containing field-specific error messages.
+ * @param {HTMLElement} container - The dialog content container element.
+ * @param {Object} element - The original task object being edited.
+ * @param {string} dueDate - The formatted due date string for display.
+ * @returns {void}
+ */
 function handleInvalidEditForm(errors, container, element, dueDate) {
     showEditErrors(errors, container);
     const confirmEditBtn = container.querySelector('.confirm-edit-task-btn');
@@ -325,16 +350,40 @@ function resetDeleteButtons(deleteButton, editButton, handleDeleteClick, handleE
 export function openDialog(index) {
     let element = tasks.filter((task) => task["id"] === `${index}`)[0];
 
+    let dueDate = initializeDialogDisplay(element);
+    
+    setupEditButton(element, dueDate);
+    dialogRef.showModal();
+}
+
+/**
+ * Initializes and displays the dialog with task content and animations.
+ * Sets up CSS classes for swipe animation, renders template, and initializes members/subtasks.
+ * @param {Object} element - The task object to display in the dialog.
+ * @returns {string} The formatted due date string for further use.
+ */
+function initializeDialogDisplay(element) {
     let mobileDesktopIndicator = "mobile";
     if (isDesktop()) mobileDesktopIndicator = "desktop";
-    dialogRef.classList.add("dialog-task")
+    dialogRef.classList.add("dialog-task");
     dialogRef.classList.add(`dialog-swipe-in-${mobileDesktopIndicator}`);
 
     const dueDate = element["dueDate"] ? formatDate(element["dueDate"]) : "No due date set";
     dialogRef.innerHTML = getTemplateDialog(element, dueDate);
     initMembers(element["member"]);
     initSubtasks(element["id"]);
+    
+    return dueDate;
+}
 
+/**
+ * Sets up the edit button event listener and delete button for a task in the dialog.
+ * Creates the edit click handler and attaches it to the edit button.
+ * @param {Object} element - The task object to be edited.
+ * @param {string} dueDate - The formatted due date string for display.
+ * @returns {void}
+ */
+function setupEditButton(element, dueDate) {
     const handleEditClick = () => {
         const dialogContentRef = document.querySelector(".dialog-content");
         showEditConfirmation(dialogContentRef, element, dueDate);
@@ -346,8 +395,6 @@ export function openDialog(index) {
     if (editButton) {
         editButton.addEventListener("click", handleEditClick, {once: true});
     }
-
-    dialogRef.showModal();
 }
 
 /**
@@ -391,7 +438,6 @@ function initMembers(memberIds) {
 /**
  * Initializes and renders the subtasks section in the task dialog.
  * Displays both pending and completed subtasks with checkboxes.
- * TODO: Add drag-and-drop functionality to reorder subtasks
  * @param {string} taskId - The unique identifier of the task whose subtasks to render.
  */
 function initSubtasks(taskId) {
@@ -408,7 +454,6 @@ function initSubtasks(taskId) {
     completedSubtasks.forEach((subtask, index) => {
         subtasksContainer.innerHTML += getTemplateSubtask(subtask, taskId, index + pendingSubtasks.length, true);
     });
-
     addSubtaskEventListeners(taskId)
 }
 

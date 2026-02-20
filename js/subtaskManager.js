@@ -226,6 +226,10 @@ function setupSubtaskEventDelegation(container) {
     setupSubtaskInputEventListener(container);
 }
 
+/**
+ * Sets up event listeners for the subtask input field
+ * @param {HTMLElement} container - The container element to scope queries
+ */
 function setupSubtaskInputEventListener(container) {
     const subtaskInput = container.querySelector('.subtask-input');
     if (subtaskInput) {
