@@ -23,6 +23,7 @@ main {
 
 .login-logo {
     animation: unset !important;
+    filter: none !important;
 }
 
 .button-container {
