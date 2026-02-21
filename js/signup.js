@@ -1,11 +1,19 @@
+/**
+ * @fileoverview Signup page functionality including form submission handling,
+ * submit-time validation, success message display, and event setup.
+ * Real-time input validation is delegated to signupValidation.js.
+ */
+
 import {validateEmailFormat} from "../utils/contact.js";
 import {updatePasswordIcon, togglePasswordVisibility} from "./login.js";
 import {containsHtmlChars} from "./template.js";
+import {handleInputChange, updateSubmitButtonState, setupCheckboxChangeListener} from "./signupValidation.js";
 
 const HACK_ATTEMPT_MSG = "Want to hack me? Nah Ah! Remove HTML chars and \",\'";
 
 /**
- * Clear error messages and red borders from form inputs
+ * Clears all error messages and red borders from form inputs.
+ * @returns {void}
  */
 function clearFormErrors() {
     const existingError = document.querySelector(".auth-error-message");
@@ -18,7 +26,7 @@ function clearFormErrors() {
         const formInputs = form.querySelectorAll('input[type="password"], input[type="text"], input[type="email"]');
         const checkbox = document.getElementById("confirm-check");
         formInputs.forEach(input => {
-            input.style.borderBottom = ""
+            input.style.borderBottom = "";
         });
         if (!checkbox) return;
         checkbox.style.borderColor = "";
@@ -26,12 +34,13 @@ function clearFormErrors() {
 }
 
 /**
- * Show form validation error for a specific field
- * @param {string} fieldId The ID of the input field
- * @param {string} message The error message to display
- * @param {boolean} isHtml Whether the message contains HTML (default: false)
+ * Shows a form validation error for a specific field.
+ * @param {string} fieldId - The ID of the input field
+ * @param {string} message - The error message to display
+ * @param {boolean} [isHtml=false] - Whether the message contains HTML
+ * @returns {void}
  */
-function showFormError(fieldId, message, isHtml = false) {
+export function showFormError(fieldId, message, isHtml = false) {
     const field = document.getElementById(fieldId);
     if (!field) return;
     field.style.borderBottom = "1px solid #ff4646";
@@ -50,79 +59,7 @@ function showFormError(fieldId, message, isHtml = false) {
 }
 
 /**
- * Check if all text input fields are filled (excluding checkbox)
- * @returns {boolean} True if all text fields are filled
- */
-function areAllTextFieldsFilled() {
-    const username = document.getElementById("username")?.value.trim();
-    const email = document.getElementById("email")?.value.trim();
-    const password = document.getElementById("signup-password")?.value;
-    const confirmPassword = document.getElementById("confirm-password")?.value;
-
-    return !!(username && email && password && confirmPassword);
-}
-
-/**
- * Check if all required signup fields are filled
- * @returns {boolean} True if all required fields are filled
- */
-function areAllFieldsFilled() {
-    const acceptedPolicy = document.getElementById("confirm-check")?.checked;
-    return areAllTextFieldsFilled() && acceptedPolicy;
-}
-
-/**
- * Display privacy warning message next to checkbox
- * @param {HTMLElement} checkbox - The privacy checkbox element
- */
-function showPrivacyWarning(checkbox) {
-    checkbox.style.borderColor = "#ff4646";
-    const warning = document.createElement("span");
-    warning.className = "privacy-warning error-message";
-    warning.textContent = "Please accept the Privacy Policy";
-    checkbox.parentElement.appendChild(warning);
-}
-
-/**
- * Check privacy checkbox state and show warning if all fields filled but checkbox unchecked
- */
-function checkPrivacyWarning() {
-    const checkbox = document.getElementById("confirm-check");
-    if (!checkbox) return;
-
-    const existingWarning = checkbox.parentElement.querySelector(".privacy-warning");
-
-    if (areAllTextFieldsFilled() && !checkbox.checked) {
-        if (!existingWarning) showPrivacyWarning(checkbox);
-    } else {
-        if (existingWarning) {
-            existingWarning.remove();
-            checkbox.style.borderColor = "";
-        }
-    }
-}
-
-/**
- * Check if there are any validation errors on the form
- * @returns {boolean} True if there are errors
- */
-function hasValidationErrors() {
-    const errorMessages = document.querySelectorAll(".error-message");
-    return errorMessages.length > 0;
-}
-
-/**
- * Update the submit button state based on form completeness and errors
- */
-function updateSubmitButtonState() {
-    const submitButton = document.querySelector('form button[type="submit"]');
-    if (submitButton) {
-        submitButton.disabled = !areAllFieldsFilled() || hasValidationErrors();
-    }
-}
-
-/**
- * Show error message for privacy policy checkbox
+ * Shows an error message for the privacy policy checkbox.
  * @returns {boolean} Always returns false to indicate validation failure
  */
 function showPolicyError() {
@@ -137,13 +74,13 @@ function showPolicyError() {
 }
 
 /**
- * Validate signup form fields and show errors if invalid
- * @param username
- * @param email
- * @param password
- * @param confirmPassword
- * @param acceptedPolicy
- * @returns {boolean}
+ * Validates the complete signup form fields and shows errors if invalid.
+ * @param {string} username - The username value
+ * @param {string} email - The email value
+ * @param {string} password - The password value
+ * @param {string} confirmPassword - The confirm password value
+ * @param {boolean} acceptedPolicy - Whether the privacy policy was accepted
+ * @returns {boolean} True if the form is valid
  */
 function validateSignupForm(username, email, password, confirmPassword, acceptedPolicy) {
     clearFormErrors();
@@ -156,9 +93,9 @@ function validateSignupForm(username, email, password, confirmPassword, accepted
 }
 
 /**
- * Validate username field (first and last name required)
- * @param {string} username
- * @returns {boolean}
+ * Validates the username field (first and last name required).
+ * @param {string} username - The username to validate
+ * @returns {boolean} True if valid
  */
 function validateUsername(username) {
     const nameRegex = /^\p{L}+\s\p{L}+$/u;
@@ -179,9 +116,9 @@ function validateUsername(username) {
 }
 
 /**
- * Validate email field
- * @param {string} email
- * @returns {boolean}
+ * Validates the email field format and content.
+ * @param {string} email - The email to validate
+ * @returns {boolean} True if valid
  */
 function validateEmail(email) {
     if (!email.trim()) {
@@ -200,10 +137,10 @@ function validateEmail(email) {
 }
 
 /**
- * Validate username and email fields and show errors if invalid
- * @param {string} username
- * @param {string} email
- * @returns {boolean}
+ * Validates both username and email fields and shows errors if invalid.
+ * @param {string} username - The username to validate
+ * @param {string} email - The email to validate
+ * @returns {boolean} True if both are valid
  */
 function validateUsernameAndEmail(username, email) {
     const isUsernameValid = validateUsername(username);
@@ -212,11 +149,11 @@ function validateUsernameAndEmail(username, email) {
 }
 
 /**
- * Validate password and confirm password fields and show errors if invalid
- * Firebase requirements: lowercase, uppercase, non-alphanumeric character
- * @param password
- * @param confirmPassword
- * @returns {boolean}
+ * Validates password and confirm password fields.
+ * Firebase requirements: lowercase, uppercase, digit, non-alphanumeric character.
+ * @param {string} password - The password to validate
+ * @param {string} confirmPassword - The confirmation password to validate
+ * @returns {boolean} True if both passwords are valid
  */
 function validatePasswordField(password, confirmPassword) {
     let isValid = true;
@@ -228,7 +165,7 @@ function validatePasswordField(password, confirmPassword) {
 }
 
 /**
- * Validates the user password against security requirements
+ * Validates the user password against security requirements.
  * @param {string} password - The password to validate
  * @returns {boolean} True if password is valid, false otherwise
  */
@@ -248,7 +185,7 @@ function validateUserPassword(password) {
 }
 
 /**
- * Validates the confirmation password field matches the original password
+ * Validates the confirmation password field matches the original password.
  * @param {string} confirmPassword - The confirmation password to validate
  * @returns {boolean} True if confirmation password is valid and matches, false otherwise
  */
@@ -267,10 +204,10 @@ function confirmUserPassword(confirmPassword) {
     return isValid;
 }
 
-
 /**
- * Show success message after signup (signup page)
- * Shows for 800ms then redirects to login page (no auto-login)
+ * Shows a success message after signup.
+ * Displays for 800ms then redirects to the login page (no auto-login).
+ * @returns {void}
  */
 export function showSuccessMessage() {
     const successDialog = document.getElementById("signupSuccess");
@@ -284,12 +221,12 @@ export function showSuccessMessage() {
     }, 800);
 }
 
-
-
 /**
- * Initialize signup page functionality (signup page)
- * @param {function} signupUserCallback - Callback function to handle user signup logic
- * @param {function} handleAuthErrorCallback - Callback function to handle authentication errors
+ * Initializes signup page functionality.
+ * Sets up input listeners, checkbox listener, password toggles, and form submission.
+ * @param {Function} signupUserCallback - Callback function to handle user signup logic
+ * @param {Function} handleAuthErrorCallback - Callback function to handle authentication errors
+ * @returns {void}
  */
 export function initSignupPage(signupUserCallback, handleAuthErrorCallback) {
     const signupForm = document.querySelector("form");
@@ -309,8 +246,9 @@ export function initSignupPage(signupUserCallback, handleAuthErrorCallback) {
 }
 
 /**
- * Sets up input change event listeners for all text, email and password fields
+ * Sets up input change event listeners for all text, email and password fields.
  * @param {HTMLFormElement} form - The form element containing the inputs
+ * @returns {void}
  */
 function setupInputChangeListeners(form) {
     const inputs = form.querySelectorAll(
@@ -320,137 +258,7 @@ function setupInputChangeListeners(form) {
 }
 
 /**
- * Sets up the change event listener for the privacy checkbox
- */
-function setupCheckboxChangeListener() {
-    const checkbox = document.getElementById("confirm-check");
-    if (checkbox) checkbox.addEventListener("change", () => {
-        checkPrivacyWarning();
-        updateSubmitButtonState();
-    });
-}
-
-/**
- * Handles input change events for form fields by clearing errors, validating, and updating button state
- * @param {Event} event - The input change event
- * @returns {void}
- */
-function handleInputChange(event) {
-    const input = event.target;
-    clearFieldError(input.id);
-    validateFieldOnInput(input);
-    checkPrivacyWarning();
-    updateSubmitButtonState();
-}
-
-/**
- * Clear error for a specific field
- * @param {string} fieldId The ID of the input field
- */
-function clearFieldError(fieldId) {
-    const field = document.getElementById(fieldId);
-    if (!field) return;
-    field.style.borderBottom = "";
-    const existingError = field.parentElement.querySelector(".error-message");
-    if (existingError) existingError.remove();
-}
-
-/**
- * Validate a single field on input
- * @param {HTMLInputElement} input The input element to validate
- */
-function validateFieldOnInput(input) {
-    const value = input.value;
-    const id = input.id;
-
-    switch (id) {
-        case "username":
-            validateUsernameOnInput(value);
-            break;
-        case "email":
-            validateEmailOnInput(value);
-            break;
-        case "signup-password":
-            validatePasswordOnInput(value);
-            validateConfirmPasswordOnInput();
-            break;
-        case "confirm-password":
-            validateConfirmPasswordOnInput();
-            break;
-    }
-}
-
-/**
- * Validate username field on input
- * @param {string} username
- */
-function validateUsernameOnInput(username) {
-    if (!username.trim()) return;
-
-    if (containsHtmlChars(username)) {
-        showFormError("username", HACK_ATTEMPT_MSG);
-        return;
-    }
-
-    const nameRegex = /^\p{L}+\s\p{L}+$/u;
-    if (username.trim().length > 2 && !nameRegex.test(username.trim())) {
-        showFormError("username", "Please enter first and last name");
-    }
-}
-
-/**
- * Validate email field on input
- * @param {string} email
- */
-function validateEmailOnInput(email) {
-    if (!email.trim()) return;
-
-    if (containsHtmlChars(email)) {
-        showFormError("email", HACK_ATTEMPT_MSG);
-        return;
-    }
-
-    if (!validateEmailFormat(email)) {showFormError("email", "Invalid email format");}
-}
-
-/**
- * Validate password field on input
- * @param {string} password
- */
-function validatePasswordOnInput(password) {
-    if (!password) return;
-
-    if (containsHtmlChars(password)) {
-        showFormError("signup-password", HACK_ATTEMPT_MSG);
-        return;
-    }
-
-    if (password.length >= 1 && (password.length < 6 || !/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/[0-9]/.test(password) || !/[^a-zA-Z0-9]/.test(password))) {
-        showFormError("signup-password", `Insecure Password - <a href="https://www.bsi.bund.de/EN/Themen/Verbraucherinnen-und-Verbraucher/Informationen-und-Empfehlungen/Cyber-Sicherheitsempfehlungen/Accountschutz/Sichere-Passwoerter-erstellen/sichere-passwoerter-erstellen_node.html" target="_blank" rel="noopener">BSI</a>`, true);
-    }
-}
-
-/**
- * Validate confirm password field on input
- */
-function validateConfirmPasswordOnInput() {
-    const password = document.getElementById("signup-password")?.value;
-    const confirmPassword = document.getElementById("confirm-password")?.value;
-
-    if (!confirmPassword) return;
-
-    if (containsHtmlChars(confirmPassword)) {
-        showFormError("confirm-password", HACK_ATTEMPT_MSG);
-        return;
-    }
-
-    if (password && confirmPassword && password !== confirmPassword) {
-        showFormError("confirm-password", "Passwords do not match");
-    }
-}
-
-/**
- * Sets up password visibility toggle functionality for a toggle element
+ * Sets up password visibility toggle functionality for a toggle element.
  * @param {HTMLElement} toggle - The toggle element with data-target attribute
  * @returns {void}
  */
@@ -464,7 +272,7 @@ function setupPasswordToggle(toggle) {
 }
 
 /**
- * Handles the signup form submission by validating inputs and calling signup callback
+ * Handles the signup form submission by validating inputs and calling the signup callback.
  * @param {Function} signupUserCallback - Callback function to handle user signup
  * @param {Function} handleAuthErrorCallback - Callback function to handle authentication errors
  * @returns {Promise<void>}

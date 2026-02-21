@@ -180,11 +180,11 @@ export async function createTask(taskData) {
 }
 
 /**
- * Construct task object for RTDB
- * @param newTaskRef
- * @param taskData
- * @param now
- * @returns {{id: *, title: *, text, dueDate: string|*, priority: *, task: *|Promise<void>, category, member, subtasks, subtasks_done: *[], createdAt: *, updatedAt: *}}
+ * Constructs a task object for storage in the Firebase Realtime Database.
+ * @param {import("https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js").DatabaseReference} newTaskRef - The Firebase database reference for the new task
+ * @param {Object} taskData - The task data collected from the form
+ * @param {number} now - The current timestamp in milliseconds
+ * @returns {Object} The formatted task object ready for Firebase storage
  */
 function getTaskObject(newTaskRef,taskData, now) {
     return {

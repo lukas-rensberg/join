@@ -31,9 +31,9 @@ export let tasks = [];
 export let contacts = [];
 
 /**
- * Filters tasks by search input from the search field.
- * Searches for matches in task titles (case-insensitive).
- * Updates the board display with filtered results or resets to show all tasks if search is empty.
+ * Filters tasks based on the search input value and updates the board display.
+ * Compares the search input against task titles and descriptions (case-insensitive).
+ * If the search input is empty, it resets the board to show all tasks.
  * @returns {void}
  */
 function filterTasksBySearch() {

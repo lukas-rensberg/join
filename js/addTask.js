@@ -114,7 +114,6 @@ function attachCategoryListener(container) {
 function showErrors(errors, container) {
     clearAllFieldErrors(container);
     if (errors.title) showFieldError('title', errors.title, container);
-    // if (errors.description) showFieldError('description', errors.description, container);
     if (errors.dueDate) showFieldError('dueDate', errors.dueDate, container);
     if (errors.category) showFieldError('category', errors.category, container);
 }
@@ -149,8 +148,7 @@ export async function handleCreateTaskFromBoard(container, targetCategory = 'to-
     }
 
     try {
-        const taskData = collectTaskData(container, targetCategory);
-        await createTask(taskData);
+        await createTask(collectTaskData(container, targetCategory));
         return true;
     } catch (error) {
         handleCreateTaskError();
@@ -182,7 +180,9 @@ async function createAndRedirect(container) {
  * Handles errors during task creation
  * @returns {void}
  */
-function handleCreateTaskError() { showErrorBanner('Error creating task. Please try again.'); }
+function handleCreateTaskError() {
+    showErrorBanner('Error creating task. Please try again.');
+}
 
 /**
  * Redirects to board page after short delay (to allow success banner to be seen)

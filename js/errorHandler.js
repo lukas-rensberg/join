@@ -11,8 +11,10 @@ export function createAuthErrorMessage(message) {
 }
 
 /**
- * Show error message below form fields (for auth forms)
- * Positions the error at the bottom of the form (absolute positioned)
+ * Shows an error message below form fields (for auth forms).
+ * Positions the error at the bottom of the form (absolute positioned).
+ * @param {string} message - The error message to display
+ * @returns {void}
  */
 export function showErrorMessage(message) {
     const existingError = document.querySelector(".auth-error-message");
@@ -32,18 +34,22 @@ export function showErrorMessage(message) {
 }
 
 /**
- * Alias for showErrorMessage (for inline errors)
+ * Alias for showErrorMessage (for inline errors).
+ * @param {string} message - The error message to display
+ * @returns {void}
  */
 export const showInlineError = showErrorMessage;
 
 /**
- * Handle authentication errors (login page, signup page, protected pages)
+ * Handles authentication errors by mapping the error code to a user-friendly message.
+ * @param {Object} error - The Firebase authentication error object
+ * @returns {void}
  */
 export function handleAuthError(error) { showErrorMessage(getErrorMessage(error)); }
 
 /**
  * Map Firebase authentication error codes to user-friendly messages
- * @param error - The error object from Firebase authentication
+ * @param {Object} error - The error object from Firebase authentication
  * @returns {string} User-friendly error message
  */
 function getErrorMessage(error) {

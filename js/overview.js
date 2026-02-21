@@ -1,8 +1,7 @@
 import {auth, loadTasks} from "./database.js";
 import {onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 import {renderContact} from "./contacts.js";
-
-const DASHBOARD_CACHE_KEY = 'dashboardData';
+import {cacheDashboardData, getCachedDashboardData} from "./cacheManager.js";
 
 let counts = {
     'to-do': 0,
@@ -45,30 +44,8 @@ function mobileDashboardAnimation() {
 }
 
 /**
- * Saves dashboard data to localStorage for faster initial load
- * @param {Object} data - Dashboard data to cache
- */
-function cacheDashboardData(data) {
-    try {
-        localStorage.setItem(DASHBOARD_CACHE_KEY, JSON.stringify(data));
-    } catch (_) {
-    }
-}
-
-/**
- * Loads cached dashboard data from localStorage
- * @returns {Object|null} Cached dashboard data or null
- */
-function getCachedDashboardData() {
-    try {
-        const cached = localStorage.getItem(DASHBOARD_CACHE_KEY);
-        return cached ? JSON.parse(cached) : null;
-    } catch (_) {
-    }
-}
-
-/**
- * Get greeting based on current time
+ * Returns a time-based greeting string depending on the current hour.
+ * @returns {string} A greeting string ("Good morning", "Good afternoon", or "Good evening")
  */
 function getTimeBasedGreeting() {
     const hour = new Date().getHours();
@@ -98,9 +75,10 @@ function moveGreetingContainer() {
 /**
  * Adds a marquee effect to the username if it exceeds the container width on desktop devices.
  * On mobile devices, it simply displays the username without animation.
- * @param nameElement
- * @param wrapper
- * @param h1
+ * @param {HTMLElement} nameElement - The element containing the user's name text
+ * @param {HTMLElement|null} wrapper - The wrapper element used to measure available width
+ * @param {HTMLElement} h1 - The h1 element to toggle marquee/fixed classes on
+ * @returns {void}
  */
 function addMarqueeEffect(nameElement, wrapper, h1) {
     requestAnimationFrame(() => {
@@ -217,6 +195,12 @@ function finalizeGreeting(container) {
     container?.classList.add("loaded");
 }
 
+/**
+ * Sets up the greeting UI for authenticated (non-guest) users.
+ * Creates the h1 wrapper and marquee text elements inside the greeting container.
+ * @param {HTMLElement} greetingContainer - The greeting container DOM element
+ * @returns {void}
+ */
 function setupUserGreeting(greetingContainer) {
     const greetingElement = greetingContainer.querySelector("p");
     if (greetingElement) {
@@ -232,6 +216,12 @@ function setupUserGreeting(greetingContainer) {
     headline.appendChild(document.createElement("span")).className = "marquee-text";
 }
 
+/**
+ * Sets up the greeting UI for anonymous/guest users.
+ * Displays a simple greeting without username and adjusts styling for desktop/mobile.
+ * @param {HTMLElement} greetingElement - The paragraph element displaying the greeting text
+ * @returns {void}
+ */
 function setupGuestGreeting(greetingElement) {
     greetingElement.textContent = getTimeBasedGreeting();
     greetingElement.classList.add("greeting-guest");
@@ -240,7 +230,9 @@ function setupGuestGreeting(greetingElement) {
 }
 
 /**
- * Update avatar initials based on username
+ * Updates the avatar element's text content with the user's rendered initials.
+ * @param {Object} user - The Firebase Auth user object
+ * @returns {void}
  */
 function updateAvatarInitials(user) {
     const avatarElement = document.querySelector(".avatar");
@@ -251,7 +243,8 @@ function updateAvatarInitials(user) {
 }
 
 /**
- * Add click event listeners to all dashboard cards
+ * Adds click event listeners to all dashboard cards that redirect to the board page.
+ * @returns {void}
  */
 function addCardListeners() {
     const cards = document.querySelectorAll('.card, .card-urgent-deadline');
@@ -327,6 +320,11 @@ function updateDashboardNumbers(tasks) {
     updateDeadline(urgentInfo.nearestDeadline)
 }
 
+/**
+ * Updates all category count elements and the urgent count on the dashboard.
+ * @param {number} urgentCount - The number of urgent tasks
+ * @returns {void}
+ */
 function updateCounts(urgentCount) {
     updateNumberElement('.card-todo .number', counts['to-do']);
     updateNumberElement('.card-progress .number', counts['in-progress']);
@@ -336,6 +334,11 @@ function updateCounts(urgentCount) {
     updateNumberElement('.card-urgent-deadline .number', urgentCount);
 }
 
+/**
+ * Updates the deadline display element with the nearest upcoming deadline date.
+ * @param {Date|null} nearestDeadline - The nearest deadline date or null if none
+ * @returns {void}
+ */
 function updateDeadline(nearestDeadline) {
     const deadlineElement = document.querySelector('.deadline-section .date');
     if (deadlineElement) {
