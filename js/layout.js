@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Layout module for dynamic generation of header, aside navigation and footer.
+ * Manages the user interface based on the user's authentication status.
+ */
+
 import {auth} from "./database.js";
 import {
     onAuthStateChanged,
@@ -203,6 +208,10 @@ export function initLayout() {
     });
 }
 
+/**
+ * Initialize layout when DOM is fully loaded
+ * This is a caller function.
+ */
 if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => initLayout());
 } else {

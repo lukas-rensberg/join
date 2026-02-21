@@ -2,11 +2,11 @@ import {contacts, formatDate, tasks} from "../js/board.js";
 import {validateTaskForm} from "../js/formValidation.js";
 import {collectEditTaskData} from "../js/taskDataCollector.js";
 import {createTask, deleteTask, updateTask} from "../js/database.js";
-import {getEditTaskTemplate, getTemplateDialog, getTemplateMember, getTemplateSubtask} from "../js/template.js";
+import {getEditTaskTemplate, getTemplateDialog, getTemplateMember} from "../js/template.js";
 import {initializeDateInput} from "../js/dateInputManager.js";
 import {initializePriorityButtons, updatePriorityIcon} from "../js/priorityManager.js";
 import {initializeDropdowns, preselectCategory, preselectContacts, resetDropdownState} from "../js/dropdownManager.js";
-import {initializeSubtasks, populateSubtasks, resetSubtaskInitialization} from "../js/subtaskManager.js";
+import {initializeSubtasks, initSubtasks, populateSubtasks, resetSubtaskInitialization} from "../js/subtaskManager.js";
 import {isDesktop} from "./mediaQuerySwitch.js";
 import {clearAllFieldErrors, clearFieldError, showFieldError} from "../js/errorHandler.js";
 
@@ -433,43 +433,4 @@ function initMembers(memberIds) {
             membersContainer.innerHTML += getTemplateMember(contact.name, contact.initials, contact.avatarColor);
         }
     }
-}
-
-/**
- * Initializes and renders the subtasks section in the task dialog.
- * Displays both pending and completed subtasks with checkboxes.
- * @param {string} taskId - The unique identifier of the task whose subtasks to render.
- */
-function initSubtasks(taskId) {
-    let subtasksContainer = document.querySelector(".d-subtasks-check");
-    subtasksContainer.innerHTML = "";
-    const task = tasks.find(t => t.id === taskId);
-    if (!task) return;
-    const pendingSubtasks = task.subtasks || [];
-    const completedSubtasks = task.subtasks_done || [];
-
-    pendingSubtasks.forEach((subtask, index) => {
-        subtasksContainer.innerHTML += getTemplateSubtask(subtask, taskId, index, false);
-    });
-    completedSubtasks.forEach((subtask, index) => {
-        subtasksContainer.innerHTML += getTemplateSubtask(subtask, taskId, index + pendingSubtasks.length, true);
-    });
-    addSubtaskEventListeners(taskId)
-}
-
-/**
- * Adds event listeners to subtask checkboxes in the task dialog.
- * Listens for checkbox changes and updates subtask completion status.
- * @param {string} taskId - The unique identifier of the task whose subtasks need listeners.
- * @returns {void}
- */
-function addSubtaskEventListeners(taskId) {
-    const checkboxes = document.querySelectorAll(`input[data-task-id="${taskId}"]`);
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function () {
-            const subtask = this.dataset.subtask;
-            const isCompleted = this.checked;
-            window.updateSubtaskStatus(taskId, subtask, isCompleted);
-        });
-    });
 }

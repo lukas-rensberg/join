@@ -17,17 +17,24 @@ export function initializeDateInput(container, options = {}) {
 
     if (!dateInput.id) dateInput.id = `calendar-${calendarCounter++}`;
     container.querySelector('.calendar-icon')?.setAttribute('for', dateInput.id);
+    const formattedDate = getFormattedCalendarDate(dateInput.value)
 
-    // Convert YYYY-MM-DD → dd/mm/yyyy BEFORE calendarJs init so it can parse with split("/")
-    let formattedDate = '';
-    if (dateInput.value && /^\d{4}-\d{2}-\d{2}$/.test(dateInput.value)) {
-        const [year, month, day] = dateInput.value.split('-');
-        formattedDate = `${day}/${month}/${year}`;
-        dateInput.value = formattedDate;
-    } else if (dateInput.value && /^\d{2}\/\d{2}\/\d{4}$/.test(dateInput.value)) {
-        formattedDate = dateInput.value;
+    initCalendarJs(dateInput.id, options.allowPastDates, options.onDateChanged);
+    if (formattedDate) {
+        const visibleInput = container.querySelector('.calendar-date-picker-input');
+        if (visibleInput) {
+            visibleInput.value = formattedDate;
+        }
     }
+}
 
+/**
+ * Initializes the calendar.js date picker on the specified input element with given options.
+ * @param {String} inputId - The ID of the hidden input element to attach the calendar to
+ * @param {boolean} allowPastDates - Whether to allow selecting past dates
+ * @param {Function} onDateChanged - Callback fired when a date is selected via the picker
+ */
+function initCalendarJs(inputId, allowPastDates, onDateChanged) {
     const calendarOptions = {
         views: {
             datePicker: {
@@ -37,23 +44,25 @@ export function initializeDateInput(container, options = {}) {
         events: {}
     };
 
-    if (!options.allowPastDates) {
-        calendarOptions.views.datePicker.minimumDate = new Date();
+    if (!allowPastDates) calendarOptions.views.datePicker.minimumDate = new Date();
+    if (typeof onDateChanged === 'function') {
+        calendarOptions.events.onDatePickerDateChanged = onDateChanged;
     }
 
-    if (typeof options.onDateChanged === 'function') {
-        calendarOptions.events.onDatePickerDateChanged = options.onDateChanged;
-    }
+    new calendarJs(inputId, calendarOptions);
+}
 
-    new calendarJs(dateInput.id, calendarOptions);
-
-    // After CalendarJS init, sync the value to the visible input it creates
-    if (formattedDate) {
-        const visibleInput = container.querySelector('.calendar-date-picker-input');
-        if (visibleInput) {
-            visibleInput.value = formattedDate;
-        }
+/**
+ * Formats the date from YYYY-MM-DD to dd/mm/yyyy for calendarJs compatibility.
+ * @param {string} value - The date string in either YYYY-MM-DD or dd/mm/yyyy format
+ * @returns {string} - The formatted date string in dd/mm/yyyy format
+ */
+function getFormattedCalendarDate(value) {
+    if (value && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
+        const [year, month, day] = value.split('-');
+        return `${day}/${month}/${year}`;
     }
+    return value;
 }
 
 /**

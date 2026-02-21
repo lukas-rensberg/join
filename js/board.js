@@ -53,25 +53,31 @@ function filterTasksBySearch() {
  * @returns {void}
  */
 function renderFilteredTasks(filteredTasks) {
-    const categories = ['to-do', 'in-progress', 'await-feedback', 'done'];
-
-    categories.forEach(category => {
+    ['to-do', 'in-progress', 'await-feedback', 'done'].forEach(category => {
         const categoryTasks = filteredTasks.filter(task => task.category === category);
         const containerRef = document.getElementById(category);
         containerRef.innerHTML = "";
 
-        if (categoryTasks.length === 0) return containerRef.innerHTML = getNoTaskTemplate(category);
+        if (categoryTasks.length === 0) return containerRef.innerText = getNoTaskTemplate(category);
 
-        categoryTasks.forEach(task => {
-            const subtasks = task.subtasks || [];
-            const subtasksDone = task.subtasks_done || [];
-            const totalSubtasks = subtasks.length + subtasksDone.length;
-            const progressWidth = totalSubtasks > 0 ? (subtasksDone.length / totalSubtasks) * 100 : 0;
-            containerRef.innerHTML += getTemplateTaskCard(task, subtasksDone, totalSubtasks, progressWidth);
-            initMarkedUsers(task);
-            hideEmptySubtasks(task);
-        });
+        categoryTasks.forEach(task => getTaskCard(task, containerRef));
     });
+}
+
+/**
+ * Renders a single task card on the board with progress and member avatars.
+ * @param {Object} task - The task object to render.
+ * @param {HTMLElement} containerRef - The container element to append the task card to.
+ * @returns {void}
+ */
+function getTaskCard(task, containerRef) {
+    const subtasks = task.subtasks || [];
+    const subtasksDone = task.subtasks_done || [];
+    const totalSubtasks = subtasks.length + subtasksDone.length;
+    const progressWidth = totalSubtasks > 0 ? (subtasksDone.length / totalSubtasks) * 100 : 0;
+    containerRef.innerText += getTemplateTaskCard(task, subtasksDone, totalSubtasks, progressWidth);
+    initMarkedUsers(task);
+    hideEmptySubtasks(task);
 }
 
 
@@ -316,31 +322,45 @@ async function removeContactFromAllTasks(contactId) {
  * Moves subtasks between pending and completed arrays and saves to Firebase.
  * @param {string} taskId - The unique identifier of the task.
  * @param {string} subtask - The name of the subtask to update.
- * @param {boolean} isCompleted - Whether the subtask should be marked as completed.
+ * @param {boolean} markAsDone - Whether the subtask should be marked as completed.
  * @returns {Promise<void>}
  */
-async function updateSubtaskStatus(taskId, subtask, isCompleted) {
+async function updateSubtaskStatus(taskId, subtask, markAsDone) {
     const task = tasks.find(t => t.id === taskId);
     if (!task) return;
 
     task.subtasks = Array.isArray(task.subtasks) ? task.subtasks : Object.values(task.subtasks || {});
     task.subtasks_done = Array.isArray(task.subtasks_done) ? task.subtasks_done : Object.values(task.subtasks_done || {});
 
-    if (isCompleted) {
+    if (markAsDone) {
         const pendingIndex = task.subtasks.indexOf(subtask);
-        if (pendingIndex > -1) {
-            task.subtasks.splice(pendingIndex, 1);
-            task.subtasks_done.push(subtask);
-        }
+        if (pendingIndex > -1) superChange("done", pendingIndex, task, subtask)
     } else {
         const doneIndex = task.subtasks_done.indexOf(subtask);
-        if (doneIndex > -1) {
-            task.subtasks_done.splice(doneIndex, 1);
-            task.subtasks.push(subtask);
-        }
+        if (doneIndex > -1) superChange('undone', doneIndex, task, subtask)
     }
+
     await saveTask(task);
 }
+
+/**
+ * Helper function to move a subtask between pending and completed arrays based on the desired status.
+ * @param {string} setTo - The target status for the subtask ("done" or "undone").
+ * @param {number} index - The index of the subtask in its current array.
+ * @param {Object} task - The task object containing the subtask arrays.
+ * @param {string} subtask - The name of the subtask to move.
+ * @returns {void}
+ */
+function superChange(setTo = "undone", index, task, subtask) {
+    if (setTo === "done") {
+        task.subtasks_done.push(subtask);
+        task.subtasks.splice(index, 1);
+        return;
+    }
+    task.subtasks_done.splice(index, 1);
+    task.subtasks.push(subtask);
+}
+
 
 document.addEventListener('DOMContentLoaded', () => {
     initializeTasks();

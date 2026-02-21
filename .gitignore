@@ -27,6 +27,7 @@ yarn-error.log*
 # Build output (if any)
 dist/
 build/
+out/
 
 # Optional logs and temp files
 *.log

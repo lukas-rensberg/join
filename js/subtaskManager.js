@@ -1,4 +1,5 @@
-import {createSubtaskHTML, createEditActionsHTML, createNormalActionsHTML} from "./template.js";
+import {createSubtaskHTML, createEditActionsHTML, createNormalActionsHTML, getTemplateSubtask} from "./template.js";
+import {tasks} from "./board.js";
 
 let activeContainer = null;
 const initializedContainers = new WeakSet();
@@ -292,5 +293,45 @@ export function populateSubtasks(subtasks = [], subtasksDone = [], container) {
         listItem.className = 'subtask-item';
         listItem.innerHTML = createSubtaskHTML(subtaskText);
         subtaskList.appendChild(listItem);
+    });
+}
+
+
+/**
+ * Initializes and renders the subtasks section in the task dialog.
+ * Displays both pending and completed subtasks with checkboxes.
+ * @param {string} taskId - The unique identifier of the task whose subtasks to render.
+ */
+export function initSubtasks(taskId) {
+    let subtasksContainer = document.querySelector(".d-subtasks-check");
+    subtasksContainer.innerHTML = "";
+    const task = tasks.find(t => t.id === taskId);
+    if (!task) return;
+    const pendingSubtasks = task.subtasks || [];
+    const completedSubtasks = task.subtasks_done || [];
+
+    pendingSubtasks.forEach((subtask, index) => {
+        subtasksContainer.innerHTML += getTemplateSubtask(subtask, taskId, index, false);
+    });
+    completedSubtasks.forEach((subtask, index) => {
+        subtasksContainer.innerHTML += getTemplateSubtask(subtask, taskId, index + pendingSubtasks.length, true);
+    });
+    addSubtaskEventListeners(taskId)
+}
+
+/**
+ * Adds event listeners to subtask checkboxes in the task dialog.
+ * Listens for checkbox changes and updates subtask completion status.
+ * @param {string} taskId - The unique identifier of the task whose subtasks need listeners.
+ * @returns {void}
+ */
+function addSubtaskEventListeners(taskId) {
+    const checkboxes = document.querySelectorAll(`input[data-task-id="${taskId}"]`);
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function () {
+            const subtask = this.dataset.subtask;
+            const isCompleted = this.checked;
+            window.updateSubtaskStatus(taskId, subtask, isCompleted);
+        });
     });
 }
