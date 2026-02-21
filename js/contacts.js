@@ -232,6 +232,9 @@ function setupClickListeners() {
     const backButton = document.getElementById("backButton");
     if (backButton) backButton.addEventListener("click", hideContactDetail);
 
+    const backButtonDesktop = document.getElementById("backButtonDesktop");
+    if (backButtonDesktop) backButtonDesktop.addEventListener("click", hideContactDetail);
+
     const deleteButton = document.getElementById("deleteButton");
     if (deleteButton) deleteButton.addEventListener("click", deleteContactFromModal);
 }

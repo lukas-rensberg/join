@@ -4,7 +4,7 @@ import {showInlineError} from "../js/errorHandler.js";
 
 export let contacts = [];
 export let currentContactId = null;
-export const desktopMediaQuery = window.matchMedia("(min-width: 1450px)");
+export const desktopMediaQuery = window.matchMedia("(min-width: 812px)");
 const detailViewDesktop = document.getElementById("contactDetailViewDesktop");
 const detailViewMobile = document.getElementById("contactDetailView");
 
@@ -92,7 +92,10 @@ function showContactDetailDesktop(contact, contactId) {
 
     detailViewMobile.classList.remove("active");
     updateContactDetailViews(contact, contactId);
-    detailViewDesktop.classList.add("active");
+    superToggle(detailViewDesktop, "hidden", "active");
+
+    const contactsSection = document.querySelector(".contacts-section");
+    if (contactsSection) contactsSection.classList.add("hidden");
 }
 
 /**
@@ -163,14 +166,20 @@ function populateContactDetailViewDesktop(contact) {
  */
 export function hideContactDetail() {
     document.getElementById("contactDetailView").classList.remove("active");
-    document.getElementById("contactDetailViewDesktop").classList.remove("active");
+    superToggle(document.getElementById("contactDetailViewDesktop"), "active", "hidden");
     document.querySelector(".contacts-container").style.display = "block";
+
+    const contactsSection = document.querySelector(".contacts-section");
+    if (contactsSection) contactsSection.classList.remove("hidden");
+
+    document.querySelectorAll(".contact-item").forEach(item => item.classList.remove("active"));
 
     const fabIcon = document.getElementById("fabIcon");
     fabIcon.src = "./assets/icons/person_add.svg";
     fabIcon.alt = "Add Contact";
 
     document.getElementById("fabMenu").classList.remove("active");
+    currentContactId = null;
 }
 
 /**
