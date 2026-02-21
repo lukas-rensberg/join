@@ -9,6 +9,7 @@ main {
     max-width: calc(25rem + (2 * var(--padding-side)));
     padding: 0 var(--padding-side);
     flex: 1;
+    background-color: var(--main-color);
 }
 
 .logo-wrapper {
@@ -22,8 +23,7 @@ main {
 }
 
 .login-logo {
-    animation: unset !important;
-    filter: none !important;
+    animation: unset !important
 }
 
 .button-container {
