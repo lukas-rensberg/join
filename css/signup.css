@@ -1,4 +1,6 @@
-
+.body-signup{
+    background-color: var(--main-color) !important;
+}
 
 main {
     display: flex;
@@ -9,7 +11,6 @@ main {
     max-width: calc(25rem + (2 * var(--padding-side)));
     padding: 0 var(--padding-side);
     flex: 1;
-    background-color: var(--main-color);
 }
 
 .logo-wrapper {
