@@ -105,7 +105,6 @@ h2 {
 
 .login-title::after {
     content: "";
-    display: block;
     position: absolute;
     bottom: -0.5rem;
     left: 50%;
@@ -312,15 +311,8 @@ footer {
 
 @media (min-width: 480px) {
     @keyframes logoSlideIn {
-        0% {
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(1);
-        }
-        100% {
-            top: 2rem;
-            left: 1rem;
-            transform: translate(0, 0) scale(1);
+        from {
+            transform: translate(calc(50vw - 4rem), calc(50vh - 4.835rem)) scale(1.6);
         }
     }
 
@@ -342,10 +334,10 @@ footer {
             left: 50%;
             transform: translate(-50%, -50%) scale(1.5);
         }
-        100% {
-            top: 2rem;
-            left: 1rem;
-            transform: translate(0, 0) scale(1);
+
+        to {
+            transform: translate(0, 0) scale(0.75);
+            background: url("../assets/icons/logo-blue.svg") center center no-repeat;
         }
     }
 
@@ -419,9 +411,8 @@ footer {
             left: 50%;
             transform: translate(-50%, -50%) scale(2);
         }
-        100% {
-            top: 2rem;
-            left: 1rem;
+
+        to {
             transform: translate(0, 0) scale(1);
         }
     }

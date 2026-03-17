@@ -169,6 +169,15 @@ async function initLoginSubmitHandler(event, loginUserCallback, handleAuthErrorC
     }
 }
 
+function initLogoWrapper() {
+    const wrapper = document.querySelector(".logo-wrapper");
+    if (wrapper) {
+        setTimeout(() => {
+            wrapper.style.position = "absolute";
+        }, 700);
+    }
+}
+
 /**
  * Initializes logout functionality on protected pages.
  * Attaches click handlers to logout links that call the provided callback.
