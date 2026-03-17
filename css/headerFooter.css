@@ -1,4 +1,5 @@
 header {
+    grid-area: header;
     width: 100vw;
     height: 3.75rem;
     background-color: var(--main-color);
@@ -108,8 +109,8 @@ label[for="slideInSideMenu"] {
 .side-menu {
     position: fixed;
     position-anchor: --header;
-    right: anchor(right);
-    top: anchor(bottom);
+    right: anchor(--header right);
+    top: anchor(--header bottom);
     border: none;
     background-color: #ffffff;
     z-index: 1001;
@@ -144,6 +145,7 @@ nav {
 }
 
 footer {
+    grid-area: footer;
     width: 100%;
     height: 3.75rem;
     display: flex;

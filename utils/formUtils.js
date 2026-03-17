@@ -3,9 +3,9 @@
  * Helper functions for form manipulation and clearing with scoped container support
  */
 
-import { selectPriority } from "./priorityManager.js";
-import { clearSubtaskInput } from "./subtaskManager.js";
-import { clearSelectedContacts, clearSelectedCategory } from "./dropdownManager.js";
+import { selectPriority } from "../js/priorityManager.js";
+import { clearSubtaskInput } from "../js/subtaskManager.js";
+import { setSelectedContacts, setSelectedCategory } from "../js/dropdownManager.js";
 
 /**
  * Clears all form input fields
@@ -40,7 +40,7 @@ export function resetPriorityToMedium(container) {
  * @returns {void}
  */
 export function clearContactSelections(container) {
-    clearSelectedContacts();
+    setSelectedContacts([]);
     clearContactDropzone(container);
     clearContactCheckboxes(container);
 }
@@ -78,7 +78,7 @@ export function clearContactCheckboxes(container) {
  * @returns {void}
  */
 export function clearCategorySelection(container) {
-    clearSelectedCategory();
+    setSelectedCategory(null);
     resetCategoryDisplay(container);
     clearCategoryOptions(container);
 }

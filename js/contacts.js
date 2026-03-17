@@ -102,7 +102,6 @@ function renderContactsList(contactsArray) {
     });
 }
 
-
 /**
  * Creates contact section for a specific letter
  * @param {string} letter The wanted letter of the contacts in this section
@@ -121,7 +120,6 @@ function createContactsPerLetter(letter, groupedContacts) {
         contactItem.innerHTML = generateContactItemTemplate(contact);
         section.appendChild(contactItem);
     });
-
     return section;
 }
 
@@ -186,13 +184,11 @@ function getFormData() {
 async function saveContact(event) {
     const addedContactRef = document.getElementById("contactAdded");
     event.preventDefault();
-
     const formData = getFormData();
 
     if (!validateContactForm(formData)) return;
 
     const {name, email, phone} = formData;
-
     if (getEditMode()) await updateContact(getCurrentContactId(), name, email, phone, getInitialsFromName(name));
     else await createNewContact(addedContactRef, name, email, phone);
 
@@ -201,6 +197,14 @@ async function saveContact(event) {
     closeContactModal();
 }
 
+/**
+ * Creates a new contact with the provided details and triggers a confirmation animation
+ * @param {HTMLElement} container - The container element to apply the animation to
+ * @param {string} name - The name of the contact
+ * @param {string} email - The email address of the contact
+ * @param {string} phone - The phone number of the contact
+ * @returns {Promise<void>}
+ */
 async function createNewContact(container, name, email, phone) {
     const newContactId = generateContactId();
     setCurrentContactId(newContactId);
@@ -228,15 +232,26 @@ function setupClickListeners() {
     const backButton = document.getElementById("backButton");
     if (backButton) backButton.addEventListener("click", hideContactDetail);
 
+    const backButtonDesktop = document.getElementById("backButtonDesktop");
+    if (backButtonDesktop) backButtonDesktop.addEventListener("click", hideContactDetail);
+
     const deleteButton = document.getElementById("deleteButton");
     if (deleteButton) deleteButton.addEventListener("click", deleteContactFromModal);
 }
 
+/**
+ * Sets up the floating action button click event listener
+ * @returns {void}
+ */
 function setupFabButton() {
     const fabButton = document.getElementById("fabButton");
     if (fabButton) fabButton.addEventListener("click", handleFabClick);
 }
 
+/**
+ * Sets up click event listeners for edit and delete contact links
+ * @returns {void}
+ */
 function setupContactLinks() {
     const editContactLink = document.getElementById("editContactLink");
     if (editContactLink) {
@@ -254,6 +269,10 @@ function setupContactLinks() {
     }
 }
 
+/**
+ * Sets up click event listeners for desktop edit and delete actions
+ * @returns {void}
+ */
 function setupDesktopActions() {
     const editContactDesktop = document.getElementById("editContactDesktop");
     if (editContactDesktop) editContactDesktop.addEventListener("click", editContact);
@@ -261,6 +280,10 @@ function setupDesktopActions() {
     if (deleteContactDesktop) deleteContactDesktop.addEventListener("click", deleteContact);
 }
 
+/**
+ * Sets up click event listeners for closing the contact modal
+ * @returns {void}
+ */
 function setupContactModalCloseListeners() {
     const modalBackdrop = document.getElementById("modalBackdrop");
     if (modalBackdrop) modalBackdrop.addEventListener("click", closeContactModal);
@@ -270,6 +293,14 @@ function setupContactModalCloseListeners() {
     if (cancelButton) cancelButton.addEventListener("click", closeContactModal);
 }
 
+/**
+ * Renders user initials from user object
+ * @param {Object} user - The user object
+ * @param {string} [user.displayName] - The display name of the user
+ * @param {string} [user.email] - The email address of the user
+ * @param {boolean} [user.isAnonymous] - Whether the user is anonymous
+ * @returns {string} The user's initials (2 characters)
+ */
 export function renderContact(user) {
     let initials = "U";
     if (user.displayName) {
@@ -287,7 +318,11 @@ export function renderContact(user) {
     return initials;
 }
 
-
+/**
+ * Initializes the contacts page by loading contacts, setting up event listeners
+ * and handling media query changes
+ * @returns {void}
+ */
 function init() {
     if (!window.location.pathname.endsWith("contacts.html")) return;
     loadContactsFromRTDB();

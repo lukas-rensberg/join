@@ -278,22 +278,6 @@ export function getContactChipHTML(contact) {
     `;
 }
 
-export function generateAvatarHTML(user) {
-    return `
-    <input type="checkbox" id="slideInSideMenu" />
-    <label for="slideInSideMenu">
-      <div class="avatar" id="toggleSideMenu">${user.initials}</div>
-    </label>
-    <div class="side-menu" id="cardLegalLinks">
-      <nav>
-        <a class="link-none" href="help.html">Help</a>
-        <a href="legalNotice.html">Legal Notice</a>
-        <a href="privacy.html">Privacy Policy</a>
-        <a href="index.html">Log Out</a>
-      </nav>
-    </div>
-  `;
-}
 /**
  * Generates HTML for a category option in the dropdown
  * @param {Object} category - The category object
@@ -304,6 +288,20 @@ export function getCategoryOptionHTML(category) {
     return `
       <div class="category-option-name">${category.name}</div>
     `;
+}
+
+/**
+ * Generates the complete HTML for the category dropdown options
+ * @returns {string} HTML string containing all category options
+ */
+export function getCategoryDropdownOptionsHTML() {
+    return `
+        <div class="category-option" data-category-id="technical">
+            ${getCategoryOptionHTML({id: 'technical', name: 'Technical Task'})}
+        </div>
+        <div class="category-option" data-category-id="user-story">
+            ${getCategoryOptionHTML({id: 'user-story', name: 'User Story'})}
+        </div>`;
 }
 
 /**
@@ -324,11 +322,10 @@ export function getTemplateAddTask() {
                 <div class="form-group">
                     <label>Due date</label>
                     <div class="input-with-icon">
-                        <input aria-label="Enter Due Date" type="text" class="due-date due-date-input"
-                            placeholder="dd/mm/yyyy" maxlength="10" />
-                        <span class="icon">
-                            <img src="./assets/icons/calendar.svg" alt="Calendar Symbol, not working" />
-                        </span>
+                        <input type="text" class="date-input-hidden"/>
+                        <label class="icon calendar-icon">
+                            <img src="./assets/icons/calendar.svg" alt="Calendar"/>
+                        </label>
                     </div>
                 </div>
 
@@ -337,15 +334,15 @@ export function getTemplateAddTask() {
                     <div class="priority-selection">
                         <button class="priority-btn urgent" type="button">
                             Urgent
-                            <img src="./assets/priority_icons/prio_urgent_colored.svg" alt="Image with two arrows up" />
+                            <img src="./assets/priority_icons/prio_urgent_colored.svg" alt="Image with two arrows up"/>
                         </button>
                         <button class="priority-btn medium active" type="button">
                             Medium
-                            <img src="./assets/priority_icons/medium.svg" alt="Image with two stripes horizontal" />
+                            <img src="./assets/priority_icons/medium.svg" alt="Image with two stripes horizontal"/>
                         </button>
                         <button class="priority-btn low" type="button">
                             Low
-                            <img src="./assets/priority_icons/prio_low_colored.svg" alt="Image with two arrows down" />
+                            <img src="./assets/priority_icons/prio_low_colored.svg" alt="Image with two arrows down"/>
                         </button>
                     </div>
                 </div>
@@ -355,9 +352,9 @@ export function getTemplateAddTask() {
                     <div class="custom-dropdown contact-dropdown-wrapper">
                         <div class="dropdown-header contact-dropdown-header">
                             <input type="text" class="dropdown-search-input contact-search-input"
-                                placeholder="Select contacts to assign" />
+                                placeholder="Select contacts to assign"/>
                             <img src="./assets/menu_icons/arrow-drop-down.svg" class="dropdown-arrow"
-                                alt="Little Image indicating an dropdown" />
+                                alt="Little Image indicating an dropdown"/>
                         </div>
                         <div class="dropdown-content contact-dropdown-content">
                         </div>
@@ -371,28 +368,31 @@ export function getTemplateAddTask() {
                         <div class="dropdown-header category-dropdown-header">
                             <span class="dropdown-display-text category-display">Select task category</span>
                             <img src="./assets/menu_icons/arrow-drop-down.svg" class="dropdown-arrow"
-                                alt="Little Image indicating an dropdown" />
+                                alt="Little Image indicating an dropdown"/>
                         </div>
                         <div class="dropdown-content category-dropdown-content">
                         </div>
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group mobile-last">
                     <label>Subtasks <span class="optional">(optional)</span></label>
                     <div class="input-with-icon subtask-input-wrapper">
-                        <input type="text" class="subtask-input" placeholder="Add a subtask" />
+                        <input type="text" class="subtask-input" placeholder="Add a subtask"/>
                         <div class="subtask-icons">
-                            <img src="./assets/icons/close.svg" alt="Cancel" class="icon-cancel" />
+                            <img src="./assets/icons/close.svg" alt="Cancel" class="icon-cancel"/>
                             <span class="icon-separator"></span>
-                            <img src="./assets/icons/check-blue.svg" alt="Confirm" class="icon-confirm" />
+                            <img src="./assets/icons/check-blue.svg" alt="Confirm" class="icon-confirm"/>
                         </div>
                     </div>
                     <ul class="subtask-list"></ul>
                 </div>`;
 }
 
-
+/**
+ * Generates the HTML template for the header when user is not logged in
+ * @returns {string} HTML string for the logged out header
+ */
 export function generateLoggedOutHeaderHTML() {
     return `    
     <section class="header">
@@ -404,6 +404,11 @@ export function generateLoggedOutHeaderHTML() {
   `;
 }
 
+/**
+ * Generates the HTML template for the header when user is logged in
+ * @param {string} userInitials - The initials of the logged in user to display in the avatar
+ * @returns {string} HTML string for the logged in header
+ */
 export function generateLoggedInHeaderHTML(userInitials) {
     return `
     <section class="header">
@@ -484,7 +489,16 @@ export function getEditTaskTemplate() {
     `;
 }
 
-export function generateNavlinkWithActiveState(item, isActive) {
+/**
+ * Generates HTML for a navigation link with optional active state styling
+ * @param {Object} item - The navigation item object
+ * @param {string} item.href - The URL the link points to
+ * @param {string} item.class - CSS class for the navigation item
+ * @param {string} item.label - Display text for the navigation item
+ * @param {string} isActive - CSS class string to add when link is active (e.g., ' active')
+ * @returns {string} HTML string for the navigation link
+ */
+export function generateNavLinkWithActiveState(item, isActive) {
     return `
         <a class="nav-item${isActive}" href="${item.href}">
           <span class="${item.class}">${item.label}</span>
@@ -492,6 +506,12 @@ export function generateNavlinkWithActiveState(item, isActive) {
     `;
 }
 
+/**
+ * Generates HTML for the footer navigation with active state styling for legal links
+ * @param {string} isPrivacyActive - CSS class string to add when privacy link is active (e.g., ' active')
+ * @param {string} isLegalActive - CSS class string to add when legal notice link is active (e.g., ' active')
+ * @returns {string} HTML string for the footer navigation
+ */
 export function generateFooterWithActiveStates(isPrivacyActive, isLegalActive) {
     return `
       <a class="nav-item" href="index.html">

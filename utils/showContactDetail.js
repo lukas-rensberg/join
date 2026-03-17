@@ -4,7 +4,7 @@ import {showInlineError} from "../js/errorHandler.js";
 
 export let contacts = [];
 export let currentContactId = null;
-export const desktopMediaQuery = window.matchMedia("(min-width: 1450px)");
+export const desktopMediaQuery = window.matchMedia("(min-width: 812px)");
 const detailViewDesktop = document.getElementById("contactDetailViewDesktop");
 const detailViewMobile = document.getElementById("contactDetailView");
 
@@ -92,7 +92,10 @@ function showContactDetailDesktop(contact, contactId) {
 
     detailViewMobile.classList.remove("active");
     updateContactDetailViews(contact, contactId);
-    detailViewDesktop.classList.add("active");
+    superToggle(detailViewDesktop, "hidden", "active");
+
+    const contactsSection = document.querySelector(".contacts-section");
+    if (contactsSection) contactsSection.classList.add("hidden");
 }
 
 /**
@@ -163,13 +166,20 @@ function populateContactDetailViewDesktop(contact) {
  */
 export function hideContactDetail() {
     document.getElementById("contactDetailView").classList.remove("active");
+    superToggle(document.getElementById("contactDetailViewDesktop"), "active", "hidden");
     document.querySelector(".contacts-container").style.display = "block";
+
+    const contactsSection = document.querySelector(".contacts-section");
+    if (contactsSection) contactsSection.classList.remove("hidden");
+
+    document.querySelectorAll(".contact-item").forEach(item => item.classList.remove("active"));
 
     const fabIcon = document.getElementById("fabIcon");
     fabIcon.src = "./assets/icons/person_add.svg";
     fabIcon.alt = "Add Contact";
 
     document.getElementById("fabMenu").classList.remove("active");
+    currentContactId = null;
 }
 
 /**
@@ -236,38 +246,51 @@ export function handleMediaQueryChange(event) {
 
 /**
  * Opens the contact modal in either create or edit mode
- * TODO: Refactor modal setup logic into separate mode-specific functions
  * @param {boolean} editMode - Whether to open in edit mode (true) or create mode (false)
  */
 function openContactModal(editMode) {
     isEditMode = editMode;
-
     if (isEditMode) {
         const contact = findContactById(currentContactId);
         if (!contact) return;
-
         setupEditContactModal(contact);
 
         if (isDesktop()) {
-            contactModal.classList.add("edit-contact-modal");
-            contactModal.classList.add("edit-dialog-swipe-in");
-            modalHeader.classList.remove("add-modal-header")
-            modalHeader.classList.add("edit-modal-header")
+            openContactModalDesktop();
         } else {
             contactModal.classList.add("contact-modal");
             contactModal.classList.add("dialog-swipe-in");
         }
-
     } else {
         setupAddContactModal();
-        contactModal.classList.add("contact-modal");
-        contactModal.classList.add("dialog-swipe-in");
-        modalHeader.classList.remove("edit-modal-header");
-        modalHeader.classList.add("add-modal-header")
+        openContactModalMobile();
     }
     contactModal.showModal();
-
 }
+
+/**
+ * Opens the contact modal with desktop-specific styling for edit mode
+ * @returns {void}
+ */
+function openContactModalDesktop() {
+    contactModal.classList.add("edit-contact-modal");
+    contactModal.classList.add("edit-dialog-swipe-in");
+    modalHeader.classList.remove("add-modal-header")
+    modalHeader.classList.add("edit-modal-header")
+}
+
+/**
+ * Opens the contact modal with mobile-specific styling
+ * @returns {void}
+ */
+function openContactModalMobile() {
+    contactModal.classList.add("contact-modal");
+    contactModal.classList.add("dialog-swipe-in");
+    modalHeader.classList.remove("edit-modal-header");
+    modalHeader.classList.add("add-modal-header")
+}
+
+
 
 /**
  * Finds a contact by its ID

@@ -1,21 +1,25 @@
 .body-contacts {
-    position: relative;
-    display: flex;
-    flex-direction: column;
+    display: grid;
     min-height: 100vh;
-    width: 100vw;
-    background-color: rgb(255, 255, 255);
+    grid-template-columns: 1fr;
+    grid-template-rows: 3.75rem 1fr 3.75rem;
+    grid-template-areas:
+    "header"
+    "main"
+    "footer";
 }
 
 .contacts-main {
+    grid-area: main;
     flex: 1 1 0;
     background-color: rgb(255, 255, 255);
     overflow-y: auto;
 }
 
 .contacts-container {
-    padding: 3.75rem var(--padding-side);
+    padding: 0.75rem var(--padding-side);
     width: min(465px, 100%);
+    margin: auto;
 }
 
 .contact-section {
@@ -91,7 +95,7 @@
 }
 
 .fab-mobile {
-    position: absolute;
+    position: fixed;
     bottom: 6.25rem;
     right: 1.25rem;
     width: 3.5rem;
@@ -226,9 +230,9 @@
 }
 
 .contact-detail-view {
-    position: absolute;
-    /*position: fixed;*/
-    top: 60px;
+    position: fixed;
+    position-anchor: --header;
+    top: anchor(--header bottom);
     display: none;
     flex-direction: column;
     height: 100%;
@@ -298,7 +302,6 @@
     align-items: center;
     gap: 1rem;
     margin-bottom: 2rem;
-    /*flex: 1 1 0;*/
 }
 
 .contact-detail-avatar {
@@ -554,8 +557,8 @@
     font-size: 0.75rem;
     position: absolute;
     position-anchor: --contact-input;
-    top: anchor(bottom);
-    left: anchor(left);
+    top: anchor(--contact-input bottom);
+    left: anchor(--contact-input left);
     padding-top: 0.25rem;
     margin-left: 0.75rem;
     z-index: 10;
@@ -575,17 +578,28 @@
     display: none;
 }
 
+.contact-detail-back-row {
+    display: none;
+}
+
 @media (width >= 812px) {
+    .body-contacts {
+        display: grid;
+        min-height: 100vh;
+        gap: 0;
+        grid-template-columns: 250px 1fr;
+        grid-template-rows: 6rem 1fr;
+        grid-template-areas:
+    "header header"
+    "aside-desktop main"
+    }
+
     .fab-mobile {
         display: none;
     }
 
-    .body-contacts {
-        height: 100vh;
-        overflow: hidden;
-    }
-
     .contacts-main {
+        grid-area: main;
         display: flex;
         flex: 1 1 0;
         overflow: hidden;
@@ -594,10 +608,8 @@
     .contacts-section {
         display: flex;
         flex-direction: column;
-        margin-left: 250px;
         width: 465px;
         height: 100%;
-        padding: 6rem 0 0 0;
         overflow: hidden;
         box-shadow: 4px 0 6px 0 rgba(0, 0, 0, 0.08);
     }
@@ -608,7 +620,7 @@
         justify-content: center;
         background-color: rgb(255, 255, 255);
         height: 6.5rem;
-        width: 465px;
+        width: 100%;
         flex-shrink: 0;
 
         & button {
@@ -672,7 +684,6 @@
         flex: 1 1 0;
         padding: 4.5rem 3.875rem;
         transform: translateX(100%);
-        max-width: calc(1920px - 675px);
         opacity: 0;
         transition: transform 0.3s ease-out, opacity 0.3s ease-out;
     }
@@ -680,7 +691,13 @@
     .contact-detail-view-desktop.active {
         transform: translateX(0);
         opacity: 1;
-        padding: 10rem 3.875rem;
+        padding: 3.875rem;
+    }
+
+    .contact-detail-back-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
     }
 
     .contact-detail-header-desktop {
@@ -770,7 +787,7 @@
         background-color: #ffffff;
         position: fixed;
         position-anchor: --header;
-        left: anchor(right);
+        left: calc(anchor(--header right) + 2.5rem);
         top: 50%;
         opacity: 1;
         transform: translate(0%, -50%);
@@ -856,16 +873,15 @@
         margin: 0 0 2rem 0;
         flex-shrink: 0;
     }
+
+}
+
+@media (width >= 1100px) {
+
 }
 
 @media (width >= 812px) and (width <= 1450px) {
-    .contact-detail-view.active {
-        display: flex;
-        margin-left: 16rem;
-        width: calc(100vw - 250px);
-    }
-
-    .contact-detail-view-desktop{
+    .hidden {
         display: none;
     }
 }

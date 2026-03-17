@@ -30,6 +30,13 @@ export function handleBoardMediaQueryChange(event) {
     }
 }
 
+/**
+ * Handles dialog styling when viewport size changes between desktop and mobile.
+ * Toggles CSS classes for appropriate swipe-in animations based on screen size.
+ * @param {HTMLDialogElement} dialogRef - Reference to the dialog element
+ * @param {MediaQueryListEvent} event - The media query change event
+ * @returns {void}
+ */
 function dialogIsOpen(dialogRef, event) {
     if (event.matches) {
         dialogRef.classList.remove("dialog-swipe-in-mobile");

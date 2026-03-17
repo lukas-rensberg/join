@@ -1,7 +1,8 @@
 import {validateEmailFormat} from "../utils/contact.js";
 
 /**
- * Clear error messages and red borders from form inputs
+ * Clears error messages and red borders from form inputs.
+ * @returns {void}
  */
 function clearFormErrors() {
     const existingError = document.querySelector(".auth-error-message");
@@ -42,27 +43,27 @@ function showValidationError(fieldName, errorMessage) {
  */
 function validateLoginForm(email, password) {
     clearFormErrors();
-
     if (!email.trim()) {
         showValidationError("email", "Email is required");
         return false;
     }
-
     if (!validateEmailFormat(email)) {
         showValidationError("email", "Invalid email format");
         return false;
     }
-
     if (!password) {
         showValidationError("password", "Password is required");
         return false;
     }
-
     return true;
 }
 
 /**
- * Update password icon based on input value
+ * Updates the password field icon based on the input value.
+ * Shows lock icon when empty, visibility_off when password is hidden, visibility when shown.
+ * @param {HTMLInputElement} passwordInput - The password input element
+ * @param {HTMLElement} iconElement - The icon toggle element containing the img
+ * @returns {void}
  */
 export function updatePasswordIcon(passwordInput, iconElement) {
     const img = iconElement.querySelector("img");
@@ -82,7 +83,9 @@ export function updatePasswordIcon(passwordInput, iconElement) {
 }
 
 /**
- * Toggle password visibility
+ * Toggles the password field between visible text and hidden password mode.
+ * @param {HTMLElement} toggleElement - The toggle element with a data-target attribute pointing to the password input
+ * @returns {void}
  */
 export function togglePasswordVisibility(toggleElement) {
     const targetId = toggleElement.getAttribute("data-target");
@@ -102,11 +105,13 @@ export function togglePasswordVisibility(toggleElement) {
 
 
 /**
- * Initialize login page functionality (login page)
+ * Initializes the login page functionality including form submission, guest login, and input handlers.
+ * @param {Function} loginUserCallback - Callback to perform the login with email and password
+ * @param {Function} guestLoginCallback - Callback to perform anonymous/guest login
+ * @param {Function} handleAuthErrorCallback - Callback to handle authentication errors
+ * @returns {void}
  */
 export function initLoginPage(loginUserCallback, guestLoginCallback, handleAuthErrorCallback) {
-    initLogoWrapper()
-
     const loginForm = document.querySelector("form");
     if (loginForm && document.getElementById("email")) initLoginEventHandler(loginForm, loginUserCallback, handleAuthErrorCallback);
 
@@ -165,16 +170,19 @@ async function initLoginSubmitHandler(event, loginUserCallback, handleAuthErrorC
 }
 
 function initLogoWrapper() {
-    // const wrapper = document.querySelector(".logo-wrapper");
-    // if (wrapper) {
-    //     setTimeout(() => {
-    //         wrapper.style.position = "absolute";
-    //     }, 700);
-    // }
+    const wrapper = document.querySelector(".logo-wrapper");
+    if (wrapper) {
+        setTimeout(() => {
+            wrapper.style.position = "absolute";
+        }, 700);
+    }
 }
 
 /**
- * Initialize logout functionality (protected pages)
+ * Initializes logout functionality on protected pages.
+ * Attaches click handlers to logout links that call the provided callback.
+ * @param {Function} handleLogoutCallback - Callback to perform the logout operation
+ * @returns {void}
  */
 export function initLogout(handleLogoutCallback) {
     const logoutLinks = document.querySelectorAll('a[href="./index.html"], a[href="index.html"]');

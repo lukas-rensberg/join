@@ -2,13 +2,13 @@ import {contacts, formatDate, tasks} from "../js/board.js";
 import {validateTaskForm} from "../js/formValidation.js";
 import {collectEditTaskData} from "../js/taskDataCollector.js";
 import {createTask, deleteTask, updateTask} from "../js/database.js";
-import {getEditTaskTemplate, getTemplateDialog, getTemplateMember, getTemplateSubtask} from "../js/template.js";
+import {getEditTaskTemplate, getTemplateDialog, getTemplateMember} from "../js/template.js";
 import {initializeDateInput} from "../js/dateInputManager.js";
 import {initializePriorityButtons, updatePriorityIcon} from "../js/priorityManager.js";
 import {initializeDropdowns, preselectCategory, preselectContacts, resetDropdownState} from "../js/dropdownManager.js";
-import {initializeSubtasks, populateSubtasks, resetSubtaskInitialization} from "../js/subtaskManager.js";
+import {initializeSubtasks, initSubtasks, populateSubtasks, resetSubtaskInitialization} from "../js/subtaskManager.js";
 import {isDesktop} from "./mediaQuerySwitch.js";
-import {clearAllFieldErrors, showFieldError} from "../js/errorHandler.js";
+import {clearAllFieldErrors, clearFieldError, showFieldError} from "../js/errorHandler.js";
 
 let dialogRef = document.getElementById("dialog-task");
 
@@ -46,13 +46,33 @@ function showEditConfirmation(dialogContentRef, element, dueDate) {
     dialogContentRef.style.padding = "0";
     dialogContentRef.style.overflow = "visible";
 
-    initializeDateInput(dialogContentRef);
+    const dueDateInput = dialogContentRef.querySelector('.date-input-hidden');
+    if (dueDateInput && element.dueDate) {
+        dueDateInput.value = element.dueDate;
+    }
+    initializeDateInput(dialogContentRef, {
+        allowPastDates: true,
+        onDateChanged: () => clearFieldError('dueDate', dialogContentRef)
+    });
+    showEditConfirmationSub(dialogContentRef, element, dueDate);
+}
+
+/**
+ * Continues the edit confirmation setup by initializing form components and populating fields.
+ * Handles priority buttons, dropdowns, subtasks, and event handlers initialization.
+ * @param {HTMLElement} dialogContentRef - The dialog content container element.
+ * @param {Object} element - The task object being edited.
+ * @param {string} dueDate - The formatted due date string for display.
+ * @returns {void}
+ */
+function showEditConfirmationSub(dialogContentRef, element, dueDate) {
+    populateEditFormBasicFieldsWithoutDate(dialogContentRef, element);
     initializePriorityButtons(dialogContentRef);
     resetDropdownState();
-    initializeDropdowns(dialogContentRef);
+    initializeDropdowns(dialogContentRef, document.querySelector(".edit-task-form"));
     resetSubtaskInitialization(dialogContentRef);
     initializeSubtasks(dialogContentRef);
-    populateEditForm(dialogContentRef, element);
+    populateEditFormAdvancedFields(dialogContentRef, element);
     initializeEventHandler(dialogContentRef, element, dueDate)
 }
 
@@ -98,6 +118,12 @@ function cancelEditMode(element, dueDate) {
     editButton.addEventListener("click", handleEditClick, {once: true});
 }
 
+/**
+ * Resets the dialog content element's inline styles to default values.
+ * Restores padding and removes overflow styling after exiting edit mode.
+ * @param {HTMLElement} dialogContentRef - The dialog content container element.
+ * @returns {void}
+ */
 function resetDialogContentStyle(dialogContentRef) {
     if (dialogContentRef) {
         dialogContentRef.style.padding = "1.25rem 1rem";
@@ -106,40 +132,32 @@ function resetDialogContentStyle(dialogContentRef) {
 }
 
 /**
- * Populates the edit form with existing task data from Firebase
+ * Populates basic fields in the edit form (title, description) without date
+ * Date is set before calendar initialization in showEditConfirmation
  * @param {HTMLElement} container - The dialog content container element
  * @param {Object} element - The task object containing all task data
  * @returns {void}
  */
-function populateEditForm(container, element) {
+function populateEditFormBasicFieldsWithoutDate(container, element) {
     const titleInput = container.querySelector('.input-title');
     if (titleInput) titleInput.value = element.title || '';
 
     const descriptionInput = container.querySelector('.task-description');
     if (descriptionInput) descriptionInput.value = element.text || '';
+}
 
-    const dueDateInput = container.querySelector('.due-date-input');
-    if (dueDateInput && element.dueDate) dueDateInput.value = formatDateForInput(element.dueDate);
-
+/**
+ * Populates advanced fields in the edit form (priority, contacts, category, subtasks)
+ * Should be called AFTER initializing dropdowns and other components
+ * @param {HTMLElement} container - The dialog content container element
+ * @param {Object} element - The task object containing all task data
+ * @returns {void}
+ */
+function populateEditFormAdvancedFields(container, element) {
     setPriorityButton(container, element.priority);
     preselectContacts(element.member, container);
     preselectCategory(element.task, container);
     populateSubtasks(element.subtasks || [], element.subtasks_done || [], container);
-}
-
-/**
- * Converts a date from YYYY-MM-DD format to dd/mm/yyyy format
- * @param {string} dateString - Date in YYYY-MM-DD format
- * @returns {string} Date in dd/mm/yyyy format
- */
-function formatDateForInput(dateString) {
-    if (!dateString) return '';
-
-    const parts = dateString.split('-');
-    if (parts.length !== 3) return dateString;
-
-    const [year, month, day] = parts;
-    return `${day}/${month}/${year}`;
 }
 
 /**
@@ -185,11 +203,19 @@ async function confirmEdit(element, dueDate) {
         closeDialog();
     } catch (error) {
         const confirmEditBtn = dialogContentRef.querySelector('.confirm-edit-task-btn');
-        if (confirmEditBtn) confirmEditBtn.addEventListener("click", () =>
-            confirmEdit(element, dueDate), {once: true});
+        if (confirmEditBtn) confirmEditBtn.addEventListener("click", () => confirmEdit(element, dueDate), {once: true});
     }
 }
 
+/**
+ * Handles invalid edit form submission by displaying errors and re-attaching the confirm button listener.
+ * Shows validation errors and allows the user to retry after fixing issues.
+ * @param {Object} errors - Object containing field-specific error messages.
+ * @param {HTMLElement} container - The dialog content container element.
+ * @param {Object} element - The original task object being edited.
+ * @param {string} dueDate - The formatted due date string for display.
+ * @returns {void}
+ */
 function handleInvalidEditForm(errors, container, element, dueDate) {
     showEditErrors(errors, container);
     const confirmEditBtn = container.querySelector('.confirm-edit-task-btn');
@@ -324,16 +350,40 @@ function resetDeleteButtons(deleteButton, editButton, handleDeleteClick, handleE
 export function openDialog(index) {
     let element = tasks.filter((task) => task["id"] === `${index}`)[0];
 
+    let dueDate = initializeDialogDisplay(element);
+    
+    setupEditButton(element, dueDate);
+    dialogRef.showModal();
+}
+
+/**
+ * Initializes and displays the dialog with task content and animations.
+ * Sets up CSS classes for swipe animation, renders template, and initializes members/subtasks.
+ * @param {Object} element - The task object to display in the dialog.
+ * @returns {string} The formatted due date string for further use.
+ */
+function initializeDialogDisplay(element) {
     let mobileDesktopIndicator = "mobile";
     if (isDesktop()) mobileDesktopIndicator = "desktop";
-    dialogRef.classList.add("dialog-task")
+    dialogRef.classList.add("dialog-task");
     dialogRef.classList.add(`dialog-swipe-in-${mobileDesktopIndicator}`);
 
     const dueDate = element["dueDate"] ? formatDate(element["dueDate"]) : "No due date set";
     dialogRef.innerHTML = getTemplateDialog(element, dueDate);
     initMembers(element["member"]);
     initSubtasks(element["id"]);
+    
+    return dueDate;
+}
 
+/**
+ * Sets up the edit button event listener and delete button for a task in the dialog.
+ * Creates the edit click handler and attaches it to the edit button.
+ * @param {Object} element - The task object to be edited.
+ * @param {string} dueDate - The formatted due date string for display.
+ * @returns {void}
+ */
+function setupEditButton(element, dueDate) {
     const handleEditClick = () => {
         const dialogContentRef = document.querySelector(".dialog-content");
         showEditConfirmation(dialogContentRef, element, dueDate);
@@ -345,8 +395,6 @@ export function openDialog(index) {
     if (editButton) {
         editButton.addEventListener("click", handleEditClick, {once: true});
     }
-
-    dialogRef.showModal();
 }
 
 /**
@@ -385,45 +433,4 @@ function initMembers(memberIds) {
             membersContainer.innerHTML += getTemplateMember(contact.name, contact.initials, contact.avatarColor);
         }
     }
-}
-
-/**
- * Initializes and renders the subtasks section in the task dialog.
- * Displays both pending and completed subtasks with checkboxes.
- * TODO: Add drag-and-drop functionality to reorder subtasks
- * @param {string} taskId - The unique identifier of the task whose subtasks to render.
- */
-function initSubtasks(taskId) {
-    let subtasksContainer = document.querySelector(".d-subtasks-check");
-    subtasksContainer.innerHTML = "";
-    const task = tasks.find(t => t.id === taskId);
-    if (!task) return;
-    const pendingSubtasks = task.subtasks || [];
-    const completedSubtasks = task.subtasks_done || [];
-
-    pendingSubtasks.forEach((subtask, index) => {
-        subtasksContainer.innerHTML += getTemplateSubtask(subtask, taskId, index, false);
-    });
-    completedSubtasks.forEach((subtask, index) => {
-        subtasksContainer.innerHTML += getTemplateSubtask(subtask, taskId, index + pendingSubtasks.length, true);
-    });
-
-    addSubtaskEventListeners(taskId)
-}
-
-/**
- * Adds event listeners to subtask checkboxes in the task dialog.
- * Listens for checkbox changes and updates subtask completion status.
- * @param {string} taskId - The unique identifier of the task whose subtasks need listeners.
- * @returns {void}
- */
-function addSubtaskEventListeners(taskId) {
-    const checkboxes = document.querySelectorAll(`input[data-task-id="${taskId}"]`);
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function () {
-            const subtask = this.dataset.subtask;
-            const isCompleted = this.checked;
-            window.updateSubtaskStatus(taskId, subtask, isCompleted);
-        });
-    });
 }

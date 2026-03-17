@@ -1,58 +1,68 @@
-/**
- * Date Input Management Functions
- * Handles date input formatting and validation with scoped container support
- */
+import {calendarJs} from "./calendar.min.js"
+
+let calendarCounter = 0;
 
 /**
- * Initializes the date input field
- * Adds automatic formatting for dd/mm/yyyy
- * @param {HTMLElement} container - The container element to scope queries (default: document)
+ * Initializes the date input field with calendar.js date picker.
+ * Converts any pre-set YYYY-MM-DD value to dd/mm/yyyy before calendarJs init,
+ * since calendarJs internally parses the hidden input value with split("/").
+ * @param {HTMLElement} container - The container element to scope queries
+ * @param {Object} [options] - Optional configuration
+ * @param {boolean} [options.allowPastDates=false] - Whether to allow selecting past dates (useful for editing existing tasks)
+ * @param {Function} [options.onDateChanged] - Callback fired when a date is selected via the picker
  */
-export function initializeDateInput(container) {
-    const dateInput = container.querySelector('.due-date-input');
-    if (dateInput) {
-        dateInput.addEventListener('input', formatDateInput);
-        dateInput.addEventListener('keydown', handleDateKeydown);
-    }
-}
+export function initializeDateInput(container, options = {}) {
+    const dateInput = container.querySelector('.date-input-hidden');
+    if (!dateInput) return;
 
-/**
- * Formats the date input to dd/mm/yyyy format
- * Automatically adds slashes
- * @param {Event} event - The input event
- */
-function formatDateInput(event) {
-    const input = event.target;
-    let value = input.value.replace(/\D/g, '');
+    if (!dateInput.id) dateInput.id = `calendar-${calendarCounter++}`;
+    container.querySelector('.calendar-icon')?.setAttribute('for', dateInput.id);
+    const formattedDate = getFormattedCalendarDate(dateInput.value)
 
-    if (value.length >= 2) {
-        value = value.substring(0, 2) + '/' + value.substring(2);
-    }
-    if (value.length >= 5) {
-        value = value.substring(0, 5) + '/' + value.substring(5, 9);
-    }
-
-    input.value = value;
-}
-
-/**
- * Handles keydown events for the date input
- * Allows proper backspace functionality
- * @param {KeyboardEvent} event - The keyboard event
- */
-function handleDateKeydown(event) {
-    const input = event.target;
-
-    if (event.key === 'Backspace') {
-        const cursorPosition = input.selectionStart;
-        const value = input.value;
-
-        if (cursorPosition > 0 && value[cursorPosition - 1] === '/') {
-            event.preventDefault();
-            input.value = value.substring(0, cursorPosition - 2) + value.substring(cursorPosition);
-            input.setSelectionRange(cursorPosition - 2, cursorPosition - 2);
+    initCalendarJs(dateInput.id, options.allowPastDates, options.onDateChanged);
+    if (formattedDate) {
+        const visibleInput = container.querySelector('.calendar-date-picker-input');
+        if (visibleInput) {
+            visibleInput.value = formattedDate;
         }
     }
+}
+
+/**
+ * Initializes the calendar.js date picker on the specified input element with given options.
+ * @param {String} inputId - The ID of the hidden input element to attach the calendar to
+ * @param {boolean} allowPastDates - Whether to allow selecting past dates
+ * @param {Function} onDateChanged - Callback fired when a date is selected via the picker
+ */
+function initCalendarJs(inputId, allowPastDates, onDateChanged) {
+    const calendarOptions = {
+        views: {
+            datePicker: {
+                selectedDateFormat: "{dd}/{mm}/{yyyy}",
+            }
+        },
+        events: {}
+    };
+
+    if (!allowPastDates) calendarOptions.views.datePicker.minimumDate = new Date();
+    if (typeof onDateChanged === 'function') {
+        calendarOptions.events.onDatePickerDateChanged = onDateChanged;
+    }
+
+    new calendarJs(inputId, calendarOptions);
+}
+
+/**
+ * Formats the date from YYYY-MM-DD to dd/mm/yyyy for calendarJs compatibility.
+ * @param {string} value - The date string in either YYYY-MM-DD or dd/mm/yyyy format
+ * @returns {string} - The formatted date string in dd/mm/yyyy format
+ */
+function getFormattedCalendarDate(value) {
+    if (value && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
+        const [year, month, day] = value.split('-');
+        return `${day}/${month}/${year}`;
+    }
+    return value;
 }
 
 /**

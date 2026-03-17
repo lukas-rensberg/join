@@ -2,7 +2,7 @@ html, body {
     height: 100%;
 }
 
-.body-login {
+.body-auth {
     font-family: sans-serif;
     color: var(--color-menu-text);
     background: var(--main-color);
@@ -20,7 +20,7 @@ html, body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 6rem 16px 0;
+    padding: 9rem 16px 0;
 }
 
 .logo-wrapper {
@@ -77,11 +77,9 @@ html, body {
     justify-content: center;
     opacity: 0;
     animation: loginFadeIn 500ms ease-in-out 700ms forwards;
-    z-index: 10;
     width: 100%;
     height: 100%;
     flex: 1;
-    margin-top: 4.5rem;
 }
 
 .login-card {
@@ -107,6 +105,7 @@ h2 {
 
 .login-title::after {
     content: "";
+    position: absolute;
     bottom: -0.5rem;
     left: 50%;
     transform: translateX(-50%);
@@ -122,7 +121,6 @@ h2 {
     justify-content: space-between;
     width: 90%;
     height: 2.5rem;
-    margin-top: 1.25rem;
     margin-bottom: 1rem;
     border: none;
     position: relative;
@@ -141,12 +139,14 @@ span {
 
 .email-icon {
     background: url("../assets/icons/mail.svg") center center no-repeat;
-    transform: scale(0.8);
+}
+
+.person-icon {
+    background: url("../assets/icons/person.svg") center center no-repeat;
 }
 
 .password-icon {
     background: url("../assets/icons/lock.svg") center center no-repeat;
-    transform: scale(0.8);
 }
 
 input[type="text"],
@@ -299,18 +299,6 @@ footer {
     color: var(--main-color);
 }
 
-@keyframes loginFadeIn {
-    0% {
-        opacity: 0;
-        transform: translateY(1.25rem);
-    }
-
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
 .bottom-section {
     width: 100%;
     display: flex;
@@ -323,15 +311,8 @@ footer {
 
 @media (min-width: 480px) {
     @keyframes logoSlideIn {
-        0% {
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(1);
-        }
-        100% {
-            top: 10px;
-            left: 16px;
-            transform: translate(0, 0) scale(1);
+        from {
+            transform: translate(calc(50vw - 4rem), calc(50vh - 4.835rem)) scale(1.6);
         }
     }
 
@@ -353,10 +334,10 @@ footer {
             left: 50%;
             transform: translate(-50%, -50%) scale(1.5);
         }
-        100% {
-            top: 10px;
-            left: 16px;
-            transform: translate(0, 0) scale(1);
+
+        to {
+            transform: translate(0, 0) scale(0.75);
+            background: url("../assets/icons/logo-blue.svg") center center no-repeat;
         }
     }
 
@@ -430,9 +411,8 @@ footer {
             left: 50%;
             transform: translate(-50%, -50%) scale(2);
         }
-        100% {
-            top: 10px;
-            left: 16px;
+
+        to {
             transform: translate(0, 0) scale(1);
         }
     }
@@ -455,8 +435,7 @@ footer {
 
     .login-card {
         max-width: 32.5rem;
-        margin: 5.85rem 0 1.95rem;
-
+        margin: 5.85rem 0 0;
         form {
             padding: 2rem;
         }
