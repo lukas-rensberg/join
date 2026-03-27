@@ -84,13 +84,7 @@ Run join using the following methods:
 
 ---
 ##  Project Roadmap 
-### Q4 2025 + Q1 (Jan.) 2026
-
-- [X] **`Add the board`**: <strike>Add the entire board with drag & drop</strike>
-- [X] **`Add Task`**: <strike>Add functions to add tasks to the board</strike>
-- [X] **`Fix mobile drag & drop`**: <strike>Mobile Drag and Drop not working - make it works.</strike>
-- [X] **`Responsive Design`**: Make the app responsive.
-
+### Project completed (for now)
 ---
 
 ##  Our team
